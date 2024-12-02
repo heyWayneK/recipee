@@ -20,7 +20,7 @@ async function sendVerificationRequest(params: any) {
 
   const sendEmail = await resend.emails.send({
     from: process.env.SEND_EMAIL_FROM,
-    subject: "Login To MicroSassFast",
+    subject: "Login To Recipee",
     to: identifier,
     html: `<h1>hello, ${url}, ${identifier}, ${provider}, ${theme}, ${host} </h1>`,
   });
@@ -71,7 +71,8 @@ export const authOptions: NextAuthOptionsExtended = {
     brandColor: config.colors.main,
     // Add your custom logo below. The recommended size is rectangular (e.g., 200x50px) to display both your logo and name.
     // This logo will appear during the login process. If not provided, a placeholder or faded look will be applied.
-    logo: `https://${config.domainName}/logoAndName.png`,
+    // logo: `https://${config.domainName}/logoAndName.png`,
+    logo: `${config.domainName}/logoAndName.png`,
   },
 };
 

@@ -1,3 +1,4 @@
+const colors = require("tailwindcss/colors");
 module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -7,10 +8,72 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: {
+          50: "#f0f9ff",
+          100: "#e0f2fe",
+          200: "#bae6fd",
+          300: "#7dd3fc",
+          400: "#38bdf8",
+          500: "#0ea5e9",
+          600: "#0284c7",
+          700: "#0369a1",
+          800: "#075985",
+          900: "#0c4a6e",
+        },
+        secondary: {
+          50: "#fdf2f8",
+          100: "#fce7f3",
+          200: "#fbcfe8",
+          300: "#f9a8d4",
+          400: "#f472b6",
+          500: "#ec4899",
+          600: "#db2777",
+          700: "#be185d",
+          800: "#9d174d",
+          900: "#831843",
+        },
+        neutral: colors.gray,
+        // Add more color ranges as needed
+        recipe: {
+          r1: "#BE7028",
+          r2: "#1E929C",
+          r3: "#831E9C",
+          r4: "#BE9E28",
+          r5: "#96B323",
+          r6: "#501E9C",
+          r7: "#E07272",
+          r8: "#1E9C42",
+          r9: "#9C1E8B",
+          r10: "#1E789C",
+          r11: "#C04624",
+          r12: "#1E249C",
+          r13: "#9C1E42",
+          r14: "#7EA017",
+          r15: "#E09E72",
+          r16: "#1E4C9C",
+          r17: "#E0C872",
+          r18: "#A5E072",
+          r19: "#72E0CA",
+          r20: "#7BA4F0",
+          r21: "#8F72E0",
+          r22: "#C672E0",
+          r23: "#BE2828",
+          r24: "#929292",
+          r25: "#595959",
+        },
+      },
+      boxShadow: {
+        shadow1: "0 0 4px 4px rgb(0 0 0 / 0.2)",
+      },
       backgroundImage: {
-        gradient:
+        gradientRainbow:
           "linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82)",
-        launch: "url('/launch/launch-bg.svg')",
+        launchSvg: "url('/launch/launch-bg.svg')",
+        gradientGreyDarkerTop:
+          "linear-gradient(150deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
+        gradientGreyDarkerBott:
+          "linear-gradient(30deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
       },
       animation: {
         opacity: "opacity 0.25s ease-in-out",

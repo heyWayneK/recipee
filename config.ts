@@ -3,12 +3,12 @@ import { ConfigProps } from "./types/config";
 
 const config = {
   // Name of the application used for branding and SEO
-  appName: "MicroSaaSFast",
+  appName: "Recipee",
   // Brief description of the application for SEO purposes; can be customized
   appDescription:
-    "An advanced NextJS boilerplate designed for SaaS, AI tools, or any web application development.",
+    "Recipee - Easy Recipe, Production, Nutrition and Everything Food Related. For Chefs. With Recipe Version History, Chef Feeback Task Management",
   // Domain name of the application without protocol or trailing slash
-  domainName: "docs.microsaasfast.me",
+  domainName: "http://localhost:3000",
   crisp: {
     // Crisp support widget ID; leave empty if Crisp is not used
     id: "",
@@ -23,7 +23,7 @@ const config = {
         priceId:
           process.env.NODE_ENV === "development"
             ? "price_1Niyy5AxyNprDp7iZIqEyD2h"
-            : "price_456",
+            : "price_1Niyy5AxyNprDp7iZIqEyD2h",
         // Name of the pricing plan shown to users
         name: "Starter",
         // Description of the plan; helpful for users to understand plan benefits
@@ -43,7 +43,7 @@ const config = {
         priceId:
           process.env.NODE_ENV === "development"
             ? "price_1O5KtcAxyNprDp7iftKnrrpw"
-            : "price_456",
+            : "price_1O5KtcAxyNprDp7iftKnrrpw",
         // Mark this plan as featured to highlight it on the pricing page
         isFeatured: true,
         name: "Advanced",
@@ -73,11 +73,11 @@ const config = {
     // Required email 'From' field for sending magic login links
     fromNoReply: process.env.SEND_EMAIL_FROM,
     // Required email 'From' field for other types of emails like updates
-    fromAdmin: `Dennis at MicroSaaSFast <youremail@yourwebsite.com>`,
+    fromAdmin: `Wayne <wayne@thinkshift-ai.com>`,
     // Support email shown to customers; leave empty if not needed
-    supportEmail: "youremail@yourwebsite.com",
+    supportEmail: "wayne@thinkshift-ai.com",
     // Forward replies from the support email to another address
-    forwardRepliesTo: "forwardemail@gmail.com",
+    forwardRepliesTo: "wayne@thinkshift-ai.com",
   },
   colors: {
     // DaisyUI theme name to apply; defaults to dark theme

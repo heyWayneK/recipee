@@ -20,5 +20,9 @@ export default async function LayoutPrivate({
   }
 
   // If the user is authenticated, render the children components.
-  return <>{children}</>;
+  return (
+    <>
+      <div className=" mt-72">{children}</div>
+    </>
+  );
 }

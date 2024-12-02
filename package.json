@@ -1,5 +1,5 @@
 {
-  "name": "micro-sass-fast",
+  "name": "Recipee.app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -45,8 +45,8 @@
     "react-hot-toast": "^2.4.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-tooltip": "^5.26.3",
-    "resend": "^3.4.0",
-    "stripe": "^16.0.0",
+    "resend": "^3.5.0",
+    "stripe": "^16.12.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
@@ -55,6 +55,7 @@
     "@types/jest": "^29.5.12",
     "@types/mdx": "^2.0.12",
     "@types/node": "^20.12.2",
+    "@types/nodemailer": "^6.4.16",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
     "@types/react-syntax-highlighter": "^15.5.11",

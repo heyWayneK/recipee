@@ -12,6 +12,7 @@ const nextConfig = {
       "cdn-icons-png.flaticon.com",
       "res.cloudinary.com",
       "fast-strapi-cms-651b34b82e95.herokuapp.comhttps",
+      "recipee.app",
     ],
   },
 };

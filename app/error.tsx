@@ -12,10 +12,12 @@ export default function Error({
   error: Error;
   reset: () => void;
 }) {
+  console.log(error);
+
   return (
     <>
       <div className="h-screen w-full flex flex-col justify-center items-center text-center gap-6 p-6">
-        <div className="p-6 bg-white rounded-xl">
+        {/* <div className="p-6 bg-white rounded-xl">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             data-name="Layer 1"
@@ -128,13 +130,14 @@ export default function Error({
               d="M417.523 130.291h-72a6.508 6.508 0 0 1-6.5-6.5v-87.5a6.508 6.508 0 0 1 6.5-6.5h72a6.508 6.508 0 0 1 6.5 6.5v87.5a6.508 6.508 0 0 1-6.5 6.5Z"
             />
           </svg>
-        </div>
+        </div> */}
 
-        <p className="font-medium md:text-xl md:font-semibold">
-          Something went wrong 🥲
+        <p className="font-medium md:text-xl md:font-semibold text-slate-200">
+          Something went wrong, See Console 🥲
         </p>
 
         <p className="text-red-500">{error?.message}</p>
+        <p className="text-red-500">{error.stack}</p>
 
         <div className="flex flex-wrap gap-4 justify-center">
           <button className="btn btn-sm" onClick={reset}>

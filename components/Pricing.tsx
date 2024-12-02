@@ -11,11 +11,11 @@ export const data = {
       id: 1,
       priceId:
         process.env.NODE_ENV === "development"
-          ? "price_1Niyy5AxyNprDp7iZIqEyD2h"
-          : "price_456",
-      price_before: "$310",
-      price_now: "$210",
-      btn_txt: "Get MicroSaaSFast",
+          ? "prod_REHM6OmA9sLpHx"
+          : "prod_REHM6OmA9sLpHx",
+      price_before: "$150",
+      price_now: "$75",
+      btn_txt: "Dietitian Package",
       is_best_deal: false,
       btn_link: "",
       features: [
@@ -65,11 +65,11 @@ export const data = {
       id: 2,
       priceId:
         process.env.NODE_ENV === "development"
-          ? "price_1Niyy5AxyNprDp7iZIqEyD2h"
-          : "price_456",
+          ? "prod_REHNsm5W5X2P5m"
+          : "prod_REHNsm5W5X2P5m",
       price_before: "$350",
-      price_now: "$250",
-      btn_txt: "Get MicroSaaSFast",
+      price_now: "$302",
+      btn_txt: "Professional",
       is_best_deal: true,
       btn_link: "",
       features: [

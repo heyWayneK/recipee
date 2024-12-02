@@ -6,7 +6,7 @@ export default function Custom404() {
   return (
     <section className="relative bg-base-100 text-base-content h-screen w-full flex flex-col justify-center gap-8 items-center p-10">
       <div className="p-6 bg-white rounded-xl">
-        <svg
+        {/* <svg
           xmlns="http://www.w3.org/2000/svg"
           className="w-56 h-56"
           viewBox="0 0 860.13137 571.14799"
@@ -92,7 +92,7 @@ export default function Custom404() {
             fill="#cacaca"
             d="m858.94 570.84-857.75.308a1.19 1.19 0 1 1 0-2.381l857.75-.308a1.19 1.19 0 0 1 0 2.382Z"
           />
-        </svg>
+        </svg> */}
       </div>
       <p className="text-lg md:text-xl font-semibold">
         This page doesn&apos;t exist 😅

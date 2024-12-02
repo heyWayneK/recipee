@@ -4,8 +4,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgres://postgres:1234@localhost:5432/micro-sass-fast-fe?schema=public"
-}
+  url      = env("POSTGRESQL_URI")
+  directUrl = env("POSTGRESQL_DIRECT_URI")
+} 
 
 model Account {
   id                 Int       @id @default(autoincrement())

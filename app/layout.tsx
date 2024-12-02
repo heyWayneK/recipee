@@ -27,7 +27,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       )}
       <body>
         {/* ClientLayout to provide common layout and functionality */}
-        <ClientLayout>{children}</ClientLayout>
+        {/* <ClientLayout>{children}</ClientLayout> */}
+        {children}
       </body>
     </html>
   );

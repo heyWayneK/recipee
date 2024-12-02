@@ -19,7 +19,7 @@ const categorySlugs: {
 export const categories: categoryType[] = [
   {
     slug: categorySlugs.feature,
-    title: "New Features",
+    title: "Recipee - Easy Complete",
     titleShort: "Features",
     description:
       "Check out the latest features we've added to MicroSassFast. I'm continually enhancing our product to help you launch faster.",
@@ -27,7 +27,7 @@ export const categories: categoryType[] = [
   },
   {
     slug: categorySlugs.tutorial,
-    title: "How Tos & Tutorials",
+    title: "Recipee - How Tos & Tutorials",
     titleShort: "Tutorials",
     description:
       "Learn how to use MicroSassFast with these step-by-step tutorials. I'll guide you on how to ship faster and save time.",

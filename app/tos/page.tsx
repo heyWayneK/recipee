@@ -36,43 +36,43 @@ const TOS = () => {
         >
           {`1. Introduction
 
-By using MicroSaaSFast you confirm your acceptance of, and agree to be bound by, these terms and conditions.
+By using Recipee you confirm your acceptance of, and agree to be bound by, these terms and conditions.
 
 2. Agreement to Terms and Conditions
 
-This Agreement takes effect on the date on which you first use the MicroSaaSFast software.
+This Agreement takes effect on the date on which you first use the Recipee software.
 
 3. Unlimited Access Software License with Termination Rights
 
-The MicroSaaSFast Software License facilitates the acquisition of MicroSaaSFast software through a single purchase, granting users unrestricted and perpetual access to its comprehensive functionalities. 
+The Recipee Software License facilitates the acquisition of Recipee software through a single purchase, granting users unrestricted and perpetual access to its comprehensive functionalities. 
 
 This license entails a straightforward and flexible arrangement, exempting users from recurring fees or subscriptions. However, it is important to acknowledge that the licensor retains the right to terminate the license without conditions or prerequisites. This termination provision enables the licensor to exercise control over software distribution and utilization.
 
-Opting for the MicroSaaSFast Software License enables users to enjoy the benefits of the software while recognizing the licensor's unrestricted termination rights, which provide adaptability and address potential unforeseen circumstances.
+Opting for the Recipee Software License enables users to enjoy the benefits of the software while recognizing the licensor's unrestricted termination rights, which provide adaptability and address potential unforeseen circumstances.
 
 4. Refunds
 
-Due to the nature of digital products, the MicroSaaSFast boilerplate cannot be refunded or exchanged once access is granted.
+Due to the nature of digital products, the Recipee boilerplate cannot be refunded or exchanged once access is granted.
 
 5. Disclaimer
 
-It is not warranted that MicroSaaSFast will meet your requirements or that its operation will be uninterrupted or bug-free. All express and implied warranties or conditions not stated in this Agreement (including without limitation, loss of profits, loss or corruption of data, business interruption or loss of contracts), so far as such exclusion or disclaimer is permitted under the applicable law are excluded and expressly disclaimed. This Agreement does not affect your statutory rights.
+It is not warranted that Recipee will meet your requirements or that its operation will be uninterrupted or bug-free. All express and implied warranties or conditions not stated in this Agreement (including without limitation, loss of profits, loss or corruption of data, business interruption or loss of contracts), so far as such exclusion or disclaimer is permitted under the applicable law are excluded and expressly disclaimed. This Agreement does not affect your statutory rights.
 
 6. Warranties and Limitation of Liability
 
-MicroSaaSFast does not give any warranty, guarantee or other term as to the quality, fitness for purpose or otherwise of the software. MicroSaaSFast shall not be liable to you by reason of any representation (unless fraudulent), or any implied warranty, condition or other term, or any duty at common law, for any loss of profit or any indirect, special or consequential loss, damage, costs, expenses or other claims (whether caused by MicroSaaSFast's negligence or the negligence of its servants or agents or otherwise) which arise out of or in connection with the provision of any goods or services by MicroSaaSFast. MicroSaaSFast shall not be liable or deemed to be in breach of contract by reason of any delay in performing, or failure to perform, any of its obligations if the delay or failure was due to any cause beyond its reasonable control. Notwithstanding contrary clauses in this Agreement, in the event that MicroSaaSFast are deemed liable to you for breach of this Agreement, you agree that MicroSaaSFast's liability is limited to the amount actually paid by you for your services or software, which amount calculated in reliance upon this clause. You hereby release MicroSaaSFast from any and all obligations, liabilities and claims in excess of this limitation.
+Recipee does not give any warranty, guarantee or other term as to the quality, fitness for purpose or otherwise of the software. Recipee shall not be liable to you by reason of any representation (unless fraudulent), or any implied warranty, condition or other term, or any duty at common law, for any loss of profit or any indirect, special or consequential loss, damage, costs, expenses or other claims (whether caused by Recipee's negligence or the negligence of its servants or agents or otherwise) which arise out of or in connection with the provision of any goods or services by Recipee. Recipee shall not be liable or deemed to be in breach of contract by reason of any delay in performing, or failure to perform, any of its obligations if the delay or failure was due to any cause beyond its reasonable control. Notwithstanding contrary clauses in this Agreement, in the event that Recipee are deemed liable to you for breach of this Agreement, you agree that Recipee's liability is limited to the amount actually paid by you for your services or software, which amount calculated in reliance upon this clause. You hereby release Recipee from any and all obligations, liabilities and claims in excess of this limitation.
 
 7. Responsibilities
 
-MicroSaaSFast is not responsible for what the user does with the user-generated content.
+Recipee is not responsible for what the user does with the user-generated content.
 
 8. Price Adjustments
 
-As we continue to improve MicroSaaSFast and expand our offerings, the price may increase. The discount is provided to help customers secure the current price without being surprised by future increases.
+As we continue to improve Recipee and expand our offerings, the price may increase. The discount is provided to help customers secure the current price without being surprised by future increases.
 
 9. General Terms and Law
 
-This Agreement is governed by the laws of the United Kingdom. You acknowledge that no joint venture, partnership, employment, or agency relationship exists between you and MicroSaaSFast as a result of your use of these services. You agree not to hold yourself out as a representative, agent or employee of MicroSaaSFast. You agree that MicroSaaSFast will not be liable by reason of any representation, act or omission to act by you.
+This Agreement is governed by the laws of the United Kingdom. You acknowledge that no joint venture, partnership, employment, or agency relationship exists between you and Recipee as a result of your use of these services. You agree not to hold yourself out as a representative, agent or employee of Recipee. You agree that Recipee will not be liable by reason of any representation, act or omission to act by you.
 
 Last updated: 20 August 2024.`}
         </pre>

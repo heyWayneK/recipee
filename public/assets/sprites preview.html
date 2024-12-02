@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SVG Sprite Preview</title>
+    <style>
+      .svg-preview {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        margin: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      .svg-preview svg {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+      }
+      .svg-preview p {
+        width: 100%;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="svg-previews"></div>
+    <div id="svg-list" style="width: 300px; margin: 100px"></div>
+    <script>
+      let svgArray = [];
+      let previewContainer;
+      function generateSVGPreviews(svgSpriteFile) {
+        // Fetch the SVG sprite file
+        fetch(svgSpriteFile)
+          .then((response) => response.text())
+          .then((svgText) => {
+            // Create a DOMParser to parse the SVG string
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
+
+            // Select all symbol elements
+            const symbols = svgDoc.querySelectorAll("symbol");
+
+            // Create a container to hold the previews
+            previewContainer = document.getElementById("svg-previews");
+            // console.log("symbols: ", symbols);
+
+            // Loop through each symbol and create a preview
+            symbols.forEach((symbol) => {
+              const symbolId = symbol.getAttribute("id");
+              svgArray.push(`${symbolId}`);
+
+              // Create a new div for each preview
+              let previewDiv = document.createElement("div");
+              previewDiv.classList.add("svg-preview");
+
+              // Create a new svg element for the preview
+              const previewDivSvg = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "svg"
+              );
+              previewDiv.appendChild(previewDivSvg);
+
+              // Create a use element to display the symbol
+              const useElement = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "use"
+              );
+              useElement.setAttributeNS(
+                "http://www.w3.org/1999/xlink",
+                "xlink:href",
+                `${svgSpriteFile}#${symbolId}`
+              ); // Use relative path within the same SVG
+
+              // **Fix:** Append the use element to the preview svg, not the entire document
+              previewDivSvg.appendChild(useElement);
+
+              // console.log("symbolId::: ", useElement);
+              // Add the symbol ID as text below the preview
+              const idText = document.createElement("p");
+              idText.textContent = symbolId;
+              previewDiv.appendChild(idText);
+
+              // Append the preview to the container
+              previewContainer.appendChild(previewDiv);
+              // console.log("symbol: ", previewDiv);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching or parsing SVG:", error);
+          })
+          .finally(() => {
+            previewList = document.getElementById("svg-list");
+            previewList.insertAdjacentHTML(
+              "beforeend",
+              ("'" + svgArray.join("', '") + "'").toString()
+            );
+          });
+      }
+      generateSVGPreviews("./sprite.svg");
+    </script>
+  </body>
+</html>

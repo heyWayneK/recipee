@@ -9,9 +9,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import ButtonSignin from "./ButtonSignin";
+import ButtonSignout from "./ButtonSignout";
 
 const data = {
-  website_name: "MicroSaaSFast",
+  website_name: "Recipee",
   links: [
     {
       link: "#pricing",
@@ -23,7 +24,8 @@ const data = {
     },
   ],
   logo: {
-    url: "https://res.cloudinary.com/spadasoft/image/upload/v1720100584/logo_2bc425d794.png",
+    // url: "https://res.cloudinary.com/spadasoft/image/upload/v1720100584/logo_2bc425d794.png",
+    url: "/recipee_logo_white_clearbg.svg",
   },
 };
 
@@ -33,7 +35,13 @@ const Header = () => {
       <div className="max-w-[1440px] w-full flex justify-between items-center gap-4 px-4 sm:px-12 py-6">
         <Link href="/" className="flex items-center">
           {data?.logo && (
-            <Image src={data?.logo?.url} width={50} height={50} alt="logo" />
+            <Image
+              src={data?.logo?.url}
+              width={70}
+              height={70}
+              alt="logo"
+              className=" m-3"
+            />
           )}
           <p className="text-white text-2xl font-bold font-inter">
             {data?.website_name}
@@ -53,6 +61,9 @@ const Header = () => {
               </Link>
             ))}
           </div>
+        </div>
+        <div className="hidden md:block">
+          <ButtonSignout text="Logout" />
         </div>
         <div className="hidden md:block">
           <ButtonSignin text="Login" />
