@@ -36,6 +36,7 @@ module.exports = {
         neutral: colors.gray,
         // Add more color ranges as needed
         recipe: {
+          r0: "#9d174d",
           r1: "#BE7028",
           r2: "#1E929C",
           r3: "#831E9C",

@@ -7,6 +7,7 @@ interface PillProps {
   iconName?: allowedIcon | "";
   edit?: editOption | "";
   tone?: toneOption;
+  onClick?: () => void;
 }
 export type toneOption = (typeof toneOptions)[number];
 const toneOptions = ["white", "dark", "clear"] as const;
@@ -20,13 +21,12 @@ const Pill: React.FC<PillProps> = ({
   iconName = "",
   edit = "",
   tone = "clear",
+  onClick,
 }) => {
   return (
-    <div className="relative">
+    <div className="relative" onClick={onClick}>
       <div
-        className={`text-nowrap ${className} ${
-          tone === "dark" && "bg-black text-white"
-        } ${
+        className={`text-nowrap ${className} ${tone === "dark" && "bg-black text-white"} ${
           tone === "white" && "bg-white text-black"
         }  min-w-10 border px-2 py-1 rounded-full border-slate-400 flex items-center gap-x-1 cursor-pointer select-none h-full
       ${
@@ -53,13 +53,9 @@ const Pill: React.FC<PillProps> = ({
         [&>svg]:shadow-shadow1
         [&>svg]:m-1"
       >
-        {edit === "edit" && (
-          <SvgSprite className="" size={20} iconName="edit" />
-        )}
+        {edit === "edit" && <SvgSprite className="" size={20} iconName="edit" />}
         {edit === "save" && <SvgSprite size={20} iconName="save" />}
-        {edit === "options" && (
-          <SvgSprite size={20} iconName="arrow_drop_down" />
-        )}
+        {edit === "options" && <SvgSprite size={20} iconName="arrow_drop_down" />}
       </div>
     </div>
   );

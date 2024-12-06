@@ -25,21 +25,31 @@ export default function Recipee() {
               My very long recipe name 350g version for client name
             </TextEditable>
             <TextEditable className="line-clamp-3 text-l text-center leading-tight">
-              Thinly sliced flame-grilled rump with a side of roast vegetables
-              and crispy bacon roast potato’s
+              Thinly sliced flame-grilled rump with a side of roast vegetables and crispy bacon
+              roast potato’s
             </TextEditable>
 
             {/* <div className="grid grid-cols-[repeat(auto-fit,minmax(50px,1fr))] gap-4"> */}
             <div className="flex flex-wrap justify-center gap-1 w-full">
-              <Pill edit="edit" className="text-xs" iconName="visibility">
+              <Pill
+                onClick={() => {
+                  alert("hello METRIC");
+                }}
+                edit="edit"
+                className="text-xs"
+                iconName="visibility"
+              >
                 Metric: g/Kg
               </Pill>
               <Pill className="text-xs" iconName="event" edit="options">
-                <div className="grid grid-rows-2 leading-none">
+                <div
+                  onClick={() => {
+                    alert("hello LAST SAVED");
+                  }}
+                  className="grid grid-rows-2 leading-none"
+                >
                   <div>Last Saved</div>
-                  <div className="text-[8px] leading-tight">
-                    22 Oct 2024 11h34 (WK)
-                  </div>
+                  <div className="text-[8px] leading-tight">22 Oct 2024 11h34 (WK)</div>
                 </div>
               </Pill>
               <Pill
@@ -47,10 +57,16 @@ export default function Recipee() {
                 className="text-xs"
                 iconName="add_circle"
                 edit="options"
+                onClick={() => {
+                  alert("hello SAVE");
+                }}
               >
                 Save
               </Pill>
               <Pill
+                onClick={() => {
+                  alert("hello OPTIONS");
+                }}
                 className="text-xs"
                 edit="options"
                 iconName="checklist"
@@ -71,48 +87,23 @@ export default function Recipee() {
           <DottedBorder className=" bg-gradientGreyDarkerBott">
             <div className="flex flex-col gap-4">
               <div className="flex gap-4">
-                <Pill
-                  tone="dark"
-                  edit=""
-                  className="text-sm"
-                  iconName="done_outline"
-                >
+                <Pill tone="dark" edit="" className="text-sm" iconName="done_outline">
                   TODO
                 </Pill>
-                <Pill
-                  tone="white"
-                  edit="options"
-                  className="text-sm relative"
-                  iconName="skillet"
-                >
+                <Pill tone="white" edit="options" className="text-sm relative" iconName="skillet">
                   <span>Chef Feedback</span>
                   <div className="absolute top-[-4px] right-[-4px] text-white bg-red-700 w-4 h-4 rounded-full aspect-square leading-none flex place-items-center justify-center text-[9px]">
                     2
                   </div>
                 </Pill>
               </div>
-              <Pill
-                tone="white"
-                edit="edit"
-                className="text-xs"
-                iconName="done_outline"
-              >
+              <Pill tone="white" edit="edit" className="text-xs" iconName="done_outline">
                 <div>3 days ago - Review WK Feedback</div>
               </Pill>
-              <Pill
-                tone="white"
-                edit="edit"
-                className="text-xs"
-                iconName="hourglass_top"
-              >
+              <Pill tone="white" edit="edit" className="text-xs" iconName="hourglass_top">
                 <div>3 days ago - Review WK Feedback</div>
               </Pill>
-              <Pill
-                tone="white"
-                edit="edit"
-                className="text-xs font-bold"
-                iconName="done_outline"
-              >
+              <Pill tone="white" edit="edit" className="text-xs font-bold" iconName="done_outline">
                 <div>3 days ago - Review WK Feedback</div>
               </Pill>
               <TextLink className="text-xs" onClick={() => {}}>
@@ -128,15 +119,13 @@ export default function Recipee() {
       <section className="py-5">
         <DottedBorder>
           <p className={viewMore ? "" : "line-clamp-3"}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industrys standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+            has been the industrys standard dummy text ever since the 1500s, when an unknown printer
+            took a galley of type and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting, remaining
+            essentially unchanged. It was popularised in the 1960s with the release of Letraset
+            sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+            software like Aldus PageMaker including versions of Lorem Ipsum.
           </p>
           {viewMore ? (
             <TextLink onClick={handleViewMore} className="">

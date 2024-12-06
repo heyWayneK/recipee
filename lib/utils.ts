@@ -33,7 +33,7 @@ const textColor: string = brightness === "light" ? "#000000" : "#FFFFFF";
 // // MARGIN AND MARKUP
 // For a product that costs $100 to produce:
 
-export const markup = (price: number, markup: number): number => {
+export const calcMarkup = (price: number, markup: number): number => {
   // Markup of 200%:
   // Selling Price = COGS + (COGS x Markup%)
   // Selling Price = $100 + ($100 x 200%)
@@ -41,12 +41,16 @@ export const markup = (price: number, markup: number): number => {
   return price + price * markup;
 };
 
-export const margin = (price: number, markup: number): number => {
+export const calcMargin = (price: number, margin: number): number => {
   // Margin of 60%:
   // 0.60 = (Revenue - $100) / Revenue
   // Revenue = $100 / (1 - 0.60)
   // Revenue = $250
-  return price / (1 - markup);
+  return price / (1 - margin);
+};
+
+export const calcXCost = (price: number, x: number): number => {
+  return price * x;
 };
 
 export const convertKcalToKj = (kcal: number): number => {
