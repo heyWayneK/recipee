@@ -7,6 +7,7 @@ import DottedBorder from "@/components/DottedBorder";
 import Pill from "@/components/Pill";
 import RecipeModule from "@/components/RecipeModule";
 import TextEditable from "@/components/TextEditable";
+import { MenuModalProvider } from "@/contexts/UseMenuModal";
 
 // This page is only accessible to authenticated users.
 // It is wrapped with the LayoutPrivate component to enforce access control.
@@ -17,7 +18,7 @@ export default function Recipee() {
   const handleViewMore = () => setViewMore(!viewMore);
 
   return (
-    <>
+    <MenuModalProvider>
       <section className="py-5">
         <div className="grid grid-cols-[2fr_1fr_1fr] gap-6">
           <DottedBorder className="grid grid-cols-1 content-evenly gap-y-6">
@@ -138,6 +139,32 @@ export default function Recipee() {
           )}
         </DottedBorder>
       </section>
-    </>
+      <section className="py-5">
+        <DottedBorder>
+          <button data-collapse-target="myCollapse">Toggle Collapse</button>
+          <div id="myCollapse" className="collapse">
+            <div className="max-h-none overflow-hidden transition-all">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+              has been the industrys standard dummy text ever since the 1500s, when an unknown
+              printer took a galley of type and scrambled it to make a type specimen book. It has
+              survived not only five centuries, but also the leap into electronic typesetting,
+              remaining essentially unchanged. It was popularised in the 1960s with the release of
+              Letraset sheets containing Lorem Ipsum passages, and more recently with deskttook a
+              galley of type and scrambled it to make a type specimen book. It has survived not only
+              five centuries, but also the leap into electronic typesetting, remaining essentially
+              unchanged. It was popularised in the 1960s with the release of Letraset sheets
+              containing Lorem Ipsum passages, and more recently with desktop publishing software
+              like Aldus PageMaker including versions of Lorem Ipsum.op publishing software like
+              Aldus PageMaker including versions of Lorem Ipsum. took a galley of type and scrambled
+              it to make a type specimen book. It has survived not only five centuries, but also the
+              leap into electronic typesetting, remaining essentially unchanged. It was popularised
+              in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and
+              more recently with desktop publishing software like Aldus PageMaker including versions
+              of Lorem Ipsum.
+            </div>
+          </div>
+        </DottedBorder>
+      </section>
+    </MenuModalProvider>
   );
 }

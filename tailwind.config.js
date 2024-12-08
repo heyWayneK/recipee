@@ -8,6 +8,27 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // gridTemplateColumns: {
+      //   // USED TO PREGENERATE RECIPE ASSEMBLY ROWS
+      //   // Add as many as you need
+      //   1: "[2fr_repeat(1,1fr)]",
+      //   2: "[2fr_repeat(2,1fr)]",
+      //   3: "[2fr_repeat(3,1fr)]",
+      //   4: "[2fr_repeat(4,1fr)]",
+      //   5: "[2fr_repeat(5,1fr)]",
+      //   6: "[2fr_repeat(6,1fr)]",
+      //   7: "[2fr_repeat(7,1fr)]",
+      //   8: "[2fr_repeat(8,1fr)]",
+      //   9: "[2fr_repeat(9,1fr)]",
+      //   10: "[2fr_repeat(10,1fr)]",
+      // },
+      // safelist: [
+      //   // gridTemplateColumns:
+      //   // To ensure Tailwind preserves dynamically generated classes
+      //   {
+      //     pattern: /grid-cols-./,
+      //   },
+      // ],
       colors: {
         primary: {
           50: "#f0f9ff",

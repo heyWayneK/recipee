@@ -18,12 +18,14 @@ import { PointerIcon } from "lucide-react";
 import { calcMarkup, calcXCost } from "@/lib/utils";
 import path from "path/posix";
 import Table_Cell from "./Table_Cell";
+import MenuOption1 from "./MenuOption1";
 
 export interface DataProps {
   portions: number[];
   setting: {
     unitMaster: string[];
     unitMask: string[];
+    unitType: string[];
     vat: number;
     currency: string;
     locale: string;
@@ -91,6 +93,43 @@ interface ComponentsProps {
   ingredientCosts: { [key: number]: number };
   yield: number;
   nutriPer100: nutriPer100Props[];
+  version: string;
+  recipe?: RecipeProps;
+}
+
+interface RecipeProps {
+  recipeSummary: {};
+  brand: {};
+  customer: {};
+  recipeDetail: recipeDetailProps[];
+  // recipeSummary: { yield: 0.85 },
+  // brand: { name: "fitchef", id: 3452, logoSrc: "" },
+  // customer: { name: "emperors", id: 8667, logoSrc: "" },
+  // recipeDetail: [
+}
+
+interface recipeDetailProps {
+  ingredId: number;
+  ingredName: string;
+  dietClassification: "vegan" | "vegetarian" | "animal_product";
+  order: number;
+  type: "ingredient" | "step" | "sub-recipe";
+  stepInstruction?: string;
+  supplier: string;
+  instruction: string;
+  qty: number;
+  unitType: "liquid" | "weight";
+  cost: number;
+  needsPrep: boolean;
+  FQscore: FQProps;
+}
+
+interface FQProps {
+  // MUSTS BE BETWEEN -1 to 1
+  positive: number;
+  negative: number;
+  neutral: number;
+  overall: number;
 }
 
 interface UIElement {
@@ -102,9 +141,9 @@ interface UIElement {
 const data: DataProps = {
   setting: {
     // ALL RECIPES ARE IN g
-    unitMaster: ["g", "kg"],
-    // BUT unitMask will provide coversions to oz/lb
-    unitMask: ["g", "kg"],
+    unitType: ["weight", "liquid"],
+    unitMaster: ["g", "kg"] /*[["g", "kg"],["oz", "lbs"],] */,
+    unitMask: ["metric", "imperial"],
     vat: 0.15,
     currency: "R",
     locale: "ZAR",
@@ -160,6 +199,7 @@ const data: DataProps = {
   components: [
     {
       name: "Cheese Cheddar",
+      version: "22_mar_2024_12h34_WK_2",
       id: 101235,
       subType: "ingredient",
       recipeType: "local",
@@ -192,7 +232,8 @@ const data: DataProps = {
       ],
     },
     {
-      name: "Roasted Cauliflower",
+      name: "Roasted Cauli Cheese 1",
+      version: "22_mar_2024_12h34_WK_2",
       id: 101235,
       subType: "recipe",
       recipeType: "local",
@@ -223,9 +264,32 @@ const data: DataProps = {
         { name: "sodium", valuePer100: 0.5, unit: "g (#mg)" },
         { name: "salt", valuePer100: 1, unit: "g (#mg)" },
       ],
+      recipe: {
+        recipeSummary: { yield: 0.85, costPer100g: 43.7 },
+        brand: { name: "fitchef", id: 3452, logoSrc: "" },
+        customer: { name: "emperors", id: 8667, logoSrc: "" },
+        recipeDetail: [
+          {
+            ingredId: 111,
+            ingredName: "Coconut Oil",
+            qty: 345,
+            order: 1,
+            type: "ingredient",
+            instruction: "",
+            dietClassification: "vegetarian",
+            stepInstruction: "",
+            supplier: "Acme",
+            unitType: "weight",
+            cost: 5.43,
+            needsPrep: false,
+            FQscore: { positive: 0, negative: 0, neutral: 0, overall: 0 },
+          },
+        ],
+      },
     },
     {
       name: "Master - FC Potato Mash super long name",
+      version: "22_mar_2024_12h34_WK_2",
       id: 1012456,
       subType: "recipe",
       recipeId: 6759,
@@ -260,6 +324,7 @@ const data: DataProps = {
     },
     {
       name: "FC Mince Cautage Pie",
+      version: "22_mar_2024_12h34_WK_2",
       id: 10129876,
       subType: "recipe",
       recipeId: 657,
@@ -294,14 +359,14 @@ const data: DataProps = {
     },
     {
       name: "Olive Oil",
+      version: "22_mar_2024_12h34_WK_2",
       id: 10129876,
-      subType: "recipe",
+      subType: "ingredient",
       recipeId: null,
       recipeType: "local",
       ingredientId: 568,
       portions: { 100: 51, 275: 52, 350: 53, 1000: 54 },
       ingredientCosts: { 100: 51.33, 275: 52.43, 350: 53.7, 1000: 54.88 },
-
       yield: 0.73,
       nutriPer100: [
         { name: "kcal", valuePer100: 2000, unit: "kcal" },
@@ -386,13 +451,9 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
   const getGridCss = () => {
     // COLUMNS COUNT BASED ON PORTION SIZE OPTIONS
     const rows = "_1fr".repeat(data.portions.length);
-    // console.log("should b 4", rows);
-    const g = ` grid justify-center grid-cols-[3fr${rows}] gap-y-4`;
-    // const g = ` grid bg-red-300 justify-center grid-cols-[2fr_${rows}] gap-y-4`;
+    const g = ` grid justify-center gap-y-4 grid-cols-[3fr${rows}] `;
     return g;
   };
-  // const g = ` grid justify-center grid-cols-[3fr_1fr_1fr_1fr_1fr] gap-y-4`;
-  // const g = ` grid justify-center grid-cols-[2fr_repeat(${data.portions.length},1fr)] gap-y-4`;
 
   const [viewPrices, setViewPrices] = useState(false);
 
@@ -405,8 +466,15 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
     <DottedBorder className=" grid grid-cols-1 justify-items-center">
       <Row_EditOrProduction data={data} />
       <Row_Heading data={data} />
+
       <form action="#">
-        <div className={getGridCss()}>
+        {/* CREATE PLASTING TABLE */}
+        <div
+          // DYNAMICALLY CREATE COLUMN BASED ON ELEMENT COUNT
+          className={`grid justify-center gap-y-4`}
+          style={{ gridTemplateColumns: `2fr repeat(${data.portions.length}, 1fr)` }}
+        >
+          {/* <div className={`grid justify-center gap-y-4 grid-cols-5`}> */}
           {data.uiElements.map((uiElement, rowNum) => {
             const uiName = uiElement.name;
             switch (uiName) {
@@ -434,13 +502,14 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
                       >
                         {viewPrices ? "Hide Prices" : "Show Prices"}
                       </Pill>
+                      <MenuOption1 />
                     </div>
                   </Table_Cell>
                 );
 
                 return [head];
 
-              // ASSEMBLY
+              // ASSEMBLY / PLATING / COMPONENTS / ELEMENTS
               case "plating":
                 head = (
                   <Table_Cell
@@ -464,9 +533,8 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
               case "components":
                 cells = [];
 
-                //   RESET LiveCost Values
+                // RESET LIVE CALCULATED VALUES
                 for (const portionSize of data.portions) {
-                  // RESET LIVE CALCULATED VALUES
                   data.uiElements[rowNum].costsLive[portionSize] = 0;
                 }
 
@@ -503,9 +571,9 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
                         <div>{formatWeight(component.portions[portionSize])}</div>
 
                         {viewPrices && (
-                          <div>
-                            ({data.setting.currency}
-                            {currentCost})
+                          <div className="text-[10px] self-center">
+                            {data.setting.currency}
+                            {currentCost}
                           </div>
                         )}
                       </Table_Cell>
@@ -564,14 +632,17 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
                   // OTHER COLUMNS
                   cells.push(
                     <Table_Cell key={uiName + "_" + rowNum + "_" + i} className="">
-                      <div>Id:</div>
-                      <div>{data.packagingCostsId[portionSize]}</div>
-                      <div>
-                        ({data.setting.currency}
+                      <div className="flex gap-x-1">
+                        {data.setting.currency}
                         {data.costRules.packagingCosts[
                           data.packagingCostsId[portionSize]
                         ].cost.toFixed(2)}
-                        )
+
+                        {viewPrices && (
+                          <div className="text-[10px] self-center">
+                            <div>Id:{data.packagingCostsId[portionSize]}</div>
+                          </div>
+                        )}
                       </div>
                     </Table_Cell>
                   );
@@ -595,14 +666,17 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
                   // OTHER COLUMNS
                   cells.push(
                     <Table_Cell key={uiName + "_" + rowNum + "_" + i} className="">
-                      <div>Id:{data.otherCostsId[data.portions[i]]}</div>
-
                       <div>
                         {data.setting.currency}
                         {data.costRules.otherCosts[data.otherCostsId[data.portions[i]]].costs
                           .reduce((acc, cost) => (acc = acc + cost.cost), 0)
                           .toFixed(2)}
                       </div>
+                      {viewPrices && (
+                        <div className="text-[10px] self-center">
+                          Id:{data.otherCostsId[data.portions[i]]}
+                        </div>
+                      )}
                     </Table_Cell>
                   );
                   // LIVE COSTS - OTHER COSTS
@@ -610,7 +684,7 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
                     data.otherCostsId[data.portions[i]]
                   ].costs.reduce((acc, cost) => (acc = acc + cost.cost), 0);
                 }
-                console.log(data.uiElements);
+                // console.log(data.uiElements);
                 return [...cells];
 
               case "costs_sub_total":
