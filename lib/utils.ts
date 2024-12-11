@@ -1,3 +1,4 @@
+import { data } from "@/app/data/recipe";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -16,9 +17,7 @@ export function isHexColorLightOrDark(color: string): "light" | "dark" {
   const b = parseInt(color.substr(4, 2), 16);
 
   // Calculate the brightness
-  const brightness = Math.sqrt(
-    0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b)
-  );
+  const brightness = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
 
   // Return 'light' or 'dark'
   return brightness > 127.5 ? "light" : "dark";
@@ -60,3 +59,37 @@ export const convertKcalToKj = (kcal: number): number => {
 export const convertKjToKcal = (kj: number): number => {
   return kj / 4.184;
 };
+
+// FUNCTIONS
+export const formatCurrency = (cost: number): number | string => {
+  return data.setting.currency + " " + Number(cost.toFixed(2));
+};
+
+export const formatWeight = (weight: number): number | string => {
+  // RETURN e.g grams or kilograms
+  const unit = weight < 1000 ? data.setting.unitMaster[0] : data.setting.unitMaster[1];
+  const weightUnit =
+    weight < 1000
+      ? weight + " " + unit
+      : weight / 1000 + (weight % 1000 > 0 && "." + (weight % 1000)) + " " + unit;
+  //  TODO: need to handle mls and oz/lbs
+  return weightUnit;
+};
+
+export function getLiveTotal(portionSize: number, rowName: string): number {
+  const [path] = data.uiElements.filter((obj) => obj.name === rowName);
+  const portionValue = Number(path.costsLive[portionSize]);
+  return portionValue;
+}
+
+export const calcProfit = (costPrice: number, type: string, x: number): number => {
+  let m: number = 0;
+  if (type === "markup") m = calcMarkup(costPrice, x);
+  if (type === "margin") m = calcMarkup(costPrice, x);
+  if (type === "xcost") m = calcXCost(costPrice, x);
+  return m - costPrice;
+};
+
+export function replace_(text: string): string {
+  return text.split("_").join(" ");
+}

@@ -8,6 +8,8 @@ import Pill from "@/components/Pill";
 import RecipeModule from "@/components/RecipeModule";
 import TextEditable from "@/components/TextEditable";
 import { MenuModalProvider } from "@/contexts/UseMenuModal";
+import MenuOption1 from "@/components/MenuOption1";
+import MenuOption2 from "@/components/MenuOption2";
 
 // This page is only accessible to authenticated users.
 // It is wrapped with the LayoutPrivate component to enforce access control.
@@ -32,46 +34,30 @@ export default function Recipee() {
 
             {/* <div className="grid grid-cols-[repeat(auto-fit,minmax(50px,1fr))] gap-4"> */}
             <div className="flex flex-wrap justify-center gap-1 w-full">
-              <Pill
-                onClick={() => {
-                  alert("hello METRIC");
-                }}
-                edit="edit"
-                className="text-xs"
-                iconName="visibility"
-              >
-                Metric: g/Kg
-              </Pill>
-              <Pill className="text-xs" iconName="event" edit="options">
-                <div
-                  onClick={() => {
-                    alert("hello LAST SAVED");
-                  }}
-                  className="grid grid-rows-2 leading-none"
-                >
-                  <div>Last Saved</div>
-                  <div className="text-[8px] leading-tight">22 Oct 2024 11h34 (WK)</div>
-                </div>
-              </Pill>
-              <Pill
-                tone="dark"
-                className="text-xs"
-                iconName="add_circle"
-                edit="options"
-                onClick={() => {
-                  alert("hello SAVE");
-                }}
-              >
-                Save
-              </Pill>
-              <Pill
-                onClick={() => {
-                  alert("hello OPTIONS");
-                }}
-                className="text-xs"
-                edit="options"
-                iconName="checklist"
-              ></Pill>
+              <MenuOption1>
+                <Pill edit="edit" className="text-xs" iconName="visibility">
+                  Metric: g/Kg
+                </Pill>
+              </MenuOption1>
+
+              <MenuOption2>
+                <Pill className="text-xs" iconName="event" edit="options">
+                  <div className="grid grid-rows-2 leading-none">
+                    <div>Last Saved</div>
+                    <div className="text-[8px] leading-tight">22 Oct 2024 11h34 (WK)</div>
+                  </div>
+                </Pill>
+              </MenuOption2>
+
+              <MenuOption2>
+                <Pill tone="dark" className="text-xs" iconName="add_circle" edit="options">
+                  Save
+                </Pill>
+              </MenuOption2>
+
+              <MenuOption2>
+                <Pill className="text-xs" edit="options" iconName="checklist"></Pill>
+              </MenuOption2>
             </div>
           </DottedBorder>
           {/* <div className="relative w-48 h-48 md:w-96 md:h-96  bg-slate-300 rounded-3xl overflow-hidden"> */}

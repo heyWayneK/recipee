@@ -86,7 +86,7 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             {options.map((option, index) => (
               <button
                 key={index}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2 hover:bg-red-600"
                 onClick={(e) => {
                   e.preventDefault();
                   option.handler();
@@ -146,3 +146,27 @@ export const useModelMenu = (options: MenuOption[]) => {
 
   return { buttonRef, handleClick, buttonPosition };
 };
+
+/* USAGE
+
+import { MenuButton } from "@/components/MenuButton";
+import React, { ReactElement } from "react";
+
+interface Props {
+  children: React.ReactNode;
+}
+
+const MenuOption1: React.FC<Props> = ({ children }) => {
+  const menuOptions = [
+    { name: "Option 1 - 2", handler: () => console.log("Option 1 clicked ") },
+    { name: "Option 2 - 2", handler: () => console.log("Option 2 clicked ") },
+    { name: "Option 3 - 2", handler: () => console.log("Option 3 clicked ") },
+  ];
+
+  return <MenuButton options={menuOptions}>{children}</MenuButton>;
+};
+
+export default MenuOption1;
+
+
+*/

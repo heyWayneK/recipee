@@ -1,7 +1,7 @@
 "use client";
 
 import { useModelMenu } from "@/contexts/UseMenuModal";
-import React from "react";
+import React, { ReactElement, ReactNode } from "react";
 
 type MenuOption = {
   name: string;
@@ -10,19 +10,18 @@ type MenuOption = {
 
 interface MenuButtonProps {
   options: MenuOption[];
-  buttonText: string;
+  children: React.ReactNode;
 }
 
-export const MenuButton: React.FC<MenuButtonProps> = ({ options, buttonText }) => {
+export const MenuButton: React.FC<MenuButtonProps> = ({ options, children }) => {
   const { buttonRef, handleClick, buttonPosition } = useModelMenu(options);
-
   return (
     <button
       ref={buttonRef}
       onClick={handleClick}
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      className="bg-white hover:bg-white text-black py-0 px-0 rounded"
     >
-      {buttonText}
+      {children}
     </button>
   );
 };
