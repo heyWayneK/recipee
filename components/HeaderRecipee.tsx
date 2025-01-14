@@ -40,26 +40,12 @@ const data = {
 function HeaderRecipee() {
   return (
     <div className="w-full flex justify-between align-middle">
-      <Image
-        src={"/logo/recipe_logo_black.svg"}
-        alt="Recipee Logo Black"
-        width={200}
-        height={100}
-      />
+      <Image src={"/logo/recipe_logo_black.svg"} alt="Recipee Logo Black" width={200} height={100} />
 
       <div className="flex gap-3 items-center content-center">
-        <SvgSpriteLink
-          iconName="hamburger"
-          size={40}
-          link="/"
-          className="rounded-md border-2"
-        />
+        <SvgSpriteLink iconName="hamburger" size={40} link="/" className="rounded-md border-2" />
         {data.links.map((item: any, index: number) => (
-          <Link
-            key={item.title}
-            href={item.title}
-            className="whitespace-nowrap"
-          >
+          <Link key={item.title + index} href={item.title} className="whitespace-nowrap">
             {item.title}
           </Link>
         ))}

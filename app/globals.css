@@ -10,8 +10,26 @@
   display: none;
 }
 
-.wayneTest {
-  background-color: red;
+@layer base {
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+  }
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-semibold;
+  }
+  h3 {
+    @apply text-lg md:text-xl lg:text-2xl font-semibold;
+  }
+  h4 {
+    @apply text-xl md:text-xl lg:text-2xl font-semibold;
+  }
+  h5 {
+    @apply text-lg md:text-xl lg:text-2xl font-semibold;
+  }
+  h6 {
+    @apply text-base md:text-lg lg:text-xl font-semibold;
+  }
+  /* Add responsive styles for other headings */
 }
 
 /* SAMPLE */

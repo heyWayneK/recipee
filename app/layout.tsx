@@ -6,6 +6,7 @@ import { getSEOTags } from "@/libs/seo";
 import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import "./globals.css";
+import { ModalProvider } from "@/providers/modalProvider";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {/* ClientLayout to provide common layout and functionality */}
         {/* <ClientLayout>{children}</ClientLayout> */}
         {children}
+        <ModalProvider />
       </body>
     </html>
   );

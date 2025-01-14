@@ -7,11 +7,7 @@ import SvgSprite from "./SvgSprite";
 const Loading = () => {
   return (
     <div className="w-full h-full animate-spin relative p-3">
-      <SvgSprite
-        size={40}
-        iconName={"refresh"}
-        className="absolute inset-0 m-auto opacity-30"
-      />
+      <SvgSprite size={40} iconName={"refresh"} className="absolute inset-0 m-auto opacity-30" />
     </div>
   );
 };

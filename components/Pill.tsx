@@ -15,33 +15,17 @@ const toneOptions = ["white", "dark", "clear"] as const;
 export type editOption = (typeof editOptions)[number];
 const editOptions = ["edit", "save", "options"] as const;
 
-const Pill: React.FC<PillProps> = ({
-  children,
-  className = "",
-  iconName = "",
-  edit = "",
-  tone = "clear",
-  onClick,
-}) => {
+const Pill: React.FC<PillProps> = ({ children, className = "", iconName = "", edit = "", tone = "clear", onClick }) => {
   return (
-    <div className="relative" onClick={onClick}>
+    <div className="relative h-full" onClick={onClick}>
       <div
         className={`text-nowrap ${className} ${tone === "dark" && "bg-black text-white"} ${
           tone === "white" && "bg-white text-black"
         }  min-w-10 border px-2 py-1 rounded-full border-slate-400 flex items-center gap-x-1 cursor-pointer select-none h-full
-      ${
-        edit !== "" &&
-        "before:content-['...'] before:absolute before:left-[50%] before:translate-x-[-50%] before:bottom-[-1px]"
-      }
+      ${edit !== "" && "before:content-['...'] before:absolute before:left-[50%] before:translate-x-[-50%] before:bottom-[-1px]"}
       `}
       >
-        {iconName && (
-          <SvgSprite
-            className={`${tone === "dark" ? "fill-white" : "fill-black"}`}
-            size={16}
-            iconName={iconName}
-          />
-        )}
+        {iconName && <SvgSprite className={`${tone === "dark" ? "fill-white" : "fill-black"}`} size={16} iconName={iconName} />}
         {children}
       </div>
       <div

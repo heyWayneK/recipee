@@ -40,3 +40,19 @@ export default async function Recipee({
     </div>
   );
 }
+
+// SETUP INITIAL PROPS FOR ALL PAGES ; INITIAL PROPS()
+// // pages/_app.js
+// import App from 'next/app';
+
+// function MyApp({ Component, pageProps }) {
+//   return <Component {...pageProps} />
+// }
+
+// MyApp.getInitialProps = async (appContext) => {
+//   const myObject = { key: 'value' }; // Initialize here
+//   // This will be available to all pages
+//   return { pageProps: { ...pageProps, myObject } };
+// }
+
+// export default MyApp;
