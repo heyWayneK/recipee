@@ -1,7 +1,7 @@
 "use client";
 
 import { MenuButton } from "@/components/MenuButton";
-import React, { ReactElement } from "react";
+import React from "react";
 
 interface Props {
   children: React.ReactNode;

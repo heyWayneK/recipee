@@ -1,5 +1,7 @@
 "use client";
 
+import { MenuOptionsProps } from "@/components/MenuPopupOnMouseOver";
+import SvgSprite from "@/components/SvgSprite";
 import React, { createContext, useState, useContext, useCallback, useRef, useEffect, MutableRefObject } from "react";
 
 type MenuOption = {
@@ -15,22 +17,26 @@ type ModalPosition = {
 };
 
 interface MenuModalContextType {
-  openMenu: (options: MenuOption[], buttonRect: DOMRect, buttonRef: MutableRefObject<any>) => void;
+  // openMenu: (options: MenuOption[], buttonRect: DOMRect, buttonRef: MutableRefObject<any>) => void;
+  openMenu: (options: MenuOptionsProps[], buttonRect: DOMRect, buttonRef: MutableRefObject<any>) => void;
   closeMenu: () => void;
 }
 
 const MenuModalContext = createContext<MenuModalContextType | undefined>(undefined);
 
 export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const MENUWIDTH = 200; // px;
+  // MODAL MENU WIDTH
+  const MENUWIDTH = 220; // px;
+
   const [isOpen, setIsOpen] = useState(false);
-  const [options, setOptions] = useState<MenuOption[]>([]);
+  const [options, setOptions] = useState<MenuOptionsProps[]>([]);
   const [position, setPosition] = useState<ModalPosition>({ top: 0, left: 0, width: 0, right: 0 });
   const modalRef = useRef<HTMLDivElement>(null);
 
   let buttonClicked: MutableRefObject<HTMLDivElement>;
 
-  const openMenu = useCallback((newOptions: MenuOption[], buttonRect: DOMRect, buttonRef: MutableRefObject<HTMLDivElement>) => {
+  // const openMenu = useCallback((newOptions: MenuOption[], buttonRect: DOMRect, buttonRef: MutableRefObject<HTMLDivElement>) => {
+  const openMenu = useCallback((newOptions: MenuOptionsProps[], buttonRect: DOMRect, buttonRef: MutableRefObject<HTMLDivElement>) => {
     setOptions(newOptions);
     buttonClicked = buttonRef;
     // GET BOUNDS OF ORIGINALLY CLICKED BUTTON
@@ -54,13 +60,17 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setIsOpen(true);
   }, []);
 
-  const closeMenu = useCallback(() => {
-    setIsOpen(false);
+  const closeMenu = useCallback((changed = false) => {
     // RESET Z ON ORIGINAL BUTTON
-    if (buttonClicked.current) {
+    if (buttonClicked?.current) {
       buttonClicked.current.style.zIndex = "0";
+      console.log("SHOULD SHOW A CHANGE ARROW**************", buttonClicked?.current.textContent);
+      // ADD ROTATING OUTLINE ON UPDATE
+      // Add the class that includes the ::after pseudo-element
+      if (changed) buttonClicked.current.classList.add("rotating-outline");
       // buttonClicked.current.style.backgroundColor = "pink";
     }
+    setIsOpen(false);
   }, []);
 
   useEffect(() => {
@@ -89,7 +99,7 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <MenuModalContext.Provider value={{ openMenu, closeMenu }}>
       {children}
       {isOpen && (
-        // BACKGROUND TRANSPARENT GREY at Z10 to visually focus menu
+        // MODAL BACKGROUND TRANSPARENT LAYER Z-10
         <div className="fixed inset-0 z-10  w-full h-full" style={{ pointerEvents: "none", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
           <div
             ref={modalRef}
@@ -104,16 +114,41 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             }}
           >
             {options.map((option, index) => (
+              // HANDLER = ()
+              // SELECTED ID for drop down current selected
+              // ID = the ID is drop down list item id
+              // JSX = the JSX list item name
               <button
                 key={index}
-                className="block w-full text-left px-4 py-2 leading-tight text-xs hover:opacity-50 active:opacity-85 "
+                className={`block w-full text-left px-2 py-1 rounded-3xl leading-tight text-xs my-3 cursor-none ${
+                  option?.handler !== null && option?.id === option?.selectedId
+                    ? " bg-gradientGreyDarkerBott"
+                    : ` ${option?.handler !== null ? " hover:opacity-50 hover:border active:opacity-85" : " cursor-none"}`
+                }  `}
+                disabled={option?.handler === null ? true : false}
                 onClick={(e) => {
                   e.preventDefault();
-                  option.handler();
+                  // SLOW DOWN UPDATE to show spinner
+                  setTimeout(() => {
+                    option.handler();
+                  }, 500);
                   closeMenu();
                 }}
               >
-                {option.name}
+                <div className="flex gap-1 inset-0">
+                  {option.handler === null ? (
+                    `${" "}`
+                  ) : option?.selectedId === option?.id ? (
+                    <div className=" flex place-items-center  flex-grow-0 flex-shrink-0 inset-0">
+                      <SvgSprite size={20} iconName="check_circle" />
+                    </div>
+                  ) : (
+                    <div className="flex place-items-center justify-content-center ">
+                      <SvgSprite size={20} iconName="radio_button_unchecked" />
+                    </div>
+                  )}
+                  <div className="flex-grow">{option.jsx}</div>
+                </div>
               </button>
             ))}
           </div>
@@ -132,13 +167,11 @@ export const useMenuModal = () => {
 };
 
 // HOOK
-export const useModalMenu = (options: MenuOption[]) => {
+// export const useModalMenu = (options: MenuOption[]) => {
+export const useModalMenu = (options: MenuOptionsProps[]) => {
   const { openMenu, closeMenu } = useMenuModal();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [buttonPosition, setButtonPosition] = useState<DOMRect | null>(null);
-
-  //  let currentButton: React.MouseEvent<HTMLButtonElement>;
-  // console.log("BUTTONREF______", buttonRef);
 
   const updateButtonPosition = useCallback(() => {
     if (buttonRef.current) {

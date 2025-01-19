@@ -25,7 +25,7 @@ const Row_PlatingIngredientSubTotal: React.FC<Row_PlatingIngredientSubTotalProps
       {recipeData.componentsSubTotalsPrices.map((price, i) => {
         return (
           <Table_Cell type="sub_total" key={name + "_" + i}>
-            {data.setting.currency}
+            {recipeData.data.setting.currency}
             {price.toFixed(2)}
           </Table_Cell>
         );

@@ -54,22 +54,12 @@
               previewDiv.classList.add("svg-preview");
 
               // Create a new svg element for the preview
-              const previewDivSvg = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "svg"
-              );
+              const previewDivSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
               previewDiv.appendChild(previewDivSvg);
 
               // Create a use element to display the symbol
-              const useElement = document.createElementNS(
-                "http://www.w3.org/2000/svg",
-                "use"
-              );
-              useElement.setAttributeNS(
-                "http://www.w3.org/1999/xlink",
-                "xlink:href",
-                `${svgSpriteFile}#${symbolId}`
-              ); // Use relative path within the same SVG
+              const useElement = document.createElementNS("http://www.w3.org/2000/svg", "use");
+              useElement.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `${svgSpriteFile}#${symbolId}`); // Use relative path within the same SVG
 
               // **Fix:** Append the use element to the preview svg, not the entire document
               previewDivSvg.appendChild(useElement);
@@ -90,10 +80,7 @@
           })
           .finally(() => {
             previewList = document.getElementById("svg-list");
-            previewList.insertAdjacentHTML(
-              "beforeend",
-              ("'" + svgArray.join("', '") + "'").toString()
-            );
+            previewList.insertAdjacentHTML("beforeend", ("'" + svgArray.join("', '") + "'").toString());
           });
       }
       generateSVGPreviews("./sprite.svg");

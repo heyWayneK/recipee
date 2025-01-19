@@ -1,20 +1,13 @@
-import React, { ReactNode, createContext, useContext, useState } from "react";
-import { DataProps as RecipeData } from "@/app/data/recipe";
-import { data as recipeData } from "@/app/data/recipe";
-import { UnknownKeysParam } from "zod";
-
-// interface ContextType {
-//   qty: number;
-//   setQty: React.Dispatch<React.SetStateAction<number>>;
-//   components: Record<string, any>;
-//   setComponents: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+import { DataProps, data } from "@/app/data/recipe";
+import React, { createContext, useContext, useState } from "react";
 
 interface PreCalculatedTypes {
-  // [key: string]: string | number;
   [key: string]: string;
 }
 
 // DEFINE PRECALCULATED RECIPE DATA
+//- These contain the calulated recipe subTotals, Totals and
+//- lookup values like markup, or the cost of other costs etc
 export interface PreCalculatedRecipeData {
   portionSizes: number[];
   componentsNamesArray: string[];
@@ -33,6 +26,7 @@ export interface PreCalculatedRecipeData {
   markUpPriceRules: number[];
   salePricesExVat: number[];
   salesPricesIncVat: number[];
+  data?: DataProps;
 }
 export const preCalculatedRecipeData: PreCalculatedRecipeData = {
   portionSizes: [],
@@ -52,6 +46,7 @@ export const preCalculatedRecipeData: PreCalculatedRecipeData = {
   markUpPriceRules: [],
   salePricesExVat: [],
   salesPricesIncVat: [],
+  data: JSON.parse(JSON.stringify(data)),
 };
 
 // DEFINE context shape
@@ -59,13 +54,10 @@ interface RecipeDataContextType {
   qty: number;
   setQty: React.Dispatch<React.SetStateAction<number>>;
   recipeData: PreCalculatedRecipeData;
-  // recipeData: RecipeData;
   updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void;
-  // updateRecipeData: (newData: Partial<RecipeData>) => void;
 }
 
 const RecipeDataContext = createContext<RecipeDataContextType | undefined>(undefined);
-// const RecipeDataContext = createContext<PreCalculatedRecipeData | undefined>(undefined);
 
 interface RecipeDataProviderProps {
   children: React.ReactNode;
@@ -75,38 +67,50 @@ interface RecipeDataProviderProps {
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
   const [qty, setQty] = useState<number>(1);
 
+  // const [recipeDataState, setRecipeDataState] = useState<PreCalculatedRecipeData>(JSON.parse(JSON.stringify(data)));
   const [recipeDataState, setRecipeDataState] = useState<PreCalculatedRecipeData>(preCalculatedRecipeData);
-  // const [recipeDataState, setRecipeDataState] = useState<RecipeData>(recipeData);
 
   // Function to update any part of the recipe data
-  const updateRecipeData = (newData: Partial<PreCalculatedRecipeData>) => {
-    console.log("UPDATE NEW DATA", newData);
-    setRecipeDataState((prevData) => ({ ...prevData, ...newData }));
-  };
-  // const updateRecipeData = (newData: Partial<RecipeData>) => {
+  // const updateRecipeData = (newData: Partial<PreCalculatedRecipeData>) => {
+  //   // console.log("UPDATE NEW DATA", newData);
   //   setRecipeDataState((prevData) => ({ ...prevData, ...newData }));
   // };
+
+  // PARTIAL SAVE recipeData.data structure
+  const updateRecipeData = (newData: Partial<PreCalculatedRecipeData>) => {
+    setRecipeDataState((prevData) => {
+      const mergeDeep = (target: any, source: any): any => {
+        // If source value is not object or is null, return source directly
+        if (source === null || typeof source !== "object") return source;
+
+        // Target and source must be objects
+        for (const key in source) {
+          if (source.hasOwnProperty(key)) {
+            if (target[key] && typeof target[key] === "object" && typeof source[key] === "object") {
+              // If both target[key] and source[key] are objects, merge deeply
+              target[key] = mergeDeep(target[key], source[key]);
+            } else {
+              // Otherwise, overwrite the target property
+              target[key] = source[key];
+            }
+          }
+        }
+        return target;
+      };
+
+      return mergeDeep({ ...prevData }, newData);
+    });
+  };
 
   const value: RecipeDataContextType = {
     qty,
     setQty,
     recipeData: recipeDataState,
-    // recipeData: recipeDataState,
     updateRecipeData,
   };
 
-  // let components;
-  // let ingredientSubTotal;
-  // let packingCost;
-  // let otherCost;
-  // let costsSubTotal;
-  // let markUp;
-  // let salePriceExVat;
-  // let salesPriceIncVat;
-
   // 2. Return Context
   return <RecipeDataContext.Provider value={value}>{children}</RecipeDataContext.Provider>;
-  // return <RecipeDataContext.Provider value={value}>{children}</RecipeDataContext.Provider>;
 };
 
 // 3. Export Hook

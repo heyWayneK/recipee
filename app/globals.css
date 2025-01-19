@@ -60,3 +60,36 @@
     }
   }
 }
+
+/* To focus your eye on the table cell that has changed */
+@keyframes rotating-dots {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.rotating-outline {
+  position: relative;
+  /* color: white; */
+  /* opacity: 0; */
+  /* background-color: red; */
+  filter: blur(1px);
+}
+.rotating-outline::after {
+  content: "";
+  position: absolute;
+  top: -80%;
+  left: 0;
+  right: 0;
+  /* bottom: 0; */
+  /* transform: translateY(-200%); */
+  /* transform: translatex(50%); */
+  outline: 5px dotted rgba(0, 0, 0, 0.5);
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 100px;
+  animation: rotating-dots 5s linear infinite;
+}

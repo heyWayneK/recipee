@@ -43,11 +43,9 @@ const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = fals
 
   return (
     <>
-      <Table_Cell firstCol={false} header={false} type="plating" iconName="category" key={name}>
+      <Table_Cell onClick={handleOpenModal} firstCol={false} header={false} type="plating" iconName="category" key={name}>
         <span>
-          <Link href="#" onClick={handleOpenModal}>
-            {name.toUpperCase()}
-          </Link>
+          <Link href="#">{name.toUpperCase()}</Link>
         </span>
       </Table_Cell>
       {recipeData.portionSizes.map((portion, col) => (

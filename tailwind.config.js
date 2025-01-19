@@ -1,11 +1,6 @@
 const colors = require("tailwindcss/colors");
 module.exports = {
-  content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./styles/globals.css",
-  ],
+  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./pages/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "./styles/globals.css"],
   theme: {
     extend: {
       // gridTemplateColumns: {
@@ -89,13 +84,11 @@ module.exports = {
         shadow1: "0 0 4px 4px rgb(0 0 0 / 0.2)",
       },
       backgroundImage: {
-        gradientRainbow:
-          "linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82)",
+        gradientRainbow: "linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82)",
+        gradientGreyDarkerTop: "linear-gradient(30deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
+        gradientGreyDarkerBott: "linear-gradient(30deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
+        gradientGreyDarkerBott2: "linear-gradient(60deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
         launchSvg: "url('/launch/launch-bg.svg')",
-        gradientGreyDarkerTop:
-          "linear-gradient(150deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
-        gradientGreyDarkerBott:
-          "linear-gradient(30deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
       },
       animation: {
         opacity: "opacity 0.25s ease-in-out",

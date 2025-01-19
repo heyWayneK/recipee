@@ -88,13 +88,11 @@ const allowedIcons = [
   "settings",
   "edit",
   "save",
+  "circle",
+  "radio_button_unchecked",
 ] as const;
 
-const SvgSprite: React.FC<SvgSpriteProps> = ({
-  size = 20,
-  iconName,
-  className = "",
-}) => {
+const SvgSprite: React.FC<SvgSpriteProps> = ({ size = 20, iconName, className = "" }) => {
   return (
     <svg width={size} height={size} className={className}>
       <use xlinkHref={`/assets/sprite.svg#${iconName}`}></use>

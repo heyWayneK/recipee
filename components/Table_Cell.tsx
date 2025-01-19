@@ -11,6 +11,7 @@ interface Table_CellProps {
   header?: boolean;
   rowNum?: string | number;
   firstCol?: boolean;
+  onClick?: () => void;
 }
 export type typeOption = (typeof typeOptions)[number];
 const typeOptions = ["clear", "plating", "text", "plating_list", "sub_total", "total", "print", "controls", "ingredient", "sub_recipe", "step", "method"] as const;
@@ -18,10 +19,10 @@ const typeOptions = ["clear", "plating", "text", "plating_list", "sub_total", "t
 export type editOption = (typeof editOptions)[number];
 const editOptions = ["edit", "save", "options"] as const;
 //+ rowNum + " "
-const Table_Cell: React.FC<Table_CellProps> = ({ children, className = "", iconName = "", edit = "", type = "text", header = false, rowNum = "", firstCol = false }) => {
+const Table_Cell: React.FC<Table_CellProps> = ({ children, className = "", iconName = "", edit = "", type = "text", header = false, rowNum = "", firstCol = false, onClick = () => {} }) => {
   return (
     <div
-      key={Math.random()}
+      onClick={onClick}
       className={`relative grid
       ${type === "controls" ? "col-span-full border-0 rounded-full" : ""}
       ${type === "method" ? "col-span-full " : ""}
@@ -49,7 +50,7 @@ const Table_Cell: React.FC<Table_CellProps> = ({ children, className = "", iconN
         
         ${type === "controls" ? " grid grid-flow-col justify-between items-center rounded-full [&>*]:grid [&>*]:grid-flow-col [&>*]:gap-x-2" : ""} 
 
-        ${type === "plating_list" ? "  !justify-start text-nowrap !line-clamp-1 text-white border-5 rounded-full hover:opacity-60 active:opacity-75" : ""}
+        ${type === "plating_list" ? "  !justify-start text-nowrap  text-white border-5 rounded-full hover:opacity-60 active:opacity-75" : ""}
 
         ${type === "sub_total" ? " border-t border-b border-black font-medium !text-black " : ""}  
 
@@ -73,7 +74,7 @@ const Table_Cell: React.FC<Table_CellProps> = ({ children, className = "", iconN
         }
         ${className}
         
-        ${firstCol ? " font-semibold grid uppercase text-[0.6rem] sm:text-xs  !justify-items-start content-center text-white " : " text-black "}
+        ${firstCol ? " font-semibold grid uppercase text-[0.6rem] sm:text-xs content-center  text-white !line-clamp-1 " : " text-black "}
 
         ${header ? " font-medium text-base bg-black text-white border rounded-full justify-center justify-items-center text-center" : " justify-center justify-items-center text-center text-black "}
         } 

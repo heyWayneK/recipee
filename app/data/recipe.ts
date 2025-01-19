@@ -1,6 +1,6 @@
 export interface DataProps {
   portions: number[];
-  setting: {
+  readonly setting: {
     unitMaster: string[];
     unitMask: string[];
     unitType: string[];
@@ -9,10 +9,8 @@ export interface DataProps {
     locale: string;
     language: "EN" | "FR" | "SP";
   };
-  costRules: CostRules;
+  readonly costRules: CostRules;
   components: ComponentsProps[];
-  uiElements?: UIElement[];
-  // uiSubRecipeElements: UIElement[];
   packagingCostsId: { [key: number]: number };
   otherCostsId: { [key: number]: number };
   markupId: { [key: number]: number };
@@ -31,29 +29,33 @@ export interface CostRules {
 }
 
 export interface PackagingCost {
-  name: string;
-  cost: number;
+  readonly name: string;
+  readonly cost: number;
 }
 
 export interface OtherCost {
-  name: string;
-  costs: OtherCostItem[];
+  readonly name: string;
+  readonly costs: OtherCostItem[];
 }
 
 export interface OtherCostItem {
-  name: string;
-  cost: number;
-  id: number;
+  readonly name: string;
+  readonly cost: number;
+  readonly id: number;
 }
+
+type markUpType = "markup" | "margin" | "xcost";
 
 export interface MarkUp {
-  name: string;
-  factor: number;
-  type: "markup" | "margin" | "xcost";
+  readonly name: string;
+  readonly factor: number;
+  readonly type: markUpType;
 }
 
+type recipeType = "local" | "master" | "unlinkedMaster";
+
 export interface RecipeType {
-  type: ["local", "master", "unlinkedMaster"];
+  readonly type: recipeType;
 }
 
 export interface nutriPer100Props {
@@ -64,13 +66,15 @@ export interface nutriPer100Props {
 
 export interface ingredientType {}
 
+type componentPropsType = "ingredient" | "step" | "sub";
+
 export interface ComponentsProps {
   name: string;
   id: number;
-  type: "ingredient" | "step" | "sub";
+  type: componentPropsType;
   parentId: null | number;
   recipeId: number | null;
-  recipeType: "local" | "master" | "unlinkedMaster";
+  recipeType: recipeType;
 
   ingredientId: number | null;
   portions: { [key: number]: number };
@@ -93,12 +97,15 @@ export interface RecipeProps {
   // recipeDetail: [
 }
 
+type recipeDetailType = "ingredient" | "step" | "sub-recipe";
+type dietClassificationType = "vegan" | "vegetarian" | "animal_product";
+
 export interface recipeDetailProps {
   ingredId: number;
   ingredName?: string;
-  dietClassification?: "vegan" | "vegetarian" | "animal_product";
+  dietClassification?: dietClassificationType;
   order: number;
-  type: "ingredient" | "step" | "sub-recipe";
+  type: recipeDetailType;
   stepInstruction?: string;
   supplier?: string;
   instruction?:
@@ -130,11 +137,11 @@ export interface recipeDetailProps {
   unitType?: "liquid" | "weight";
   costPer1000?: number;
   FQscore?: FQProps;
-  needsPrep: boolean;
-  isSalt: boolean;
-  isSaltInWater: boolean;
-  isOil: boolean;
-  oilPurpose: ["100%_added", "thin_coating", "shallow_fry", "deep_fry"];
+  needsPrep?: boolean;
+  isSalt?: boolean;
+  isSaltInWater?: boolean;
+  isOil?: boolean;
+  oilPurpose?: ["100%_added", "thin_coating", "shallow_fry", "deep_fry"];
 }
 
 export interface FQProps {
@@ -147,24 +154,6 @@ export interface FQProps {
 
 export interface CostsLiveProps {
   [key: number]: number;
-}
-
-export interface UIElement {
-  name: string;
-  costsLive: CostsLiveProps;
-
-  // controls;
-  // quantity;
-  // plating;
-  // plating_list;
-  // ingredient_cost;
-  // packaging_cost;
-  // other_cost;
-  // costs_sub_total;
-  // markup;
-  // sale_price_(ex_vat);
-  // sale_price_(incl_vat);
-  // print;
 }
 
 export const data: DataProps = {
@@ -181,8 +170,10 @@ export const data: DataProps = {
   costRules: {
     // only include Packaging Costs included in the recipe
     packagingCosts: {
-      34: { name: "350g - Container 220594 - 300/350g", cost: 2.37 },
       77: { name: "265g - Container H5001", cost: 1.76 },
+      34: { name: "350g - Container 220594 - 300/350g", cost: 2.37 },
+      1: { name: "500g - Container Test", cost: 4.83 },
+      123: { name: "700g - Container Test2", cost: 9.83 },
     },
     // Only include otherCosts used in this recipe
     otherCosts: {
@@ -231,6 +222,7 @@ export const data: DataProps = {
       version: "22_mar_2024_12h34_WK_2",
       id: 77442,
       type: "sub",
+      parentId: null,
       recipeType: "master",
       recipeId: 666,
       ingredientId: 666,
@@ -352,6 +344,7 @@ export const data: DataProps = {
       version: "22_mar_2024_12h34_WK_2",
       id: 101235,
       type: "sub",
+      parentId: null,
       recipeType: "local",
       recipeId: 986,
       ingredientId: null,
@@ -638,6 +631,7 @@ export const data: DataProps = {
       version: "22_mar_2024_12h34_WK_2",
       id: 322,
       type: "sub",
+      parentId: null,
       recipeId: 666,
       recipeType: "local",
       ingredientId: null,
@@ -760,6 +754,7 @@ export const data: DataProps = {
       version: "22_mar_2024_12h34_WK_2",
       id: 98747,
       type: "sub",
+      parentId: null,
       recipeId: 666,
       recipeType: "local",
       ingredientId: null,
@@ -957,6 +952,7 @@ export const data: DataProps = {
       version: "22_mar_2024_12h34_WK_2",
       id: 4619766,
       type: "sub",
+      parentId: null,
       recipeId: null,
       recipeType: "local",
       ingredientId: 66,
