@@ -1,6 +1,10 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import SvgSprite, { allowedIcon } from "./SvgSprite";
-import { recipeColors } from "@/lib/colorsRecipes";
+import { recipeColors } from "@/libs/colorsRecipes";
+
+// TODO: EXAMPLE: TAILWIND MERGE
+// import { tailwindMerge } from "@/utils/tailwindMerge";
+// className={tailwindMerge("mb-2 p-3 overflow-hidden w-full rounded-3xl border border-dotted border-slate-600 shadow-md grid grid-cols-1 justify-center items-stretch", className)}
 
 interface Table_CellProps {
   children?: ReactNode;
@@ -12,6 +16,8 @@ interface Table_CellProps {
   rowNum?: string | number;
   firstCol?: boolean;
   onClick?: () => void;
+  trackChangeVisually?: boolean;
+  trackChangesStorageName?: string;
 }
 export type typeOption = (typeof typeOptions)[number];
 const typeOptions = ["clear", "plating", "text", "plating_list", "sub_total", "total", "print", "controls", "ingredient", "sub_recipe", "step", "method"] as const;
@@ -19,9 +25,61 @@ const typeOptions = ["clear", "plating", "text", "plating_list", "sub_total", "t
 export type editOption = (typeof editOptions)[number];
 const editOptions = ["edit", "save", "options"] as const;
 //+ rowNum + " "
-const Table_Cell: React.FC<Table_CellProps> = ({ children, className = "", iconName = "", edit = "", type = "text", header = false, rowNum = "", firstCol = false, onClick = () => {} }) => {
+const Table_Cell: React.FC<Table_CellProps> = ({
+  children,
+  className = "",
+  iconName = "",
+  edit = "",
+  type = "text",
+  header = false,
+  rowNum = null,
+  firstCol = false,
+  onClick = () => {},
+  trackChangeVisually = false,
+  trackChangesStorageName = "",
+}) => {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const [isUpdated, setIsUpdated] = useState(false);
+  // const previousChildren = useRef<ReactNode>(null);
+  let previousChildren = localStorage.getItem(`${trackChangesStorageName}-${rowNum}`);
+
+  useEffect(() => {
+    // SHOW CSS ANIMATION WHEN VALUE CHAMGES
+    if (trackChangeVisually) {
+      // NB: Convert children to a string for comparison, assuming children will be simple text or numbers.
+      const currentChildren = children ? children.toString() : "";
+      // console.log("}}}}}}}", typeof previousChildren.current);
+      if (previousChildren !== currentChildren) {
+        // if (previousChildren.current !== currentChildren) {
+        // if (typeof previousChildren.current !== null) {
+        elementRef.current?.classList.add("rotating-outline");
+        setInterval(() => {
+          elementRef.current?.classList.remove("rotating-outline");
+        }, 1500);
+        // }
+
+        // console.log("prev:", previousChildren.current);
+        // console.log("curr", currentChildren);
+        // console.log(isUpdated);
+        // console.log("__________________________");
+        // console.log(" ");
+        // Store the new value for next comparison
+        previousChildren = currentChildren;
+        // previousChildren.current = currentChildren;
+        // Save to localStorage if needed
+        // if (trackChangesStorageName && rowNum !== null) {
+        localStorage.setItem(`${trackChangesStorageName}-${rowNum}`, currentChildren);
+        // }
+        setIsUpdated(true);
+      } else {
+        setIsUpdated(false);
+      }
+    }
+  }, [children, trackChangeVisually, trackChangesStorageName, rowNum]);
+
   return (
     <div
+      ref={elementRef}
       onClick={onClick}
       className={`relative grid
       ${type === "controls" ? "col-span-full border-0 rounded-full" : ""}
@@ -30,10 +88,9 @@ const Table_Cell: React.FC<Table_CellProps> = ({ children, className = "", iconN
       `}
     >
       <div
-        key={Math.random()}
         style={{
-          backgroundColor: `${recipeColors["r" + rowNum] ?? ""}`,
-          borderColor: `${recipeColors["r" + rowNum] ?? ""}`,
+          backgroundColor: `${trackChangeVisually || (recipeColors["r" + rowNum] ?? "")}`,
+          borderColor: `${trackChangeVisually || (recipeColors["r" + rowNum] ?? "")}`,
         }}
         // STYLE OPTIONS : Do I need:cursor-pointer select-none
         //TODO:text-nowrap - do we need this?
@@ -80,13 +137,14 @@ const Table_Cell: React.FC<Table_CellProps> = ({ children, className = "", iconN
         } 
 
         ${type === "text" ? " opacity-80 active:opacity-30 !text-black " : ""} 
-      `}
+
+        `}
+        // ${isUpdated && "rotating-outline"}
       >
         {iconName && <SvgSprite className={`${header ? "fill-white" : "fill-black"}`} size={16} iconName={iconName} />}
         {children}
       </div>
       <div
-        key={Math.random()}
         id="icon"
         className=" flex place-items-center justify-center top-0 left:50px active:bg-white rounded-full 
       "

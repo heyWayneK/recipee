@@ -1,5 +1,5 @@
 import { PreCalculatedRecipeData } from "@/contexts/UseRecipeData";
-import { calcProfit, formatCurrency } from "@/lib/utils";
+import { calcProfit, formatCurrency } from "@/libs/utils";
 
 export function preCalculateData(recipeData: PreCalculatedRecipeData, updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void) {
   // HOW TO USE:

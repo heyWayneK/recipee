@@ -1,7 +1,7 @@
 import React from "react";
 
 import Table_Cell from "./Table_Cell";
-import { formatCurrency, formatWeight, getLiveTotal, getTextTranslation, replace_ } from "@/lib/utils";
+import { formatCurrency, formatWeight, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 
@@ -26,8 +26,8 @@ const Row_PlatingSalesPriceExVat: React.FC<Row_PlatingSalesPriceExVatProps> = ({
       {data.portions.map((portionSize, i) => {
         return (
           // COLUMN CELLS START
-          <Table_Cell type="sub_total" key={name + "_" + i} className="">
-            <span className="text-nowrap">{formatCurrency(recipeData.salePricesExVat[i])}</span>
+          <Table_Cell type="sub_total" key={name + "_" + i} trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
+            {formatCurrency(recipeData.salePricesExVat[i])}
           </Table_Cell>
           // COLUMN CELLS END
         );

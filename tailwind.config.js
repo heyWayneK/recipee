@@ -1,6 +1,7 @@
 const colors = require("tailwindcss/colors");
 module.exports = {
-  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./pages/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "./styles/globals.css"],
+  content: ["./app/**/*.{js,ts,jsx,tsx,mdx}", "./pages/**/*.{js,ts,jsx,tsx,mdx}", "./components/**/*.{js,ts,jsx,tsx,mdx}", "./styles/globals.css", "./src/**/*.{js,jsx,ts,tsx}"],
+
   theme: {
     extend: {
       // gridTemplateColumns: {
@@ -90,6 +91,10 @@ module.exports = {
         gradientGreyDarkerBott2: "linear-gradient(60deg, rgba(160, 160, 160, 0.23) 23.96%, rgba(255, 255, 255, 0) 98.44%)",
         launchSvg: "url('/launch/launch-bg.svg')",
       },
+      // TODO: did this safelist work?
+      // SAFETLIST forces the CSS to be written to the CSS file
+      // There was an issue where most gradients werent available in CSS
+      safelist: ["bg-gradientRainbow", "bg-gradientGreyDarkerTop", "bg-gradientGreyDarkerBott", "bg-gradientGreyDarkerBott2"],
       animation: {
         opacity: "opacity 0.25s ease-in-out",
         appearFromRight: "appearFromRight 300ms ease-in-out",
@@ -177,6 +182,55 @@ module.exports = {
     // You can add another theme among the list of 30+
     // Add "data-theme='theme_name" to any HTML tag to enable the 'theme_name' theme.
     // https://daisyui.com/
-    themes: ["light", "dark"],
+    // themes: ["light", "dark"],
+    /* 
+    slate-100 #f1f5f9
+    slate-200 #e2e8f0
+    slate-300 #cbd5e1
+    slate-400 #94a3b8
+    slate-500 #64748b
+    slate-600 #475569
+    slate-700 #334155
+    slate-800 #1e293b
+    slate-900 #0f172a
+
+    */
+
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
+          primary: "#0f172a",
+          "primary-content": "#ff0000",
+          secondary: "#334155",
+          "secondary-content": "#334155",
+          accent: "#00ffff",
+          neutral: "#94a3b8",
+          "base-100": "#F5F5F5",
+          "text-base-content": "#ff0000",
+          info: "#0000ff",
+          success: "#00ff00",
+          warning: "#ff7f00",
+          "warning-content": "#ff7f00",
+          error: "#ff0000",
+        },
+        dark: {
+          ...require("daisyui/src/theming/themes")["dark"],
+          primary: "#ff00ff",
+          "primary-content": "#0f172a",
+          secondary: "#ff00ff",
+          "secondary-content": "#ff00ff",
+          accent: "#00ffff",
+          neutral: "#94a3b8",
+          "base-100": "#334155",
+          "text-base-content": "#f1f5f9",
+          info: "#0000ff",
+          success: "#00ff00",
+          warning: "#ff7f00",
+          "warning-content": "#ff7f00",
+          error: "#ff0000",
+        },
+      },
+    ],
   },
 };

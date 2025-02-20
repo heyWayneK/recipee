@@ -3,7 +3,7 @@ import Table_Cell from "./Table_Cell";
 
 import { data, recipeDetailProps } from "@/app/data/recipe";
 import Pill from "./Pill";
-import { formatCurrency, getTextTranslation } from "@/lib/utils";
+import { formatCurrency, getTextTranslation } from "@/libs/utils";
 import SvgSprite from "./SvgSprite";
 import { recipeeUI } from "./Row_SubRecipesAll";
 

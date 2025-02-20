@@ -1,7 +1,7 @@
 import React from "react";
 
 import Table_Cell from "./Table_Cell";
-import { formatCurrency, formatWeight, getLiveTotal, getTextTranslation, replace_ } from "@/lib/utils";
+import { formatCurrency, formatWeight, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 import MenuDynamicChildren, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
@@ -15,6 +15,13 @@ interface Row_PlatingOtherCostProps {
 const Row_PlatingOtherCost: React.FC<Row_PlatingOtherCostProps> = ({ className = "", viewPrices }) => {
   const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   const name = getTextTranslation(replace_("other_costs"));
+  // UPDATE OBJECT
+  const update = (portionSize: number, ruleId: number) => {
+    const newObj = { ...recipeData.data.otherCostsId, ...{ [portionSize]: ruleId } };
+    updateRecipeData((recipeData.data.otherCostsId = { ...newObj }));
+    // ADD HISTORY
+  };
+
   const dropDownInfoHead: MenuOptionsProps[] = [
     {
       jsx: (
@@ -36,31 +43,34 @@ const Row_PlatingOtherCost: React.FC<Row_PlatingOtherCostProps> = ({ className =
       {/* FIRST COLUMN END */}
 
       {/* OTHER COLUMNS START */}
+      {/* DROP DOWN MODAL INFO__________START */}
       {recipeData.otherCostsPriceRules.map((rule, i) => {
-        const dropDownInfo: MenuOptionsProps[] = recipeData.data.costRules.otherCosts[rule].costs.map((cost) => {
-          return {
+        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
+
+        for (const [key, value] of Object.entries(recipeData.data.costRules.otherCosts)) {
+          dropDownLinks.push({
             jsx: (
               <>
-                <span className=" font-bold">{cost.name}: </span>
+                <span className="font-bold">{value.name}</span>
                 <br />
                 <span>
-                  {formatCurrency(cost.cost)} (#{cost.id})
+                  {formatCurrency(+value.costs)} (#{key})
                 </span>
               </>
             ),
-            handler: null,
-          };
-        });
-        return (
-          <MenuDynamicChildren key={name + "_" + "_" + "menu" + "_" + i} menuArray={[...dropDownInfoHead, ...dropDownInfo]}>
-            <Table_Cell key={name + "_" + i} edit="edit">
-              <span className=" text-nowrap"> {formatCurrency(recipeData.otherCostsPriceTotals[i])}</span>
+            handler: () => update(recipeData.portionSizes[i], +key),
+            selectedId: recipeData.otherCostsPriceRules[i],
+            id: +key,
+          });
+        }
+        // DROP DOWN MODAL INFO__________END
 
-              {/* {viewPrices && (
-                <div key={Math.random()} className="text-[10px] self-center">
-                  ID:{recipeData.otherCostsPriceRules[i]}
-                </div>
-              )} */}
+        return (
+          <MenuDynamicChildren key={name + "_" + "menu" + "_" + i} menuArray={dropDownLinks}>
+            <Table_Cell key={name + "_" + i} edit="edit" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
+              {formatCurrency(recipeData.otherCostsPriceTotals[i])}
+
+              {viewPrices && <div className="text-[10px] self-center">ID:{recipeData.otherCostsPriceRules[i]}</div>}
             </Table_Cell>
           </MenuDynamicChildren>
         );

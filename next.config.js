@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["lucide-react"],
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     domains: [
       // NextJS <Image> component needs to whitelist domains for src={}

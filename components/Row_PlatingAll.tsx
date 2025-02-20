@@ -18,10 +18,10 @@ import { useRecipeData } from "@/contexts/UseRecipeData";
 
 interface Row_PlatingAllProps {}
 
-const Row_PlatingAll: React.FC<Row_PlatingAllProps> = ({}) => {
+const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
   const [viewPrices, setViewPrices] = useState(false);
 
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+  const { qty, recipeData } = useRecipeData();
 
   function handleViewPrices() {
     // e.preventDefault();

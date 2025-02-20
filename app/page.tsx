@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import { getSEOTags, renderSchemaTags } from "@/libs/seo";
 
 export const metadata = getSEOTags({
-  title: "Welcome| Recipee Everything App",
+  title: "Welcome | Professional Recipee and Producton App",
   canonicalUrlRelative: "/tos",
 });
 

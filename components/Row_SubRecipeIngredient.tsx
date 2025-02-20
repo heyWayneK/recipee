@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { recipeeUI } from "./Row_SubRecipesAll";
-import { formatCurrency, formatWeight } from "@/lib/utils";
+import { formatCurrency, formatWeight } from "@/libs/utils";
 import SvgSprite from "./SvgSprite";
 import MenuOption1 from "./MenuOption1";
 

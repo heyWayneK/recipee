@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/recipee/formgen/_components/_ui/Input";
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -56,17 +56,9 @@ const Form = () => {
   return (
     <form onSubmit={handleSubmit}>
       <Toaster position="top-center" reverseOrder={false} />
-      <Input
-        placeholder="Email"
-        className="mt-8 mb-2"
-        value={email}
-        onChange={handleChange}
-      />
+      <Input placeholder="Email" className="mt-8 mb-2" value={email} onChange={handleChange} />
       {error && <p className="text-red-500 mt-2 text-start">{error}</p>}
-      <Button
-        type="submit"
-        className="w-[150px] mt-8 bg-[#006fee] border-none scale-1 hover:scale-[1.05] transition-all duration-300 hover:bg-[#006fee]"
-      >
+      <Button type="submit" className="w-[150px] mt-8 bg-[#006fee] border-none scale-1 hover:scale-[1.05] transition-all duration-300 hover:bg-[#006fee]">
         Button
       </Button>
     </form>

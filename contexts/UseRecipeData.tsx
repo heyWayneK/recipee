@@ -85,7 +85,9 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
 
         // Target and source must be objects
         for (const key in source) {
-          if (source.hasOwnProperty(key)) {
+          // TODO: DOES THIS STILL WORK... new option below
+          // if (source.hasOwnProperty(key)) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
             if (target[key] && typeof target[key] === "object" && typeof source[key] === "object") {
               // If both target[key] and source[key] are objects, merge deeply
               target[key] = mergeDeep(target[key], source[key]);

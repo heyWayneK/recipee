@@ -20,8 +20,8 @@ const Pill: React.FC<PillProps> = ({ children, className = "", iconName = "", ed
     <div className="relative h-full" onClick={onClick}>
       <div
         className={`text-nowrap ${className} ${tone === "dark" && "bg-black text-white"} ${
-          tone === "white" && "bg-white text-black"
-        }  min-w-10 border px-2 py-1 rounded-full border-slate-400 flex items-center gap-x-1 cursor-pointer select-none h-full
+          tone === "white" && " text-black "
+        }  min-w-10 border px-2 py-1 h-full rounded-full border-slate-500 flex items-center gap-x-1 cursor-pointer select-none 
       ${edit !== "" && "before:content-['...'] before:absolute before:left-[50%] before:translate-x-[-50%] before:bottom-[-1px]"}
       `}
       >
@@ -30,13 +30,14 @@ const Pill: React.FC<PillProps> = ({ children, className = "", iconName = "", ed
       </div>
       <div
         id="icon"
-        className="absolute flex place-items-center justify-center top-0 left:50px hover:bg-white/80 active:bg-white rounded-full w-full h-full 
+        className="absolute  top-0 left:50px rounded-full w-full h-full 
         [&>svg]:rounded-full 
-        [&>svg]:invisible [&>svg]:hover:visible
+        [&>svg]:invisible 
         [&>svg]:bg-primary-400
         [&>svg]:shadow-shadow1
         [&>svg]:m-1"
       >
+        {/* TODO: if clickable " hover:bg-white/80 active:bg-white [&>svg]:hover:visible" */}
         {edit === "edit" && <SvgSprite className="" size={20} iconName="edit" />}
         {edit === "save" && <SvgSprite size={20} iconName="save" />}
         {edit === "options" && <SvgSprite size={20} iconName="arrow_drop_down" />}

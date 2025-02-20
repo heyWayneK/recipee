@@ -5,8 +5,7 @@ const config = {
   // Name of the application used for branding and SEO
   appName: "Recipee",
   // Brief description of the application for SEO purposes; can be customized
-  appDescription:
-    "Recipee - Easy Recipe, Production, Nutrition and Everything Food Related. For Chefs. With Recipe Version History, Chef Feeback Task Management",
+  appDescription: "Recipee - Easy Recipe, Production, Nutrition and Everything Food Related. For Chefs. With Recipe Version History, Chef Feeback Task Management",
   // Domain name of the application without protocol or trailing slash
   domainName: "http://localhost:3000",
   crisp: {
@@ -20,10 +19,7 @@ const config = {
     plans: [
       {
         // Price ID for the development environment; change for production
-        priceId:
-          process.env.NODE_ENV === "development"
-            ? "price_1Niyy5AxyNprDp7iZIqEyD2h"
-            : "price_1Niyy5AxyNprDp7iZIqEyD2h",
+        priceId: process.env.NODE_ENV === "development" ? "price_1Niyy5AxyNprDp7iZIqEyD2h" : "price_1Niyy5AxyNprDp7iZIqEyD2h",
         // Name of the pricing plan shown to users
         name: "Starter",
         // Description of the plan; helpful for users to understand plan benefits
@@ -32,18 +28,10 @@ const config = {
         price: 99,
         // Original price
         priceAnchor: 149,
-        features: [
-          { name: "NextJS boilerplate" },
-          { name: "User OAuth integration" },
-          { name: "Database setup" },
-          { name: "Email functionality" },
-        ],
+        features: [{ name: "NextJS boilerplate" }, { name: "User OAuth integration" }, { name: "Database setup" }, { name: "Email functionality" }],
       },
       {
-        priceId:
-          process.env.NODE_ENV === "development"
-            ? "price_1O5KtcAxyNprDp7iftKnrrpw"
-            : "price_1O5KtcAxyNprDp7iftKnrrpw",
+        priceId: process.env.NODE_ENV === "development" ? "price_1O5KtcAxyNprDp7iftKnrrpw" : "price_1O5KtcAxyNprDp7iftKnrrpw",
         // Mark this plan as featured to highlight it on the pricing page
         isFeatured: true,
         name: "Advanced",
@@ -87,9 +75,9 @@ const config = {
   },
   auth: {
     // Path for user login; used to protect private routes
-    loginUrl: "/api/auth/signin",
+    // loginUrl: "/api/auth/signin",
     // Redirect URL after successful login; usually a private user dashboard
-    callbackUrl: "/dashboard",
+    // callbackUrl: "/dashboard",
   },
 } as ConfigProps;
 

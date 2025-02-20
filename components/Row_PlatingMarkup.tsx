@@ -1,9 +1,9 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { calcProfit, formatCurrency, getTextTranslation, replace_ } from "@/lib/utils";
+import { calcProfit, formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
 import { useRecipeData } from "@/contexts/UseRecipeData";
-import MenuDynamicChildren from "./MenuPopupOnMouseOver";
+import MenuDynamicChildren, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 
 interface Row_PlatingMarkupProps {
   className?: string;
@@ -14,6 +14,13 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
   const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   const name = "markup_profit";
 
+  // UPDATE OBJECT
+  const update = (portionSize: number, ruleId: number) => {
+    const newObj = { ...recipeData.data.markupId, ...{ [portionSize]: ruleId } };
+    updateRecipeData((recipeData.data.markupId = { ...newObj }));
+    // ADD HISTORY
+  };
+
   return (
     <>
       {/* FIRST COLUMN START */}
@@ -23,16 +30,37 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
       {/* FIRST COLUMN END */}
 
       {/* OTHER COLUMNS START */}
+      {/* DROP DOWN MODAL INFO__________START */}
       {recipeData.markUpPriceAmounts.map((price, i) => {
-        let { name, factor, type } = data.costRules.markUps[recipeData.markUpPriceRules[i]];
+        let { name: markupName, factor, type } = data.costRules.markUps[recipeData.markUpPriceRules[i]];
 
-        const dropDownInfo = [`${getTextTranslation("name")}: ${name}`, `${getTextTranslation("factor")}: ${factor}`, `${getTextTranslation("type")}: ${type}`, "Change"];
+        const dropDownInfo = [`${getTextTranslation("name")}: ${markupName}`, `${getTextTranslation("factor")}: ${factor}`, `${getTextTranslation("type")}: ${type}`, "Change"];
+
+        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
+
+        for (const [key, value] of Object.entries(recipeData.data.costRules.markUps)) {
+          dropDownLinks.push({
+            jsx: (
+              <>
+                <span className="font-bold">{value.name}</span>
+                <br />
+                <span>
+                  {value.type} (#{key})
+                </span>
+              </>
+            ),
+            handler: () => update(recipeData.portionSizes[i], +key),
+            selectedId: recipeData.markUpPriceRules[i],
+            id: +key,
+          });
+        }
+        // DROP DOWN MODAL INFO__________END
 
         return (
           // COLUMN CELLS START
-          <MenuDynamicChildren key={name + "_" + "_" + "menu" + "_" + i} menuArray={dropDownInfo}>
-            <Table_Cell key={name + "_" + i} className="flex gap-y-1 flex-col" edit="edit">
-              <div className=" text-nowrap">{formatCurrency(calcProfit(price, type, factor))}</div>
+          <MenuDynamicChildren key={name + "_" + "menu" + "_" + i} menuArray={dropDownLinks}>
+            <Table_Cell key={name + "_" + i} className="flex gap-y-1 flex-col" edit="edit" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
+              {formatCurrency(calcProfit(price, type, factor))}
             </Table_Cell>
           </MenuDynamicChildren>
           // COLUMN CELLS END

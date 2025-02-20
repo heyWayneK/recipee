@@ -1,7 +1,7 @@
 import React from "react";
 
 import Table_Cell from "./Table_Cell";
-import { formatWeight } from "@/lib/utils";
+import { formatWeight } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
 import SvgSpriteLink from "./SvgSpriteLink";
 import { useRecipeData } from "@/contexts/UseRecipeData";

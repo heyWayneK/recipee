@@ -1,6 +1,6 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { formatWeight, getTextTranslation } from "@/lib/utils";
+import { formatWeight, getTextTranslation } from "@/libs/utils";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useModalBig } from "@/hooks/UseBigModal";

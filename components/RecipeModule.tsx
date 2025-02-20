@@ -1,9 +1,9 @@
 import React, { Suspense, useEffect, useState } from "react";
 import Row_SubRecipesAll from "./Row_SubRecipesAll";
 import Row_PlatingAll from "./Row_PlatingAll";
-import { PreCalculatedRecipeData, preCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
+import { useRecipeData } from "@/contexts/UseRecipeData";
 import Loading from "./Loading";
-import { preCalculateData } from "@/lib/preCalculatedRecipeData";
+import { preCalculateData } from "@/libs/preCalculatedRecipeData";
 
 export interface RecipeModuleProps {
   className?: string;
@@ -20,7 +20,7 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
     } catch (error) {
       throw new Error(error.message);
     }
-  }, [recipeData.data.packagingCostsId]);
+  }, [recipeData.data.packagingCostsId, recipeData.data.otherCostsId, recipeData.data.markupId]);
 
   console.log(recipeData);
   if (!recipeData.portionSizes.length) return <Loading />;

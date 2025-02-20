@@ -1,9 +1,12 @@
 "use client";
 
+// WHAT: THIS IS FOR THE SMALL OPTION MENU THAT POPS UP.
+
 import { MenuOptionsProps } from "@/components/MenuPopupOnMouseOver";
 import SvgSprite from "@/components/SvgSprite";
 import React, { createContext, useState, useContext, useCallback, useRef, useEffect, MutableRefObject } from "react";
 
+// STRUCTURE_______________________________________________::
 type MenuOption = {
   name: string;
   handler: () => void;
@@ -22,8 +25,10 @@ interface MenuModalContextType {
   closeMenu: () => void;
 }
 
+// CONTEXT_________________________________________________::
 const MenuModalContext = createContext<MenuModalContextType | undefined>(undefined);
 
+// PROVIDER________________________________________________::
 export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // MODAL MENU WIDTH
   const MENUWIDTH = 220; // px;
@@ -64,10 +69,10 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     // RESET Z ON ORIGINAL BUTTON
     if (buttonClicked?.current) {
       buttonClicked.current.style.zIndex = "0";
-      console.log("SHOULD SHOW A CHANGE ARROW**************", buttonClicked?.current.textContent);
+      // console.log("SHOULD SHOW A CHANGE ARROW**************", buttonClicked?.current.textContent);
       // ADD ROTATING OUTLINE ON UPDATE
       // Add the class that includes the ::after pseudo-element
-      if (changed) buttonClicked.current.classList.add("rotating-outline");
+      // if (changed) buttonClicked.current.classList.add("rotating-outline");
       // buttonClicked.current.style.backgroundColor = "pink";
     }
     setIsOpen(false);
@@ -103,7 +108,7 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         <div className="fixed inset-0 z-10  w-full h-full" style={{ pointerEvents: "none", backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
           <div
             ref={modalRef}
-            className="absolute bg-white rounded-lg shadow-lg p-2"
+            className="absolute flex flex-col gap-1 bg-white rounded-lg shadow-lg p-2 "
             style={{
               top: `${position.top}px`,
               left: `${position.left}px`,
@@ -120,7 +125,7 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
               // JSX = the JSX list item name
               <button
                 key={index}
-                className={`block w-full text-left px-2 py-1 rounded-3xl leading-tight text-xs my-3 cursor-none ${
+                className={`block w-full text-left px-2 py-1 rounded-s leading-tight text-xs my-2 border cursor-none ${
                   option?.handler !== null && option?.id === option?.selectedId
                     ? " bg-gradientGreyDarkerBott"
                     : ` ${option?.handler !== null ? " hover:opacity-50 hover:border active:opacity-85" : " cursor-none"}`
@@ -130,7 +135,7 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                   e.preventDefault();
                   // SLOW DOWN UPDATE to show spinner
                   setTimeout(() => {
-                    option.handler();
+                    option?.handler();
                   }, 500);
                   closeMenu();
                 }}
@@ -166,7 +171,7 @@ export const useMenuModal = () => {
   return context;
 };
 
-// HOOK
+// HOOK____________________________________________________::
 // export const useModalMenu = (options: MenuOption[]) => {
 export const useModalMenu = (options: MenuOptionsProps[]) => {
   const { openMenu, closeMenu } = useMenuModal();
@@ -209,8 +214,9 @@ export const useModalMenu = (options: MenuOptionsProps[]) => {
   return { buttonRef, handleClick, buttonPosition, closeMenu };
 };
 
+// USAGE:__________________________________________________::
+// There are 2 variants on MOUSECLICK and MOUSEOVER (dont use mouse over - Tablets/Mobile )
 /* MOUSECLICK
-*  USAGE:
 
 import { MenuButton } from "@/components/MenuButton";
 import React, { ReactElement } from "react";
@@ -220,7 +226,7 @@ interface Props {
 }
 
 const MenuOption1: React.FC<Props> = ({ children }) => {
-  const menuOptions = [
+  const menuOptions = [~
     { name: "Option 1 - 2", handler: () => console.log("Option 1 clicked ") },
     { name: "Option 2 - 2", handler: () => console.log("Option 2 clicked ") },
     { name: "Option 3 - 2", handler: () => console.log("Option 3 clicked ") },
@@ -233,7 +239,7 @@ export default MenuOption1;
 
 */
 
-/** 
+/**  DONT USE MOUSEOVER VERSION - IT DOESNT WORK ON MOBILE OR TABLETS
  * MOUSE OVER
   dropDownLinks = []
  * 

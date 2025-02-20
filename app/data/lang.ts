@@ -59,4 +59,14 @@ ingredient
 instruction
 qty
 cost
+
+form_error
+
+// FORM LABELS - Textfields etc
+name
+email
+address
+paymentoptions
+contacts
+
  */

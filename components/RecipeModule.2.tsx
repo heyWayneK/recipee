@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from "react";
-import { calcProfit, formatCurrency } from "@/lib/utils";
+import { calcProfit, formatCurrency } from "@/libs/utils";
 import Row_SubRecipesAll from "./Row_SubRecipesAll";
 import Row_PlatingAll from "./Row_PlatingAll";
 import { useRecipeData } from "@/contexts/UseRecipeData";

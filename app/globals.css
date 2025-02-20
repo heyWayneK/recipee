@@ -65,31 +65,58 @@
 @keyframes rotating-dots {
   0% {
     transform: rotate(0deg);
+    outline: 3px dotted rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: rotate(360deg);
+    outline: 3px dotted rgba(0, 0, 0, 0.2);
   }
   100% {
     transform: rotate(360deg);
+    outline: 3px dotted rgba(0, 0, 0, 0.05);
   }
 }
 
 .rotating-outline {
   position: relative;
+  /* display: grid; */
+  width: 100%;
+  height: 100%;
   /* color: white; */
-  /* opacity: 0; */
-  /* background-color: red; */
-  filter: blur(1px);
+  /* opacity: 0.4; */
+  background-color: rgb(212, 213, 214);
+  border-radius: 100px;
+  /* filter: blur(1px); */
+
+  /* transition: all; */
 }
 .rotating-outline::after {
+  display: grid;
   content: "";
   position: absolute;
-  top: -80%;
-  left: 0;
-  right: 0;
-  /* bottom: 0; */
-  /* transform: translateY(-200%); */
-  /* transform: translatex(50%); */
-  outline: 5px dotted rgba(0, 0, 0, 0.5);
+  place-self: center;
+  /* outline: 4px dotted rgba(0, 0, 0, 0.5); */
   width: 100%;
   aspect-ratio: 1/1;
   border-radius: 100px;
-  animation: rotating-dots 5s linear infinite;
+  animation: rotating-dots 10s linear infinite;
+}
+
+/* Add this to your global CSS file */
+.react-date-range {
+  width: 100% !important; /* Ensure the calendar takes full width */
+}
+
+.react-date-range .rdrDefinedRangesWrapper {
+  display: none; /* Hide predefined ranges on mobile */
+}
+
+.react-date-range .rdrDateDisplayWrapper {
+  font-size: 14px; /* Adjust font size for better readability */
+}
+
+@media (max-width: 768px) {
+  .react-date-range .rdrMonthsHorizontal {
+    flex-direction: column; /* Stack months vertically on small screens */
+  }
 }

@@ -1,4 +1,18 @@
-# MicroSassFast — Typescript
+# Recipee — Typescript
+
+## isOnline()?
+
+- using hook:
+  ```javascript
+  const { isOnline } = UseOnlineStatus();
+  ```
+- using component:
+  ```javascript
+  import { UseOnlineStatus } from "@/contexts/useOnlineStatus";
+  <OnlineOffline />;
+  ```
+
+# OLD - CAN DELETE AFTER THISnLATER
 
 Hey Indie Hacker 👋 it's Dennis from [MicroSassFast](https://docs.microsaasfast.me/). Let's build your SaaS fast and NOW!
 
@@ -19,4 +33,5 @@ Hey Indie Hacker 👋 it's Dennis from [MicroSassFast](https://docs.microsaasfas
 ## Support
 
 Reach out to me on [Twitter](https://twitter.com/DennisBabych) or hello@db2.io
+
 # recipee

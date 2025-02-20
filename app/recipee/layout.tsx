@@ -1,4 +1,7 @@
+"use client";
+import Footer from "@/components/Footer";
 import HeaderRecipee from "@/components/HeaderRecipee";
+import { OnlineStatusProvider } from "@/contexts/useOnlineStatus";
 import { ReactNode } from "react";
 // import { redirect } from "next/navigation";
 // import { getServerSession } from "next-auth";
@@ -7,7 +10,8 @@ import { ReactNode } from "react";
 
 // This layout component is used to wrap private pages, ensuring that only authenticated users can access them.
 // See https://docs.microsaasfast.me/private-page/
-export default async function Recipee({
+// export default async function Recipee({
+export default function Recipee({
   // export default async function LayoutPrivate({
   children,
 }: {
@@ -27,17 +31,21 @@ export default async function Recipee({
   // {renderSchemaTags()}
 
   return (
-    <div className="grid grid-cols-[max-content_1fr_max-content] h-dvh w-dvw">
-      <aside className=""></aside>
-      <div className="grid grid-rows-[min-content_1fr_min-content] min-h-dvh px-6">
-        <header className=" h-20">
-          <HeaderRecipee />
-        </header>
-        <main className="">{children}</main>
-        <footer className=" h-40">FOOTER</footer>
+    <OnlineStatusProvider>
+      <div className="grid grid-cols-[max-content_1fr_max-content] h-dvh w-dvw">
+        <aside className=""></aside>
+        <div className="grid grid-rows-[min-content_1fr_min-content] min-h-dvh px-6">
+          <header className=" h-20">
+            <HeaderRecipee />
+          </header>
+          <main className="">{children}</main>
+          <footer className=" h-40">
+            <Footer />
+          </footer>
+        </div>
+        <aside className=""></aside>
       </div>
-      <aside className=""></aside>
-    </div>
+    </OnlineStatusProvider>
   );
 }
 

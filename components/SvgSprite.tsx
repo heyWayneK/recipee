@@ -6,6 +6,10 @@ interface SvgSpriteProps {
   className?: string;
 }
 
+// TODO: EXAMPLE: TAILWIND MERGE
+// import { tailwindMerge } from "@/utils/tailwindMerge";
+// className={tailwindMerge("mb-2 p-3 overflow-hidden w-full rounded-3xl border border-dotted border-slate-600 shadow-md grid grid-cols-1 justify-center items-stretch", className)}
+
 export type allowedIcon = (typeof allowedIcons)[number];
 
 // These come from the public/assets/sprite.svg ids

@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
-import { getTextTranslation } from "@/lib/utils";
+import { getTextTranslation } from "@/libs/utils";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 
 interface Row_SubRecipeControlsProps {
@@ -22,7 +22,7 @@ const Row_SubRecipeControls: React.FC<Row_SubRecipeControlsProps> = ({ className
         <Pill tone="white" className="text-xs" iconName="speech_to_text" edit="" onClick={() => {}}>
           {getTextTranslation("give_chef_feedback")}
         </Pill>
-        <Pill tone="white" className=" text-xs bg-red-600" iconName="warning" edit="" onClick={() => {}}>
+        <Pill tone="white" className=" text-xs bg-red-600 text-red-50 [&>svg]:fill-white" iconName="warning" edit="" onClick={() => {}}>
           {getTextTranslation("you_have_feedback")}
         </Pill>
       </div>
