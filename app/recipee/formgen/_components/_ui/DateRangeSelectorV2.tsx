@@ -4,6 +4,7 @@ import { DateRangePicker, Range } from "react-date-range";
 import "react-date-range/dist/styles.css"; // Main style file
 import "react-date-range/dist/theme/default.css"; // Theme CSS file
 import { DateRangeSelectorV2Props } from "../../_types/formGen_types";
+import { isValid } from "date-fns";
 
 // FUTURE: - LOCALES for calendar language and style
 // import * as locales from "react-date-range/dist/locale";
@@ -138,10 +139,10 @@ DateRangeSelectorV2Props) => {
   }, [register, startFormElement, endFormElement, name, setValue]);
 
   useEffect(() => {
-    // console.log("start date end date VALUES", getValues("startDate"), getValues("endDate"));
     const startDate = new Date(getValues("startDate"));
     const endDate = new Date(getValues("endDate"));
-    if (startDate && endDate) {
+    console.log("start date -  end date VALUES", getValues("startDate"), getValues("endDate"));
+    if (isValid(startDate) && isValid(endDate)) {
       // console.log("REGISTERING INITIAL DATES: ", getValues("startDate"), getValues("endDate"));
       setState({ startDate, endDate });
       checkMinimumDays(startDate, endDate);

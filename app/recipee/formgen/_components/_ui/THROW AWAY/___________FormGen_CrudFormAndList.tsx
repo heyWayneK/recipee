@@ -93,7 +93,9 @@ export function FormGen_CrudFormAndList(DynamicTableComponent: React.ComponentTy
     return (
       <div className="grid gap-10">
         {/* HEADING */}
-        <h4>{selectedItem ? "Edit" : "Create New"} Item</h4>
+        <h4>
+          {selectedItem ? "Edit" : "Create New"} {tableName}]
+        </h4>
 
         {/* NEW ROW FORM or EDIT EXISTING ROW */}
         {showForm && <DynamicFormComponent model={model} onSubmit={selectedItem ? handleUpdate : handleSaveNewRow} initialData={selectedItem} handleToggleForm={handleToggleForm} />}

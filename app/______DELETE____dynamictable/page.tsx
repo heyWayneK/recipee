@@ -1,6 +1,6 @@
 "use client";
 
-import { DynamicTable } from "@/app/recipee/formgen/_components/DynamicTable";
+import { DynamicTable } from "@/app/recipee/formgen/_components/FormGen_DynamicTable";
 
 const sampleData = [
   { id: "1", name: "John Doe", age: 30, city: "New York" },

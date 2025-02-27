@@ -97,6 +97,7 @@ enum EnumDietClassification {
   vegan
   vegetarian
   animal_product
+  unknown
 }
 
 enum EnumComponentIngredientType {
@@ -198,16 +199,56 @@ model Role {
   updatedAt  DateTime @updatedAt
 }
 
+model RawToPreppedYields {
+  id               Int         @id @default(autoincrement())
+  ingredientId     Int
+  ingredients      Ingredients @relation(fields: [ingredientId], references: [id])
+  whole            Float       @default(1)
+  peeled           Float       @default(0)
+  peeled_and_cored Float       @default(0)
+  diced            Float       @default(0)
+  sliced           Float       @default(0)
+  grated           Float       @default(0)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
 model Ingredients {
-  id         Int         @id @default(autoincrement())
-  customer   Customer    @relation(fields: [customerId], references: [id])
-  customerId Int
-  isDefault  Boolean     @default(false)
-  name       String
-  nameOther  String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  Component  Component[]
+  id                        Int                    @id @default(autoincrement())
+  customer                  Customer?              @relation(fields: [customerId], references: [id])
+  customerId                Int?
+  isDefault                 Boolean                @default(false)
+  name                      String
+  name_alt                  String?
+  primary_category          String                 @default("")
+  secondary_category        String                 @default("")
+  dietary_classification    EnumDietClassification @default(unknown)
+  kcal_per_100g             Float                  @default(0)
+  kj_per_100g               Float                  @default(0)
+  protein_per_100g          Float                  @default(0)
+  fat_per_100g              Float                  @default(0)
+  saturated_fat_per_100g    Float                  @default(0)
+  monounsaturate_per_100g   Float                  @default(0)
+  polyunsaturate_per_100g   Float                  @default(0)
+  trans_fats_per_100g       Float                  @default(0)
+  omega3_per_100g           Float                  @default(0)
+  omega6_per_100g           Float                  @default(0)
+  omega9_per_100g           Float                  @default(0)
+  carbs_per_100g            Float                  @default(0)
+  net_carbs_per_100g        Float                  @default(0)
+  carbohydrates_per_100g    Float                  @default(0)
+  total_sugar_per_100g      Float                  @default(0)
+  added_sugar_per_100g      Float?                 @default(0)
+  artificial_sugar_per_100g Float?                 @default(0)
+  fibre_per_100g            Float                  @default(0)
+  starch_per_100g           Float?                 @default(0)
+  salt_per_100g             Float                  @default(0)
+  sodium_per_100g           Float                  @default(0)
+  raw_to_prepped_yields     RawToPreppedYields[]
+  Component                 Component[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Supplier {
@@ -497,8 +538,9 @@ model Component {
   type          EnumComponentIngredientType
   parent        Component?                  @relation("ComponentHierarchy", fields: [parentId], references: [id])
   parentId      Int?
-  ingredient    Ingredients?                @relation(fields: [ingredientId], references: [id])
-  ingredientId  Int?
+  // ingredient    Ingredients?       @relation(fields: [ingredientId], references: [id])
+  // DO I NEED THIS ingredientID - should be optional?
+  ingredientId  Ingredients[]
   portions      Json
   yield         Float
   nutriPer100   Json

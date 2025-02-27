@@ -7,10 +7,12 @@ export type DynamicObjectArray = Array<Record<string, any>>;
 
 export interface DynamicTableComponentProps {
   items: DynamicObjectArray;
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
   showForm: boolean;
   handleToggleForm: () => void;
+  tableName: string;
+  formFieldsToExcludeInTable: string[];
 }
 
 export interface WithCrudProps {
@@ -35,7 +37,7 @@ export interface GenericFormProps {
   model: any;
   onSubmit: (data: FieldValues) => void;
   initialData?: FieldValues;
-  handleToggleForm: () => void;
+  handleToggleForm?: () => void;
 }
 
 export interface ModelFormData {
@@ -52,11 +54,10 @@ export interface ModelFormData {
   daterange2: string;
 }
 
-export type FieldType = "text" | "number" | "multiline" | "radio" | "checkbox" | "select" | "imageupload" | "daterange" | "daterangev2";
+export type FieldType = "hidden" | "text" | "number" | "multiline" | "radio" | "checkbox" | "select" | "imageupload" | "daterange" | "daterangev2";
 
 export interface ValidateOptions {
-  id?: number | string;
-  name: string;
+  dbName: string; // form field name from DB col
   label: string;
   type: FieldType;
   required: boolean;

@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm, type FieldValues } from "react-hook-form";
 import { generateFormFields } from "@/app/recipee/formgen/_util/FormGen_FormElements";
 import { Button } from "@/components/ui/button";

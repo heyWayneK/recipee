@@ -1,4 +1,4 @@
-import { UseOnlineStatus } from "@/contexts/useOnlineStatus";
+import { UseOnlineStatus } from "@/contexts/UseOnlineStatus";
 
 const OnlineOffline = () => {
   const { isOnline } = UseOnlineStatus();
