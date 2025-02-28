@@ -93,14 +93,14 @@ export type SortDirection = "asc" | "desc" | null;
 
 export interface DynamicTableProps {
   data: Record<string, any>[];
-  // onRowSelect?: (id: number) => void;
+  onRowSelect?: (id: any) => void;
   onAction: (id: any[]) => void;
   showForm: boolean;
   handleToggleForm: () => void;
 }
 
 export interface TableItem {
-  id?: number | string;
+  id?: number | string | null;
   [key: string]: any;
 }
 

@@ -285,7 +285,7 @@ export interface ComponentsProps {
   type?: EnumComponentIngredientType;
   parentId?: null | number;
   ingredientId?: number | null;
-  portions?: { [key: number]: number };
+  portions?: { [key: number]: number } | null;
   yield?: number;
   nutriPer100?: nutriPer100Props[];
   version?: string;
@@ -335,7 +335,7 @@ export interface recipeDetailProps {
   isSaltInWater: boolean;
   isOil: boolean;
   oilPurpose: EnumOilPurpose;
-  subRecipe: ComponentsProps;
+  subRecipe: ComponentsProps | null;
 }
 
 export interface FQProps {
