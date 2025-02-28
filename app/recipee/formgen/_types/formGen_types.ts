@@ -8,9 +8,9 @@ export type DynamicObjectArray = Array<Record<string, any>>;
 export interface DynamicTableComponentProps {
   items: DynamicObjectArray;
   // onEdit: (id: number) => void;
-  onEdit: () => void;
+  onEdit: (id: number) => void;
   // onDelete: (id: number) => void;
-  onDelete: () => void;
+  onDelete: (id: number) => void;
   showForm: boolean;
   handleToggleForm: () => void;
   tableName: string;
@@ -37,9 +37,9 @@ export interface ApiResponse {
 
 export interface GenericFormProps {
   model: any;
-  // onSubmit: (data: FieldValues) => void;
-  onSubmit: () => void;
-  initialData?: FieldValues;
+  onSubmit: (data: FieldValues) => void;
+  // onSubmit: () => void;
+  initialData?: FieldValues | null;
   handleToggleForm?: () => void;
 }
 

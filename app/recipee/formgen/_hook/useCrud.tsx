@@ -5,8 +5,8 @@ import { FieldValues } from "react-hook-form";
 
 // The custom hook
 export default function useTableCrud(tableName: TableName) {
-  const [items, setItems] = useState<DynamicObjectArray | null>(null);
-  const [isError, setIsError] = useState<Partial<ApiResponse> | null>({ error: false });
+  const [items, setItems] = useState<DynamicObjectArray | []>([]);
+  const [isError, setIsError] = useState<Partial<ApiResponse>>({ error: false });
   const [selectedItem, setSelectedItem] = useState<{ id: number } | null>(null);
   const [showForm, setShowForm] = useState<boolean>(false);
 
@@ -15,9 +15,9 @@ export default function useTableCrud(tableName: TableName) {
     try {
       const fetchedItems: DynamicObjectArray = await getAll(tableName);
       // Flatten date objects (TODO: Improve date handling)
-      const jsonFetch = JSON.parse(JSON.stringify(fetchedItems));
+      const jsonFetch = await JSON.parse(JSON.stringify(fetchedItems));
       setItems(jsonFetch);
-    } catch (error) {
+    } catch (error: any) {
       setIsError({
         ok: false,
         error: true,

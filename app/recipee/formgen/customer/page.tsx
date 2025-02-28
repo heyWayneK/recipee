@@ -4,7 +4,7 @@ import React from "react";
 import { Prisma } from "@prisma/client";
 import { TableName } from "../_api/prismaCrud";
 import { ValidateOptions } from "../_types/formGen_types";
-import FormGen_Form_Table_DbCall2 from "../_components/Form_Table_DbCall";
+import FormGen_Form_Table_DbCall2 from "../_components/Form_Table_DbCall2";
 
 /* EXAMPLE FIELDS_______________START
   CustomerSelect:
