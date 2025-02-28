@@ -7,8 +7,10 @@ export type DynamicObjectArray = Array<Record<string, any>>;
 
 export interface DynamicTableComponentProps {
   items: DynamicObjectArray;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  // onEdit: (id: number) => void;
+  onEdit: () => void;
+  // onDelete: (id: number) => void;
+  onDelete: () => void;
   showForm: boolean;
   handleToggleForm: () => void;
   tableName: string;
@@ -35,7 +37,8 @@ export interface ApiResponse {
 
 export interface GenericFormProps {
   model: any;
-  onSubmit: (data: FieldValues) => void;
+  // onSubmit: (data: FieldValues) => void;
+  onSubmit: () => void;
   initialData?: FieldValues;
   handleToggleForm?: () => void;
 }
@@ -61,14 +64,14 @@ export interface ValidateOptions {
   label: string;
   type: FieldType;
   required: boolean;
-  pattern: { value: RegExp; message: string; type: FieldType };
-  options: { value: string; label: string }[];
-  enum: any; // For handling enums
-  min: number;
-  max: number;
-  error: string;
-  minLength?: number;
-  maxLength?: number;
+  pattern: { value: RegExp; message: string; type: FieldType } | null;
+  options: { value: string; label: string }[] | null;
+  enum: any | null; // For handling enums
+  min: number | null;
+  max: number | null;
+  error: string | null;
+  minLength?: number | null;
+  maxLength?: number | null;
   // INFO:
   /* EXAMPLES:
       <input {...register("firstName", { required: true, maxLength: 20 })} />
@@ -78,16 +81,20 @@ export interface ValidateOptions {
     */
 }
 
-export type ValidationType = Partial<{
-  [key in keyof ModelFormData]: ValidateOptions;
-}>;
+// TODO: Fix this type or delete
+// export type ValidationType<T extends keyof ModelFormData> = Partial<{
+//   [key in T]: ValidateOptions;
+// }>;
+// export type ValidationType = Partial<{
+//   [key in keyof ModelFormData]: ValidateOptions;
+// }>;
 
 export type SortDirection = "asc" | "desc" | null;
 
 export interface DynamicTableProps {
   data: Record<string, any>[];
-  onRowSelect?: (selectedIds: string[]) => void;
-  onAction?: (selectedIds: string[]) => void;
+  onRowSelect?: () => void;
+  onAction?: () => void;
   showForm: boolean;
   handleToggleForm: () => void;
 }

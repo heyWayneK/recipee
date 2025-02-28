@@ -1,15 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import OpenAI from "openai";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY }); // Set this in your .env file
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { id, name } = req.body;
+  const { id, name }: {} = req.body;
 
   if (!id || !name) {
     return res.status(400).json({ error: "Missing id or name" });
@@ -71,7 +72,8 @@ export default async function handler(req, res) {
       temperature: 0.3, // Low temperature for consistency
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
+    // TYPESCRIPT FIX ?? {}
+    const result = JSON.parse(response.choices[0].message.content ?? "{}");
 
     // Update the Ingredients table
     await prisma.ingredients.update({

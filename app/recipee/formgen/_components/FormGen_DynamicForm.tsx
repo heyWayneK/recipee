@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import Pill from "@/components/Pill";
 import Loading from "@/components/Loading";
 import { GenericFormProps } from "../_types/formGen_types";
+import { useFormStatus } from "react-dom";
 
 export function DynamicFormComponent({ model, onSubmit, initialData, handleToggleForm }: GenericFormProps) {
   const methods = useForm<FieldValues>({
     defaultValues: initialData,
   });
+
+  // TODO: use these pending, action, method, data
+  const { pending } = useFormStatus();
 
   const {
     register,
@@ -48,7 +52,15 @@ export function DynamicFormComponent({ model, onSubmit, initialData, handleToggl
           {/* disabled={errorsCount > 0 ? true : false}  className={`${errorsCount > 0 ? " line-through" : ""}`*/}
 
           <Button key={"submitButton"} disabled={isSubmitting} variant={`${errorsCount > 0 ? "destructive" : "secondary"}`} type="submit">
-            {initialData ? (errorsCount > 0 ? `Save Update - Fix ${errorsCount} Errors` : "Save Update") : errorsCount > 0 ? `Save New - Fix ${errorsCount} Errors` : "Save New"}
+            {pending
+              ? "Submitting"
+              : initialData
+              ? errorsCount > 0
+                ? `Save Update - Fix ${errorsCount} Errors`
+                : "Save Update"
+              : errorsCount > 0
+              ? `Save New - Fix ${errorsCount} Errors`
+              : "Save New"}
           </Button>
 
           <Button key={"CancelButton"} variant="secondary" type="button" onClick={handleToggleForm}>

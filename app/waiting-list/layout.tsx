@@ -1,19 +1,21 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Suspense } from "react";
+// TODO: WK removed becase of error uploading to vercel
 
-export default async function LayoutBlog({ children }: { children: any }) {
-  return (
-    <div>
-      <Suspense>
-        <Header />
-      </Suspense>
+// import Header from "@/components/Header";
+// import Footer from "@/components/Footer";
+// import { Suspense } from "react";
 
-      <main className="min-h-screen mx-auto">{children}</main>
+// export default async function LayoutBlog({ children }: { children: any }) {
+//   return (
+//     <div>
+//       <Suspense>
+//         <Header />
+//       </Suspense>
 
-      <div className="h-24" />
+//       <main className="min-h-screen mx-auto">{children}</main>
 
-      <Footer />
-    </div>
-  );
-}
+//       <div className="h-24" />
+
+//       <Footer />
+//     </div>
+//   );
+// }

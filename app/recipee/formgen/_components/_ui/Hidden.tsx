@@ -13,10 +13,11 @@ interface InputFieldProps {
   className?: string; // Additional class names for styling
 }
 
-const Hidden = ({ name, label, type = "hidden", required = false, pattern, placeholder, error, className }: InputFieldProps) => {
+// const Hidden = ({ name, label, type = "hidden", required = false, pattern, placeholder, error, className }: InputFieldProps) => {
+const Hidden = ({ name, label, type = "hidden", required = false, pattern, placeholder }: InputFieldProps) => {
   const {
     register,
-    formState: { errors },
+    // formState: { errors },
   } = useFormContext();
 
   return (

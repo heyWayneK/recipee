@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-
 import { Prisma } from "@prisma/client";
 import { TableName } from "./_api/prismaCrud";
 import { ValidateOptions } from "./_types/formGen_types";
@@ -52,9 +51,9 @@ const tableName: TableName = "customers";
 // TWO
 const formFieldsToExcludeInTable: (keyof Prisma.CustomerSelect)[] = ["emailVerified", "address", "createdAt", "logo", "updatedAt", "CostRules", "active"];
 
-type ValidationType = Partial<{
-  [key in keyof Prisma.CustomerSelect]: any;
-}>;
+// type ValidationType = Partial<{
+//   [key in keyof Prisma.CustomerSelect]: any;
+// }>;
 
 // Example usage
 const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<ValidateOptions, "dbName">>> = {

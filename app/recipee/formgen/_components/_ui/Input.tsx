@@ -33,6 +33,7 @@ const Input = ({ name, label, type = "text", required = false, pattern, placehol
       <input
         id={name}
         type={type}
+        autoComplete="off"
         placeholder={placeholder}
         {...register(name, {
           required: required ? `${label || "This field"} is required` : false,

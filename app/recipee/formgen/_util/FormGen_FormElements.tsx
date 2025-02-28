@@ -1,5 +1,5 @@
 import React from "react";
-import type { FieldValues, UseFormRegister } from "react-hook-form";
+// import type { FieldValues, UseFormRegister } from "react-hook-form";
 import Input from "../_components/_ui/Input";
 import Textarea from "../_components/_ui/Textarea";
 import RadioButtonGroup from "../_components/_ui/RadioGroup";
@@ -12,7 +12,8 @@ import DateRangeSelectorV2 from "../_components/_ui/DateRangeSelectorV2";
 import { ValidateOptions } from "../_types/formGen_types";
 import Hidden from "../_components/_ui/Hidden";
 
-export function generateFormFields(model: ValidateOptions[], register: UseFormRegister<FieldValues>) {
+// export function generateFormFields(model: ValidateOptions[], register: UseFormRegister<FieldValues>) {
+export function generateFormFields(model: ValidateOptions[]) {
   // FLATTEN OBJECT INTO ARRAY WITH ID FIRST
   const formArray = Object.entries(model).reduce((acc, [key, value]) => {
     acc.push({ dbName: key, ...value });
@@ -22,11 +23,12 @@ export function generateFormFields(model: ValidateOptions[], register: UseFormRe
   return formArray.map((option: ValidateOptions, i) => {
     switch (option.type) {
       case "hidden":
-        inputElement = <Hidden name={option.dbName} options={option.options} required={option.required} {...option} placeholder={option.type} />;
+        // inputElement = <Hidden name={option.dbName} options={option.options} required={option.required} {...option} placeholder={option.type} />;
+        inputElement = <Hidden name={option.dbName} placeholder={option.type} />;
         break;
       case "text":
       case "number":
-        inputElement = <Input name={option.dbName} label={option.label} options={option.options} required={option.required} {...option} placeholder={option.type} />;
+        inputElement = <Input name={option.dbName} label={option.label} required={option.required} placeholder={option.type} />;
         break;
       case "multiline":
         inputElement = <Textarea name={option.dbName} rows={3} label={option.label} required={option.required} placeholder={option.type} />;
@@ -76,7 +78,7 @@ export function generateFormFields(model: ValidateOptions[], register: UseFormRe
         // INFO: excludedDates={[new Date("2023-10-10"), new Date("2023-10-15"), new Date("2023-10-20")]}
         break;
       default:
-        inputElement = <Input name={option.dbName} label={option.label} options={option.options} required={option.required} {...option} placeholder={`${option.type} default`} />;
+        inputElement = <Input name={option.dbName} label={option.label} required={option.required} placeholder={`${option.type} default`} />;
     }
 
     if (option.type === "hidden") return <a key={i}>{inputElement}</a>;

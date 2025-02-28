@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ApiResponse, DynamicObjectArray } from "../_types/formGen_types";
-import { TableName, create, deleteOne, getAll, getOne, update, uploadImage } from "../_api/prismaCrud";
+import { TableName, create, deleteOne, getAll, getOne, update } from "../_api/prismaCrud";
 import { FieldValues } from "react-hook-form";
 
 // The custom hook
@@ -36,24 +36,29 @@ export default function useTableCrud(tableName: TableName) {
   // CRUD Handlers
   const handleSaveNewRow = async (data: FieldValues) => {
     try {
-      const dataWithoutImageFile: Record<string, any> = {};
-      for (const [key, value] of data.entries()) {
-        if (key !== "image") {
-          dataWithoutImageFile[key] = value;
-        }
-      }
+      // const dataWithoutImageFile: Record<string, any> = {};
+      // for (const [key, value] of data.entries()) {
+      //   console.log("DATA", key, value);
+      //   if (key !== "image") {
+      //     dataWithoutImageFile[key] = value;
+      //   }
+      // }
 
-      const imageFile = data.get("image");
-      if (imageFile instanceof File) {
-        const imageUrl = await uploadImage(imageFile);
-        dataWithoutImageFile.image = imageUrl;
-      }
+      // const imageFile = data.get("image");
+      // if (imageFile instanceof File) {
+      //   const imageUrl = await uploadImage(imageFile);
+      //   dataWithoutImageFile.image = imageUrl;
+      // }
 
-      await create(tableName, dataWithoutImageFile);
+      // console.log("INSERT New FIELDVALUES______", dataWithoutImageFile);
+
+      await create(tableName, data);
+      // await create(tableName, dataWithoutImageFile);
       await fetchItems();
       setSelectedItem(null);
       setShowForm(false);
     } catch (error) {
+      setIsError({ error: true, statusText: "Waynes error" });
       throw new Error(`Failed to insert new row: ${error}`);
     }
   };

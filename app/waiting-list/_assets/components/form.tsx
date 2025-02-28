@@ -1,68 +1,70 @@
-"use client";
-import { useState } from "react";
-import { Input } from "@/app/recipee/formgen/_components/_ui/Input";
-import { Button } from "@/components/ui/button";
-import { Toaster, toast } from "react-hot-toast";
+// TODO: WK removed becase of error uploading to vercel
 
-const Form = () => {
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
+// "use client";
+// import { useState } from "react";
+// import { Input } from "@/app/recipee/formgen/_components/_ui/Input";
+// import { Button } from "@/components/ui/button";
+// import { Toaster, toast } from "react-hot-toast";
 
-  const handleChange = (e: any) => {
-    setEmail(e.target.value);
-    setError("");
-  };
+// const Form = () => {
+//   const [email, setEmail] = useState("");
+//   const [error, setError] = useState("");
 
-  const validateEmail = (email: string) => {
-    // Basic email validation regex
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
+//   const handleChange = (e: any) => {
+//     setEmail(e.target.value);
+//     setError("");
+//   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    if (!email) {
-      setError("Email is required.");
-      return;
-    }
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+//   const validateEmail = (email: string) => {
+//     // Basic email validation regex
+//     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     return re.test(String(email).toLowerCase());
+//   };
 
-    try {
-      // Make the POST request using fetch
-      const response = await fetch("/api/lead", {
-        method: "POST", // Specify the request method
-        headers: {
-          "Content-Type": "application/json", // Specify the content type
-        },
-        body: JSON.stringify({ email: email }), // Convert the data object to a JSON string
-      });
+//   const handleSubmit = async (e: any) => {
+//     e.preventDefault();
+//     if (!email) {
+//       setError("Email is required.");
+//       return;
+//     }
+//     if (!validateEmail(email)) {
+//       setError("Please enter a valid email address.");
+//       return;
+//     }
 
-      // Check if the response is not OK (status code outside of the range 200-299)
-      if (!response.ok) {
-        throw new Error("Network response was not ok " + response.statusText);
-      }
+//     try {
+//       // Make the POST request using fetch
+//       const response = await fetch("/api/lead", {
+//         method: "POST", // Specify the request method
+//         headers: {
+//           "Content-Type": "application/json", // Specify the content type
+//         },
+//         body: JSON.stringify({ email: email }), // Convert the data object to a JSON string
+//       });
 
-      // Handle the response data
-      toast.success("Successfully added to waiting list!");
-      setEmail("");
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+//       // Check if the response is not OK (status code outside of the range 200-299)
+//       if (!response.ok) {
+//         throw new Error("Network response was not ok " + response.statusText);
+//       }
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <Toaster position="top-center" reverseOrder={false} />
-      <Input placeholder="Email" className="mt-8 mb-2" value={email} onChange={handleChange} />
-      {error && <p className="text-red-500 mt-2 text-start">{error}</p>}
-      <Button type="submit" className="w-[150px] mt-8 bg-[#006fee] border-none scale-1 hover:scale-[1.05] transition-all duration-300 hover:bg-[#006fee]">
-        Button
-      </Button>
-    </form>
-  );
-};
+//       // Handle the response data
+//       toast.success("Successfully added to waiting list!");
+//       setEmail("");
+//     } catch (error) {
+//       console.error("Error:", error);
+//     }
+//   };
 
-export default Form;
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <Toaster position="top-center" reverseOrder={false} />
+//       <Input placeholder="Email" className="mt-8 mb-2" value={email} onChange={handleChange} />
+//       {error && <p className="text-red-500 mt-2 text-start">{error}</p>}
+//       <Button type="submit" className="w-[150px] mt-8 bg-[#006fee] border-none scale-1 hover:scale-[1.05] transition-all duration-300 hover:bg-[#006fee]">
+//         Button
+//       </Button>
+//     </form>
+//   );
+// };
+
+// export default Form;

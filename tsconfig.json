@@ -3,7 +3,7 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
@@ -14,8 +14,8 @@
     "isolatedModules": true,
     "noImplicitAny": true,
     "jsx": "preserve",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    // "noUnusedLocals": false,
+    // "noUnusedParameters": false,
     "paths": {
       "@/*": ["./*"]
     },

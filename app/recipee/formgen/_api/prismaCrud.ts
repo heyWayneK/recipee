@@ -38,6 +38,7 @@ export type TableName = (typeof TABLES)[number];
 
 // Map with specific Prisma delegate types (example, adjust to your schema)
 const modelMap: {
+  // eslint-disable-next-line no-unused-vars
   [key in TableName]: any; // Or use specific types like Prisma.CustomerDelegate
 } = {
   account: prisma.account,
@@ -99,9 +100,10 @@ export async function getOne(table: TableName, id: number) {
  */
 export async function create(table: TableName, data: any) {
   if (table in modelMap) {
+    console.log("CREATE DATA______******", data);
     return await modelMap[table].create({ data });
   } else {
-    throw new Error(`Table Insert Failed "${table}"`);
+    throw new Error(`Insert Failed "${table}"`);
   }
 }
 

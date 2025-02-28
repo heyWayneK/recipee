@@ -33,17 +33,6 @@ type ValidationType = Partial<{
 }>;
 
 const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<ValidateOptions, "dbName">>> = {
-  id: {
-    label: "ID",
-    type: "hidden",
-    required: true,
-    pattern: null,
-    options: null,
-    enum: null,
-    min: null,
-    max: null,
-    error: null,
-  },
   name: {
     label: "Name",
     type: "text",
