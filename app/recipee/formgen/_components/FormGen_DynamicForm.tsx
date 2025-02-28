@@ -17,7 +17,7 @@ export function DynamicFormComponent({ model, onSubmit, initialData, handleToggl
   const { pending } = useFormStatus();
 
   const {
-    register,
+    // register,
     handleSubmit,
     formState: { errors, isLoading, isSubmitting },
     reset,
