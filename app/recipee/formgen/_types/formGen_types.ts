@@ -39,7 +39,7 @@ export interface GenericFormProps {
   model: any;
   onSubmit: (data: FieldValues) => void;
   // onSubmit: () => void;
-  initialData: FieldValues;
+  initialData: FieldValues | undefined;
   handleToggleForm?: () => void;
 }
 
