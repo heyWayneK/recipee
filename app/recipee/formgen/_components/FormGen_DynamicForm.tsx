@@ -36,7 +36,7 @@ export function DynamicFormComponent({ model, onSubmit, initialData, handleToggl
     <FormProvider key={"formProvider"} {...methods}>
       <form key={"crud_form"} onSubmit={handleSubmit(onSubmit)} className="space-y-4  w-svw max-w-[900px] pr-16">
         {/* CREATE ALL FORM FIELDS DYNAMICALLY */}
-        {generateFormFields(model, register)}
+        {generateFormFields(model)}
 
         {/* FORM ERRORS */}
         <div key={"form_errors_div"} className="flex gap-2  flex-wrap justify-start">
