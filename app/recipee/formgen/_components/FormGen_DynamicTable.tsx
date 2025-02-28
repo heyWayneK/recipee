@@ -18,7 +18,7 @@ import { SortDirection } from "@tanstack/react-table";
 // export const DynamicTable: React.FC<DynamicTableProps> = ({ data, onRowSelect, onAction, showForm, handleToggleForm }) => {
 export const DynamicTable: React.FC<DynamicTableProps> = ({ data, onAction, handleToggleForm }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection | null>(null);
   const [filterText, setFilterText] = useState("");
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
