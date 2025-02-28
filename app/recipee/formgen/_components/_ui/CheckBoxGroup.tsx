@@ -53,12 +53,11 @@ const MultiCheckbox = ({ name, label, options, required = false, error, classNam
             <input
               type="checkbox"
               id={`${name}-${value}`}
-              // checked={selectedValues.includes(value)}
-              onChange={handleChange}
-              value={value}
               {...register(name, {
                 required: required ? `${label || "This field"} is required` : false,
+                onChange: handleChange,
               })}
+              value={value}
               className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
             />
             <span className="text-sm">{optionLabel}</span>

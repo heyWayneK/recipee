@@ -8,7 +8,7 @@ export default function useTableCrud(tableName: TableName) {
   const [items, setItems] = useState<DynamicObjectArray | []>([]);
   const [isError, setIsError] = useState<Partial<ApiResponse>>({ error: false });
   // const [selectedItem, setSelectedItem] = useState<number | null>(null);
-  const [selectedItem, setSelectedItem] = useState<FieldValues>({});
+  const [selectedItem, setSelectedItem] = useState<FieldValues>();
   const [showForm, setShowForm] = useState<boolean>(false);
 
   // Fetch items
@@ -56,7 +56,7 @@ export default function useTableCrud(tableName: TableName) {
       await create(tableName, data);
       // await create(tableName, dataWithoutImageFile);
       await fetchItems();
-      setSelectedItem(null);
+      setSelectedItem(undefined);
       setShowForm(false);
     } catch (error) {
       setIsError({ error: true, statusText: "Waynes error" });
@@ -68,7 +68,7 @@ export default function useTableCrud(tableName: TableName) {
     if (selectedItem?.id) {
       await update(tableName, selectedItem.id, data);
       await fetchItems();
-      setSelectedItem(null);
+      setSelectedItem(undefined);
       setShowForm(false);
     }
   };
@@ -85,7 +85,7 @@ export default function useTableCrud(tableName: TableName) {
   };
 
   const handleToggleForm = () => {
-    setSelectedItem(null);
+    setSelectedItem(undefined);
     setShowForm((prev) => !prev);
   };
 
