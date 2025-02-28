@@ -7,7 +7,8 @@ import { FieldValues } from "react-hook-form";
 export default function useTableCrud(tableName: TableName) {
   const [items, setItems] = useState<DynamicObjectArray | []>([]);
   const [isError, setIsError] = useState<Partial<ApiResponse>>({ error: false });
-  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  // const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [selectedItem, setSelectedItem] = useState<FieldValues>({});
   const [showForm, setShowForm] = useState<boolean>(false);
 
   // Fetch items
