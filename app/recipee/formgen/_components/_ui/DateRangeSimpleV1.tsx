@@ -36,8 +36,8 @@ const DateRangeSimpleV1 = ({
   // FUTURE:
   // minDate = calculateDateOffset(-1), // Default: yesterday
   // maxDate = calculateDateOffset(30), // Default: 30 days in the future
-  minDate = null, // Default: yesterday
-  maxDate = null, // Default: 30 days in the future
+  minDate = undefined, // Default: yesterday
+  maxDate = undefined, // Default: 30 days in the future
   errorStart,
   errorEnd,
   className,
