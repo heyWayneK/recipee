@@ -56,8 +56,8 @@ const DateRangeSelectorV2: React.FC<DateRangeSelectorV2Props> = ({
   // FUTURE:
   // minDate = new Date(new Date().setMonth(new Date().getMonth() - 1)), // Default: today
   // maxDate = new Date(new Date().setMonth(new Date().getMonth() + 3)), // Default: 30 days in the future
-  minDate = null,
-  maxDate = null,
+  minDate = undefined,
+  maxDate = undefined,
   excludedDates = [],
   minDaysSelected = 1, // 2 days minimum, else Error
   error,
@@ -77,8 +77,8 @@ DateRangeSelectorV2Props) => {
   } = useFormContext();
 
   const [state, setState] = useState<Range>({
-    startDate: null,
-    endDate: null,
+    startDate: undefined,
+    endDate: undefined,
     key: "",
     color: "grey",
     autoFocus: true,
