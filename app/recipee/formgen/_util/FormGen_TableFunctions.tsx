@@ -4,7 +4,7 @@ import { DynamicObjectArray, DynamicTableComponentProps, TableItem } from "../_t
 import React from "react";
 
 // CREATE TABLE
-export const createTableRowsWithEditDeleteMultiSelect = (items: DynamicObjectArray, onEdit: (id: number) => any, onDelete: (id: number) => any): TableItem[] => {
+export const createTableRowsWithEditDeleteMultiSelect = (items: DynamicObjectArray, onEdit: () => any, onDelete: () => any): TableItem[] => {
   if (!items) console.error("ERROR createTableRowsWithEditDeleteMultiSelect - no content");
 
   return items.map((item: { id?: number }) => {

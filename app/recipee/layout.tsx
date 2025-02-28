@@ -1,7 +1,7 @@
 "use client";
 import Footer from "@/components/Footer";
 import HeaderRecipee from "@/components/HeaderRecipee";
-import Loading from "@/components/Loading";
+// import Loading from "@/components/Loading";
 import { OnlineStatusProvider } from "@/contexts/UseOnlineStatus";
 import { ReactNode } from "react";
 // import { redirect } from "next/navigation";

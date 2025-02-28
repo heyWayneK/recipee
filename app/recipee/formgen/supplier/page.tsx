@@ -45,9 +45,9 @@ const formFieldsToExcludeInTable: (keyof Prisma.SupplierSelect)[] = [
   "customer",
 ];
 // THREE
-type ValidationType = Partial<{
-  [key in keyof Prisma.SupplierSelect]: any;
-}>;
+// type ValidationType = Partial<{
+//   [key in keyof Prisma.SupplierSelect]: any;
+// }>;
 
 // FOUR
 const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<ValidateOptions, "dbName">>> = {

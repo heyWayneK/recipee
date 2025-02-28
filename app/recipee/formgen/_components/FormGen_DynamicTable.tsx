@@ -15,7 +15,8 @@ import { SortDirection } from "@tanstack/react-table";
  * @param param0
  * @returns
  */
-export const DynamicTable: React.FC<DynamicTableProps> = ({ data, onRowSelect, onAction, showForm, handleToggleForm }) => {
+// export const DynamicTable: React.FC<DynamicTableProps> = ({ data, onRowSelect, onAction, showForm, handleToggleForm }) => {
+export const DynamicTable: React.FC<DynamicTableProps> = ({ data, onAction, handleToggleForm }) => {
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [filterText, setFilterText] = useState("");
@@ -76,12 +77,12 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({ data, onRowSelect, o
 
   const handleAction = () => {
     if (onAction) {
-      alert(selectedRows);
+      // alert(selectedRows);
       onAction(selectedRows);
     }
   };
 
-  console.log("DynamicTable++++++++++", sortedAndFilteredData);
+  // console.log("DynamicTable++++++++++", sortedAndFilteredData);
 
   return (
     <Suspense fallback={<Loading />}>

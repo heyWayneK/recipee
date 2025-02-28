@@ -28,9 +28,9 @@ const tableName = "ingredients";
 // TWO
 const formFieldsToExcludeInTable: (keyof Prisma.CustomerSelect)[] = ["emailVerified", "address", "createdAt", "CostRules", "active"];
 
-type ValidationType = Partial<{
-  [key in keyof Prisma.CustomerSelect]: any;
-}>;
+// type ValidationType = Partial<{
+//   [key in keyof Prisma.CustomerSelect]: any;
+// }>;
 
 const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<ValidateOptions, "dbName">>> = {
   name: {
