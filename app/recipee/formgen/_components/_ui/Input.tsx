@@ -4,10 +4,10 @@ import { useFormContext } from "react-hook-form";
 // Define the interface for the props
 interface InputFieldProps {
   name: string; // Name attribute for the input field
-  label?: string; // Label text for the input field
+  label: string; // Label text for the input field
   type?: string; // Type of input (e.g., "text", "email", "password")
-  required?: boolean; // Whether the field is required
-  pattern?: { value: RegExp; message: string }; // Regex pattern validation
+  required: boolean; // Whether the field is required
+  pattern?: { value: RegExp; message: string }; // Regex pattern
   placeholder?: string; // Placeholder text
   error?: string; // External error message
   className?: string; // Additional class names for styling

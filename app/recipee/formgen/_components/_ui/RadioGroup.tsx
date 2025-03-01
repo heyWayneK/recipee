@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 interface RadioButtonGroupProps {
   name: string; // Name attribute for the radio group
   label?: string; // Label text for the group
-  options: { value: string; label: string }[]; // Array of options for the radio buttons
+  options: { value: string; label: string }[] | undefined; // Array of options for the radio buttons
   required?: boolean; // Whether the radio group is required
   error?: string; // External error message
   className?: string; // Additional class names for styling
@@ -47,20 +47,21 @@ const RadioButtonGroup = ({ name, label, options, required, error, className }: 
       )}
       {/* Radio Buttons */}
       <div className="flex flex-col space-y-2">
-        {options.map(({ value, label: optionLabel }) => (
-          <label key={value} className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="radio"
-              id={`${name}-${value}`}
-              value={value}
-              checked={selectedValue === value}
-              {...register(name, { required: required ? `${label || "This field"} is required` : false })}
-              onChange={handleChange}
-              className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-500"
-            />
-            <span className="text-sm">{optionLabel}</span>
-          </label>
-        ))}
+        {options &&
+          options?.map(({ value, label: optionLabel }) => (
+            <label key={value} className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                id={`${name}-${value}`}
+                value={value}
+                checked={selectedValue === value}
+                {...register(name, { required: required ? `${label || "This field"} is required` : false })}
+                onChange={handleChange}
+                className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-500"
+              />
+              <span className="text-sm">{optionLabel}</span>
+            </label>
+          ))}
       </div>
       {/* Error Message */}
       {/* {(error || (errors[name]?.message as string)) && <div className="text-red-500 text-xs">{error || (errors[name]?.message as string)}

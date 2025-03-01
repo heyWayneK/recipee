@@ -57,7 +57,7 @@ const formFieldsToExcludeInTable: (keyof Prisma.CustomerSelect)[] = ["emailVerif
 // }>;
 
 // Example usage
-const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<ValidateOptions, "dbName">>> = {
+const formFieldsForEditUpdate: Partial<Record<keyof Prisma.CustomerSelect, Partial<ValidateOptions>>> = {
   name: {
     label: "Name",
     type: "hidden",
@@ -65,9 +65,11 @@ const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<
     min: 3,
     max: 50,
     pattern: null,
-    options: null,
+    options: [],
     enum: null,
     error: null,
+    maxLength: null,
+    minLength: null,
   },
   email: {
     label: "Email",
@@ -78,11 +80,13 @@ const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<
       message: "Invalid email address",
       type: "text",
     },
-    options: null,
+    options: [],
     enum: null,
     min: null,
     max: null,
     error: null,
+    maxLength: null,
+    minLength: null,
   },
 };
 

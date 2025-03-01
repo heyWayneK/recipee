@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 interface MultiCheckboxProps {
   name: string; // Name attribute for the checkbox group
   label?: string; // Label text for the checkbox group
-  options: { value: string; label: string }[]; // Array of options for the checkboxes
+  options: { value: string; label: string }[] | undefined; // Array of options for the checkboxes
   required?: boolean; // Whether at least one checkbox must be selected
   error?: string; // External error message
   className?: string; // Additional class names for styling
@@ -48,21 +48,22 @@ const MultiCheckbox = ({ name, label, options, required = false, error, classNam
 
       {/* Checkboxes */}
       <div className="flex flex-col space-y-2">
-        {options.map(({ value, label: optionLabel }) => (
-          <label key={value} className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="checkbox"
-              id={`${name}-${value}`}
-              {...register(name, {
-                required: required ? `${label || "This field"} is required` : false,
-                onChange: handleChange,
-              })}
-              value={value}
-              className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <span className="text-sm">{optionLabel}</span>
-          </label>
-        ))}
+        {options &&
+          options?.map(({ value, label: optionLabel }) => (
+            <label key={value} className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="checkbox"
+                id={`${name}-${value}`}
+                {...register(name, {
+                  required: required ? `${label || "This field"} is required` : false,
+                  onChange: handleChange,
+                })}
+                value={value}
+                className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="text-sm">{optionLabel}</span>
+            </label>
+          ))}
       </div>
 
       {/* Error Message */}

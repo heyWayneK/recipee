@@ -60,18 +60,18 @@ export interface ModelFormData {
 export type FieldType = "hidden" | "text" | "number" | "multiline" | "radio" | "checkbox" | "select" | "imageupload" | "daterange" | "daterangev2";
 
 export interface ValidateOptions {
-  dbName: string; // form field name from DB col
+  name: string; // Gets insert manually
   label: string;
   type: FieldType;
   required: boolean;
-  pattern: { value: RegExp; message: string; type: FieldType } | null;
-  options: { value: string; label: string }[] | null;
+  pattern?: { value: RegExp | null; message: string | null; type: FieldType } | null;
+  options?: { value: string; label: string }[] | [];
   enum: any | null; // For handling enums
   min: number | null;
   max: number | null;
-  error: string | null;
-  minLength?: number | null;
-  maxLength?: number | null;
+  error?: string | null;
+  minLength: number | null;
+  maxLength: number | null;
   // INFO:
   /* EXAMPLES:
       <input {...register("firstName", { required: true, maxLength: 20 })} />

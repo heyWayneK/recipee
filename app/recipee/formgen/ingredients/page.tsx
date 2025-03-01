@@ -4,6 +4,7 @@ import React from "react";
 import { Prisma } from "@prisma/client";
 import { ValidateOptions } from "../_types/formGen_types";
 import FormGen_Form_Table_DbCall2 from "../_components/Form_Table_DbCall2";
+import { Validate } from "react-hook-form";
 
 // SETUP FORM____________________START:
 /* EXAMPLE FIELDS_______________START
@@ -32,7 +33,7 @@ const formFieldsToExcludeInTable: (keyof Prisma.CustomerSelect)[] = ["emailVerif
 //   [key in keyof Prisma.CustomerSelect]: any;
 // }>;
 
-const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<ValidateOptions, "dbName">>> = {
+const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Partial<ValidateOptions>>> = {
   name: {
     label: "Name",
     type: "text",
@@ -40,9 +41,11 @@ const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<
     min: 3,
     max: 50,
     pattern: null,
-    options: null,
+    options: [],
     enum: null,
     error: null,
+    maxLength: null,
+    minLength: null,
   },
 };
 // SETUP FORM____________________END:

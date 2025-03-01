@@ -50,7 +50,7 @@ const formFieldsToExcludeInTable: (keyof Prisma.SupplierSelect)[] = [
 // }>;
 
 // FOUR
-const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<ValidateOptions, "dbName">>> = {
+const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Partial<ValidateOptions>>> = {
   name: {
     label: "Name",
     type: "text",
@@ -58,7 +58,7 @@ const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<
     min: 3,
     max: 50,
     pattern: null,
-    options: null,
+    options: [],
     enum: null,
     error: null,
   },
@@ -69,7 +69,7 @@ const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<
     min: 3,
     max: 50,
     pattern: null,
-    options: null,
+    options: [],
     enum: null,
     error: null,
   },
@@ -80,7 +80,7 @@ const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Omit<
     min: 3,
     max: 50,
     pattern: null,
-    options: null,
+    options: [],
     enum: null,
     error: null,
   },
