@@ -1,8 +1,7 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
 import { data } from "@/app/data/recipe";
-import SvgSprite from "./SvgSprite";
 
 interface Row_SubRecipeSubNameProps {
   className?: string;
@@ -16,7 +15,7 @@ const Row_SubRecipeSubName: React.FC<Row_SubRecipeSubNameProps> = ({ className =
 
       <div className="">
         <Pill tone="white" className=" text-xs" iconName="" edit="" onClick={() => {}}>
-          Yield: {data.components[subRecipeId].yield * 100}%
+          Yield: {data.components[subRecipeId].yield ?? 0 * 100}%
         </Pill>
         <Pill tone="white" className="max-w-20 line-clamp-1" iconName="arrow_drop_down" edit="" onClick={() => {}}>
           Version

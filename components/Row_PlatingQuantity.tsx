@@ -7,7 +7,7 @@ import { useRecipeData } from "@/contexts/UseRecipeData";
 
 interface Row_PlatingQuantityProps {}
 
-const Row_PlatingQuantity: React.FC<Row_PlatingQuantityProps> = ({}) => {
+const Row_PlatingQuantity: React.FC<Row_PlatingQuantityProps> = () => {
   const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
 
   const name = getTextTranslation("quantity");

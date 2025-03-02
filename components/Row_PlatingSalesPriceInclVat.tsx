@@ -37,7 +37,7 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
         const dropDownInfo = [`${getTextTranslation("VAT")}: ${data.setting.vat * 100}%`];
 
         // const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
-        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
+        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
         // TODO: MAKE DATA USING LOCAL VAT INCL
         for (const [key, value] of Object.entries(recipeData.data.costRules.packagingCosts)) {
           dropDownLinks.push(
@@ -51,7 +51,7 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
                   </span>
                 </>
               ),
-              handler: null,
+              handler: () => {},
             }
             //   handler: () => update(recipeData.portionSizes[i], +key),
             //   selectedId: recipeData.packingCostPriceRules[i],

@@ -290,7 +290,9 @@ export interface ComponentsProps {
   nutriPer100?: nutriPer100Props[];
   version?: string;
   versions?: versionsProps[];
-  recipe?: RecipeProps;
+  //  TODO: does recipe need to be ? and null
+  // recipe?: RecipeProps | null;
+  recipe: RecipeProps;
 }
 
 export interface Brand {

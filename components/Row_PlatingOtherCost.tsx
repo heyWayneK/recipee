@@ -31,7 +31,7 @@ const Row_PlatingOtherCost: React.FC<Row_PlatingOtherCostProps> = ({ className =
           <span>rule name (#78)</span>
         </>
       ),
-      handler: null,
+      handler: () => {},
     },
   ];
   return (
@@ -45,7 +45,7 @@ const Row_PlatingOtherCost: React.FC<Row_PlatingOtherCostProps> = ({ className =
       {/* OTHER COLUMNS START */}
       {/* DROP DOWN MODAL INFO__________START */}
       {recipeData.otherCostsPriceRules.map((rule, i) => {
-        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
+        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
 
         for (const [key, value] of Object.entries(recipeData.data.costRules.otherCosts)) {
           dropDownLinks.push({

@@ -6,9 +6,9 @@ import Row_SubRecipeStep from "./Row_SubRecipeStep";
 interface Row_SubRecipeIngredientsProps {
   subRecipeId: number;
   subRecipe: ComponentsProps;
-  className?: string;
 }
-const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ subRecipeId, subRecipe, className = "" }) => {
+const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ subRecipeId, subRecipe }) => {
+  if (!data.components || !subRecipe.recipe) return;
   const totalWeight = subRecipe.recipe.recipeDetail.reduce((acc, v) => (acc += v.qty), 0);
   let stepCount = 1;
   return (

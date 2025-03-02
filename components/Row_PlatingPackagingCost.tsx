@@ -33,7 +33,7 @@ const Row_PlatingPackagingCosts: React.FC<Row_PlatingPackagingCostsProps> = ({ c
 
       {/* DROP DOWN MODAL INFO__________START */}
       {recipeData.packingCostPriceRules.map((portionSize, i) => {
-        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
+        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
 
         for (const [key, value] of Object.entries(recipeData.data.costRules.packagingCosts)) {
           dropDownLinks.push({

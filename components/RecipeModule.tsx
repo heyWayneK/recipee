@@ -17,7 +17,7 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
     try {
       // CREATE THE TOTALS, SUB TOTALS, PAACKAGING VALUES etc
       preCalculateData(recipeData, updateRecipeData);
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }, [recipeData.data.packagingCostsId, recipeData.data.otherCostsId, recipeData.data.markupId]);

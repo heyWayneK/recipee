@@ -16,11 +16,11 @@ const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = fals
   // COMPONENTS
   const name = getTextTranslation("components");
 
-  // const dropDownInfo = [
-  //   { name: "Option 1", handler: () => {} },
-  //   { name: "Option 2", handler: () => {} },
-  // ];
-  const dropDownInfo = ["Option 1", "Option 2"];
+  // const dropDownInfo = ["Option 1", "Option 2"];
+  const dropDownInfo = [
+    { jsx: <div>Option 1 - 2</div>, handler: () => console.log("Option 1 clicked - 2") },
+    { jsx: <div>Option 2 - 2</div>, handler: () => console.log("Option 2 clicked - 2") },
+  ];
 
   const { openModal } = useModalBig();
 

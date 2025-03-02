@@ -9,7 +9,7 @@ import { useRecipeData } from "@/contexts/UseRecipeData";
 
 interface Recipe_RecipeNameBlockProps {}
 
-const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = ({}) => {
+const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = () => {
   const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   return (
     <DottedBorder className="grid grid-cols-1 content-evenly gap-y-6">

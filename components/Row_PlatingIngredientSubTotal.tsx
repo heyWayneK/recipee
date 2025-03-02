@@ -1,7 +1,7 @@
 import React from "react";
 
 import Table_Cell from "./Table_Cell";
-import { getLiveTotal, getTextTranslation, replace_ } from "@/libs/utils";
+import { getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 
