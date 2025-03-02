@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "devdebug": "NODE_OPTIONS='--inspect' next dev",
-    "build": "next build",
+    "build": "prisma generate && <actual-build-command>",
     "postbuild": "next-sitemap",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
     "migrate-db": "npx prisma migrate dev --name init"
