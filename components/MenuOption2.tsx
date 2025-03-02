@@ -9,9 +9,8 @@ interface Props {
 
 const MenuOption2: React.FC<Props> = ({ children }) => {
   const menuOptions = [
-    { name: "Option 1 - 2", handler: () => console.log("Option 1 clicked - 2") },
-    { name: "Option 2 - 2", handler: () => console.log("Option 2 clicked - 2") },
-    { name: "Option 3 - 2", handler: () => console.log("Option 3 clicked - 2") },
+    { jsx: <div>Option 1 - 2</div>, handler: () => console.log("Option 1 clicked - 2") },
+    { jsx: <div>Option 2 - 2</div>, handler: () => console.log("Option 2 clicked - 2") },
   ];
 
   return <MenuButton options={menuOptions}>{children}</MenuButton>;
