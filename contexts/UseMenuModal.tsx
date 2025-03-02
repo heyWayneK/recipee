@@ -34,7 +34,7 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const MENUWIDTH = 220; // px;
 
   const [isOpen, setIsOpen] = useState(false);
-  const [options, setOptions] = useState<MenuOptionsProps[]>([]);
+  const [options, setOptions] = useState<MenuOptionsProps[]>();
   const [position, setPosition] = useState<ModalPosition>({ top: 0, left: 0, width: 0, right: 0 });
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -118,44 +118,47 @@ export const MenuModalProvider: React.FC<{ children: React.ReactNode }> = ({ chi
               width: `${MENUWIDTH}px`,
             }}
           >
-            {options.map((option, index) => (
-              // HANDLER = ()
-              // SELECTED ID for drop down current selected
-              // ID = the ID is drop down list item id
-              // JSX = the JSX list item name
-              <button
-                key={index}
-                className={`block w-full text-left px-2 py-1 rounded-s leading-tight text-xs my-2 border cursor-none ${
-                  option?.handler !== null && option?.id === option?.selectedId
-                    ? " bg-gradientGreyDarkerBott"
-                    : ` ${option?.handler !== null ? " hover:opacity-50 hover:border active:opacity-85" : " cursor-none"}`
-                }  `}
-                disabled={option?.handler === null ? true : false}
-                onClick={(e) => {
-                  e.preventDefault();
-                  // SLOW DOWN UPDATE to show spinner
-                  setTimeout(() => {
-                    option?.handler();
-                  }, 500);
-                  closeMenu();
-                }}
-              >
-                <div className="flex gap-1 inset-0">
-                  {option.handler === null ? (
-                    `${" "}`
-                  ) : option?.selectedId === option?.id ? (
-                    <div className=" flex place-items-center  flex-grow-0 flex-shrink-0 inset-0">
-                      <SvgSprite size={20} iconName="check_circle" />
-                    </div>
-                  ) : (
-                    <div className="flex place-items-center justify-content-center ">
-                      <SvgSprite size={20} iconName="radio_button_unchecked" />
-                    </div>
-                  )}
-                  <div className="flex-grow">{option.jsx}</div>
-                </div>
-              </button>
-            ))}
+            {options &&
+              options.map((option, index) => (
+                // HANDLER = ()
+                // SELECTED ID for drop down current selected
+                // ID = the ID is drop down list item id
+                // JSX = the JSX list item name
+                <button
+                  key={index}
+                  className={`block w-full text-left px-2 py-1 rounded-s leading-tight text-xs my-2 border cursor-none ${
+                    option?.handler !== null && option?.id === option?.selectedId
+                      ? " bg-gradientGreyDarkerBott"
+                      : ` ${option?.handler !== null ? " hover:opacity-50 hover:border active:opacity-85" : " cursor-none"}`
+                  }  `}
+                  disabled={option?.handler === null ? true : false}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // SLOW DOWN UPDATE to show spinner
+                    setTimeout(() => {
+                      {
+                        option.handler && option.handler();
+                      }
+                    }, 500);
+                    closeMenu();
+                  }}
+                >
+                  <div className="flex gap-1 inset-0">
+                    {option.handler === null ? (
+                      `${" "}`
+                    ) : option?.selectedId === option?.id ? (
+                      <div className=" flex place-items-center  flex-grow-0 flex-shrink-0 inset-0">
+                        <SvgSprite size={20} iconName="check_circle" />
+                      </div>
+                    ) : (
+                      <div className="flex place-items-center justify-content-center ">
+                        <SvgSprite size={20} iconName="radio_button_unchecked" />
+                      </div>
+                    )}
+                    <div className="flex-grow">{option.jsx}</div>
+                  </div>
+                </button>
+              ))}
           </div>
         </div>
       )}
