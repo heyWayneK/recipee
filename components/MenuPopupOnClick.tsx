@@ -16,10 +16,10 @@ interface Props {
 }
 
 const MenuPopupDynamic: React.FC<Props> = ({ children, menuArray }) => {
-  const menuOptions = menuArray.map((option) => ({
-    name: option,
-    handler: () => {}, // Default handler if not provided
-  }));
+  const menuOptions = [
+    { jsx: <div>Option 1 - 2</div>, handler: () => console.log("Option 1 clicked - 2") },
+    { jsx: <div>Option 2 - 2</div>, handler: () => console.log("Option 2 clicked - 2") },
+  ];
 
   return <MenuButton options={menuOptions}>{children}</MenuButton>;
 };

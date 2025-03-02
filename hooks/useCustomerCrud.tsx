@@ -16,7 +16,7 @@ export function useCustomerCrud() {
       });
       if (!response.ok) throw new Error("Failed to create customer");
       return await response.json();
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -35,7 +35,7 @@ export function useCustomerCrud() {
       console.log("UPDATE:_____________", response);
       if (!response.ok) throw new Error("Failed to update customer");
       return await response.json();
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -51,7 +51,7 @@ export function useCustomerCrud() {
       });
       if (!response.ok) throw new Error("Failed to delete customer");
       return await response.json();
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
