@@ -17,21 +17,11 @@ if (!process.env.RESEND_API_KEY) {
  * @returns {Promise} A Promise that resolves when the email is sent.
  */
 
-export const sendEmail = async ({
-  subject,
-  html,
-  replyTo,
-}: {
-  from: string;
-  subject: string;
-  text?: string;
-  html?: string;
-  replyTo?: string;
-}): Promise<any> => {
+export const sendEmail = async ({ subject, html, replyTo }: { from: string; subject: string; text: string; html: string; replyTo: string }): Promise<any> => {
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   const email_libs = await resend.emails.send({
-    from: process.env.SEND_EMAIL_FROM,
+    from: process.env.SEND_EMAIL_FROM!,
     subject,
     to: replyTo,
     html,

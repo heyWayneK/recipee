@@ -20,17 +20,9 @@ interface CreateCustomerPortalParams {
 
 // This script sets up a Stripe Checkout session for one-time payments. Typically, it's triggered by the <ButtonCheckout /> component.
 // Webhooks handle updating the user's status in the database after payment is completed.
-export const createCheckout = async ({
-  user,
-  mode,
-  clientReferenceId,
-  successUrl,
-  cancelUrl,
-  priceId,
-  couponId,
-}: CreateCheckoutParams): Promise<string> => {
+export const createCheckout = async ({ user, mode, clientReferenceId, successUrl, cancelUrl, priceId, couponId }: CreateCheckoutParams): Promise<string> => {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       typescript: true,
     });
 
@@ -77,20 +69,17 @@ export const createCheckout = async ({
       cancel_url: cancelUrl,
       ...extraParams,
     });
-    return stripeSession.url;
+    return stripeSession.url ?? "";
   } catch (e) {
     console.error(e);
-    return null;
+    return "";
   }
 };
 
 // This is used to create Customer Portal sessions, allowing users to manage their subscriptions,
 // including payment methods, cancellations, and more.
-export const createCustomerPortal = async ({
-  customerId,
-  returnUrl,
-}: CreateCustomerPortalParams): Promise<string> => {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+export const createCustomerPortal = async ({ customerId, returnUrl }: CreateCustomerPortalParams): Promise<string> => {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     typescript: true,
   });
   const portalSession = await stripe.billingPortal.sessions.create({
@@ -103,7 +92,7 @@ export const createCustomerPortal = async ({
 // This function retrieves the user's checkout session and extracts relevant data, such as the planId the user subscribed to.
 export const findCheckoutSession = async (sessionId: string) => {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       typescript: true,
     });
     const session = await stripe.checkout.sessions.retrieve(sessionId, {

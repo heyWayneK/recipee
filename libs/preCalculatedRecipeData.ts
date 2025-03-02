@@ -12,7 +12,14 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, updateReci
   // TODO: ADD HISTORY
   // PLATING COST CALCULATION ____________________START::
   // RECALC LIVE PORTION SIZES___________________________
-  const portionSizes = recipeData.data.portions.map((val) => recipeData.data.components.reduce((acc2, val2) => (acc2 += val2.portions[val]), 0));
+
+  const portionSizes = recipeData.data.portions.map((val) =>
+    recipeData.data.components.reduce((acc2, val2) => {
+      // TODO: val2b temp fix for vercel
+      const val2b = typeof val2.portions === "number" ? val2.portions : 0;
+      return (acc2 += val2b);
+    }, 0)
+  );
 
   // ERROR if portions do not match______________________
   if (portionSizes.toString() !== recipeData.data.portions.toString()) {
@@ -27,7 +34,7 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, updateReci
     // NAME
     componentsNamesArray.push(component.name);
     // WEIGHTS BY PORTION ARRAY
-    componentsWeights.push(recipeData.data.portions.map((val) => component.portions[val]));
+    componentsWeights.push(recipeData.data.portions.map((val) => (component.portions ? component.portions[val] : 0)));
 
     // TODO: dont need name length once db is being used
     // ID GENERATED FOR component KEY = unique key
@@ -50,9 +57,12 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, updateReci
       return (ttlWeight += val.qty);
     }, 0);
 
+    // TODO: check this yield, added for vercel errors
+    const yld: number = component.yield ? component.yield : 1;
     componentsPricePer1000.push(
       // GET COMPONENT TOTAL INGREDIENTCOST/1000
-      totalPrice / ((totalWeight * component.yield) / 1000)
+
+      totalPrice / ((totalWeight * yld) / 1000)
     );
   }
 

@@ -19,7 +19,7 @@ async function sendVerificationRequest(params: any) {
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   const sendEmail = await resend.emails.send({
-    from: process.env.SEND_EMAIL_FROM,
+    from: process.env.SEND_EMAIL_FROM!,
     subject: "Login To Recipee",
     to: identifier,
     html: `<h1>hello, ${url}, ${identifier}, ${provider}, ${theme}, ${host} </h1>`,
@@ -32,8 +32,8 @@ export const authOptions: NextAuthOptionsExtended = {
   providers: [
     GoogleProvider({
       // Follow the "Login with Google" tutorial to get your credentials
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!,
       async profile(profile) {
         return {
           id: profile.sub,
@@ -58,9 +58,9 @@ export const authOptions: NextAuthOptionsExtended = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
     session: async ({ session, token }) => {
-      if (session?.user) {
-        session.user.id = token.sub;
-      }
+      // if (session !== undefined) {
+      //   session.user.id = token.sub;
+      // }
       return session;
     },
   },
