@@ -16,8 +16,10 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
 
   // UPDATE OBJECT
   const update = (portionSize: number, ruleId: number) => {
-    const newObj = { ...recipeData.data.markupId, ...{ [portionSize]: ruleId } };
-    updateRecipeData((recipeData.data.markupId = { ...newObj }));
+    const newObj = { ...recipeData.data?.markupId, ...{ [portionSize]: ruleId } };
+    // TODO: this was wierd. check if it is correct (= sign)
+    // updateRecipeData((recipeData.data.markupId = { ...newObj }));
+    updateRecipeData((recipeData.data.markupId, { ...newObj }));
     // ADD HISTORY
   };
 
@@ -36,7 +38,8 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
 
         const dropDownInfo = [`${getTextTranslation("name")}: ${markupName}`, `${getTextTranslation("factor")}: ${factor}`, `${getTextTranslation("type")}: ${type}`, "Change"];
 
-        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
+        // TODO: WHY IS HANDLER null or ()=>{}
+        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
 
         for (const [key, value] of Object.entries(recipeData.data.costRules.markUps)) {
           dropDownLinks.push({

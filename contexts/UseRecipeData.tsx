@@ -26,7 +26,7 @@ export interface PreCalculatedRecipeData {
   markUpPriceRules: number[];
   salePricesExVat: number[];
   salesPricesIncVat: number[];
-  data?: DataProps;
+  data: DataProps;
 }
 export const preCalculatedRecipeData: PreCalculatedRecipeData = {
   portionSizes: [],
