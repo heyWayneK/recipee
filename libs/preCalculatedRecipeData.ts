@@ -1,7 +1,7 @@
 import { PreCalculatedRecipeData } from "@/contexts/UseRecipeData";
 import { calcProfit, formatCurrency } from "@/libs/utils";
 
-export function preCalculateData(recipeData: PreCalculatedRecipeData, updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void) {
+export async function preCalculateData(recipeData: PreCalculatedRecipeData, updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void) {
   // HOW TO USE:
   /** 
      const updatePackagingRule = (portionSize: number, ruleId: number) => {
@@ -9,17 +9,12 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, updateReci
        updateRecipeData((recipeData.data.packagingCostsId = { ...newObj }));
       };
     */
+  // if (recipeData.data.portions.length === 0) return;
+
   // TODO: ADD HISTORY
   // PLATING COST CALCULATION ____________________START::
   // RECALC LIVE PORTION SIZES___________________________
-
-  const portionSizes = recipeData.data.portions.map((val) =>
-    recipeData.data.components.reduce((acc2, val2) => {
-      // TODO: val2b temp fix for vercel
-      const val2b = typeof val2.portions === "number" ? val2.portions : 0;
-      return (acc2 += val2b);
-    }, 0)
-  );
+  const portionSizes = recipeData.data.portions.map((val) => recipeData.data.components.reduce((acc2, val2) => (acc2 += val2.portions ? val2.portions[val] : 0), 0));
 
   // ERROR if portions do not match______________________
   if (portionSizes.toString() !== recipeData.data.portions.toString()) {

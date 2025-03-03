@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect } from "react";
 import Row_SubRecipesAll from "./Row_SubRecipesAll";
 import Row_PlatingAll from "./Row_PlatingAll";
 import { useRecipeData } from "@/contexts/UseRecipeData";
@@ -20,9 +20,11 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
     } catch (error: any) {
       throw new Error(error.message);
     }
-  }, [recipeData.data.packagingCostsId, recipeData.data.otherCostsId, recipeData.data.markupId]);
+    // TODO: DONT add recipeData to the dependencies!
+  }, []);
 
-  console.log(recipeData);
+  console.log("recipe data", recipeData);
+
   if (!recipeData.portionSizes.length) return <Loading />;
 
   return (

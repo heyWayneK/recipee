@@ -285,7 +285,7 @@ export interface ComponentsProps {
   type?: EnumComponentIngredientType;
   parentId?: null | number;
   ingredientId?: number | null;
-  portions?: { [key: number]: number } | null;
+  portions: { [key: number]: number };
   yield?: number;
   nutriPer100?: nutriPer100Props[];
   version?: string;
@@ -1112,7 +1112,7 @@ export const data: DataProps = {
               parentId: 3,
 
               ingredientId: null,
-              portions: null,
+              portions: { 265: 70, 350: 90 },
               // ingredientCosts: { 265: 3.01, 350: 3.91 },
               yield: 1,
               nutriPer100: [
@@ -1218,7 +1218,7 @@ export const data: DataProps = {
                       parentId: 3,
 
                       ingredientId: null,
-                      portions: null,
+                      portions: { 265: 70, 350: 90 },
                       // ingredientCosts: { 265: 3.01, 350: 3.91 },
                       yield: 1,
                       nutriPer100: [
