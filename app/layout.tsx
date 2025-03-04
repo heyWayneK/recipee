@@ -9,6 +9,7 @@ import config from "@/config";
 import "./globals.css";
 import { ModalProvider } from "@/providers/bigModalProvider";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const font = Inter({ subsets: ["latin"] });
 // const font = Inter({ subsets: ["latin"], weight: "100", variable: ""});
@@ -42,25 +43,27 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             this is an issue related to the daisyUi Light/Dark dynamic css classes 
     */
     // <StrictMode>
-    <ThemeProvider>
-      <html lang="en" data-theme={config.colors.theme} className={font.className} suppressHydrationWarning>
-        {config.domainName && (
-          <head>
-            <PlausibleProvider domain={config.domainName} />
-            {/* // OR
+    <ClerkProvider>
+      <ThemeProvider>
+        <html lang="en" data-theme={config.colors.theme} className={font.className} suppressHydrationWarning>
+          {config.domainName && (
+            <head>
+              <PlausibleProvider domain={config.domainName} />
+              {/* // OR
           <title></title>
           <meta name="description" content=""  />
         <link rel="icon" href="/favicon.ico"  /> */}
-          </head>
-        )}
-        <body>
-          {/* ClientLayout to provide common layout and functionality */}
-          {/* <ClientLayout>{children}</ClientLayout> */}
-          {children}
-          <ModalProvider />
-        </body>
-      </html>
-    </ThemeProvider>
+            </head>
+          )}
+          <body>
+            {/* ClientLayout to provide common layout and functionality */}
+            {/* <ClientLayout>{children}</ClientLayout> */}
+            {children}
+            <ModalProvider />
+          </body>
+        </html>
+      </ThemeProvider>
+    </ClerkProvider>
     // </StrictMode>
   );
 }

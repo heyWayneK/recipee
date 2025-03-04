@@ -61,6 +61,15 @@ model User {
   ProductionEventTask ProductionEventTask[]
 }
 
+model Profiles {
+  id           Int     @id @default(autoincrement())
+  username     String?
+  email        String? @unique
+  avatar_url   String?
+  organisation String?
+  role         String?
+}
+
 model VerificationToken {
   identifier String
   token      String   @unique

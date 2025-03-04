@@ -1,9 +1,9 @@
 import { DataProps, data } from "@/app/data/recipe";
 import React, { createContext, useContext, useState } from "react";
 
-interface PreCalculatedTypes {
-  [key: string]: string;
-}
+// interface PreCalculatedTypes {
+//   [key: string]: string;
+// }
 
 // DEFINE PRECALCULATED RECIPE DATA
 //- These contain the calulated recipe subTotals, Totals and
@@ -55,6 +55,7 @@ interface RecipeDataContextType {
   setQty: React.Dispatch<React.SetStateAction<number>>;
   recipeData: PreCalculatedRecipeData;
   updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void;
+  // updateRecipeData: Partial<PreCalculatedRecipeData>;
 }
 
 const RecipeDataContext = createContext<RecipeDataContextType | undefined>(undefined);

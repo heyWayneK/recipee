@@ -18,7 +18,6 @@ const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewP
   return (
     // Crucial: Return the result of the map
     <>
-      {" "}
       {/* Added a Fragment to wrap the returned array of arrays */}
       {recipeData.componentsWeights.map((component, iC) => {
         const name = recipeData.componentsNamesArray[iC];

@@ -59,7 +59,7 @@ export default function useTableCrud(tableName: TableName) {
       setSelectedItem(undefined);
       setShowForm(false);
     } catch (error) {
-      setIsError({ error: true, statusText: "Waynes error" });
+      setIsError({ error: true, statusText: "Waynes error - useCrud.tsx - handleSaveNewRow" });
       throw new Error(`Failed to insert new row: ${error}`);
     }
   };

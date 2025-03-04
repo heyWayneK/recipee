@@ -64,7 +64,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, upda
   // COMPONENT PRICES per portion : number[][]___________
   const componentsPrices: number[][] = [];
   for (let iC = 0; iC < componentsWeights.length; iC++) {
-    componentsPrices.push(componentsWeights[iC].map((portion, iP) => (portion / 1000) * componentsPricePer1000[iC]));
+    componentsPrices.push(componentsWeights[iC].map((portion) => (portion / 1000) * componentsPricePer1000[iC]));
   }
 
   // CREATE ARRAY OF COMPONENENT PRICES per portion number[][]

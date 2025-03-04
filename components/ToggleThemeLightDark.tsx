@@ -3,10 +3,8 @@ import React, { ReactNode, useContext } from "react";
 import Pill from "@/components/Pill";
 import { getTextTranslation } from "@/libs/utils";
 
-interface ToggleThemeLightDarkProps {
-  className?: string;
-}
-const ToggleThemeLightDark: React.FC<ToggleThemeLightDarkProps> = ({ className = "" }) => {
+interface ToggleThemeLightDarkProps {}
+const ToggleThemeLightDark: React.FC<ToggleThemeLightDarkProps> = () => {
   // TOGGLE DARK & LIGHT THEME
   const { theme, toggleTheme } = useContext(ThemeContext);
 

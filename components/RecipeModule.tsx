@@ -21,9 +21,11 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
       throw new Error(error.message);
     }
     // TODO: DONT add recipeData to the dependencies!
+    // FIXME: This will cause an infinite loop
   }, []);
 
   console.log("recipe data", recipeData);
+  console.log("qty & setQty use? - fix", qty, setQty);
 
   if (!recipeData.portionSizes.length) return <Loading />;
 
