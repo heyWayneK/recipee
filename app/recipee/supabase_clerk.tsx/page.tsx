@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/nextjs";
-import { supabase } from "@/supabaseClient";
+import { supabase } from "@/utils/supabaseClient";
 
 export default function MyComponent() {
   const { getToken } = useAuth();

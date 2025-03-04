@@ -1,7 +1,9 @@
-import { supabase } from "@/supabaseClient";
+import { supabase } from "@/utils/supabaseClient.js";
 
-export default async function handler(req, res) {
-  const event = req.body;
+// Export a POST handler instead of a default handler
+export async function POST(req) {
+  // In App Router, req is a Web Request object, so we need to parse the body
+  const event = await req.json();
 
   if (event.type === "user.created") {
     const { id, email_addresses } = event.data;
@@ -9,8 +11,16 @@ export default async function handler(req, res) {
 
     const { error } = await supabase.from("profiles").insert([{ id, email }]);
 
-    if (error) return res.status(500).json({ error: error.message });
+    if (error) {
+      return new Response(JSON.stringify({ error: error.message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
   }
 
-  return res.status(200).json({ message: "Webhook processed" });
+  return new Response(JSON.stringify({ message: "Webhook processed" }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 }
