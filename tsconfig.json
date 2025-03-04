@@ -26,6 +26,6 @@
     ],
     "target": "ES2017"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/office365mail/sendMail.js", ".next/types/app/recipee/formgen/page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/office365mail/sendMail.js", ".next/types/app/recipee/formgen/page.tsx", "app/recipee/supabase_clerk"],
   "exclude": ["node_modules"]
 }

@@ -1,3 +1,4 @@
+"use client";
 import { useAuth } from "@clerk/nextjs";
 import { supabase } from "@/utils/supabaseClient";
 
