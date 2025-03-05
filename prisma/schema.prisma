@@ -68,6 +68,8 @@ model Profiles {
   avatar_url   String?
   organisation String?
   role         String?
+  json         Json?
+
 }
 
 model VerificationToken {
