@@ -52,7 +52,7 @@ export async function POST(req) {
           }))
         : "";
 
-      const lastSignInAt = lastSignInAt ? new Date(lastSignInAt).toISOString() : null;
+      const lastSignInAt = last_sign_in_at ? new Date(last_sign_in_at).toISOString() : null;
 
       // FUTURE: Add support for organisations & roles
       // UNSURE of the structure of the organisations and roles
