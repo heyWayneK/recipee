@@ -8,15 +8,15 @@ export async function POST(req) {
 
     // Handle "user.created" event
     if (event.type === "user.created" || event.type === "user.updated") {
-      const { id, email_addresses } = event.data;
+      const { id: userId, email_addresses } = event.data;
       const email = email_addresses[0].email_address;
       const organisation = "Wayne test"; // Consider making this dynamic
       const json = JSON.stringify({ event });
 
       // Upsert the profile using Prisma
       await prisma.profiles.upsert({
-        where: { id: id },
-        create: { id, email, organisation, json },
+        where: { userId: userId },
+        create: { userId, email, organisation, json },
         update: { email, organisation, json },
       });
 

@@ -63,13 +63,13 @@ model User {
 
 model Profiles {
   id           Int     @id @default(autoincrement())
+  userId       String
   username     String?
   email        String? @unique
-  avatar_url   String?
+  avatarUrl    String?
   organisation String?
   role         String?
   json         Json?
-
 }
 
 model VerificationToken {
@@ -108,7 +108,7 @@ enum EnumDietClassification {
   vegan
   vegetarian
   animal_product
-  unknown
+  none
 }
 
 enum EnumComponentIngredientType {
@@ -233,7 +233,7 @@ model Ingredients {
   name_alt                  String?
   primary_category          String?                 @default("")
   secondary_category        String?                 @default("")
-  dietary_classification    EnumDietClassification? @default(unknown)
+  dietary_classification    EnumDietClassification? @default(none)
   kcal_per_100g             Float?                  @default(0)
   kj_per_100g               Float?                  @default(0)
   protein_per_100g          Float?                  @default(0)
