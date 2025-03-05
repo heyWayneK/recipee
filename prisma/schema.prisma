@@ -62,14 +62,18 @@ model User {
 }
 
 model Profiles {
-  id           Int     @id @default(autoincrement())
-  userId       String?  @unique
-  username     String?
-  email        String? @unique
-  avatarUrl    String?
-  organisation String?
-  role         String?
-  json         Json?
+  id            Int     @id @default(autoincrement())
+  userId        String? @unique
+  username      String?
+  emails        Json?
+  phoneNumbers  Json?
+  organisations String?
+  avatarUrl     String?
+  roles         Json?
+  firstName     String?
+  lastName      String?
+  lastSignInAt  String?
+  json          Json?
 }
 
 model VerificationToken {
