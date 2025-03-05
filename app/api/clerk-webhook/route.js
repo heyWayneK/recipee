@@ -17,7 +17,7 @@ export async function POST(req) {
         email_addresses,
         phone_numbers,
         avatar_url: avatarUrl,
-        last_sign_in_at: lastSignInAt,
+        last_sign_in_at = "",
         organisations: orgs = undefined,
         roles = undefined,
       } = event.data;
@@ -51,6 +51,8 @@ export async function POST(req) {
             ["role"]: role.role,
           }))
         : "";
+
+      const lastSignInAt = lastSignInAt ? new Date(lastSignInAt).toISOString() : null;
 
       // FUTURE: Add support for organisations & roles
       // UNSURE of the structure of the organisations and roles
