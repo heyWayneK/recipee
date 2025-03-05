@@ -17,6 +17,11 @@ export async function POST(req) {
         headers: { "Content-Type": "application/json" },
       });
     }
+  } else if (!req) {
+    return new Response(JSON.stringify({ message: "Event not supported" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   return new Response(JSON.stringify({ message: "Webhook processed" }), {

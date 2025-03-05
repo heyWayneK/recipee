@@ -14,7 +14,7 @@ export default function MyComponent() {
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
-      //   .match({ id: requesting_user_id() }) // Optional: ensure it matches the authenticated user
+      // .match({ id: requesting_user_id() }) // Optional: ensure it matches the authenticated user
       .setHeader("Authorization", `Bearer ${token}`);
 
     console.log(data, error);
