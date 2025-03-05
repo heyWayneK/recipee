@@ -9,8 +9,9 @@ export async function POST(req) {
     const { id, email_addresses } = event.data;
     const email = email_addresses[0].email_address;
     const organisation = "Wayne test";
+    const json = JSON.stringify({ event });
 
-    const { error } = await supabase.from("profiles").insert([{ id, email, organisation }]);
+    const { error } = await supabase.from("profiles").insert([{ id, email, organisation, json }]);
 
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {
