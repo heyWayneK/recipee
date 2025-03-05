@@ -27,7 +27,7 @@ export async function POST(req) {
 
       // emails
       const emails = JSON.stringify(
-        email_addresses.map((email, i) => ({
+        email_addresses.map((email) => ({
           email: email.email_address,
         }))
       );
@@ -35,7 +35,7 @@ export async function POST(req) {
       // phone numbers
       const phoneNumbers = JSON.stringify(
         phone_numbers.map((phone) => ({
-          phone: phone.phone.phone_number,
+          phone: phone.phone_number,
         }))
       );
 
