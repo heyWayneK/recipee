@@ -18,7 +18,7 @@ export async function POST(req) {
         phone_numbers,
         avatar_url: avatarUrl,
         last_sign_in_at: lastSignInAt,
-        organisations = undefined,
+        organisations: orgs = undefined,
         roles = undefined,
       } = event.data;
 
@@ -40,8 +40,8 @@ export async function POST(req) {
       );
 
       // organisations - Not sure if this exists
-      const orgs = organisations
-        ? organisations.map((org) => ({
+      const organisations = orgs
+        ? orgs.map((org) => ({
             organisation: org.organisation,
           }))
         : "";
@@ -56,7 +56,7 @@ export async function POST(req) {
       // UNSURE of the structure of the organisations and roles
       // const roles = JSON.stringify(roles.map((role,i) => {role: role.role}));
 
-      const obj = { emails, orgs, json, lastSignInAt, username, phoneNumbers, organisations, avatarUrl, rolesJson, firstName, lastName };
+      const obj = { emails, organisations, json, lastSignInAt, username, phoneNumbers, avatarUrl, rolesJson, firstName, lastName };
 
       // Upsert the profile using Prisma
       await prisma.profiles.upsert({
