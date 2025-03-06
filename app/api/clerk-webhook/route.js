@@ -23,21 +23,17 @@ export async function POST(req) {
       } = event.data;
 
       // Save the whole event data as JSON
-      const json = JSON.stringify({ event });
+      const json = { event };
 
       // emails
-      const emails = JSON.stringify(
-        email_addresses.map((email) => ({
-          email: email.email_address,
-        }))
-      );
+      const emails = email_addresses.map((email) => ({
+        email: email.email_address,
+      }));
 
       // phone numbers
-      const phoneNumbers = JSON.stringify(
-        phone_numbers.map((phone) => ({
-          phone: phone.phone_number,
-        }))
-      );
+      const phoneNumbers = phone_numbers.map((phone) => ({
+        phone: phone.phone_number,
+      }));
 
       // organisations - Not sure if this exists
       const organisations = orgs
