@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { TableName } from "../_types/formGen_setup";
 
 import { Prisma } from "@prisma/client";
 import { ValidateOptions } from "../_types/formGen_types";
@@ -27,7 +28,7 @@ EXAMPLE FIELDS _______________END */
 
 // SETUP FORM____________________START:
 // ONE
-const tableName = "supplier";
+const tableName: TableName = "supplier";
 // TWO
 const formFieldsToExcludeInTable: (keyof Prisma.SupplierSelect)[] = [
   "customerId",

@@ -1,7 +1,4 @@
 "use server";
-// import prisma from "@/libs/prisma";
-import { PrismaClient } from "@prisma/client";
-import { createClient } from "@supabase/supabase-js";
 import { modelMap, TableName, supabase } from "../_types/formGen_setup";
 
 /**

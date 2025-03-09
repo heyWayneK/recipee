@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Prisma } from "@prisma/client";
-import { TableName } from "./_api/prismaCrud";
+import { TableName } from "./_types/formGen_setup";
 import { ValidateOptions } from "./_types/formGen_types";
 import FormGen_Form_Table_DbCall2 from "./_components/Form_Table_DbCall2";
 
