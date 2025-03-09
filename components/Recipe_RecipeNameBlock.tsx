@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import DottedBorder from "@/components/DottedBorder";
 import TextEditable from "@/components/TextEditable";
 import MenuOption1 from "@/components/MenuOption1";
@@ -10,11 +10,12 @@ import { useRecipeData } from "@/contexts/UseRecipeData";
 interface Recipe_RecipeNameBlockProps {}
 
 const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = () => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+  const { recipeData } = useRecipeData();
+  // const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   return (
-    <DottedBorder className="grid grid-cols-1 content-evenly gap-y-6">
-      <TextEditable<"data.recipeName"> initialTextObject={{ "data.recipeName": recipeData.data?.recipeName }} />
-      <TextEditable<"data.recipeDesc"> initialTextObject={{ "data.recipeDesc": recipeData.data.recipeDesc }} />
+    <DottedBorder className="grid grid-cols-1 content-evenly gap-y-6 ">
+      <TextEditable initialTextObject={{ "data.recipeName": recipeData.data?.recipeName }} />
+      <TextEditable initialTextObject={{ "data.recipeDesc": recipeData.data.recipeDesc }} />
 
       <div className="flex flex-wrap justify-center items-stretch gap-1 w-full">
         <MenuOption1>

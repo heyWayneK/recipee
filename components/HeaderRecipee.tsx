@@ -349,11 +349,13 @@ const HeaderRecipee: React.FC = () => {
 
       {/* Mobile Navigation */}
       {isOpen && (
-        <nav className="md:hidden bg-white shadow-md transition-all duration-300 py-4">
-          {data.menuItems.map((item) => (
-            <MenuItem key={item.title} item={item} isMobile={true} setIsMobile={setIsMobile} activeDropdown={activeDropdown} toggleDropdown={toggleDropdown} pathname={pathname} />
-          ))}
-        </nav>
+        <header>
+          <nav className="md:hidden bg-white shadow-md transition-all duration-300 py-4">
+            {data.menuItems.map((item) => (
+              <MenuItem key={item.title} item={item} isMobile={true} setIsMobile={setIsMobile} activeDropdown={activeDropdown} toggleDropdown={toggleDropdown} pathname={pathname} />
+            ))}
+          </nav>
+        </header>
       )}
     </div>
   );

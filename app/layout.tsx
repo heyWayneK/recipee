@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { Inter } from "next/font/google";
 import { Viewport } from "next";
 import PlausibleProvider from "next-plausible";
@@ -11,7 +11,6 @@ import { ModalProvider } from "@/providers/bigModalProvider";
 import { ThemeContext, ThemeProvider } from "@/contexts/ThemeContext";
 import { ClerkProvider } from "@clerk/nextjs";
 import { OnlineStatusProvider } from "@/contexts/UseOnlineStatus";
-import HeaderRecipee from "@/components/HeaderRecipee";
 
 const font = Inter({ subsets: ["latin"] });
 // const font = Inter({ subsets: ["latin"], weight: "100", variable: ""});
@@ -39,7 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   //   document.documentElement.classList.add("hydrated");
   // }, []);
 
-  console.log("RootLayout: config.colors.theme", config.colors.theme);
+  // console.log("RootLayout: config.colors.theme", config.colors.theme);
 
   return (
     /* INFO: 
@@ -63,12 +62,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </head>
             )}
             <body>
-              <header className="">
+              {/* <header className="">
                 <HeaderRecipee />
-              </header>
+              </header> */}
               {/* ClientLayout to provide common layout and functionality */}
               {/* <ClientLayout>{children}</ClientLayout> */}
               {children}
+
               <ModalProvider />
             </body>
           </html>

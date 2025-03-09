@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import SvgSprite from "@/components/SvgSprite";
 import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
 
@@ -55,18 +55,18 @@ const TextEditable = <P extends PathString>({ initialTextObject, onSave, classNa
       {/* overflow-auto */}
       <span
         className={`${className}
-         text-slate-700 text-pretty  text-ellipsis rounded-xl min-w-10 px-4 py-1 gap-x-1 cursor-pointer select-none hover:rounded-md 
+        text-base-content text-pretty  text-ellipsis rounded-xl min-w-10 px-4 py-1 gap-x-1 cursor-pointer select-none hover:rounded-md 
       `}
       >
         <div>
           {editing ? (
             <div>
-              <input type="text" value={text} onChange={handleChange} />
+              <input className=" text-base-content" type="text" value={text} onChange={handleChange} />
               <button onClick={handleSave}>Save</button>
             </div>
           ) : (
             <div>
-              <span>{text}</span>
+              <span className="text-base-content">{text}</span>
               <button onClick={handleEdit}>Edit</button>
             </div>
           )}

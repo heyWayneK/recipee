@@ -33,17 +33,13 @@ export default function Recipee({
 
   return (
     <div className="grid grid-cols-[max-content_1fr_max-content] h-dvh w-dvw">
-      <aside className=""></aside>
-      <div className="grid grid-rows-[min-content_1fr_min-content] min-h-dvh px-6">
-        {/* <header className="">
-          <HeaderRecipee />
-        </header> */}
-        <main className="">{children}</main>
-        <footer className=" h-40">
-          <Footer />
-        </footer>
+      <aside></aside>
+      <div className="grid grid-rows-[min-content_1fr_min-content] min-h-dvh ">
+        <HeaderRecipee />
+        <main className="px-6">{children}</main>
+        <Footer />
       </div>
-      <aside className=""></aside>
+      <aside></aside>
     </div>
   );
 }

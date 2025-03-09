@@ -9,6 +9,7 @@ import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { getSEOTags, renderSchemaTags } from "@/libs/seo";
+import HeaderRecipee from "@/components/HeaderRecipee";
 
 export const metadata = getSEOTags({
   title: "Welcome | Professional Recipee and Producton App",
@@ -20,18 +21,19 @@ export default function Home() {
     <>
       {renderSchemaTags()}
 
-      {/* <Header /> */}
+      <HeaderRecipee />
 
-      <main>
-        <Hero />
-        <LaunchApp />
-        <Problem />
-        <Features />
-        <Pricing />
-        <FAQ />
-        <CTA />
-      </main>
-      {/* <Footer /> */}
+      <Hero />
+      <LaunchApp />
+      <Problem />
+      <Features />
+      <Pricing />
+      <FAQ />
+      <CTA />
+
+      <footer className=" h-40">
+        <Footer />
+      </footer>
     </>
   );
 }

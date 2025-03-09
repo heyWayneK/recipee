@@ -217,7 +217,7 @@ module.exports = {
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
           primary: "#ff00ff",
-          "primary-content": "#0f172a",
+          "primary-content": "#f1f5f9",
           secondary: "#ff00ff",
           "secondary-content": "#ff00ff",
           accent: "#00ffff",
