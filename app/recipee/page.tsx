@@ -7,6 +7,7 @@ import Recipe_RecipeNameBlock from "@/components/Recipe_RecipeNameBlock";
 import Recipe_ImageBlock from "@/components/Recipe_ImageBlock";
 import Recipe_TodoBlock from "@/components/Recipe_TodoBlock";
 import Recipe_NoteBlock from "@/components/Recipe_NoteBlock";
+import React from "react";
 
 // This page is only accessible to authenticated users.
 // It is wrapped with the LayoutPrivate component to enforce access control.
@@ -28,6 +29,7 @@ export default function Recipee() {
         <section className="py-5">
           <Recipe_NoteBlock />
         </section>
+        <div data-testid="test">test-1234</div>
       </RecipeDataProvider>
     </MenuModalProvider>
   );

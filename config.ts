@@ -7,7 +7,7 @@ const config = {
   // Brief description of the application for SEO purposes; can be customized
   appDescription: "Recipee - Easy Recipe, Production, Nutrition and Everything Food Related. For Chefs. With Recipe Version History, Chef Feeback Task Management",
   // Domain name of the application without protocol or trailing slash
-  domainName: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "http://recippe.com:3000",
+  domainName: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "http://recipee.app",
   crisp: {
     // Crisp support widget ID; leave empty if Crisp is not used
     id: "",

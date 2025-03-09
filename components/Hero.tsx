@@ -4,12 +4,11 @@ import config from "@/config";
 import TestimonialRating from "./TestimonialRating";
 
 const data = {
-  title1: "Launch your",
-  title2: "SaaS startup",
-  title3: "in 3 month,",
-  title4: "1 day",
-  description:
-    "This NEXT.js boilerplate wrapper with pre build modules is all what you need to ship your SaaS, AI tool or a startup today and start making money FAST",
+  title1: "Welcome to Recipee.app",
+  title2: "Efficient Recipee and Production App",
+  title3: "for chef,",
+  title4: "by chefs",
+  description: "Everything you need to manage your kitchen, from recipes to production, all in one place.",
 };
 
 const Hero = () => {
@@ -19,18 +18,11 @@ const Hero = () => {
         <div className="lg:w-[45%] max-w-[450px]">
           <TestimonialRating />
           <h1 className="font-inter text-[48px] leading-[57px] font-bold mt-4 text-white">
-            {data?.title1}{" "}
-            <span className="text-transparent bg-gradient-to-r from-[#E437F2] to-[#853FF8] bg-clip-text">
-              {data?.title2}
-            </span>{" "}
-            <span className="line-through">{data?.title3}</span> {data?.title4}
+            {data?.title1} <span className="text-transparent bg-gradient-to-r from-[#E437F2] to-[#853FF8] bg-clip-text">{data?.title2}</span> <span className="line-through">{data?.title3}</span>{" "}
+            {data?.title4}
           </h1>
-          <p className="text-[#95959D] font-inter text-xl my-4">
-            {data?.description}
-          </p>
-          <button className="btn bg-[#006fee] border-none hover:bg-[#006fee] text-white scale-1 hover:scale-[1.05] transition-all duration-300 btn-wide rounded-full">
-            Get {config.appName}
-          </button>
+          <p className="text-[#95959D] font-inter text-xl my-4">{data?.description}</p>
+          <button className="btn bg-[#006fee] border-none hover:bg-[#006fee] text-white scale-1 hover:scale-[1.05] transition-all duration-300 btn-wide rounded-full">Get {config.appName}</button>
           <TestimonialsAvatars priority={true} />
         </div>
         <div>

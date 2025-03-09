@@ -1,9 +1,10 @@
 import { ThemeContext } from "@/contexts/ThemeContext";
-import React, { ReactNode, useContext } from "react";
+import React, { useContext } from "react";
 import Pill from "@/components/Pill";
 import { getTextTranslation } from "@/libs/utils";
 
 interface ToggleThemeLightDarkProps {}
+
 const ToggleThemeLightDark: React.FC<ToggleThemeLightDarkProps> = () => {
   // TOGGLE DARK & LIGHT THEME
   const { theme, toggleTheme } = useContext(ThemeContext);

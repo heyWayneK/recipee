@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     domains: [
       // NextJS <Image> component needs to whitelist domains for src={}
+      "recipee.app",
       "lh3.googleusercontent.com",
       "pbs.twimg.com",
       "images.unsplash.com",
@@ -13,8 +14,13 @@ const nextConfig = {
       "cdn-icons-png.flaticon.com",
       "res.cloudinary.com",
       "fast-strapi-cms-651b34b82e95.herokuapp.comhttps",
-      "recipee.app",
     ],
+  },
+
+  //INFO:  IMPORTANT FOR JEST TESTING.
+  // to allow live to use SWC
+  experimental: {
+    forceSwcTransforms: true,
   },
 };
 

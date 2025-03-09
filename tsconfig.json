@@ -1,24 +1,42 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noImplicitAny": true,
-    "jsx": "preserve",
+    "types": [
+      "jest",
+      "node",
+      "@testing-library/jest-dom"
+    ],
+    "jsx": "preserve", // Ensure this is set for React/Next.js
+    "module": "esnext",
+    "moduleResolution": "node",
+    // "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     // "noUnusedLocals": false,
     // "noUnusedParameters": false,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["src/*"]
+    //   // "@/*": ["src/*"]
+    // },
     "plugins": [
       {
         "name": "next"
@@ -26,6 +44,21 @@
     ],
     "target": "ES2017"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "utils/office365mail/sendMail.js", ".next/types/app/recipee/formgen/page.tsx", "app/recipee/supabase_clerk_test"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "utils/office365mail/sendMail.js",
+    ".next/types/app/recipee/formgen/page.tsx",
+    "app/recipee/supabase_clerk_test",
+    "cypress.config.js",
+    // "jest__.config____.js"
+    "jest.config.ts"
+  ]
+  // "exclude": ["node_modules"]
+  ,
+  "exclude": [
+    "node_modules"
+  ]
 }

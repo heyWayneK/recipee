@@ -1,10 +1,10 @@
 import Loading from "@/components/Loading";
 import ErrorPage from "../ErrorPage";
-import { TableName } from "../_api/prismaCrud";
 import { DynamicFormComponent } from "./FormGen_DynamicForm";
 import useTableCrud from "../_hook/useCrud";
 import React from "react";
 import { DynamicTableComponent } from "../_util/FormGen_TableFunctions";
+import { TableName } from "../_types/formGen_setup";
 
 // Updated Component Usage
 function FormGen_Form_Table_DbCall2({
@@ -17,6 +17,7 @@ function FormGen_Form_Table_DbCall2({
   formFieldsToExcludeInTable: string[];
   model: any; // Replace with proper type
 }) {
+  // CALL THE DATABASE
   const { items, isError, selectedItem, showForm, handleSaveNewRow, handleUpdate, handleDelete, handleEdit, handleToggleForm } = useTableCrud(tableName);
 
   if (!isError.error && items === null) return <Loading />;

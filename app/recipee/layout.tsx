@@ -32,21 +32,19 @@ export default function Recipee({
   // {renderSchemaTags()}
 
   return (
-    <OnlineStatusProvider>
-      <div className="grid grid-cols-[max-content_1fr_max-content] h-dvh w-dvw">
-        <aside className=""></aside>
-        <div className="grid grid-rows-[min-content_1fr_min-content] min-h-dvh px-6">
-          <header className="">
-            <HeaderRecipee />
-          </header>
-          <main className="">{children}</main>
-          <footer className=" h-40">
-            <Footer />
-          </footer>
-        </div>
-        <aside className=""></aside>
+    <div className="grid grid-cols-[max-content_1fr_max-content] h-dvh w-dvw">
+      <aside className=""></aside>
+      <div className="grid grid-rows-[min-content_1fr_min-content] min-h-dvh px-6">
+        {/* <header className="">
+          <HeaderRecipee />
+        </header> */}
+        <main className="">{children}</main>
+        <footer className=" h-40">
+          <Footer />
+        </footer>
       </div>
-    </OnlineStatusProvider>
+      <aside className=""></aside>
+    </div>
   );
 }
 

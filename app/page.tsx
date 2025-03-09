@@ -19,9 +19,9 @@ export default function Home() {
   return (
     <>
       {renderSchemaTags()}
-      {/* <Suspense>
-        <Header />
-      </Suspense> */}
+
+      {/* <Header /> */}
+
       <main>
         <Hero />
         <LaunchApp />

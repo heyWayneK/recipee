@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { ApiResponse, DynamicObjectArray } from "../_types/formGen_types";
-import { TableName, create, deleteOne, getAll, getOne, update } from "../_api/prismaCrud";
+import { create, deleteOne, getAll, getOne, update } from "../_api/prismaCrud";
 import { FieldValues } from "react-hook-form";
+import { TableName } from "../_types/formGen_setup";
 
 // The custom hook
 export default function useTableCrud(tableName: TableName) {
@@ -14,7 +15,11 @@ export default function useTableCrud(tableName: TableName) {
   // Fetch items
   const fetchItems = useCallback(async () => {
     try {
-      const fetchedItems: DynamicObjectArray = await getAll(tableName);
+      console.log(" 1. fetchedItems --------- getAll");
+      // const fetchedItems: DynamicObjectArray = await getAll(tableName);
+      const fetchedItems: any = await getAll(tableName);
+      console.log("5. fetchedItems -----------------", fetchedItems);
+
       // Flatten date objects (TODO: Improve date handling)
       const jsonFetch = await JSON.parse(JSON.stringify(fetchedItems));
       setItems(jsonFetch);

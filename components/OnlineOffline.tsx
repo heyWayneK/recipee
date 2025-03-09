@@ -4,7 +4,7 @@ import { UseOnlineStatus } from "@/contexts/UseOnlineStatus";
 const OnlineOffline = () => {
   const { isOnline } = UseOnlineStatus();
   return (
-    <div className={`w-svw text-sm text-center ${isOnline ? "bg-lime-400" : "bg-red-400"}`}>
+    <div suppressHydrationWarning className="w-svw text-sm text-center" style={{ backgroundColor: `${isOnline ? "lime" : "red"}` }}>
       <p>{isOnline ? "You are online" : "You are offline"}</p>
     </div>
   );
