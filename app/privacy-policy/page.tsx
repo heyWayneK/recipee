@@ -12,12 +12,7 @@ const PrivacyPolicy = () => {
     <main className="max-w-xl mx-auto">
       <div className="p-5">
         <Link href="/" className="btn btn-ghost text-white">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="w-5 h-5"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
             <path
               fillRule="evenodd"
               d="M15 10a.75.75 0 01-.75.75H7.612l2.158 1.96a.75.75 0 11-1.04 1.08l-3.5-3.25a.75.75 0 010-1.08l3.5-3.25a.75.75 0 111.04 1.08L7.612 9.25h6.638A.75.75 0 0115 10z"
@@ -26,15 +21,10 @@ const PrivacyPolicy = () => {
           </svg>{" "}
           Back
         </Link>
-        <h1 className="text-3xl font-extrabold pb-6 text-white">
-          Privacy Policy for {config.appName}
-        </h1>
+        <h1 className="text-3xl font-extrabold pb-6 text-white">Privacy Policy for {config.appName}</h1>
 
-        <pre
-          className="leading-relaxed whitespace-pre-wrap text-white"
-          style={{ fontFamily: "sans-serif" }}
-        >
-          {`Your privacy is important to us. It is MicroSaaSFast's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.
+        <pre className="leading-relaxed whitespace-pre-wrap text-white" style={{ fontFamily: "sans-serif" }}>
+          {`Your privacy is important to us. It is Recipee.app's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.
 
 We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we're collecting it and how it will be used.
 
@@ -42,7 +32,7 @@ We only retain collected information for as long as necessary to provide you wit
 
 We don't share any personally identifying information publicly or with third parties, except when required to by law.
 
-We act in the capacity of a data controller and a data processor with regard to the personal data processed through MicroSaaSFast and the services in terms of the applicable data protection laws, The Data Protection Act 2018, including the EU General Data Protection Regulation (GDPR).
+We act in the capacity of a data controller and a data processor with regard to the personal data processed through Recipee.app and the services in terms of the applicable data protection laws, The Data Protection Act 2018, including the EU General Data Protection Regulation (GDPR).
 
 Our website may link to external sites that are not operated by us. Please be aware that we have no control over the content and practices of these sites, and cannot accept responsibility or liability for their respective privacy policies.
 
