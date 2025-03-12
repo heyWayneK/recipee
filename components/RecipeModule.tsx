@@ -25,6 +25,7 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
   }, []);
 
   console.log("recipe data", recipeData);
+  //  TODO: remove or use qty and serQty?
   console.log("qty & setQty use? - fix", qty, setQty);
 
   if (!recipeData.portionSizes.length) return <Loading />;

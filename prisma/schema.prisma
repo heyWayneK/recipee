@@ -214,18 +214,76 @@ model Role {
   updatedAt  DateTime @updatedAt
 }
 
+model PrepInstructions {
+  id            Int          @id @default(autoincrement())
+  name          String
+  translation   Json?
+  desc          String?
+  yield         Float?
+  isLive        Boolean      @default(true)
+  updatedAt     DateTime     @updatedAt
+  Ingredients   Ingredients? @relation(fields: [ingredientsId], references: [id])
+  ingredientsId Int?
+}
+
 model RawToPreppedYields {
-  id               Int         @id @default(autoincrement())
-  ingredientId     Int
-  ingredients      Ingredients @relation(fields: [ingredientId], references: [id])
-  whole            Float       @default(1)
-  peeled           Float       @default(0)
-  peeled_and_cored Float       @default(0)
-  diced            Float       @default(0)
-  sliced           Float       @default(0)
-  grated           Float       @default(0)
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
+  id            Int          @id @default(autoincrement())
+  name          String
+  translation   Json?
+  desc          String?
+  yield         Float?
+  isLive        Boolean      @default(true)
+  updatedAt     DateTime     @updatedAt
+  Ingredients   Ingredients? @relation(fields: [ingredientsId], references: [id])
+  ingredientsId Int?
+}
+
+model CookedYieldsCategories {
+  id           Int            @id @default(autoincrement())
+  name         String
+  translation  Json?
+  desc         String?
+  yield        Float?
+  isLive       Boolean        @default(true)
+  updatedAt    DateTime       @updatedAt
+  CookedYields CookedYields[]
+}
+
+model CookedYields {
+  id                       Int                    @id @default(autoincrement())
+  name                     String
+  translation              Json?
+  desc                     String?
+  yield                    Float?
+  isLive                   Boolean                @default(true)
+  updatedAt                DateTime               @updatedAt
+  CookedYieldsCategories   CookedYieldsCategories @relation(fields: [CookedYieldsCategoriesId], references: [id])
+  CookedYieldsCategoriesId Int
+  ingredients              Ingredients[]
+}
+
+model DryCookedYieldsCategories {
+  id              Int               @id @default(autoincrement())
+  name            String
+  translation     Json?
+  desc            String?
+  yield           Float?
+  isLive          Boolean           @default(true)
+  updatedAt       DateTime          @updatedAt
+  DryCookedYields DryCookedYields[]
+}
+
+model DryCookedYields {
+  id                          Int                       @id @default(autoincrement())
+  name                        String
+  translation                 Json?
+  desc                        String?
+  yield                       Float?
+  isLive                      Boolean                   @default(true)
+  updatedAt                   DateTime                  @updatedAt
+  DryCookedYieldsCategories   DryCookedYieldsCategories @relation(fields: [DryCookedYieldsCategoriesId], references: [id])
+  DryCookedYieldsCategoriesId Int
+  ingredients                 Ingredients[]
 }
 
 model Ingredients {
@@ -235,6 +293,7 @@ model Ingredients {
   isDefault                 Boolean?                @default(false)
   name                      String
   name_alt                  String?
+  translation               Json?
   primary_category          String?                 @default("")
   secondary_category        String?                 @default("")
   dietary_classification    EnumDietClassification? @default(none)
@@ -260,7 +319,10 @@ model Ingredients {
   salt_per_100g             Float?                  @default(0)
   sodium_per_100g           Float?                  @default(0)
   raw_to_prepped_yields     RawToPreppedYields[]
+  CookedYields              CookedYields[]
+  DryCookedYields           DryCookedYields[]
   Component                 Component[]
+  PrepInstructions          PrepInstructions[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

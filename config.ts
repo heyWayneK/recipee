@@ -73,12 +73,12 @@ const config = {
     // Main color used throughout the application, including the loading bar and browser tabs
     main: themes["light"]["primary"],
   },
-  auth: {
-    // Path for user login; used to protect private routes
-    // loginUrl: "/api/auth/signin",
-    // Redirect URL after successful login; usually a private user dashboard
-    // callbackUrl: "/dashboard",
-  },
+  // auth: {
+  //   // Path for user login; used to protect private routes
+  //   // loginUrl: "/api/auth/signin",
+  //   // Redirect URL after successful login; usually a private user dashboard
+  //   // callbackUrl: "/dashboard",
+  // },
 } as ConfigProps;
 
 export default config;

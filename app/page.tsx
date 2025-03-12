@@ -10,6 +10,8 @@ import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { getSEOTags, renderSchemaTags } from "@/libs/seo";
 import HeaderRecipee from "@/components/HeaderRecipee";
+import Image from "next/image";
+import DottedBorder from "@/components/DottedBorder";
 
 export const metadata = getSEOTags({
   title: "Welcome | Professional Recipee and Producton App",
@@ -19,21 +21,35 @@ export const metadata = getSEOTags({
 export default function Home() {
   return (
     <>
-      {renderSchemaTags()}
+      <main className="flex flex-col items-center justify-center min-h-screen py-2 gap-10">
+        {/* {renderSchemaTags()} */}
+        <div className="flex items-center">
+          <Image src={"/logo/recipe_logo_black.svg"} alt="Logo" width={800} height={400} />
+        </div>
 
-      <HeaderRecipee />
+        <DottedBorder className="grid grid-cols-1 text-left content-center gap-y-6 p-14 w-4/6 max-w-1xl justify-center text-balance">
+          <div className="flex items-center gap-10">
+            <b>The Future of Accurate Ai Food Management</b>
+            <br /> <br />
+            Nutrition. Recipe Life Cycle. Food Management. Food eCommerce. Suppliers. Stock. Production. Sales.
+            <br /> <br />
+            Coming really soon.
+          </div>
+        </DottedBorder>
+      </main>
+      {/* <HeaderRecipee /> */}
 
-      <Hero />
+      {/* <Hero />
       <LaunchApp />
       <Problem />
       <Features />
       <Pricing />
       <FAQ />
-      <CTA />
+      <CTA /> */}
 
-      <footer className=" h-40">
+      {/* <footer className=" h-40">
         <Footer />
-      </footer>
+      </footer> */}
     </>
   );
 }
