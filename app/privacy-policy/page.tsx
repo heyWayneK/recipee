@@ -9,9 +9,9 @@ export const metadata = getSEOTags({
 
 const PrivacyPolicy = () => {
   return (
-    <main className="max-w-xl mx-auto">
+    <main className="max-w-xl mx-auto  text-base-content">
       <div className="p-5">
-        <Link href="/" className="btn btn-ghost text-white">
+        <Link href="/" className="btn btn-ghost ">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
             <path
               fillRule="evenodd"
@@ -21,9 +21,9 @@ const PrivacyPolicy = () => {
           </svg>{" "}
           Back
         </Link>
-        <h1 className="text-3xl font-extrabold pb-6 text-white">Privacy Policy for {config.appName}</h1>
+        <h1 className="text-3xl font-extrabold pb-6 ">Privacy Policy for {config.appName}</h1>
 
-        <pre className="leading-relaxed whitespace-pre-wrap text-white" style={{ fontFamily: "sans-serif" }}>
+        <pre className="leading-relaxed whitespace-pre-wrap " style={{ fontFamily: "sans-serif" }}>
           {`Your privacy is important to us. It is Recipee.app's policy to respect your privacy regarding any information we may collect from you across our website, and other sites we own and operate.
 
 We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we're collecting it and how it will be used.

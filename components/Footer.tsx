@@ -16,7 +16,7 @@ const data = {
     //   title: "Blog",
     // },
     {
-      link: "/tos",
+      link: "/terms",
       title: "Terms of services",
     },
     {
