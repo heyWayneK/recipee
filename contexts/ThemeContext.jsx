@@ -3,7 +3,7 @@ import { createContext, useState, useEffect } from "react";
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   // const [theme, setTheme] = useState(() => {
   //   // if (typeof window !== "undefined") {
   //   const storedTheme = localStorage.getItem("theme");
@@ -13,12 +13,12 @@ export const ThemeProvider = ({ children }) => {
   // });
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      console.log("USE EFFECT THEME__", theme);
-      localStorage.setItem("theme", theme);
-      // document.documentElement.className = theme;
-      document.documentElement.setAttribute("data-theme", theme); // Update the data-theme att
-    }
+    // if (typeof window !== "undefined") {
+    console.log("USE EFFECT THEME__", theme);
+    localStorage.setItem("theme", theme);
+    // document.documentElement.className = theme;
+    document.documentElement.setAttribute("data-theme", theme); // Update the data-theme att
+    // }
   }, [theme]);
 
   const toggleTheme = async () => {

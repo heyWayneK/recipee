@@ -21,19 +21,20 @@ export const metadata = getSEOTags({
 export default function Home() {
   return (
     <>
-      <main className="flex flex-col items-center justify-center min-h-screen py-2 gap-10">
+      <main className="flex flex-col items-center justify-center min-h-screen p-4 gap-10">
         {/* {renderSchemaTags()} */}
         <div className="flex items-center">
           <Image src={"/logo/recipe_logo_black.svg"} alt="Logo" width={800} height={400} />
         </div>
 
-        <DottedBorder className="grid grid-cols-1 text-left content-center gap-y-6 p-14 w-4/6 max-w-1xl justify-center text-balance">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] items-center gap-10">
-            <b>The Future of Accurate Ai Food Management</b>
-            <br /> <br />
-            Nutrition. Recipe Life Cycle. Food Management. Food eCommerce. Suppliers. Stock. Production. Sales.
-            <br /> <br />
-            Coming really soon.
+        <DottedBorder className="grid grid-cols-1 p-6 text-center sm:text-left  justify-center text-balance max-w-2xl">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] justify-stretch gap-10  first:text-2xl first:font-medium text-pretty">
+            <span>The Future of Accurate Ai Food Management</span>
+            <span className=" text-sm">
+              Nutrition. <b>Recipe Lifecycle.</b> Food Management. <b>Food eCommerce.</b> Suppliers & Stock. <b>Production.</b> Sales. <br />
+              <br />
+              Coming soon.
+            </span>
           </div>
         </DottedBorder>
       </main>
@@ -47,9 +48,9 @@ export default function Home() {
       <FAQ />
       <CTA /> */}
 
-      {/* <footer className=" h-40">
+      <footer className=" h-40">
         <Footer />
-      </footer> */}
+      </footer>
     </>
   );
 }

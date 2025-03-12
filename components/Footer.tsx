@@ -5,16 +5,16 @@ import ButtonSignin from "./ButtonSignin";
 import ToggleThemeLightDark from "./ToggleThemeLightDark";
 
 const data = {
-  website_name: "Recipee",
+  website_name: "Recipee.app",
   links: [
-    {
-      link: "#pricing",
-      title: "Pricing",
-    },
-    {
-      link: "/blog",
-      title: "Blog",
-    },
+    // {
+    //   link: "#pricing",
+    //   title: "Pricing",
+    // },
+    // {
+    //   link: "/blog",
+    //   title: "Blog",
+    // },
     {
       link: "/tos",
       title: "Terms of services",
@@ -24,7 +24,7 @@ const data = {
       title: "Privacy policy",
     },
   ],
-  description: "Ship your startup in days, not weeks",
+  description: "Intelligent Recipee and Production App",
   copyright: `Copyright ©${new Date().getFullYear()}- All rights reserved`,
   logo: {
     url: "https://res.cloudinary.com/spadasoft/image/upload/v1720100584/logo_2bc425d794.png",
