@@ -28,7 +28,7 @@ export default function Home() {
         </div>
 
         <DottedBorder className="grid grid-cols-1 text-left content-center gap-y-6 p-14 w-4/6 max-w-1xl justify-center text-balance">
-          <div className="flex items-center gap-10">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] items-center gap-10">
             <b>The Future of Accurate Ai Food Management</b>
             <br /> <br />
             Nutrition. Recipe Life Cycle. Food Management. Food eCommerce. Suppliers. Stock. Production. Sales.
