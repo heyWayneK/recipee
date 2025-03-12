@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+// import { NextResponse } from "next/server";
 
-const jsonResponse = {
-  message: "This is public data",
-  status: "success",
-};
+// const jsonResponse = {
+//   message: "This is public data",
+//   status: "success",
+// };
 
 // export default async function handler(req: any, res: any) {
 //   try {
@@ -71,22 +71,22 @@ const jsonResponse = {
 //   }
 // }
 
-export async function GET(req: any, res: any) {
-  // Your GET method logic here
-  // res.status(200).json({ message: "GET request successful" });
-  return NextResponse.json({ message: "GET request successful" });
-}
+// export async function GET(req: any, res: any) {
+//   // Your GET method logic here
+//   // res.status(200).json({ message: "GET request successful" });
+//   return NextResponse.json({ message: "GET request successful" });
+// }
 
-export async function POST(req: any, res: any) {
-  // Your POST method logic here
-  // res.status(200).json({ message: "POST request successful" });
-  return NextResponse.json({ message: "GET request successful" });
-}
+// export async function POST(req: any, res: any) {
+//   // Your POST method logic here
+//   // res.status(200).json({ message: "POST request successful" });
+//   return NextResponse.json({ message: "GET request successful" });
+// }
 
-export default async function HTTP(req: any, res: any) {
-  // Your POST method logic here
-  // res.status(200).json({ message: "HTTP request successful" });
-  return NextResponse.json({ message: "GET request successful" });
-}
+// export default async function HTTP(req: any, res: any) {
+//   // Your POST method logic here
+//   // res.status(200).json({ message: "HTTP request successful" });
+//   return NextResponse.json({ message: "GET request successful" });
+// }
 
-// // Add other HTTP methods as needed
+// // // Add other HTTP methods as needed
