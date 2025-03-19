@@ -1,0 +1,11 @@
+name: Process Webhook Queue
+on:
+  schedule:
+    - cron: "*/5 * * * *" # Every 5 minutes
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Edge Function
+        run: |
+          curl -X POST https://zozztsfhpsotmekjeiwt.supabase.co/functions/v1/classify-ingredient

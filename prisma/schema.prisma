@@ -8,86 +8,96 @@ datasource db {
   directUrl = env("POSTGRESQL_DIRECT_URI")
 }
 
-model Account {
-  id                 Int     @id @default(autoincrement())
-  userId             Int
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
-  oauth_token_secret String?
-  oauth_token        String?
+// OLD AUTH MODEL
+// model Account {
+//   id                 Int     @id @default(autoincrement())
+//   profiles_id             Int
+//   type               String
+//   provider           String
+//   providerAccount_id  String
+//   refresh_token      String? @db.Text
+//   access_token       String? @db.Text
+//   expires_at         Int?
+//   token_type         String?
+//   scope              String?
+//   id_token           String? @db.Text
+//   session_state      String?
+//   oauth_token_secret String?
+//   oauth_token        String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   user user @relation(fields: [profiles_id], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+//   @@unique([provider, providerAccount_id])
+// }
+
+// OLD AUTH MODEL
+// model Session {
+//   id           Int      @id @default(autoincrement())
+//   sessionToken String   @unique
+//   profiles_id       Int
+//   expires      DateTime
+
+//   profiles       profiles      @relation(fields: [profiles_id], references: [id], onDelete: Cascade)
+//   customer   customer? @relation(fields: [customer_id], references: [id])
+//   customer_id Int?
+// }
+
+// model user {
+//   id            Int       @id @default(autoincrement())
+//   name          String?
+//   email         String?   @unique
+//   email_verified DateTime?
+//   image         String?
+//   customer_id    String?
+//   price_id       String?
+//   hasAccess     Boolean?
+//   created_at     DateTime  @default(now())
+
+//   // accounts            Account[]
+//   // sessions            Session[]
+//   todo                todo[]
+//   todo_status          todo_status[]
+//   todo_document        todo_document[]
+//   conversation_thread  conversation_thread[]
+//   production_event     production_event[]
+//   production_event_task production_event_task[]
+// }
+
+// INFO: Manually integrated to Clerk.io Auth
+
+model profiles {
+  id                    Int                     @id @default(autoincrement())
+  profiles_id           String?                 @unique
+  username              String?
+  emails                Json?
+  phone_numbers         Json?
+  organisations         String?
+  avatar_url            String?
+  roles                 Json?
+  first_name            String?
+  last_name             String?
+  last_sign_in_at       String?
+  json                  Json?
+  todo                  todo[]
+  todo_status           todo_status[]
+  todo_document         todo_document[]
+  conversation_thread   conversation_thread[]
+  production_event      production_event[]
+  production_event_task production_event_task[]
 }
 
-model Session {
-  id           Int      @id @default(autoincrement())
-  sessionToken String   @unique
-  userId       Int
-  expires      DateTime
+// model VerificationToken {
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
 
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Customer   Customer? @relation(fields: [customerId], references: [id])
-  customerId Int?
-}
+//   @@unique([identifier, token])
+// }
 
-model User {
-  id            Int       @id @default(autoincrement())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  customerId    String?
-  priceId       String?
-  hasAccess     Boolean?
-  createdAt     DateTime  @default(now())
-
-  accounts            Account[]
-  sessions            Session[]
-  Todo                Todo[]
-  TodoStatus          TodoStatus[]
-  TodoDocument        TodoDocument[]
-  ConversationThread  ConversationThread[]
-  ProductionEvent     ProductionEvent[]
-  ProductionEventTask ProductionEventTask[]
-}
-
-model Profiles {
-  id            Int     @id @default(autoincrement())
-  userId        String? @unique
-  username      String?
-  emails        Json?
-  phoneNumbers  Json?
-  organisations String?
-  avatarUrl     String?
-  roles         Json?
-  firstName     String?
-  lastName      String?
-  lastSignInAt  String?
-  json          Json?
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-}
-
-model Lead {
-  id        Int      @id @default(autoincrement())
-  email     String
-  createdAt DateTime @default(now())
+model lead {
+  id         Int      @id @default(autoincrement())
+  email      String
+  created_at DateTime @default(now())
 }
 
 enum EnumLanguage {
@@ -112,10 +122,10 @@ enum EnumDietClassification {
   vegan
   vegetarian
   animal_product
-  none
+  unknown
 }
 
-enum EnumComponentIngredientType {
+enum EnumcomponentIngredientType {
   ingredient
   step
   sub
@@ -165,476 +175,637 @@ enum EnumMetricOrImperial {
   imperial
 }
 
-model Customer {
-  id             Int             @id @default(autoincrement())
+enum EnumPrimaryCategory {
+  alcoholic_beverages
+  baking_ingredients
+  broths_stocks
+  condiments_sauces
+  dairy
+  eggs
+  fats_oils
+  fermented_foods
+  flavorings_extracts
+  fruits
+  grains_cereals
+  herbs_spices
+  legumes
+  meat
+  mushrooms
+  non_alcoholic_beverages
+  nuts_seeds
+  other
+  pasta_noodles
+  plant_based_proteins
+  poultry
+  seafood
+  seaweed
+  sugars_sweeteners
+  vegetables
+  vitamins_minerals_supplements
+  water
+}
+
+model customer {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  email                  String                   @unique
+  email_verified         DateTime?
+  address                String
+  logo                   String?
+  active                 Boolean                  @default(true)
+  payment_options        String
+  contacts               String
+  created_at             DateTime                 @default(now())
+  updated_at             DateTime                 @updatedAt
+  ingredients            ingredients[]
+  suppliers              supplier[]
+  allergies              allergy[]
+  stocks                 stock[]
+  stock_locations        stock_location[]
+  recipe_books           recipe_book[]
+  todos                  todo[]
+  stock_minimum          stock_minimum[]
+  recip_backup           recipe_backup[]
+  recipe_book_index      recipe_book_index[]
+  recipe_book_collection recipe_book_collection[]
+  recipe_book_ccess      recipe_book_access[]
+  todo_status            todo_status[]
+  todo_document          todo_document[]
+  conversation_thread    conversation_thread[]
+  production_event       production_event[]
+  production_event_task  production_event_task[]
+  cost_rules             cost_rules[]
+  packagingCosts         packaging_costs[]
+  other_costs            other_costs[]
+  markup                 markup[]
+  recipe                 recipe[]
+  ingredients_nutrition  ingredients_nutrition[]
+  ingredients_yields     ingredients_yields[]
+}
+
+// model Role {
+//   id         Int      @id @default(autoincrement())
+//   profiles_id     Int
+//   role       Int
+//   customer   customer @relation(fields: [customer_id], references: [id])
+//   customer_id Int
+//   created_at  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+// }
+
+model prep_instructions {
+  id             Int          @id @default(autoincrement())
   name           String
-  email          String          @unique
-  emailVerified  DateTime?
-  address        String
-  logo           String?
-  active         Boolean         @default(true)
-  paymentOptions String
-  contacts       String
-  ingredients    Ingredients[]
-  suppliers      Supplier[]
-  allergies      Allergy[]
-  stocks         Stock[]
-  stockLocations StockLocation[]
-  recipeBooks    RecipeBook[]
-  todos          Todo[]
-  sessions       Session[]
-  roles          Role[]
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-
-  StockMinimum         StockMinimum[]
-  RecipeBackup         RecipeBackup[]
-  RecipeBookIndex      RecipeBookIndex[]
-  RecipeBookCollection RecipeBookCollection[]
-  RecipeBookAccess     RecipeBookAccess[]
-  TodoStatus           TodoStatus[]
-  TodoDocument         TodoDocument[]
-  ConversationThread   ConversationThread[]
-  ProductionEvent      ProductionEvent[]
-  ProductionEventTask  ProductionEventTask[]
-  CostRules            CostRules[]
-  PackagingCosts       PackagingCosts[]
-  OtherCosts           OtherCosts[]
-  Markup               Markup[]
-  Recipe               Recipe[]
+  translation    Json?
+  desc           String?
+  yield          Float?
+  is_live        Boolean      @default(true)
+  updated_at     DateTime     @updatedAt
+  ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
+  ingredients_id Int?
 }
 
-model Role {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  role       Int
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model raw_to_prepped_yields {
+  id               Int          @id @default(autoincrement())
+  whole            Float        @default(0)
+  peeled           Float        @default(0)
+  peeled_and_cored Float        @default(0)
+  diced            Float        @default(0)
+  sliced           Float        @default(0)
+  grated           Float        @default(0)
+  updated_at       DateTime     @updatedAt
+  ingredients      ingredients? @relation(fields: [ingredients_id], references: [id])
+  ingredients_id   Int?
 }
 
-model PrepInstructions {
-  id            Int          @id @default(autoincrement())
+// LISTS of cooked yield categories for dropdown menus
+model cooked_yields_categories {
+  id            Int             @id @default(autoincrement())
   name          String
   translation   Json?
   desc          String?
   yield         Float?
-  isLive        Boolean      @default(true)
-  updatedAt     DateTime     @updatedAt
-  Ingredients   Ingredients? @relation(fields: [ingredientsId], references: [id])
-  ingredientsId Int?
+  is_live       Boolean         @default(true)
+  updated_at    DateTime        @updatedAt
+  created_at    DateTime?       @default(now())
+  cooked_yields cooked_yields[]
 }
 
-model RawToPreppedYields {
-  id            Int          @id @default(autoincrement())
-  name          String
-  translation   Json?
-  desc          String?
-  yield         Float?
-  isLive        Boolean      @default(true)
-  updatedAt     DateTime     @updatedAt
-  Ingredients   Ingredients? @relation(fields: [ingredientsId], references: [id])
-  ingredientsId Int?
-}
-
-model CookedYieldsCategories {
-  id           Int            @id @default(autoincrement())
-  name         String
-  translation  Json?
-  desc         String?
-  yield        Float?
-  isLive       Boolean        @default(true)
-  updatedAt    DateTime       @updatedAt
-  CookedYields CookedYields[]
-}
-
-model CookedYields {
-  id                       Int                    @id @default(autoincrement())
-  name                     String
-  translation              Json?
-  desc                     String?
-  yield                    Float?
-  isLive                   Boolean                @default(true)
-  updatedAt                DateTime               @updatedAt
-  CookedYieldsCategories   CookedYieldsCategories @relation(fields: [CookedYieldsCategoriesId], references: [id])
-  CookedYieldsCategoriesId Int
-  ingredients              Ingredients[]
-}
-
-model DryCookedYieldsCategories {
-  id              Int               @id @default(autoincrement())
-  name            String
-  translation     Json?
-  desc            String?
-  yield           Float?
-  isLive          Boolean           @default(true)
-  updatedAt       DateTime          @updatedAt
-  DryCookedYields DryCookedYields[]
-}
-
-model DryCookedYields {
+// LISTS of cooked yield for dropdown menus
+model cooked_yields {
   id                          Int                       @id @default(autoincrement())
   name                        String
   translation                 Json?
   desc                        String?
-  yield                       Float?
-  isLive                      Boolean                   @default(true)
-  updatedAt                   DateTime                  @updatedAt
-  DryCookedYieldsCategories   DryCookedYieldsCategories @relation(fields: [DryCookedYieldsCategoriesId], references: [id])
-  DryCookedYieldsCategoriesId Int
-  ingredients                 Ingredients[]
+  is_live                     Boolean                   @default(true)
+  yield                       Float                     @default(0)
+  updated_at                  DateTime                  @updatedAt
+  created_at                  DateTime?                 @default(now())
+  cooked_yields_categories    cooked_yields_categories? @relation(fields: [cooked_yields_categories_id], references: [id])
+  cooked_yields_categories_id Int?
+
+  ingredients_yields    ingredients_yields? @relation(fields: [ingredients_yields_id], references: [id])
+  ingredients_yields_id Int?
 }
 
-model Ingredients {
-  id                        Int                     @id @default(autoincrement())
-  customer                  Customer?               @relation(fields: [customerId], references: [id])
-  customerId                Int?
-  isDefault                 Boolean?                @default(false)
-  name                      String
-  name_alt                  String?
-  translation               Json?
-  primary_category          String?                 @default("")
-  secondary_category        String?                 @default("")
-  dietary_classification    EnumDietClassification? @default(none)
-  kcal_per_100g             Float?                  @default(0)
-  kj_per_100g               Float?                  @default(0)
-  protein_per_100g          Float?                  @default(0)
-  fat_per_100g              Float?                  @default(0)
-  saturated_fat_per_100g    Float?                  @default(0)
-  monounsaturate_per_100g   Float?                  @default(0)
-  polyunsaturate_per_100g   Float?                  @default(0)
-  trans_fats_per_100g       Float?                  @default(0)
-  omega3_per_100g           Float?                  @default(0)
-  omega6_per_100g           Float?                  @default(0)
-  omega9_per_100g           Float?                  @default(0)
-  carbs_per_100g            Float?                  @default(0)
-  net_carbs_per_100g        Float?                  @default(0)
-  carbohydrates_per_100g    Float?                  @default(0)
-  total_sugar_per_100g      Float?                  @default(0)
-  added_sugar_per_100g      Float?                  @default(0)
-  artificial_sugar_per_100g Float?                  @default(0)
-  fibre_per_100g            Float?                  @default(0)
-  starch_per_100g           Float?                  @default(0)
-  salt_per_100g             Float?                  @default(0)
-  sodium_per_100g           Float?                  @default(0)
-  raw_to_prepped_yields     RawToPreppedYields[]
-  CookedYields              CookedYields[]
-  DryCookedYields           DryCookedYields[]
-  Component                 Component[]
-  PrepInstructions          PrepInstructions[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Supplier {
-  id                Int      @id @default(autoincrement())
-  customer          Customer @relation(fields: [customerId], references: [id])
-  customerId        Int
+model dry_cooked_yields_categories {
+  id                Int                 @id @default(autoincrement())
   name              String
-  vat               String?
-  corporationNumber String?
-  logo              String?
-  email             String?
-  tel               String?
-  cell              String?
-  whatsapp          String?
-  accountEmail      String?
-  accountName       String?
-  accountTel        String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  translation       Json?
+  desc              String?
+  yield             Float?
+  is_live           Boolean             @default(true)
+  updated_at        DateTime            @updatedAt
+  dry_cooked_yields dry_cooked_yields[]
 }
 
-model Allergy {
-  id         Int      @id @default(autoincrement())
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-  name       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model dry_cooked_yields {
+  id                              Int                           @id @default(autoincrement())
+  name                            String
+  translation                     Json?
+  desc                            String?
+  yield                           Float?
+  is_live                         Boolean                       @default(true)
+  updated_at                      DateTime                      @updatedAt
+  dry_cooked_yields_categories    dry_cooked_yields_categories? @relation(fields: [dry_cooked_yields_categories_id], references: [id])
+  dry_cooked_yields_categories_id Int?
+  ingredients                     ingredients[]
 }
 
-model Stock {
-  id              Int            @id @default(autoincrement())
-  stockLocation   StockLocation  @relation(fields: [stockLocationId], references: [id])
-  stockLocationId Int
-  customer        Customer       @relation(fields: [customerId], references: [id])
-  customerId      Int
-  qty             Float
-  isActive        Boolean        @default(true)
-  minimums        StockMinimum[]
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+model ingredients_religious_certification {
+  id                Int           @id @default(autoincrement())
+  name              String        @default("unknown")
+  kosherIngredients ingredients[] @relation("KosherRelation") // Back-relation for kosher
+  halalIngredients  ingredients[] @relation("HalalRelation") // Back-relation for halal
 }
 
-model StockMinimum {
-  id              Int           @id @default(autoincrement())
-  stock           Stock         @relation(fields: [stockId], references: [id])
-  stockId         Int
-  stockLocation   StockLocation @relation(fields: [stockLocationId], references: [id])
-  stockLocationId Int
-  customer        Customer      @relation(fields: [customerId], references: [id])
-  customerId      Int
-  qty             Float
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+model ingredients {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  names_alt   String?
+  customer    customer? @relation(fields: [customer_id], references: [id])
+  customer_id Int?
+  is_default  Boolean?  @default(false)
+  translation Json?
+
+  primary_category    ingredient_category_primary? @relation(fields: [primary_category_id], references: [id])
+  primary_category_id Int?
+
+  secondary_category String?
+
+  raw_to_prepped_yields raw_to_prepped_yields[]
+  cooked_yields         ingredient_cooked_yields[]
+  dry_cooked_yields     dry_cooked_yields[]
+  component             component[]
+  prep_instructions     prep_instructions[]
+  ingredients_nutrition ingredients_nutrition[]
+  created_at            DateTime                   @default(now())
+  updated_at            DateTime                   @updatedAt
+  ingredients_yields    ingredients_yields[]
+
+  dietary_classification    dietary_classification? @relation(fields: [dietary_classification_id], references: [id])
+  dietary_classification_id Int?
+
+  kosher    ingredients_religious_certification? @relation(name: "KosherRelation", fields: [kosher_id], references: [id])
+  kosher_id Int?
+
+  halal    ingredients_religious_certification? @relation(name: "HalalRelation", fields: [halal_id], references: [id])
+  halal_id Int?
+
+  confidence        Float?
+  allergy           allergy?            @relation(fields: [allergy_id], references: [id])
+  allergy_id        Int?
+  allergyIngredient allergyIngredient[]
+  WebhookQueue      WebhookQueue[]
 }
 
-model StockLocation {
-  id           Int            @id @default(autoincrement())
-  customer     Customer       @relation(fields: [customerId], references: [id])
-  customerId   Int
-  name         String
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Stock        Stock[]
-  StockMinimum StockMinimum[]
+// LISTS of cooked yield for dropdown menus
+model ingredient_cooked_yields {
+  id             Int          @id @default(autoincrement())
+  ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
+  ingredients_id Int?
+  raw            Float        @default(0)
+  cooked         Float        @default(0)
+  deep_fry       Float        @default(0)
+  shallow_fry    Float        @default(0)
+  boiled         Float        @default(0)
+  roasted        Float        @default(0)
+  updated_at     DateTime     @updatedAt
+  created_at     DateTime     @default(now())
 }
 
-model RecipeBackup {
-  id         Int      @id @default(autoincrement())
-  recipeId   Int
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-  userId     Int
-  name       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model ingredient_category_primary {
+  id                            Int                             @id @default(autoincrement())
+  name                          String
+  translation                   Json?
+  ingredient_category_secondary ingredient_category_secondary[]
+  created_at                    DateTime                        @default(now())
+  updated_at                    DateTime                        @updatedAt
+  ingredients                   ingredients[]
 }
 
-model RecipeBook {
-  id                   Int                    @id @default(autoincrement())
-  customer             Customer               @relation(fields: [customerId], references: [id])
-  customerId           Int
-  name                 String
-  desc                 String?
-  image                String?
-  price                Float?
-  url                  String?
-  indexes              RecipeBookIndex[]
-  access               RecipeBookAccess[]
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  RecipeBookCollection RecipeBookCollection[]
+model ingredient_category_secondary {
+  id                             Int                         @id @default(autoincrement())
+  name                           String
+  ingredientCategoryPrimary      ingredient_category_primary @relation(fields: [ingredient_category_primary_id], references: [id])
+  ingredient_category_primary_id Int
+  translation                    Json?
+  created_at                     DateTime                    @default(now())
+  updated_at                     DateTime                    @updatedAt
 }
 
-model RecipeBookIndex {
-  id           Int        @id @default(autoincrement())
-  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id])
-  recipeBookId Int
-  customer     Customer   @relation(fields: [customerId], references: [id])
-  customerId   Int
-  order        Int
-  name         String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+// Vegan, Veg, Animal Product, None
+model dietary_classification {
+  id          Int           @id @default(autoincrement())
+  name        String
+  translation Json?
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  ingredients ingredients[]
 }
 
-model RecipeBookCollection {
-  id           Int        @id @default(autoincrement())
-  recipeId     Int
-  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id])
-  recipeBookId Int
-  customer     Customer   @relation(fields: [customerId], references: [id])
-  customerId   Int
-  name         String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+model ingredients_yields {
+  id             Int             @id @default(autoincrement())
+  customer       customer?       @relation(fields: [customer_id], references: [id])
+  customer_id    Int?
+  is_default     Boolean?        @default(false)
+  name           String
+  ingredients    ingredients?    @relation(fields: [ingredients_id], references: [id])
+  ingredients_id Int?
+  yield          Float?
+  is_live        Boolean         @default(true)
+  cooked_yields  cooked_yields[]
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
 }
 
-model RecipeBookAccess {
-  id           Int        @id @default(autoincrement())
-  recipeBook   RecipeBook @relation(fields: [recipeBookId], references: [id])
-  recipeBookId Int
-  customer     Customer   @relation(fields: [customerId], references: [id])
-  customerId   Int
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+model ingredients_nutrition {
+  id                        Int          @id @default(autoincrement())
+  customer                  customer?    @relation(fields: [customer_id], references: [id])
+  customer_id               Int?
+  is_default                Boolean?     @default(false)
+  ingredients               ingredients? @relation(fields: [ingredients_id], references: [id])
+  ingredients_id            Int?
+  kcal_per_100g             Float?       @default(0)
+  kj_per_100g               Float?       @default(0)
+  protein_per_100g          Float?       @default(0)
+  fat_per_100g              Float?       @default(0)
+  saturated_fat_per_100g    Float?       @default(0)
+  monounsaturate_per_100g   Float?       @default(0)
+  polyunsaturate_per_100g   Float?       @default(0)
+  trans_fats_per_100g       Float?       @default(0)
+  omega3_per_100g           Float?       @default(0)
+  omega6_per_100g           Float?       @default(0)
+  omega9_per_100g           Float?       @default(0)
+  carbs_per_100g            Float?       @default(0)
+  net_carbs_per_100g        Float?       @default(0)
+  carbohydrates_per_100g    Float?       @default(0)
+  total_sugar_per_100g      Float?       @default(0)
+  added_sugar_per_100g      Float?       @default(0)
+  artificial_sugar_per_100g Float?       @default(0)
+  fibre_per_100g            Float?       @default(0)
+  starch_per_100g           Float?       @default(0)
+  salt_per_100g             Float?       @default(0)
+  sodium_per_100g           Float?       @default(0)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
-model Todo {
-  id         Int            @id @default(autoincrement())
-  user       User           @relation(fields: [userId], references: [id])
-  userId     Int
-  customer   Customer       @relation(fields: [customerId], references: [id])
-  customerId Int
-  status     TodoStatus     @relation(fields: [statusId], references: [id])
-  statusId   Int
-  documents  TodoDocument[]
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+model supplier {
+  id                 Int      @id @default(autoincrement())
+  customer           customer @relation(fields: [customer_id], references: [id])
+  customer_id        Int
+  name               String
+  vat                String?
+  corporation_number String?
+  logo               String?
+  email              String?
+  tel                String?
+  cell               String?
+  whatsapp           String?
+  account_email      String?
+  account_name       String?
+  account_tel        String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
 }
 
-model TodoStatus {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-  name       String
-  todos      Todo[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model allergy {
+  id                Int                 @id @default(autoincrement())
+  customer          customer?           @relation(fields: [customer_id], references: [id])
+  customer_id       Int?
+  name              String
+  desc              String
+  translation       Json?
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  ingredients       ingredients[]
+  allergyIngredient allergyIngredient[]
 }
 
-model TodoDocument {
-  id         Int      @id @default(autoincrement())
-  todo       Todo     @relation(fields: [todoId], references: [id])
-  todoId     Int
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-  file       String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model allergyIngredient {
+  id            Int         @id @default(autoincrement())
+  allergy       allergy     @relation(fields: [allergy_id], references: [id])
+  allergy_id    Int
+  ingredient    ingredients @relation(fields: [ingredient_id], references: [id])
+  ingredient_id Int
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
 }
 
-model ConversationThread {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-  recipe     Recipe   @relation(fields: [recipeId], references: [id])
-  recipeId   Int
-  message    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model ProductionEvent {
-  id         Int                   @id @default(autoincrement())
-  user       User                  @relation(fields: [userId], references: [id])
-  userId     Int
-  customer   Customer              @relation(fields: [customerId], references: [id])
-  customerId Int
-  recipe     Recipe                @relation(fields: [recipeId], references: [id])
-  recipeId   Int
-  pdf        String
-  tasks      ProductionEventTask[]
-  createdAt  DateTime              @default(now())
-  updatedAt  DateTime              @updatedAt
-}
-
-model ProductionEventTask {
+model stock {
   id                Int             @id @default(autoincrement())
-  productionEvent   ProductionEvent @relation(fields: [productionEventId], references: [id])
-  productionEventId Int
-  user              User            @relation(fields: [userId], references: [id])
-  userId            Int
-  customer          Customer        @relation(fields: [customerId], references: [id])
-  customerId        Int
-  recipe            Recipe          @relation(fields: [recipeId], references: [id])
-  recipeId          Int
-  pdf               String
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
+  stock_location    stock_location  @relation(fields: [stock_location_id], references: [id])
+  stock_location_id Int
+  customer          customer        @relation(fields: [customer_id], references: [id])
+  customer_id       Int
+  qty               Float
+  is_active         Boolean         @default(true)
+  minimums          stock_minimum[]
+  created_at        DateTime        @default(now())
+  updated_at        DateTime        @updatedAt
 }
 
-model CostRules {
+model stock_minimum {
+  id                Int            @id @default(autoincrement())
+  stock             stock          @relation(fields: [stock_id], references: [id])
+  stock_id          Int
+  stock_location    stock_location @relation(fields: [stock_location_id], references: [id])
+  stock_location_id Int
+  customer          customer       @relation(fields: [customer_id], references: [id])
+  customer_id       Int
+  qty               Float
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+}
+
+model stock_location {
+  id            Int             @id @default(autoincrement())
+  customer      customer        @relation(fields: [customer_id], references: [id])
+  customer_id   Int
+  name          String
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  stock         stock[]
+  stock_minimum stock_minimum[]
+}
+
+model recipe_backup {
   id          Int      @id @default(autoincrement())
-  customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  Int
+  recipe_id   Int
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
+  profiles_id Int
+  name        String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model recipe_book {
+  id                     Int                      @id @default(autoincrement())
+  customer               customer                 @relation(fields: [customer_id], references: [id])
+  customer_id            Int
+  name                   String
+  desc                   String?
+  image                  String?
+  price                  Float?
+  url                    String?
+  indexes                recipe_book_index[]
+  access                 recipe_book_access[]
+  created_at             DateTime                 @default(now())
+  updated_at             DateTime                 @updatedAt
+  recipe_book_collection recipe_book_collection[]
+}
+
+model recipe_book_index {
+  id             Int         @id @default(autoincrement())
+  recipe_book    recipe_book @relation(fields: [recipe_book_id], references: [id])
+  recipe_book_id Int
+  customer       customer    @relation(fields: [customer_id], references: [id])
+  customer_id    Int
+  order          Int
+  name           String
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+}
+
+model recipe_book_collection {
+  id             Int         @id @default(autoincrement())
+  recipe_id      Int
+  recipe_book    recipe_book @relation(fields: [recipe_book_id], references: [id])
+  recipe_book_id Int
+  customer       customer    @relation(fields: [customer_id], references: [id])
+  customer_id    Int
+  name           String
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+}
+
+model recipe_book_access {
+  id             Int         @id @default(autoincrement())
+  recipe_book    recipe_book @relation(fields: [recipe_book_id], references: [id])
+  recipe_book_id Int
+  customer       customer    @relation(fields: [customer_id], references: [id])
+  customer_id    Int
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @updatedAt
+}
+
+model todo {
+  id          Int             @id @default(autoincrement())
+  profiles    profiles        @relation(fields: [profiles_id], references: [id])
+  profiles_id Int
+  customer    customer        @relation(fields: [customer_id], references: [id])
+  customer_id Int
+  status      todo_status     @relation(fields: [status_id], references: [id])
+  status_id   Int
+  documents   todo_document[]
+  created_at  DateTime        @default(now())
+  updated_at  DateTime        @updatedAt
+}
+
+model todo_status {
+  id          Int      @id @default(autoincrement())
+  profiles    profiles @relation(fields: [profiles_id], references: [id])
+  profiles_id Int
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
+  name        String
+  todos       todo[]
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model todo_document {
+  id          Int      @id @default(autoincrement())
+  todo        todo     @relation(fields: [todo_id], references: [id])
+  todo_id     Int
+  profiles    profiles @relation(fields: [profiles_id], references: [id])
+  profiles_id Int
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
+  file        String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model conversation_thread {
+  id          Int      @id @default(autoincrement())
+  profiles    profiles @relation(fields: [profiles_id], references: [id])
+  profiles_id Int
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
+  recipe      recipe   @relation(fields: [recipe_id], references: [id])
+  recipe_id   Int
+  message     String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+}
+
+model production_event {
+  id          Int                     @id @default(autoincrement())
+  profiles    profiles                @relation(fields: [profiles_id], references: [id])
+  profiles_id Int
+  customer    customer                @relation(fields: [customer_id], references: [id])
+  customer_id Int
+  recipe      recipe                  @relation(fields: [recipe_id], references: [id])
+  recipe_id   Int
+  pdf         String
+  tasks       production_event_task[]
+  created_at  DateTime                @default(now())
+  updated_at  DateTime                @updatedAt
+}
+
+model production_event_task {
+  id                  Int              @id @default(autoincrement())
+  production_event    production_event @relation(fields: [production_event_id], references: [id])
+  production_event_id Int
+  profiles            profiles         @relation(fields: [profiles_id], references: [id])
+  profiles_id         Int
+  customer            customer         @relation(fields: [customer_id], references: [id])
+  customer_id         Int
+  recipe              recipe           @relation(fields: [recipe_id], references: [id])
+  recipe_id           Int
+  pdf                 String
+  created_at          DateTime         @default(now())
+  updated_at          DateTime         @updatedAt
+}
+
+model cost_rules {
+  id          Int      @id @default(autoincrement())
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
   name        String
   cost        String
   description String
 }
 
-model PackagingCosts {
+model packaging_costs {
   id          Int      @id @default(autoincrement())
-  customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  Int
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
   name        String
   cost        String
   description String
 }
 
-model OtherCosts {
+model other_costs {
   id          Int      @id @default(autoincrement())
-  customer    Customer @relation(fields: [customerId], references: [id])
-  customerId  Int
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
   name        String
   cost        String
   description String
 }
 
-model Markup {
+model markup {
   id          Int            @id @default(autoincrement())
-  customer    Customer       @relation(fields: [customerId], references: [id])
-  customerId  Int
+  customer    customer       @relation(fields: [customer_id], references: [id])
+  customer_id Int
   name        String
   factor      String
   type        EnumMarkUpType
   description String
 }
 
-model Recipe {
-  id                  Int                   @id @default(autoincrement())
-  name                String
-  description         String
-  portions            Int[]
-  costRules           Json
-  packagingCostsId    Json
-  otherCostsId        Json
-  markupId            Json
-  components          Component[]
-  setting             Json
-  customer            Customer              @relation(fields: [customerId], references: [id])
-  customerId          Int
-  brand               Brand                 @relation(fields: [brandId], references: [id])
-  type                EnumRecipeType
-  version             String
-  versions            Json
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  ConversationThread  ConversationThread[]
-  ProductionEvent     ProductionEvent[]
-  ProductionEventTask ProductionEventTask[]
-  brandId             Int
-  RecipePortions      RecipePortions[]
+model recipe {
+  id                 Int         @id @default(autoincrement())
+  name               String
+  description        String
+  portions           Int[]
+  cost_rules         Json
+  packaging_costs_id Json
+  other_costs_id     Json
+  markup_id          Json
+  components         component[]
+  setting            Json
+
+  customer    customer @relation(fields: [customer_id], references: [id])
+  customer_id Int
+
+  brand                 brand                   @relation(fields: [brand_id], references: [id])
+  brand_id              Int
+  type                  EnumRecipeType
+  version               String
+  versions              Json
+  created_at            DateTime                @default(now())
+  updated_at            DateTime                @updatedAt
+  conversation_thread   conversation_thread[]
+  production_event      production_event[]
+  production_event_task production_event_task[]
+  recipe_portions       recipe_portions[]
 }
 
-model RecipePortions {
-  id               Int    @id @default(autoincrement())
-  name             String
-  recipe           Recipe @relation(fields: [recipeId], references: [id])
-  recipeId         Int
-  size             Int
-  costRules        Int
-  packagingCostsId Int
-  otherCostsId     Int
-  markupId         Int
+model recipe_portions {
+  id                 Int    @id @default(autoincrement())
+  name               String
+  recipe             recipe @relation(fields: [recipe_id], references: [id])
+  recipe_id          Int
+  size               Int
+  cost_rules         Int
+  packaging_costs_id Int
+  other_costs_id     Int
+  markup_id          Int
 }
 
-model Component {
-  id            Int                         @id @default(autoincrement())
-  name          String
-  type          EnumComponentIngredientType
-  parent        Component?                  @relation("ComponentHierarchy", fields: [parentId], references: [id])
-  parentId      Int?
-  // ingredient    Ingredients?       @relation(fields: [ingredientId], references: [id])
+model component {
+  id             Int                         @id @default(autoincrement())
+  name           String
+  type           EnumcomponentIngredientType
+  parent         component?                  @relation("componentHierarchy", fields: [parent_id], references: [id])
+  parent_id      Int?
+  // ingredient    ingredients?       @relation(fields: [ingredient_id], references: [id])
   // DO I NEED THIS ingredientID - should be optional?
-  ingredientId  Ingredients[]
-  portions      Json
-  yield         Float
-  nutriPer100   Json
-  version       String
-  versions      Json
-  recipe        Recipe                      @relation(fields: [recipeId], references: [id])
-  recipeId      Int
-  subComponents Component[]                 @relation("ComponentHierarchy")
-  createdAt     DateTime                    @default(now())
-  updatedAt     DateTime                    @updatedAt
+  ingredient_id  ingredients[]
+  portions       Json
+  yield          Float
+  nutri_per_100  Json
+  version        String
+  versions       Json
+  recipe         recipe                      @relation(fields: [recipe_id], references: [id])
+  recipe_id      Int
+  sub_components component[]                 @relation("componentHierarchy")
+  created_at     DateTime                    @default(now())
+  updated_at     DateTime                    @updatedAt
 }
 
-model Brand {
-  id        Int      @id @default(autoincrement())
-  name      String
-  logoSrc   String
-  recipes   Recipe[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model brand {
+  id         Int      @id @default(autoincrement())
+  name       String
+  logoSrc    String
+  recipes    recipe[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model WebhookQueue {
+  id            Int         @id @default(autoincrement())
+  ingredient    ingredients @relation(fields: [ingredient_id], references: [id])
+  ingredient_id Int         @map("ingredient_id")
+  name          String
+  createdAt     DateTime    @default(now()) @map("created_at")
+  processed     Boolean     @default(false)
+
+  @@map("webhook_queue")
 }

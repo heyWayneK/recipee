@@ -130,7 +130,7 @@ const data = {
       ],
     },
   ],
-  logo: { url: "/logo/recipe_logo_black.svg" },
+  logo: { url: "/logo/recipee_logo_black.svg" },
 };
 
 const geistSans = Geist({

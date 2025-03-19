@@ -54,12 +54,12 @@ export async function POST(req) {
       // UNSURE of the structure of the organisations and roles
       // const roles = JSON.stringify(roles.map((role,i) => {role: role.role}));
 
-      const obj = { emails, organisations, json, lastSignInAt, username, phoneNumbers, avatarUrl, roles, firstName, lastName };
+      const obj = { emails, organisations, json, last_sign_in_at: lastSignInAt, username, phone_numbers: phoneNumbers, avatar_url: avatarUrl, roles, first_name: firstName, last_name: lastName };
 
       // Upsert the profile using Prisma
       await prisma.profiles.upsert({
-        where: { userId: id },
-        create: { userId: id, ...obj },
+        where: { user_id: id },
+        create: { user_id: id, ...obj },
         update: { ...obj },
       });
 

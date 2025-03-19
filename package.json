@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.4",
+    "@google/generative-ai": "^0.24.0",
     "@headlessui/react": "^1.7.18",
     "@hookform/resolvers": "^3.10.0",
     "@loancrate/prisma-schema-parser": "^3.0.0",
@@ -45,6 +46,7 @@
     "clsx": "^2.1.1",
     "crisp-sdk-web": "^1.0.22",
     "date-fns": "^4.1.0",
+    "deno": "^2.2.4",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
     "form-data": "^4.0.0",

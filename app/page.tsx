@@ -24,7 +24,7 @@ export default function Home() {
       <main className="flex flex-col items-center justify-center min-h-screen p-4 gap-10">
         {/* {renderSchemaTags()} */}
         <div className="flex items-center">
-          <Image src={"/logo/recipe_logo_black.svg"} alt="Logo" width={800} height={400} />
+          <Image src={"/logo/recipee_logo_black.svg"} alt="Logo" width={800} height={400} />
         </div>
 
         <DottedBorder className="grid grid-cols-1 p-6 text-center sm:text-left  justify-center text-balance max-w-2xl">

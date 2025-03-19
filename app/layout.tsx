@@ -57,18 +57,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <PlausibleProvider domain={config.domainName} />
                 {/* // OR
           <title></title>
-          <meta name="description" content=""  />
-        <link rel="icon" href="/favicon.ico"  /> */}
+          <meta name="description" content=""  /> */}
+                <meta name="apple-mobile-web-app-title" content="recipee.app" />
+                <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+                {/* <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" /> */}
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <link rel="shortcut icon" href="/favicon.ico" />
+                <link rel="manifest" href="/site.webmanifest" />
               </head>
             )}
             <body>
-              {/* <header className="">
-                <HeaderRecipee />
-              </header> */}
               {/* ClientLayout to provide common layout and functionality */}
               {/* <ClientLayout>{children}</ClientLayout> */}
               {children}
-
               <ModalProvider />
             </body>
           </html>

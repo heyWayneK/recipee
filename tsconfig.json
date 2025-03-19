@@ -44,7 +44,8 @@
     "app/recipee/supabase_clerk_test",
     "cypress.config.js",
     // "jest__.config____.js"
-    "jest.config.ts"
+    "jest.config.ts",
+    "app/api/get-seed/[table]/route.ts"
   ],
   // "exclude": ["node_modules"]
   "exclude": ["node_modules"]
