@@ -30,7 +30,7 @@ EXAMPLE FIELDS _______________END */
 // ONE
 const tableName: TableName = "supplier";
 // TWO
-const formFieldsToExcludeInTable: (keyof Prisma.SupplierSelect)[] = [
+const formFieldsToExcludeInTable: (keyof Prisma.supplierSelect)[] = [
   "customerId",
   "corporationNumber",
   "logo",
