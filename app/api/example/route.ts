@@ -16,7 +16,7 @@ curl -X http://localhost:3000/api/example \
 curl "http://localhost:3000/api/example?id=6&name=pear"
 */
 
-export async function handler(request: Request) {
+export async function POST(request: Request) {
   try {
     // Determine the HTTP method of the request
     const method = request.method;
@@ -50,6 +50,6 @@ export async function handler(request: Request) {
   }
 }
 
-// Export the handler as POST and GET
-export const POST = handler;
-export const GET = handler;
+// // Export the handler as POST and GET
+// export const POST = handler;
+// export const GET = handler;
