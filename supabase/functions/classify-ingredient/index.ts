@@ -1,13 +1,12 @@
-// import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
-// import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const supabase = createClient(
+  // eslint-disable-next-line 
   Deno.env.get('SB_URL') ?? '',
+  // eslint-disable-next-line 
   Deno.env.get('SB_ANON_KEY') ?? ''
 );
-
+// eslint-disable-next-line 
 Deno.serve(async (req) => {
   console.log('Processing tasks...');
   // Fetch unprocessed tasks from the queue
