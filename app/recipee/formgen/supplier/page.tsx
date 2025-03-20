@@ -51,7 +51,7 @@ const formFieldsToExcludeInTable: (keyof Prisma.SupplierSelect)[] = [
 // }>;
 
 // FOUR
-const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Partial<ValidateOptions>>> = {
+const formFieldsForEditUpdate: Partial<Record<keyof Prisma.supplierSelect, Partial<ValidateOptions>>> = {
   name: {
     label: "Name",
     type: "text",

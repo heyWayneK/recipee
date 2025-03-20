@@ -3,19 +3,21 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 // DO NOT USE THIS IN PRODUCTION
 // import { Deno } from 'https://deno.land/std/node/module.ts'; 
-
 const supabase = createClient(
   Deno.env.get('SB_URL') ?? '',
   Deno.env.get('SB_ANON_KEY') ?? ''
 );
 
 serve(async (req) => {
+  console.log('Processing tasks...');
   // Fetch unprocessed tasks from the queue
   const { data: tasks, error } = await supabase
     .from('webhook_queue')
     .select('id, ingredient_id, name')
     .eq('processed', false)
     .limit(10); // Process in batches to avoid overload
+
+    console.log('tasks from queue:', tasks);
 
   if (error) {
     console.error('Error fetching tasks:', error);
@@ -34,7 +36,7 @@ serve(async (req) => {
     try {
       // Call your external webhook/API
       const response = await fetch(
-        'https://7147-2a0a-ef40-114f-a501-b8d8-1156-b0e9-d0e8.ngrok-free.app/api/classify-ingredient/x',
+        'https://5e80-2a0a-ef40-114f-a501-b8d8-1156-b0e9-d0e8.ngrok-free.app/api/classify-ingredient/x',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -1,4 +1,8 @@
-PRISMA MODEL
+use "npx" for CLI prefix
+hide .env when npx supabase functions deploy classify-ingredient
+
+## PRISMA MODEL
+
 model WebhookQueue {
 id Int @id @default(autoincrement())
 ingredientId Int @map("ingredient_id")
@@ -87,7 +91,7 @@ serve(async (req) => {
     try {
       // Call your external webhook/API
       const response = await fetch(
-        'https://fb7e-2a0a-ef40-114f-a501-601e-1f87-79cb-4fc9.ngrok-free.app/api/classify-ingredient/x',
+        'https://5e80-2a0a-ef40-114f-a501-b8d8-1156-b0e9-d0e8.ngrok-free.app/api/classify-ingredient/x',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

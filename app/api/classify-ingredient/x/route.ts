@@ -17,7 +17,8 @@ function getReligiousCertIdByName(name: string, religiousCertArray: { id: number
   return id;
 }
 
-export async function handler(request: Request) {
+// export async function handler(request: Request) {
+export async function POST(request: Request) {
   try {
     let id: number | null = null;
     let name: string | null = null;
@@ -267,5 +268,5 @@ export async function handler(request: Request) {
 }
 
 // Export the handler as POST and GET
-export const POST = handler;
-export const GET = handler;
+// export const POST = handler;
+// export const GET = handler;

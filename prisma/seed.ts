@@ -1,42 +1,264 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
+
+// IMPORTANT - use seed data script with table name:
+// http://localhost:3000/api/get-seed/dryCookedYields
+// npx ts-node prisma/seed.ts
 
 const prisma = new PrismaClient();
 
-const customerData = [
+// const allergyData : Prisma.allergyCreateInput[] = [
+const allergyData : any = [
   {
-    id: 2,
-    name: "person 2",
-    email: "",
-    emailVerified: null,
-    address: "",
-    logo: null,
-    active: true,
-    paymentOptions: "",
-    contacts: "",
-    createdAt: "2025-03-08T17:37:51.807Z",
-    updatedAt: "2025-03-08T17:37:37.359Z",
+    "id": 0,
+    "customer_id": null,
+    "name": "unknown",
+    "desc": "Unable to classify ingredient allergies. Manual intervention is required.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
   },
   {
-    id: 1,
-    name: "wayne",
-    email: "wayne@recipee.app2",
-    emailVerified: null,
-    address: "",
-    logo: null,
-    active: true,
-    paymentOptions: "",
-    contacts: "",
-    createdAt: "2025-03-08T17:37:33.386Z",
-    updatedAt: "2025-03-08T17:37:10.263Z",
+    "id": 1,
+    "customer_id": null,
+    "name": "none",
+    "desc": "No common food allergy associations.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
   },
-  // Add more records from your exported data
-];
+  {
+    "id": 3,
+    "customer_id": null,
+    "name": "buckwheat",
+    "desc": "Common in Asia, especially Japan (e.g. in soba noodles).",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 4,
+    "customer_id": null,
+    "name": "celery",
+    "desc": "Celery might sneak into soups, stocks, or seasoning blends. ",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 5,
+    "customer_id": null,
+    "name": "chilli",
+    "desc": "Chilli and garlic are staples in countless cuisines, from sauces to marinades, often unlisted in fine detail. ",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 6,
+    "customer_id": null,
+    "name": "eggs",
+    "desc": "Particularly egg whites, a common allergen in children.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 7,
+    "customer_id": null,
+    "name": "garlic",
+    "desc": "Though rare, garlic allergies can occur, leading to symptoms like skin rashes or respiratory discomfort.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 8,
+    "customer_id": null,
+    "name": "gluten",
+    "desc": "Gluten, bread and pasta, lurks in processed foods like soups, dressings, or even soy sauce. ",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 9,
+    "customer_id": null,
+    "name": "lupin",
+    "desc": "A legume used in flours and baked goods, notable in Europe.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 10,
+    "customer_id": null,
+    "name": "milk_dairy",
+    "desc": "Cow's milk",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 11,
+    "customer_id": null,
+    "name": "mustard",
+    "desc": "Significant in Europe, found in sauces and condiments.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 12,
+    "customer_id": null,
+    "name": "peanuts",
+    "desc": "Technically a legume, but listed separately due to its high allergenic potential.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 13,
+    "customer_id": null,
+    "name": "rice",
+    "desc": "More prevalent in Asia, though less common globally.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 14,
+    "customer_id": null,
+    "name": "seafood_fish",
+    "desc": "Beyond fish and shellfish, allergies to squid or octopus may occur.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 15,
+    "customer_id": null,
+    "name": "sesame",
+    "desc": "Widespread in regional cuisine (e.g., tahini, halva).",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 16,
+    "customer_id": null,
+    "name": "shellfish",
+    "desc": "Crustaceans: Shrimp, crab, lobster & Mollusks: Clams, mussels, oysters, squid. ",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 17,
+    "customer_id": null,
+    "name": "soybeans",
+    "desc": "Soy Beans, Edamame and soy-based products like tofu and soy milk.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 18,
+    "customer_id": null,
+    "name": "sulphur_dioxide",
+    "desc": "Sulphur dioxide, a preservative, hides in dried fruits, wines, and some packaged snacks.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 19,
+    "customer_id": null,
+    "name": "tree_nuts",
+    "desc": "Includes almonds, walnuts, cashews, pistachios, pecans, hazelnuts, Brazil nuts, etc.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 20,
+    "customer_id": null,
+    "name": "wheat",
+    "desc": "A frequent trigger, especially in children.",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  },
+  {
+    "id": 21,
+    "customer_id": null,
+    "name": "nightshade",
+    "desc": "Nightshades contain alkaloids, but the highest concentration is in the leaves and stem (questionable as an allergen), not the vegetable/fruit. Tomatoes, Potatoes, Eggplant, Peppers, Goji berries etc",
+    "translation": "",
+    "created_at": "2025-03-18T09:52:47.269Z",
+    "updated_at": "2025-03-18T09:52:47.269Z"
+  }
+]
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+// const allergyData : Prisma.allergyCreateInput[] = []
+
+
+
+    // const profileData : Prisma.profilesCreateInput[] = [
+    const profileData : any = [
+      {
+        user: "person 2",
+        email: "",
+        emailVerified: null,
+        address: "",
+        logo: null,
+        active: true,
+        paymentOptions: "",
+        contacts: "",
+        createdAt: "2025-03-08T17:37:51.807Z",
+        updatedAt: "2025-03-08T17:37:37.359Z"
+      },
+      {
+        name: "wayne",
+        email: "wayne@recipee.app2",
+        emailVerified: null,
+        address: "",
+        logo: null,
+        active: true,
+        paymentOptions: "",
+        contacts: "",
+        createdAt: "2025-03-08T17:37:33.386Z",
+        updatedAt: "2025-03-08T17:37:10.263Z"
+      }
+    ];
+
+    async function seedData() {
+      await prisma.profiles.createMany({
+        data: profileData
+      });
+    }
+
+    seedData()
+      .catch((e) => {
+        console.error(e);
+      });
+  
 
 async function customerInsert() {
   console.log("Start seeding...");
   await prisma.customer.deleteMany(); // Optional: Clear existing data (use with caution)
   await prisma.customer.createMany({
-    data: customerData,
+    data: profileData,
     skipDuplicates: true, // Prevents errors if data already exists
   });
   console.log("Seeding finished.");
@@ -94,7 +316,7 @@ customerInsert()
   {
     "id": 1,
     "name": "Roasting & Baking",
-    "translation": null,
+    "translation": "",
     "desc": "Hot Air Cooking",
     "yield": 0.7,
     "isLive": true,
@@ -103,7 +325,7 @@ customerInsert()
   {
     "id": 2,
     "name": "Grilling & Broiling",
-    "translation": null,
+    "translation": "",
     "desc": "Direct High Heat",
     "yield": 0.75,
     "isLive": true,

@@ -50,6 +50,7 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
     "form-data": "^4.0.0",
+    "git-filter-repo": "^0.0.30",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.0",
     "lucide-react": "^0.408.0",
