@@ -18,7 +18,13 @@ type IngredientClassification = {
 export async function GET(request: NextRequest, { params }: { params: Promise<{ table: string }> }) {
   try {
     // Get the table parameter from the URL
-    const { table } = await params;
+    const url = new URL(request.url)
+    const table = url.searchParams.get("table");
+    // const { table } = await params;
+
+    if (!table) {
+      return NextResponse.json({ error: "Table parameter is required" }, { status: 400 })
+    }
     
     // For demonstration, we'll return mock data
     const mockData: IngredientClassification[] = [
