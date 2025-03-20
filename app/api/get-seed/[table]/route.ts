@@ -24,3 +24,11 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     );
   }
 }
+
+    // Validate the table name against allowed tables
+    // if (!TABLES.includes(tableName as TableName)) {
+    //   return NextResponse.json(
+    //     { message: "Invalid table name", error: "Table not found" },
+    //     { status: 400 }
+    //   );
+    // }
