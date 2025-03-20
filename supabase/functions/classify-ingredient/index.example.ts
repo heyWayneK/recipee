@@ -5,6 +5,9 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 
+// DO NOT USE THIS IN PRODUCTION
+import { Deno } from 'https://deno.land/std/node/module.ts'; 
+
 console.log("Hello from Functions!")
 
 Deno.serve(async (req) => {

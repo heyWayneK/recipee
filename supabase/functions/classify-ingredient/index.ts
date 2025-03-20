@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 // DO NOT USE THIS IN PRODUCTION
-// import { Deno } from 'https://deno.land/std/node/module.ts'; 
+import { Deno } from 'https://deno.land/std/node/module.ts'; 
 const supabase = createClient(
   Deno.env.get('SB_URL') ?? '',
   Deno.env.get('SB_ANON_KEY') ?? ''
