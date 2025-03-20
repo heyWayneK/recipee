@@ -3,14 +3,9 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-type RouteParams = {
-  params: {
-    table: string;
-  };
-};
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: { params: { table: string } }) {
   try {
+    // Get the table parameter from the URL
     const { table } = params;
     console.log("GET request tableName", table);
 
@@ -23,14 +18,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // }
 
     const data = await (prisma as any)[table].findMany();
-    return NextResponse.json({ data }, { status: 200 });
-  } catch (error: any) {
-    console.error("Error in GET request:", error);
-    return NextResponse.json(
-      { message: "GET request FAIL", error: error.message },
-      { status: 400 }
-    );
+    return NextResponse.json({
+      data,
+      timestamp: new Date().toISOString(),
+    })
+  } catch (error) {
+    // Handle errors appropriately
+    return NextResponse.json({ error: "Failed to fetch ingredient data" }, { status: 500 })
   }
 }
+
 
  
