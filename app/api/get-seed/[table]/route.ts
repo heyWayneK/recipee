@@ -1,31 +1,33 @@
 import { TABLES, TableName } from "@/app/recipee/formgen/_types/formGen_setup";
 import { PrismaClient } from "@prisma/client";
-// import { DefaultArgs, PrismaClientOptions } from "@prisma/client/runtime/library";
-// import { DefaultArgs, PrismaClientOptions } from "@prisma/client/runtime/library";
-// import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
-import { StringDecoder } from "string_decoder";
 
 const prisma = new PrismaClient();
 
-// export async function GET(request: NextRequest, { params }: { params: { table: unknown } }) {
-export async function GET(request: NextRequest, { params }: { params:{ table: string }} ) {
+export async function GET(
+  request: NextRequest,
+  context: { params: { table: string } } // Correct type for the second argument
+) {
   try {
-    const tableName  = params.table;
+    const tableName = context.params.table; // Extract the table name from the URL
     console.log("GET request tableName", tableName);
 
-    // if (!TABLES.includes(tableName)) {
+    // Validate the table name against allowed tables
+    // if (!TABLES.includes(tableName as TableName)) {
     //   return NextResponse.json(
     //     { message: "Invalid table name", error: "Table not found" },
     //     { status: 400 }
     //   );
     // }
 
-    // INFO: IGNORE ERROR
+    // Dynamically query the table using Prisma
     const data = await prisma[tableName].findMany(); // Use the table name dynamically
-    // const data = await prisma[tableName].findMany(); // Use the table name dynamically
-    return NextResponse.json({data: data}, { status: 200 });
+    return NextResponse.json({ data }, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ message: "GET request FAIL", error: error }, { status: 400 });
+    console.error("Error in GET request:", error);
+    return NextResponse.json(
+      { message: "GET request FAIL", error: error.message },
+      { status: 400 }
+    );
   }
 }
