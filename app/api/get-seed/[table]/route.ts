@@ -15,8 +15,8 @@ export async function GET(request: NextRequest, { params }: { params: { table: u
     // INFO: IGNORE ERROR
     const data = await prisma[tableName].findMany(); // Use the table name dynamically
     // const data = await prisma[tableName].findMany(); // Use the table name dynamically
-    return NextResponse.json(data);
+    return NextResponse.json({data: data}, { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ message: "GET request FAIL", error: error });
+    return NextResponse.json({ message: "GET request FAIL", error: error }, { status: 400 });
   }
 }
