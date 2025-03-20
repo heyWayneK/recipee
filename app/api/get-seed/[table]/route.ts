@@ -12,10 +12,10 @@ type IngredientClassification = {
   }
 }
 
-export async function GET(request: NextRequest, { params }: { params: { table: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ table: string }> }) {
   try {
     // Get the table parameter from the URL
-    const { table } = params
+    const { table } = await params
 
     // This is where you would typically fetch data from a database
     // based on the table parameter
