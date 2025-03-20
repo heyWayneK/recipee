@@ -1,0 +1,8 @@
+{
+  "ignoreCommand": "echo 'Ignoring Supabase Edge Functions'",
+  "git": {
+    "deploymentEnabled": {
+      "supabase/functions/**": false
+    }
+  }
+}

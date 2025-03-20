@@ -1,14 +1,14 @@
-import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// import { serve } from 'https://deno.land/std@0.131.0/http/server.ts';
+// import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-// DO NOT USE THIS IN PRODUCTION
-import { Deno } from 'https://deno.land/std/node/module.ts'; 
+import { createClient } from "npm:@supabase/supabase-js@2";
+
 const supabase = createClient(
   Deno.env.get('SB_URL') ?? '',
   Deno.env.get('SB_ANON_KEY') ?? ''
 );
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   console.log('Processing tasks...');
   // Fetch unprocessed tasks from the queue
   const { data: tasks, error } = await supabase
