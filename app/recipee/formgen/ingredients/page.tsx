@@ -27,13 +27,13 @@ EXAMPLE FIELDS _______________END */
 const tableName: TableName = "ingredients";
 
 // TWO
-const formFieldsToExcludeInTable: (keyof Prisma.customerSelect)[] = ["emailVerified", "address", "createdAt", "costRules", "active"];
+const formFieldsToExcludeInTable: (keyof Prisma.ingredientsSelect)[] = ["customer_id", "is_default", "created_at", "updated_at", "customer", "component", "_count"];
 
 // type ValidationType = Partial<{
 //   [key in keyof Prisma.CustomerSelect]: any;
 // }>;
 
-const formFieldsForEditUpdate: Partial<Record<keyof Prisma.SupplierSelect, Partial<ValidateOptions>>> = {
+const formFieldsForEditUpdate: Partial<Record<keyof Prisma.ingredientsSelect, Partial<ValidateOptions>>> = {
   name: {
     label: "Name",
     type: "text",

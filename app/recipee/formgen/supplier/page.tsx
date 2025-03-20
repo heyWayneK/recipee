@@ -31,18 +31,18 @@ EXAMPLE FIELDS _______________END */
 const tableName: TableName = "supplier";
 // TWO
 const formFieldsToExcludeInTable: (keyof Prisma.supplierSelect)[] = [
-  "customerId",
-  "corporationNumber",
+  "customer_id",
+  "corporation_number",
   "logo",
   "email",
   "tel",
   "cell",
   "whatsapp",
-  "accountEmail",
-  "accountName",
-  "accountTel",
-  "createdAt",
-  "updatedAt",
+  "account_email",
+  "account_name",
+  "account_tel",
+  "created_at",
+  "updated_at",
   "customer",
 ];
 // THREE
@@ -74,7 +74,7 @@ const formFieldsForEditUpdate: Partial<Record<keyof Prisma.supplierSelect, Parti
     enum: null,
     error: null,
   },
-  corporationNumber: {
+  corporation_number: {
     label: "Company Number",
     type: "text",
     required: true,

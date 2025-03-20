@@ -49,14 +49,14 @@ EXAMPLE FIELDS _______________END */
 // ONE
 const tableName: TableName = "customers";
 // TWO
-const formFieldsToExcludeInTable: (keyof Prisma.customerSelect)[] = ["emailVerified", "address", "createdAt", "logo", "updatedAt", "costRules", "active"];
+const formFieldsToExcludeInTable: (keyof Prisma.customerSelect)[] = ["email_verified", "address", "created_at", "logo", "updated_at", "cost_rules", "active"];
 
 // type ValidationType = Partial<{
 //   [key in keyof Prisma.CustomerSelect]: any;
 // }>;
 
 // Example usage
-const formFieldsForEditUpdate: Partial<Record<keyof Prisma.CustomerSelect, Partial<ValidateOptions>>> = {
+const formFieldsForEditUpdate: Partial<Record<keyof Prisma.customerSelect, Partial<ValidateOptions>>> = {
   name: {
     label: "Name",
     type: "hidden",
