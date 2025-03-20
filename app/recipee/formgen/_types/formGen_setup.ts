@@ -10,7 +10,7 @@ export const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, proc
 
 // the URL to access table Define supported table names
 export const TABLES = [
-  "account",
+  "profile",
   "allergies",
   "brands",
   "costrules",
@@ -30,7 +30,7 @@ export const TABLES = [
   "stocklocations",
   "stockminimum",
   "todos",
-  "user",
+
 ] as const;
 
 export type TableName = (typeof TABLES)[number];
@@ -40,26 +40,26 @@ export const modelMap: {
   // eslint-disable-next-line no-unused-vars
   [key in TableName]: any; // Or use specific types like Prisma.CustomerDelegate
 } = {
-  account: prisma.account,
+  profile: prisma.profiles,
   allergies: prisma.allergy,
   brands: prisma.brand,
-  costrules: prisma.costRules,
+  costrules: prisma.cost_rules,
   customers: prisma.customer,
   ingredients: prisma.ingredients,
   leads: prisma.lead,
   markuprules: prisma.markup,
-  othercosts: prisma.otherCosts,
-  productionevents: prisma.productionEvent,
-  packagingcosts: prisma.packagingCosts,
+  othercosts: prisma.other_costs,
+  productionevents: prisma.production_event,
+  packagingcosts: prisma.packaging_costs,
   recipes: prisma.recipe,
-  recipebooks: prisma.recipeBook,
-  recipeportions: prisma.recipePortions,
+  recipebooks: prisma.recipe_book,
+  recipeportions: prisma.recipe_portions,
   supplier: prisma.supplier,
   stock: prisma.stock,
-  stocklocations: prisma.stockLocation,
-  stockminimum: prisma.stockMinimum,
+  stocklocations: prisma.stock_location,
+  stockminimum: prisma.stock_minimum,
   todos: prisma.todo,
-  user: prisma.user,
+
 
   // Add remaining mappings
 };
