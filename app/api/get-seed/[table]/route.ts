@@ -14,6 +14,14 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { table } = params;
     console.log("GET request tableName", table);
 
+       // Validate the table name against allowed tables
+    // if (!TABLES.includes(tableName as TableName)) {
+    //   return NextResponse.json(
+    //     { message: "Invalid table name", error: "Table not found" },
+    //     { status: 400 }
+    //   );
+    // }
+
     const data = await (prisma as any)[table].findMany();
     return NextResponse.json({ data }, { status: 200 });
   } catch (error: any) {
@@ -25,10 +33,4 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-    // Validate the table name against allowed tables
-    // if (!TABLES.includes(tableName as TableName)) {
-    //   return NextResponse.json(
-    //     { message: "Invalid table name", error: "Table not found" },
-    //     { status: 400 }
-    //   );
-    // }
+ 
