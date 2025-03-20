@@ -1,25 +1,65 @@
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { type NextRequest, NextResponse } from "next/server"
 
-const prisma = new PrismaClient();
+// Define the type for your response data
+type IngredientClassification = {
+  id: string
+  name: string
+  category: string
+  properties: {
+    vegan: boolean
+    glutenFree: boolean
+    allergen: boolean
+  }
+}
 
 export async function GET(request: NextRequest, { params }: { params: { table: string } }) {
   try {
     // Get the table parameter from the URL
-    const { table } = params;
-    console.log("GET request tableName", table);
+    const { table } = params
 
-       // Validate the table name against allowed tables
-    // if (!TABLES.includes(tableName as TableName)) {
-    //   return NextResponse.json(
-    //     { message: "Invalid table name", error: "Table not found" },
-    //     { status: 400 }
-    //   );
-    // }
+    // This is where you would typically fetch data from a database
+    // based on the table parameter
 
-    const data = await (prisma as any)[table].findMany();
+    // For demonstration, we'll return mock data
+    const mockData: IngredientClassification[] = [
+      {
+        id: "1",
+        name: "Tomato",
+        category: "Vegetable",
+        properties: {
+          vegan: true,
+          glutenFree: true,
+          allergen: false,
+        },
+      },
+      {
+        id: "2",
+        name: "Milk",
+        category: "Dairy",
+        properties: {
+          vegan: false,
+          glutenFree: true,
+          allergen: true,
+        },
+      },
+      {
+        id: "3",
+        name: "Wheat Flour",
+        category: "Grain",
+        properties: {
+          vegan: true,
+          glutenFree: false,
+          allergen: true,
+        },
+      },
+    ]
+
+    // You could use the table parameter to filter or select different data
+    // For example, if table === 'vegan', you could filter for vegan ingredients
+
     return NextResponse.json({
-      data,
+      table,
+      ingredients: mockData,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
@@ -28,5 +68,3 @@ export async function GET(request: NextRequest, { params }: { params: { table: s
   }
 }
 
-
- 
