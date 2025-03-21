@@ -4,7 +4,7 @@ env: SUPABASE_WEBHOOK_TOKEN:${{ secrets.SUPABASE_WEBHOOK_TOKEN }}
   PROJECT_ID:zozztsfhpsotmekjeiwt
 on:
   schedule:
-    - cron: "*/5 * * * *" # Every 5 mins   # cron time guide: https://crontab.guru/
+    - cron: "*/5 * * * *" # Every 5 mins # cron: https://crontab.guru/
 jobs:
   process:
     runs-on: ubuntu-latest
