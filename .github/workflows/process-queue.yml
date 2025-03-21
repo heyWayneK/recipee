@@ -22,4 +22,4 @@ jobs:
 
       - name: Deploy Supabase Function
         run: |
-          supabase functions deploy process-queue --project-ref $PROJECT_ID --token $SUPABASE_WEBHOOK_TOKEN
+          supabase functions deploy process-queue
