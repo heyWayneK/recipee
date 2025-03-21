@@ -12,4 +12,4 @@ jobs:
       - name: Call Edge Function
         run: |
           curl -X POST https://zozztsfhpsotmekjeiwt.supabase.co/functions/v1/classify-ingredient \
-          -H "Authorization: Bearer ${{ secrets.SUPABASE_WEBHOOK_TOKEN }}"
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_WEBHOOK_TOKEN }}" --no-verify-jwt
