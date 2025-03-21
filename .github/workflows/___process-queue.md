@@ -1,3 +1,6 @@
+# GIVES ERROR
+# {"code":401,"message":"Invalid JWT"}
+
 name: Call Supabase Edge Function
 
 on:
