@@ -1,31 +1,15 @@
-name: Process Webhook Queue
+name: Call Supabase Edge Function
 
 on:
   schedule:
-    - cron: "*/5 * * * *" # Every 5 mins # cron: https://crontab.guru/
+    - cron: "*/5 * * * *" # Every 5 minutes
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
-  process:
+  call-function:
     runs-on: ubuntu-latest
-    env:
-      SUPABASE_WEBHOOK_TOKEN: ${{ secrets.SUPABASE_WEBHOOK_TOKEN }}
-      PROJECT_ID: zozztsfhpsotmekjeiwt
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install Supabase CLI
-        run: |
-          curl -L https://github.com/supabase/cli/releases/download/v0.20.0/supabase_0.20.0_linux_amd64.tar.gz | tar xz -C /usr/local/bin
-
-      - name: Initialize Supabase project
-        run: supabase init
-
       - name: Call Edge Function
         run: |
           curl -X POST https://zozztsfhpsotmekjeiwt.supabase.co/functions/v1/classify-ingredient \
-          -H "Authorization: Bearer $SUPABASE_WEBHOOK_TOKEN"
-
-      - name: Deploy Supabase Function
-        run: |
-          supabase functions deploy process-queue
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_WEBHOOK_TOKEN }}"
