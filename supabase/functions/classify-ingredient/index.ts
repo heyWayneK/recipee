@@ -36,6 +36,7 @@ Deno.serve(async (req) => {
       // Call your external webhook/API
       const response = await fetch(
         'https://5e80-2a0a-ef40-114f-a501-b8d8-1156-b0e9-d0e8.ngrok-free.app/api/classify-ingredient/x',
+        // 'https://recipee.app/api/classify-ingredient/x',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

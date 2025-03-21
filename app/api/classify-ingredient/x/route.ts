@@ -2,8 +2,8 @@
 import prisma from "@/libs/prisma";
 import OpenAI from "openai"; //for X too
 import { NextResponse } from "next/server";
-import { devNull } from "os";
-import { error } from "console";
+import exp from "constants";
+
 
 // X uses OpenAI API with different baseURL
 const xai = new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" });
@@ -270,3 +270,12 @@ export async function POST(request: Request) {
 // Export the handler as POST and GET
 // export const POST = handler;
 // export const GET = handler;
+
+
+export async function GET(request: Request) {
+ 
+    // Determine the HTTP method of the request
+    return NextResponse.json({ error: `Please use POST` }, { status: 405 });
+
+   
+}

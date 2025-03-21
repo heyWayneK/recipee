@@ -53,7 +53,7 @@ FOR EACH ROW EXECUTE FUNCTION queue_ingredient_webhook();
 
 How It Works: When you insert a row into ingredients (e.g., INSERT INTO ingredients (name) VALUES ('Tomato');), the trigger fires and adds a row to webhook_queue with the ingredient_id and name.
 
-Step 2: Update Your Edge Function to Process the Queue
+# Step 2: Update Your Edge Function to Process the Queue
 Your deployed Edge Function (classify-ingredient) should check the webhook_queue table, process unhandled tasks, and mark them as done. Here’s how to tweak it:
 Updated Edge Function
 typescript
@@ -222,7 +222,7 @@ Decouples the database from the Edge Function.
 
 Handles failures gracefully (retries on next run).
 
-Step 4: Test It
+# Step 4: Test It
 Insert a row:
 sql
 
