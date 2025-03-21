@@ -1,9 +1,5 @@
 name: Process Webhook Queue
 
-env:
-  SUPABASE_WEBHOOK_TOKEN: ${{ secrets.SUPABASE_WEBHOOK_TOKEN }}
-  PROJECT_ID: zozztsfhpsotmekjeiwt
-
 on:
   schedule:
     - cron: "*/5 * * * *" # Every 5 mins # cron: https://crontab.guru/
@@ -11,6 +7,9 @@ on:
 jobs:
   process:
     runs-on: ubuntu-latest
+    env:
+      SUPABASE_WEBHOOK_TOKEN: ${{ secrets.SUPABASE_WEBHOOK_TOKEN }}
+      PROJECT_ID: zozztsfhpsotmekjeiwt
     steps:
       - name: Call Edge Function
         run: |
