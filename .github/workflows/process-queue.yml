@@ -11,8 +11,14 @@ jobs:
       SUPABASE_WEBHOOK_TOKEN: ${{ secrets.SUPABASE_WEBHOOK_TOKEN }}
       PROJECT_ID: zozztsfhpsotmekjeiwt
     steps:
+      - name: Install Supabase CLI
+        run: npm install -g supabase
+
       - name: Call Edge Function
         run: |
-          curl -X POST https://zozztsfhpsotmekjeiwt.supabase.co/functions/v1/classify-ingredient
+          curl -X POST https://zozztsfhpsotmekjeiwt.supabase.co/functions/v1/classify-ingredient \
+          -H "Authorization: Bearer $SUPABASE_WEBHOOK_TOKEN"
 
+      - name: Deploy Supabase Function
+        run: |
           supabase functions deploy process-queue --project-ref $PROJECT_ID --token $SUPABASE_WEBHOOK_TOKEN --no-verify-jwt
