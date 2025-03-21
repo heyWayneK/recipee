@@ -12,7 +12,8 @@ jobs:
       PROJECT_ID: zozztsfhpsotmekjeiwt
     steps:
       - name: Install Supabase CLI
-        run: npm install -g supabase
+        run: |
+          curl -L https://github.com/supabase/cli/releases/download/v0.20.0/supabase_0.20.0_linux_amd64.tar.gz | tar xz -C /usr/local/bin
 
       - name: Call Edge Function
         run: |
