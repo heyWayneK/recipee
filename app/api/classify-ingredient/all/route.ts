@@ -34,9 +34,11 @@ type openAiModels = "gpt-4o-2024-05-13" | "gpt-4" | "gpt-3.5-turbo" | "gpt-4o-20
 /* curl https://api.openai.com/v1/models \
   -H "Authorization: Bearer OPENAI_API_KEY" */
 const sdks = {
-  openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
+  // openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
+
   xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-2-latest" },
-  gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
+
+  // gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
 };
 type TSDK = "openai" | "xai" | "gemini";
 const useSdk: TSDK = "xai"; // "openai" | "xai" | "gemini"
@@ -205,28 +207,27 @@ export async function POST(request: Request) {
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
       console.log("6.>>>>>>>>>>>>>>>>>>>> Json:", jsonData);
     } else if (useSdk === "openai") {
-      const response = await sdks.openai.connect.chat.completions.create(
-        {
-          model: sdks.openai.model,
-          messages: prompt,
-          temperature: 0.3,
-          // max_tokens: 150,
-        },
-        {
-          headers: {
-            organization: "org-qqfxsQUxiycsDzEmw7bCxleY",
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // console.log("response++++++++++++++:",  JSON.parse(response.choices[0].message.content.replace("```json\n", "").replace("\n```", "")));
-      jsonData = JSON.parse(response.choices[0].message.content?.replace("```json\n", "").replace("\n```", "") ?? "{}");
+      // const response = await sdks.openai.connect.chat.completions.create(
+      //   {
+      //     model: sdks.openai.model,
+      //     messages: prompt,
+      //     temperature: 0.3,
+      //     // max_tokens: 150,
+      //   },
+      //   {
+      //     headers: {
+      //       organization: "org-qqfxsQUxiycsDzEmw7bCxleY",
+      //       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+      // jsonData = JSON.parse(response.choices[0].message.content?.replace("```json\n", "").replace("\n```", "") ?? "{}");
     } else if (useSdk === "gemini") {
-      const genAI = sdks.gemini.connect;
-      const model = genAI.getGenerativeModel({ model: sdks.gemini.model });
-      const response = await model.generateContent(JSON.stringify(prompt));
-      jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
+      // const genAI = sdks.gemini.connect;
+      // const model = genAI.getGenerativeModel({ model: sdks.gemini.model });
+      // const response = await model.generateContent(JSON.stringify(prompt));
+      // jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
     }
 
     console.log("jsonData>>>>>>>>>>>>>>>:", jsonData);
