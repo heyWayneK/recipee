@@ -2,8 +2,7 @@
 import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 import OpenAI from "openai"; //for X too
-import { GoogleGenerativeAI } from "@google/generative-ai";
-// import Anthropic from "@anthropic-ai/sdk";
+// import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Define the message structure
 interface PromptMessage {
@@ -40,7 +39,8 @@ const sdks = {
 
   // gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
 };
-type TSDK = "openai" | "xai" | "gemini";
+type TSDK = "xai";
+// type TSDK = "openai" | "xai" | "gemini";
 const useSdk: TSDK = "xai"; // "openai" | "xai" | "gemini"
 
 // OPEN AI
