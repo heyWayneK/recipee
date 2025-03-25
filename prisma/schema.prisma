@@ -342,6 +342,7 @@ model ingredients_religious_certification {
 model ingredients {
   id          Int       @id @default(autoincrement())
   name        String    @unique
+  name_orig   String?
   names_alt   String?
   customer    customer? @relation(fields: [customer_id], references: [id])
   customer_id Int?
@@ -372,11 +373,12 @@ model ingredients {
   halal    ingredients_religious_certification? @relation(name: "HalalRelation", fields: [halal_id], references: [id])
   halal_id Int?
 
-  confidence        Float?
-  allergy           allergy?            @relation(fields: [allergy_id], references: [id])
-  allergy_id        Int?
-  allergyIngredient allergyIngredient[]
-  WebhookQueue      WebhookQueue[]
+  confidence         Float?
+  allergy_ingredient allergy_ingredient[]
+  ai_model           String?
+  WebhookQueue       WebhookQueue[]
+  allergy            allergy?             @relation(fields: [allergyId], references: [id])
+  allergyId          Int?
 }
 
 // LISTS of cooked yield for dropdown menus
@@ -492,26 +494,26 @@ model supplier {
 }
 
 model allergy {
-  id                Int                 @id @default(autoincrement())
-  customer          customer?           @relation(fields: [customer_id], references: [id])
-  customer_id       Int?
-  name              String
-  desc              String
-  translation       Json?
-  created_at        DateTime            @default(now())
-  updated_at        DateTime            @updatedAt
-  ingredients       ingredients[]
-  allergyIngredient allergyIngredient[]
+  id                 Int                  @id @default(autoincrement())
+  customer           customer?            @relation(fields: [customer_id], references: [id])
+  customer_id        Int?
+  name               String
+  desc               String
+  translation        Json?
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  ingredients        ingredients[]
+  allergy_ingredient allergy_ingredient[]
 }
 
-model allergyIngredient {
+model allergy_ingredient {
   id            Int         @id @default(autoincrement())
   allergy       allergy     @relation(fields: [allergy_id], references: [id])
   allergy_id    Int
   ingredient    ingredients @relation(fields: [ingredient_id], references: [id])
   ingredient_id Int
   created_at    DateTime    @default(now())
-  updated_at    DateTime    @updatedAt
+  updated_at    DateTime?   @updatedAt
 }
 
 model stock {

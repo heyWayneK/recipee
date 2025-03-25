@@ -1,78 +1,59 @@
-import { createClient } from "npm:@supabase/supabase-js@2";
+// DEPLOY:  npx supabase functions deploy classify-ingredient
+// INFO: IGNORE THE DENO WARNINGS
 
-const supabase = createClient(
-  // eslint-disable-next-line 
-  Deno.env.get('SB_URL') ?? '',
-  // eslint-disable-next-line 
-  Deno.env.get('SB_ANON_KEY') ?? ''
-);
-// eslint-disable-next-line 
-Deno.serve(async (req) => {
-  console.log('Processing tasks...');
-  // Fetch unprocessed tasks from the queue
-  const { data: tasks, error } = await supabase
-    .from('webhook_queue')
-    .select('id, ingredient_id, name')
-    .eq('processed', false)
-    .limit(10); // Process in batches to avoid overload
+// PROCESSED = FALSE
+// Setup type definitions for built-in Supabase Runtime APIs
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "jsr:@supabase/supabase-js";
 
-    console.log('tasks from queue:', tasks);
+// eslint-disable-next-line
+const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+// eslint-disable-next-line
+const supabaseAnonKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  if (error) {
-    console.error('Error fetching tasks:', error);
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-  }
+// eslint-disable-next-line
+Deno.serve(async (req: Request) => {
+  try {
+    console.log("Processing webhook tasks...");
+    // Delete all rows where processed is TRUE
+    const { data: tasks, error: fetchError } = await supabase.from("webhook_queue").select("id, ingredient_id, name").eq("processed", false).limit(10);
+    console.log("Feched Tasks:", tasks);
 
-  if (!tasks || tasks.length === 0) {
-    return new Response(JSON.stringify({ message: 'No tasks to process' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 200,
-    });
-  }
+    if (fetchError) throw fetchError;
 
-  // Process each task
-  for (const task of tasks) {
-    try {
-      // Call your external webhook/API
+    if (!tasks || tasks.length === 0) {
+      console.log("No tasks to process");
+      return new Response(JSON.stringify({ message: "No tasks to process" }), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Loop through each task and call the webhook
+    for (const task of tasks) {
+      console.log("Processing task:", `id: ${task.ingredient_id}, name: ${task.name}`);
       const response = await fetch(
-        'https://5e80-2a0a-ef40-114f-a501-b8d8-1156-b0e9-d0e8.ngrok-free.app/api/classify-ingredient/x',
+        "https://16a2-82-132-214-241.ngrok-free.app/api/classify-ingredient/all",
         // 'https://recipee.app/api/classify-ingredient/x',
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: task.ingredient_id, name: task.name }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Webhook failed with status: ${response.status}`);
+      // If the call is successful, update the processed status
+      if (response.ok) {
+        await supabase.from("webhook_queue").update({ processed: true }).eq("id", task.id);
       }
-
-      const result = await response.json();
-
-      // Update the ingredient with the result (e.g., classification status)
-      const { error: updateError } = await supabase
-        .from('ingredients')
-        .update({ status: result.status }) // Adjust based on your webhook response
-        .eq('id', task.ingredient_id);
-
-      if (updateError) {
-        throw updateError;
-      }
-
-      // Mark the task as processed
-      await supabase
-        .from('webhook_queue')
-        .update({ processed: true })
-        .eq('id', task.id);
-    } catch (err) {
-      console.error(`Failed to process task ${task.id}:`, err);
-      // Optionally, log the error and continue with other tasks
+      return new Response(JSON.stringify({ message: "All tasks completed successfully" }), {
+        headers: { "Content-Type": "application/json" },
+      });
     }
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { "Content-Type": "application/json" },
+      status: 500,
+    });
   }
-
-  return new Response(JSON.stringify({ message: 'Processed tasks', count: tasks.length }), {
-    headers: { 'Content-Type': 'application/json' },
-    status: 200,
-  });
 });

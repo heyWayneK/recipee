@@ -16,6 +16,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "@clerk/nextjs": "^6.12.4",
     "@google/generative-ai": "^0.24.0",
     "@headlessui/react": "^1.7.18",
@@ -60,7 +61,7 @@
     "next-sitemap": "^4.2.3",
     "nextjs-toploader": "^1.6.11",
     "nodemailer": "^6.9.13",
-    "openai": "^4.86.2",
+    "openai": "^4.89.0",
     "pg": "^8.12.0",
     "react": "^18.2.0",
     "react-date-range": "^2.0.1",
