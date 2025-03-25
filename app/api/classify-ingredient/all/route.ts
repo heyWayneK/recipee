@@ -105,11 +105,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
     }
 
-    console.log(">>>>>>>>>>>>>>>>>>>>id:", id, "name:", name);
+    console.log("1.>>>>>>>>>>>>>>>>>>>>id:", id, "name:", name);
 
     if (!id || !name) {
       return NextResponse.json({ error: "Missing id or name" }, { status: 400 });
     }
+
+    console.log("2.>>>>>>>>>>>>>>>>>>>>s Start Prompts id:");
 
     const prompt: PromptMessage[] = [
       {
@@ -187,6 +189,8 @@ export async function POST(request: Request) {
         content: `Classify and analyze "${name}".`,
       },
     ];
+    console.log("3.>>>>>>>>>>>>>>>>>>>>s  useSdk:", useSdk);
+
     let jsonData = null;
     if (useSdk === "xai") {
       // X Ai to classify the ingredient and get nutritional data
