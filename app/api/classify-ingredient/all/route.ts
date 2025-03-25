@@ -229,8 +229,7 @@ export async function POST(request: Request) {
       // const response = await model.generateContent(JSON.stringify(prompt));
       // jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
     }
-
-    console.log("jsonData>>>>>>>>>>>>>>>:", jsonData);
+    ``;
 
     // FIXME: CHECK ID EMPTY
     if (!jsonData) {
@@ -251,6 +250,7 @@ export async function POST(request: Request) {
     //   return res.status(400).json({ error: "Ingredient already exists in the database" });
     //   // return NextResponse.json({ message: "Ingredient already exists in the database" });
     // }
+    console.log("7a. jsonData.primary_category >>>>>>>>>>>>>>>:", jsonData.primary_category);
 
     // CHECK INGREDIENT PRIMARY CATEGORY ID or SET TO ZERO (UNKNOWN)
     const ingredientCategory = await prisma.ingredient_category_primary.findFirst({
@@ -260,10 +260,10 @@ export async function POST(request: Request) {
       where: {
         name: jsonData.primary_category,
       },
-    });
+    }); // 0 = unknown
     const ingredientCategoryId: number = ingredientCategory?.id || 0;
 
-    console.log("ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
+    console.log("7. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
 
     // CHECK INGREDIENT DIET CATEGORY (veg, vegan, animal_product) or SET TO ZERO (UNKNOWN)
     const dietaryCategory = await prisma.dietary_classification.findFirst({
@@ -276,7 +276,7 @@ export async function POST(request: Request) {
     });
     const dietaryCategoryId: number = dietaryCategory?.id || 0;
 
-    console.log("dietaryCategoryId>>>>>>>>>>>>>>>:", dietaryCategoryId);
+    console.log("8. dietaryCategoryId>>>>>>>>>>>>>>>:", dietaryCategoryId);
 
     // CHECK ALLERGY or SET TO UNKNOWN : 0
     // FIXME: multiple allergies
@@ -290,7 +290,7 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("allergyList>>>>>>>>>>>>>>>:", allergyList);
+    console.log("9. allergyList>>>>>>>>>>>>>>>:", allergyList);
 
     // GET RELIGIOUS CERTIFICATION ID array
     const religiousCertificationArray = await prisma.ingredients_religious_certification.findMany({
@@ -300,7 +300,7 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("religiousCertificationArray>>>>>>>>>>>>>>>:", religiousCertificationArray);
+    console.log("10. religiousCertificationArray>>>>>>>>>>>>>>>:", religiousCertificationArray);
 
     // INSERT INGREDIENT data into the ingredients table
     const ingredient: { id: number } = await prisma.ingredients.update({
@@ -329,7 +329,7 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("ingredient>>>>>>>>>>>>>>>:", ingredient);
+    console.log("11. ingredient>>>>>>>>>>>>>>>:", ingredient);
 
     // INSERT COOKED YIELDS into the cooked_yields table
     await prisma.ingredient_cooked_yields.create({
@@ -344,7 +344,7 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("INSERT ingredient_cooked_yields"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
+    console.log("12. INSERT ingredient_cooked_yields"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
 
     await prisma.ingredients_nutrition.create({
       data: {
@@ -359,7 +359,7 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("INSERT ingredient_nutrition"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
+    console.log("13. INSERT ingredient_nutrition"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
 
     // Insert data into the raw_to_prepped_yields table
     await prisma.raw_to_prepped_yields.create({
@@ -374,7 +374,7 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("INSERT raw_to_prepped_yelds"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
+    console.log("14. INSERT raw_to_prepped_yelds"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
 
     // ALLERGIES LOOKUP TABLE
     // INSERT ALLERGIES INTO THE INGREDIENTS_ALLERGY TABLE
@@ -428,7 +428,7 @@ export async function POST(request: Request) {
 
       allergyObj = allergyObj.filter(Boolean); // Remove null entries
 
-      console.log("allergyObj>>>>>>>>>>>>>>>:", allergyObj);
+      console.log("15. allergyObj>>>>>>>>>>>>>>>:", allergyObj);
       // Only create records if there are valid entries
       if (allergyObj.length === 1) {
         await prisma.allergy_ingredient.create({
@@ -446,10 +446,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
-
-// Export the handler as POST and GET
-// export const POST = handler;
-// export const GET = handler;
 
 export async function GET(request: Request) {
   try {
