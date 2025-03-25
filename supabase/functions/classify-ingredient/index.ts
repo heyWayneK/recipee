@@ -32,15 +32,16 @@ Deno.serve(async (req: Request) => {
     // Loop through each task and call the webhook
     for (const task of tasks) {
       console.log("Processing task:", `id: ${task.ingredient_id}, name: ${task.name}`);
-      const response = await fetch(
-        "https://16a2-82-132-214-241.ngrok-free.app/api/classify-ingredient/all",
-        // 'https://recipee.app/api/classify-ingredient/x',
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: task.ingredient_id, name: task.name }),
-        }
-      );
+      // FIXME: localhost and live urls
+      // INFO: GENERATE new ngrok url : ngrok http http://localhost:3000
+      // "https://16a2-82-132-214-241.ngrok-free.app/api/classify-ingredient/all",
+      // const url = NODE_ENV === "development" ? "https://16a2-82-132-214-241.ngrok-free.app" : "https://recipee.app";
+      const url = "https://recipee.app";
+      const response = await fetch(`${url}/api/classify-ingredient/all`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: task.ingredient_id, name: task.name }),
+      });
 
       // If the call is successful, update the processed status
       if (response.ok) {
