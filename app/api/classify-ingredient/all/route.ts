@@ -37,7 +37,6 @@ const sdks = {
   openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
   xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-2-latest" },
   gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
-  // gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
 };
 type TSDK = "openai" | "xai" | "gemini";
 const useSdk: TSDK = "xai"; // "openai" | "xai" | "gemini"
@@ -106,7 +105,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
     }
 
-    // console.log(">>>>>>>>>>>>>>>>>>>>id:", id, "name:", name);
+    console.log(">>>>>>>>>>>>>>>>>>>>id:", id, "name:", name);
 
     if (!id || !name) {
       return NextResponse.json({ error: "Missing id or name" }, { status: 400 });
@@ -256,6 +255,8 @@ export async function POST(request: Request) {
     });
     const ingredientCategoryId: number = ingredientCategory?.id || 0;
 
+    console.log("ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
+
     // CHECK INGREDIENT DIET CATEGORY (veg, vegan, animal_product) or SET TO ZERO (UNKNOWN)
     const dietaryCategory = await prisma.dietary_classification.findFirst({
       select: {
@@ -266,6 +267,8 @@ export async function POST(request: Request) {
       },
     });
     const dietaryCategoryId: number = dietaryCategory?.id || 0;
+
+    console.log("dietaryCategoryId>>>>>>>>>>>>>>>:", dietaryCategoryId);
 
     // CHECK ALLERGY or SET TO UNKNOWN : 0
     // FIXME: multiple allergies
@@ -279,6 +282,8 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log("allergyList>>>>>>>>>>>>>>>:", allergyList);
+
     // GET RELIGIOUS CERTIFICATION ID array
     const religiousCertificationArray = await prisma.ingredients_religious_certification.findMany({
       select: {
@@ -287,7 +292,7 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("***** name_orig", name);
+    console.log("religiousCertificationArray>>>>>>>>>>>>>>>:", religiousCertificationArray);
 
     // INSERT INGREDIENT data into the ingredients table
     const ingredient: { id: number } = await prisma.ingredients.update({
@@ -316,6 +321,8 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log("ingredient>>>>>>>>>>>>>>>:", ingredient);
+
     // INSERT COOKED YIELDS into the cooked_yields table
     await prisma.ingredient_cooked_yields.create({
       data: {
@@ -328,6 +335,8 @@ export async function POST(request: Request) {
         roasted: jsonData.cooked_yields.roasted || 0,
       },
     });
+
+    console.log("INSERT ingredient_cooked_yields"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
 
     await prisma.ingredients_nutrition.create({
       data: {
@@ -342,6 +351,8 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log("INSERT ingredient_nutrition"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
+
     // Insert data into the raw_to_prepped_yields table
     await prisma.raw_to_prepped_yields.create({
       data: {
@@ -354,6 +365,8 @@ export async function POST(request: Request) {
         grated: jsonData.raw_to_prepped_yields.grated || 0,
       },
     });
+
+    console.log("INSERT raw_to_prepped_yelds"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
 
     // ALLERGIES LOOKUP TABLE
     // INSERT ALLERGIES INTO THE INGREDIENTS_ALLERGY TABLE
