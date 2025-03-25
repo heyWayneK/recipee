@@ -111,7 +111,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing id or name" }, { status: 400 });
     }
 
-    console.log("2.>>>>>>>>>>>>>>>>>>>>s Start Prompts id:");
+    console.log("2.>>>>>>>>>>>>>>>>>>>>s Start Prompts id");
 
     const prompt: PromptMessage[] = [
       {
@@ -194,13 +194,16 @@ export async function POST(request: Request) {
     let jsonData = null;
     if (useSdk === "xai") {
       // X Ai to classify the ingredient and get nutritional data
+      console.log("4.>>>>>>>>>>>>>>>>>>>> Start X Ai");
       const response = await sdks.xai.connect.chat.completions.create({
         model: sdks.xai.model,
         stream: false,
         messages: prompt,
         temperature: 0.3, // Lows temperature for consistency
       });
+      console.log("5.>>>>>>>>>>>>>>>>>>>> Response:", response);
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
+      console.log("6.>>>>>>>>>>>>>>>>>>>> Json:", jsonData);
     } else if (useSdk === "openai") {
       const response = await sdks.openai.connect.chat.completions.create(
         {
