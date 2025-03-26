@@ -2,17 +2,17 @@
 import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 import OpenAI from "openai"; //for X too
-// import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { trim } from "cypress/types/jquery";
 
-// Define the message structure
+// Ai Prompt
 interface PromptMessage {
-  role: "system" | "user" | "assistant"; // Roles typically used in Open AI APIss
-  content: string; // The text content of the message
+  role: "system" | "user" | "assistant";
+  content: string;
 }
-// Define the prompt/request structure
 interface OpenAIPrompt {
   model: string; // e.g., "gpt-3.5-turbo" or "gpt-4"
-  messages: PromptMessage[]; // Array of messages for the conversation
+  messages: PromptMessage[]; // {role, content}[]
   temperature?: number; // Optional: Controls randomness (0 to 2)
   max_tokens?: number; // Optional: Limits response length
   top_p?: number; // Optional: Nucleus sampling
@@ -20,7 +20,7 @@ interface OpenAIPrompt {
   presence_penalty?: number; // sOptional: Encourages new topics
 }
 
-// Define the Gemini prompt/request structure
+// Gemini prompt/request
 interface GeminiPrompt {
   model: string; // e.g., "gemini-pro" (hypothetical)
   messages: PromptMessage[]; // Array of messages
@@ -29,39 +29,24 @@ interface GeminiPrompt {
   stream?: boolean; // Optional: Stream responses
 }
 type openAiModels = "gpt-4o-2024-05-13" | "gpt-4" | "gpt-3.5-turbo" | "gpt-4o-2024-05-13";
-// INFO: CHECK WHAT OPEN AI MODEL IS AVAILABLE
-/* curl https://api.openai.com/v1/models \
+
+/* TESTING: CHECK WHAT OPEN AI MODELS ARE AVAILABLE
+ curl https://api.openai.com/v1/models \
   -H "Authorization: Bearer OPENAI_API_KEY" */
+
 const sdks = {
-  // openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
+  openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
 
   xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-2-latest" },
 
-  // gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
+  gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
 };
-type TSDK = "xai";
-// type TSDK = "openai" | "xai" | "gemini";
-const useSdk: TSDK = "xai"; // "openai" | "xai" | "gemini"
 
-// OPEN AI
-// const xai = ;
-// const model = "gpt-4o";
-// const ai = "openai";
+type TSDK = "openai" | "xai" | "gemini";
 
-// X AI
-// const xai = new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" });
-// const model = "grok-2-latest;
-// const ai = "xai";
-// INFO TESTING: curl -X GET "https://api.x.ai/v1" -H "Authorization: Bearer OPENAI_API_KEY" -H "Content-Type: application/json"
+const useSdk: TSDK = "xai";
 
-// const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
-// const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-// const ai = "gemini";
-
-// const xai = new Anthropic({
-//   apiKey: process.env.XAI_API_KEY,
-//   baseURL: "https://api.x.ai/",
-// });
+// TESTING: curl -X GET "https://api.x.ai/v1" -H "Authorization: Bearer OPENAI_API_KEY" -H "Content-Type: application/json"
 
 type TAllergyConnect = { id: number };
 type TIngredientObj = { ingredient: { connect: TAllergyConnect }; allergy: { connect: TAllergyConnect }; updated_at: Date };
@@ -78,8 +63,6 @@ function getReligiousCertIdByName(name: string, religiousCertArray: { id: number
 // export async function handler(request: Request) {
 export async function POST(request: Request) {
   try {
-    // console.log("X Ai initialized>>>>>:", xai);
-
     // if (!xai) {
     //   return Response.json({ error: "X Ai not initialized" }, { status: 500 });
     // }
@@ -93,15 +76,11 @@ export async function POST(request: Request) {
     if (method === "POST") {
       // Handle POST request
       const body = await request.json();
+      if (!body.id || !body.name) {
+        return NextResponse.json({ error: "Missing id or name" }, { status: 400 });
+      }
       id = body.id;
       name = body.name;
-    } else if (method === "GET") {
-      // Handle GET request
-      const url = new URL(request.url);
-      id = Number(url.searchParams.get("id"));
-      name = url.searchParams.get("name");
-      // Process the webhook payload
-      // return NextResponse.json({ message: `GET METHOD name: ${name}, id: ${id}` }, { status: 200 });
     } else {
       // Unsupported HTTP method
       return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
@@ -207,33 +186,33 @@ export async function POST(request: Request) {
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
       console.log("6.>>>>>>>>>>>>>>>>>>>> Json:", jsonData);
     } else if (useSdk === "openai") {
-      // const response = await sdks.openai.connect.chat.completions.create(
-      //   {
-      //     model: sdks.openai.model,
-      //     messages: prompt,
-      //     temperature: 0.3,
-      //     // max_tokens: 150,
-      //   },
-      //   {
-      //     headers: {
-      //       organization: "org-qqfxsQUxiycsDzEmw7bCxleY",
-      //       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
-      // jsonData = JSON.parse(response.choices[0].message.content?.replace("```json\n", "").replace("\n```", "") ?? "{}");
+      const response = await sdks.openai.connect.chat.completions.create(
+        {
+          model: sdks.openai.model,
+          messages: prompt,
+          temperature: 0.3,
+          // max_tokens: 150,
+        },
+        {
+          headers: {
+            organization: "org-qqfxsQUxiycsDzEmw7bCxleY",
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      jsonData = JSON.parse(response.choices[0].message.content?.replace("```json\n", "").replace("\n```", "") ?? "{}");
     } else if (useSdk === "gemini") {
-      // const genAI = sdks.gemini.connect;
-      // const model = genAI.getGenerativeModel({ model: sdks.gemini.model });
-      // const response = await model.generateContent(JSON.stringify(prompt));
-      // jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
+      const genAI = sdks.gemini.connect;
+      const model = genAI.getGenerativeModel({ model: sdks.gemini.model });
+      const response = await model.generateContent(JSON.stringify(prompt));
+      jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
     }
     ``;
 
     // FIXME: CHECK ID EMPTY
     if (!jsonData) {
-      return NextResponse.json({ message: "GET request FAIL", error: "No data returned from X Ai" });
+      return NextResponse.json({ message: "GET request FAIL", error: `No data returned from ${sdks[useSdk].model} Ai` });
     }
 
     // CORRECT SPELLING OF INGREDIENT NAME to most common spelling or use the original name
@@ -245,6 +224,7 @@ export async function POST(request: Request) {
     //     name: name_correct_spelling,
     //   },
     // });
+
     // if (existingIngredient) {
     //   // Handle the case when the ingredient already exists in the database
     //   return res.status(400).json({ error: "Ingredient already exists in the database" });
@@ -253,15 +233,14 @@ export async function POST(request: Request) {
     console.log("7a. jsonData.primary_category >>>>>>>>>>>>>>>:", jsonData.primary_category);
 
     // CHECK INGREDIENT PRIMARY CATEGORY ID or SET TO ZERO (UNKNOWN)
-    const ingredientCategory = await prisma.ingredient_category_primary.findFirst({
+    const ingredientCategoryArray = await prisma.ingredient_category_primary.findMany({
       select: {
         id: true,
+        name: true,
       },
-      where: {
-        name: jsonData.primary_category,
-      },
-    }); // 0 = unknown
-    const ingredientCategoryId: number = ingredientCategory?.id || 0;
+    });
+
+    const ingredientCategoryId: number = ingredientCategoryArray.find((ingr) => trim(ingr.name).toLowerCase() === jsonData.ingredient_category_primary.toLowerCase())?.id || 0;
 
     console.log("7. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
 
@@ -274,7 +253,7 @@ export async function POST(request: Request) {
         name: jsonData.dietary_classification,
       },
     });
-    const dietaryCategoryId: number = dietaryCategory?.id || 0;
+    const dietaryCategoryId: number = dietaryCategory?.id || 0; // 0: unknown
 
     console.log("8. dietaryCategoryId>>>>>>>>>>>>>>>:", dietaryCategoryId);
 
@@ -450,6 +429,15 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     console.log("GET METHOD");
+    // Handle GET request
+    const url = new URL(request.url);
+    const id = Number(url.searchParams.get("id"));
+    const name = url.searchParams.get("name");
+    if (!id || !name) {
+      return NextResponse.json({ error: "USE POST instead - Missing id or name" }, { status: 400 });
+    }
+    // Process the webhook payload
+    // return NextResponse.json({ message: `GET METHOD name: ${name}, id: ${id}` }, { status: 200 });
   } catch (error) {
     // Determine the HTTP method of the request
     return NextResponse.json({ error: `Please use POST` }, { status: 405 });

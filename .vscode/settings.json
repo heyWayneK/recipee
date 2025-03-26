@@ -4,5 +4,32 @@
   },
   "deno.enablePaths": ["supabase/functions"],
   "deno.lint": true,
-  "deno.unstable": ["bare-node-builtins", "byonm", "sloppy-imports", "unsafe-proto", "webgpu", "broadcast-channel", "worker-options", "cron", "kv", "ffi", "fs", "http", "net"]
+  "deno.unstable": ["bare-node-builtins", "byonm", "sloppy-imports", "unsafe-proto", "webgpu", "broadcast-channel", "worker-options", "cron", "kv", "ffi", "fs", "http", "net"],
+  "todohighlight.defaultStyle": {
+    "color": "#2196f3",
+    "backgroundColor": "#ffeb3b"
+  },
+  "todohighlight.keywords": [
+    {
+      "text": "TODO",
+      "isCaseSensitive": true
+    },
+    {
+      "text": "FIXME",
+      "isCaseSensitive": true
+    },
+    {
+      "text": "BUG",
+      "isCaseSensitive": true
+    },
+    {
+      "text": "TESTING",
+      "isCaseSensitive": true
+    },
+    {
+      "text": "NOTE",
+      "isCaseSensitive": true
+    }
+  ],
+  "dart.showTodos": false
 }
