@@ -238,10 +238,11 @@ export async function POST(request: Request) {
         name: true,
       },
     });
+    console.log("7b. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryArray.toString());
 
-    const ingredientCategoryId: number = ingredientCategoryArray.find((ingr) => ingr.name.trim().toLowerCase() === jsonData.ingredient_category_primary.toLowerCase())?.id || 0;
+    const ingredientCategoryId: number = ingredientCategoryArray.find((ingr) => ingr.name.trim().toLowerCase() === jsonData.primary_category.toLowerCase())?.id || 0;
 
-    console.log("7. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
+    console.log("7c. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
 
     // CHECK INGREDIENT DIET CATEGORY (veg, vegan, animal_product) or SET TO ZERO (UNKNOWN)
     const dietaryCategory = await prisma.dietary_classification.findFirst({
