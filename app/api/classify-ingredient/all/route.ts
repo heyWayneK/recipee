@@ -3,7 +3,6 @@ import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 import OpenAI from "openai"; //for X too
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { trim } from "cypress/types/jquery";
 
 // Ai Prompt
 interface PromptMessage {
@@ -240,7 +239,7 @@ export async function POST(request: Request) {
       },
     });
 
-    const ingredientCategoryId: number = ingredientCategoryArray.find((ingr) => trim(ingr.name).toLowerCase() === jsonData.ingredient_category_primary.toLowerCase())?.id || 0;
+    const ingredientCategoryId: number = ingredientCategoryArray.find((ingr) => ingr.name.trim().toLowerCase() === jsonData.ingredient_category_primary.toLowerCase())?.id || 0;
 
     console.log("7. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
 
