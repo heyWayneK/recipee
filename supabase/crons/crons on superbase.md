@@ -1,6 +1,6 @@
 # CRONS ON SUPABASE
 
-## CALL EDGE FUNCTION TO READ WEBOOK QUEUE
+## call-classify-ingredient
 
 SELECT
 net.http_post(
@@ -12,7 +12,7 @@ headers := jsonb_build_object(
 timeout_milliseconds:=1000
 );
 
-## DELETE PROCESSED ROWS ON WEBHOOK QUEUE - Call ege function
+## Delete processed webhook queue rows
 
 select
 net.http_post(

@@ -1,4 +1,5 @@
 "use client";
+require("dotenv").config();
 import { ReactNode, useContext, useEffect } from "react";
 import { Inter } from "next/font/google";
 import { Viewport } from "next";

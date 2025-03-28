@@ -1,5 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
+// TESTING: test Prisma Client Connection
+// TESTING: nc -zv aws-0-eu-west-1.pooler.supabase.com 6543
+
 // OLD________________START ::
 // const prisma = new PrismaClient({
 //   log: ["query", "info", "warn", "error"], // Enable all log levels
@@ -13,7 +16,7 @@ import { PrismaClient } from "@prisma/client";
 // INFO: TO AVOID THIS ERROR (TOO MANY CONNECTIONS:
 // INFO: prisma:info Starting a postgresql pool with 21 connections.
 
-// Extend the Node.js Global interface to include prisma
+// Extend the Node.js Global interface to include prsisma
 declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
@@ -26,11 +29,23 @@ let prisma: PrismaClient;
 if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient({
     // log: ["query", "info", "warn", "error"], // Enable all log levels
+    datasources: {
+      db: {
+        // url: process.env.DATABASE_URL,
+        url: "postgresql://postgres.zozztsfhpsotmekjeiwt:U9c3eWo6bExDoVKd@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true",
+      },
+    },
   });
 } else {
   if (!global.prisma) {
     global.prisma = new PrismaClient({
       log: ["query", "info", "warn", "error"], // Enable all log levels
+      datasources: {
+        db: {
+          // url: process.env.DATABASE_URL,
+          url: "postgresql://postgres.zozztsfhpsotmekjeiwt:U9c3eWo6bExDoVKd@aws-0-eu-west-1.pooler.supabase.com:6543/postgres?pgbouncer=true",
+        },
+      },
     });
   }
   prisma = global.prisma;

@@ -1,10 +1,16 @@
 "use server";
 import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
-import OpenAI from "openai"; //for X too
+import OpenAI from "openai"; //for X/grok too
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { all } from "cypress/types/bluebird";
+import { el } from "date-fns/locale";
+import { PrismaClient } from "@prisma/client";
 
-// Ai Prompt
+// import { PrismaClient } from "@prisma/client";
+// const prisma = new PrismaClient();
+
+// Genreric Ai Prompt
 interface PromptMessage {
   role: "system" | "user" | "assistant";
   content: string;
@@ -35,63 +41,97 @@ type openAiModels = "gpt-4o-2024-05-13" | "gpt-4" | "gpt-3.5-turbo" | "gpt-4o-20
 
 const sdks = {
   openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
-
   xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-2-latest" },
-
   gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
 };
 
 type TSDK = "openai" | "xai" | "gemini";
-
 const useSdk: TSDK = "xai";
 
 // TESTING: curl -X GET "https://api.x.ai/v1" -H "Authorization: Bearer OPENAI_API_KEY" -H "Content-Type: application/json"
 
-type TAllergyConnect = { id: number };
-type TIngredientObj = { ingredient: { connect: TAllergyConnect }; allergy: { connect: TAllergyConnect }; updated_at: Date };
+// type TAllergyConnect = { id: number };
+// type TIngredientObj = { ingredient: { connect: TAllergyConnect }; allergy: { connect: TAllergyConnect }; updated_at: Date };
 
-// getReligiousCertIdByName()
-// Matching likelyhood of having religious certification (kosher, halal)
+// RELIGIOUS CERTIFICATION (kosher, halal)
 // 0 :no, 1: yes, 2: unlikely, 3: likely 4: unknown
-function getReligiousCertIdByName(name: string, religiousCertArray: { id: number; name: string }[]): number {
+function matchReligiousCertId(name: string, religiousCertArray: { id: number; name: string }[]): number {
   const match = religiousCertArray.find((item) => item.name.toLowerCase() === name.toLowerCase());
   const id = match ? Number(match.id) : 4; // 4: unknown
   return id;
 }
 
-// export async function handler(request: Request) {
-export async function POST(request: Request) {
-  try {
-    // if (!xai) {
-    //   return Response.json({ error: "X Ai not initialized" }, { status: 500 });
-    // }
+// ALLERGY IDS
+function matchAllergyId(allergyArray: { id: number; name: string }[], allergies: string, ingredientId: number): any[] {
+  let allergyObj: any[] = [];
+  let allergiesSplit: string[] = []; // e.g. jsonData.allergies: "none" | "none|val1|val2" | ""
 
-    let id: number | null = null;
-    let name: string | null = null;
+  // Split by "|"  or create aarray of one element
+  if (allergies.includes("|")) {
+    // Check if the string contains "|"
+    allergiesSplit = allergies
+      .split("|")
+      .map((allergy: string) => allergy.trim().toLowerCase())
+      .filter(Boolean); // Remove empty strings
+  } else {
+    allergiesSplit = [allergies];
+  }
+
+  for (let i = 0; i < allergiesSplit.length; i++) {
+    // LOOP THROUGH STRINGS - MATCH ID
+    // const allergyId: { id: number; name: string } | undefined = allergyArray.find((item) => item.name.toLowerCase() === allergiesSplit[i]);
+    const allergyId = allergyArray.find((item) => item.name.toLowerCase() === allergiesSplit[i]);
+
+    if (allergyId !== undefined) {
+      allergyObj = [
+        ...allergyObj,
+        {
+          ingredient_id: ingredientId,
+          allergy_id: allergyId.id,
+          updated_at: new Date(),
+        },
+      ];
+    }
+  }
+  // Object returned for LOOKUP TABLE INSERT
+  return allergyObj;
+}
+
+function matchDietaryCatId(dietaryCatArray: { id: number; name: string }[], dietaryCat: string): number {
+  const match = dietaryCatArray.find((item) => item.name.toLowerCase() === dietaryCat.toLowerCase());
+  const id = match ? Number(match.id) : 0; // 0: unknown
+  return id;
+}
+
+function matchPrimaryCategoryId(primaryCatArray: { id: number; name: string }[], primaryCat: string): number {
+  const match = primaryCatArray.find((item) => item.name.toLowerCase() === primaryCat.toLowerCase());
+  const id = match ? Number(match.id) : 0; // 0: unknown
+  return id;
+}
+
+// export async function handler(request: Request) {
+export async function GET(request: Request) {
+  try {
+    const startTime = Date.now();
+    let jsonData = null;
+    let id: number;
+    let name: string;
 
     // Determine the HTTP method of the request
     const method = request.method;
 
     if (method === "POST") {
-      // Handle POST request
       const body = await request.json();
-      if (!body.id || !body.name) {
-        return NextResponse.json({ error: "Missing id or name" }, { status: 400 });
-      }
-      id = body.id;
-      name = body.name;
+      if (!body.id || !body.name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
+      id = body?.id;
+      name = body?.name;
+      if (!id || !name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
+    } else if (method === "GET") {
+      id = 1;
+      name = "garlic";
     } else {
-      // Unsupported HTTP method
       return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
     }
-
-    console.log("1.>>>>>>>>>>>>>>>>>>>>id:", id, "name:", name);
-
-    if (!id || !name) {
-      return NextResponse.json({ error: "Missing id or name" }, { status: 400 });
-    }
-
-    console.log("2.>>>>>>>>>>>>>>>>>>>>s Start Prompts id");
 
     const prompt: PromptMessage[] = [
       {
@@ -169,21 +209,16 @@ export async function POST(request: Request) {
         content: `Classify and analyze "${name}".`,
       },
     ];
-    console.log("3.>>>>>>>>>>>>>>>>>>>>s  useSdk:", useSdk);
 
-    let jsonData = null;
     if (useSdk === "xai") {
       // X Ai to classify the ingredient and get nutritional data
-      console.log("4.>>>>>>>>>>>>>>>>>>>> Start X Ai");
       const response = await sdks.xai.connect.chat.completions.create({
         model: sdks.xai.model,
         stream: false,
         messages: prompt,
         temperature: 0.3, // Lows temperature for consistency
       });
-      console.log("5.>>>>>>>>>>>>>>>>>>>> Response:", response);
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
-      console.log("6.>>>>>>>>>>>>>>>>>>>> Json:", jsonData);
     } else if (useSdk === "openai") {
       const response = await sdks.openai.connect.chat.completions.create(
         {
@@ -207,79 +242,124 @@ export async function POST(request: Request) {
       const response = await model.generateContent(JSON.stringify(prompt));
       jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
     }
-    ``;
 
-    // FIXME: CHECK ID EMPTY
-    if (!jsonData) {
-      return NextResponse.json({ message: "GET request FAIL", error: `No data returned from ${sdks[useSdk].model} Ai` });
-    }
+    if (!jsonData) NextResponse.json({ message: "Fail", error: `No data returned from ${sdks[useSdk].model} Ai` });
 
-    // CORRECT SPELLING OF INGREDIENT NAME to most common spelling or use the original name
+    // CORRECT SPELLING OF INGREDIENT NAME to most common spelling or use the original names
     const name_correct_spelling = jsonData.name_correct_spelling || name;
 
+    // Execute all database queries concurrently using Promise.all
+    const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray, correctSpellingNameExists] = await Promise.all([
+      // INGREDIENT CATEGORY e.g. Vegetable, Fruit, Meat, etc.
+      prisma.ingredient_category_primary.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        // where: {},
+      }),
+
+      // ALLERGIES
+      prisma.allergy.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        // where: {},
+      }),
+
+      // RELIGIOUS CERTIFICATION e.g. kosher, halal
+      prisma.ingredients_religious_certification.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        // where: {},
+      }),
+
+      // DIET CATEGORY e.g. vegan, vegetarian, animal_product, unknown
+      prisma.dietary_classification.findMany({
+        select: {
+          id: true,
+          name: true,
+        },
+        // where: {},
+      }),
+
+      // DOES CORRECT SPELLING OF INGREDIENT NAME ALREADY EXIST IN THE DATABASE
+      prisma.ingredients.findFirst({
+        select: {
+          id: true,
+        },
+        where: {
+          name: name_correct_spelling,
+        },
+      }),
+    ]);
+
+    if (!primaryCatArray || primaryCatArray.length === 0) {
+      return NextResponse.json({ error: "no data from ingredient_category_primary" });
+    } else {
+      console.log("OK primaryCatArray:", primaryCatArray);
+    }
+
+    if (!allergyArray || allergyArray.length === 0) {
+      return NextResponse.json({ error: "no data from allergy" });
+    } else {
+      console.log("OK allergyArray:", allergyArray);
+    }
+
+    if (!religiousCertArray || religiousCertArray.length === 0) {
+      return NextResponse.json({ error: "no data from ingredients_religious_certification" });
+    } else {
+      console.log("OK religiousCertArray:", religiousCertArray);
+    }
+
+    if (!dietaryCatArray || dietaryCatArray.length === 0) {
+      return NextResponse.json({ error: "no data from dietary_classification" });
+    } else {
+      console.log("OK dietaryCatArray:", dietaryCatArray);
+    }
+
+    const primaryCategoryId: number = matchPrimaryCategoryId(primaryCatArray, jsonData.primary_category);
+    if (!primaryCategoryId) {
+      console.log("Primary category not found");
+      return NextResponse.json({ error: "Primary category not found" });
+    } else {
+      console.log("OK Primary category id:", primaryCategoryId);
+    }
+
+    const kosherId: number = matchReligiousCertId(jsonData.religious_certification.kosher, religiousCertArray);
+    if (!kosherId) {
+      console.log("Kosher id not found");
+      return NextResponse.json({ error: "Kosher id not found" });
+    } else {
+      console.log("OK Kosher id:", kosherId);
+    }
+
+    const halalId: number = matchReligiousCertId(jsonData.religious_certification.halal, religiousCertArray);
+    if (!halalId) {
+      console.log("Halal id not found");
+      return NextResponse.json({ error: "Halal id not found" });
+    } else {
+      console.log("OK Halal id:", halalId);
+    }
+
+    const dietaryCatArrayId: number = matchDietaryCatId(dietaryCatArray, jsonData.dietary_classification);
+    if (!dietaryCatArrayId) {
+      console.log("Dietary category not found");
+      return NextResponse.json({ error: "Dietary category not found" });
+    } else {
+      console.log("OK Dietary category id:", dietaryCatArrayId);
+    }
+
     // FIXME: CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-    // const existingIngredient = await prisma.ingredients.findFirst({
-    //   where: {
-    //     name: name_correct_spelling,
-    //   },
-    // });
 
-    // if (existingIngredient) {
-    //   // Handle the case when the ingredient already exists in the database
-    //   return res.status(400).json({ error: "Ingredient already exists in the database" });
-    //   // return NextResponse.json({ message: "Ingredient already exists in the database" });
-    // }
-    console.log("7a. jsonData.primary_category >>>>>>>>>>>>>>>:", jsonData.primary_category);
-
-    // CHECK INGREDIENT PRIMARY CATEGORY ID or SET TO ZERO (UNKNOWN)
-    const ingredientCategoryArray = await prisma.ingredient_category_primary.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-    console.log("7b. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryArray.toString());
-
-    const ingredientCategoryId: number = ingredientCategoryArray.find((ingr) => ingr.name.trim().toLowerCase() === jsonData.primary_category.toLowerCase())?.id || 0;
-
-    console.log("7c. ingredientCategoryId>>>>>>>>>>>>>>>:", ingredientCategoryId);
-
-    // CHECK INGREDIENT DIET CATEGORY (veg, vegan, animal_product) or SET TO ZERO (UNKNOWN)
-    const dietaryCategory = await prisma.dietary_classification.findFirst({
-      select: {
-        id: true,
-      },
-      where: {
-        name: jsonData.dietary_classification,
-      },
-    });
-    const dietaryCategoryId: number = dietaryCategory?.id || 0; // 0: unknown
-
-    console.log("8. dietaryCategoryId>>>>>>>>>>>>>>>:", dietaryCategoryId);
-
-    // CHECK ALLERGY or SET TO UNKNOWN : 0
-    // FIXME: multiple allergies
-    const allergyList = await prisma.allergy.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-      where: {
-        name: jsonData.allergies,
-      },
-    });
-
-    console.log("9. allergyList>>>>>>>>>>>>>>>:", allergyList);
-
-    // GET RELIGIOUS CERTIFICATION ID array
-    const religiousCertificationArray = await prisma.ingredients_religious_certification.findMany({
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-
-    console.log("10. religiousCertificationArray>>>>>>>>>>>>>>>:", religiousCertificationArray);
+    if (correctSpellingNameExists?.id !== undefined) {
+      return NextResponse.json({ error: `Corrected Name Already Exists in Ingredients Table. orig: ${name}, corrected: ${name_correct_spelling}` }, { status: 200 });
+    } else {
+      console.log("OK Corrected Name does not exist");
+    }
 
     // INSERT INGREDIENT data into the ingredients table
     const ingredient: { id: number } = await prisma.ingredients.update({
@@ -289,15 +369,12 @@ export async function POST(request: Request) {
         name: name_correct_spelling,
         name_orig: name,
         names_alt: jsonData.alternative_names.names_alt || "",
-        primary_category: { connect: { id: ingredientCategoryId } },
+        primary_category: { connect: { id: primaryCategoryId } },
         secondary_category: jsonData.secondary_category || "",
         updated_at: new Date(),
-        // Dietary Classification: vegan|vegetarian|animal_product|unknown
-        dietary_classification: { connect: { id: dietaryCategoryId } },
-        // Kosher
-        kosher: { connect: { id: getReligiousCertIdByName(jsonData.religious_certification.kosher, religiousCertificationArray) } },
-        // Halal
-        halal: { connect: { id: getReligiousCertIdByName(jsonData.religious_certification.halal, religiousCertificationArray) } },
+        dietary_classification: { connect: { id: dietaryCatArrayId } },
+        kosher: { connect: { id: kosherId } },
+        halal: { connect: { id: halalId } },
         confidence: jsonData.confidence || 0,
         // FUTURE: only true if a super admin account
         is_default: true,
@@ -308,138 +385,111 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log("11. ingredient>>>>>>>>>>>>>>>:", ingredient);
-
-    // INSERT COOKED YIELDS into the cooked_yields table
-    await prisma.ingredient_cooked_yields.create({
-      data: {
-        ingredients_id: ingredient.id,
-        raw: jsonData.cooked_yields.raw || 1,
-        cooked: jsonData.cooked_yields.cooked || 0,
-        deep_fry: jsonData.cooked_yields.deep_fry || 0,
-        shallow_fry: jsonData.cooked_yields.shallow_fry || 0,
-        boiled: jsonData.cooked_yields.boiled || 0,
-        roasted: jsonData.cooked_yields.roasted || 0,
-      },
-    });
-
-    console.log("12. INSERT ingredient_cooked_yields"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
-
-    await prisma.ingredients_nutrition.create({
-      data: {
-        ingredients_id: ingredient.id,
-        kcal_per_100g: jsonData.nutritional_data.kcal_per_100g || 0,
-        kj_per_100g: jsonData.nutritional_data.kj_per_100g || 0,
-        protein_per_100g: jsonData.nutritional_data.protein_per_100g || 0,
-        fat_per_100g: jsonData.nutritional_data.fat_per_100g || 0,
-        saturated_fat_per_100g: jsonData.nutritional_data.saturated_fat_per_100g || 0,
-        monounsaturate_per_100g: jsonData.nutritional_data.monounsaturate_per_100g || 0,
-        polyunsaturate_per_100g: jsonData.nutritional_data.polyunsaturate_per_100g || 0,
-      },
-    });
-
-    console.log("13. INSERT ingredient_nutrition"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
-
-    // Insert data into the raw_to_prepped_yields table
-    await prisma.raw_to_prepped_yields.create({
-      data: {
-        ingredients_id: ingredient.id,
-        whole: jsonData.raw_to_prepped_yields.whole || 0,
-        peeled: jsonData.raw_to_prepped_yields.peeled || 0,
-        peeled_and_cored: jsonData.raw_to_prepped_yields.peeled_and_cored || 0,
-        diced: jsonData.raw_to_prepped_yields.diced || 0,
-        sliced: jsonData.raw_to_prepped_yields.sliced || 0,
-        grated: jsonData.raw_to_prepped_yields.grated || 0,
-      },
-    });
-
-    console.log("14. INSERT raw_to_prepped_yelds"); // INSERT NUTRITIONAL DATA into the ingredients_nutrition table
-
-    // ALLERGIES LOOKUP TABLE
-    // INSERT ALLERGIES INTO THE INGREDIENTS_ALLERGY TABLE
-    // jsonData.allergies: "none" | "none|val1|val2" | even ""
-    let allergies: string[] = [];
-    const a = jsonData.allergies;
-
-    // Split by "|" regardless of content, then filter invalid values
-    allergies = a
-      .split("|")
-      .map((allergy: string) => allergy.trim().toLowerCase()) // Normalize case and whitespace
-      .filter(Boolean); // Remove empty strings
-
-    // let allergyObj: allergy_ingredientCreateManyInput[] = [];
-    // let allergyObj = Prisma.allergy_ingredientCreateManyInput[];
-    let allergyObj = [];
-    // let allergyObj: TIngredientObj[] = [];
-    // data: Prisma.allergy_ingredientCreateManyInput | Prisma.allergy_ingredientCreateManyInput[]
-    // allergy_ingredientCreateManyInput | allergy_ingredientCreateManyInput[]
-
-    /* 
-    export type allergy_ingredientCreateManyInput = {
-      id?: number
-      allergy_id: number
-      ingredient_id: number
-      created_at?: Date | string
-      updated_at?: Date | string | null
+    if (!ingredient) {
+      console.log("Ingredient not found");
+      return NextResponse.json({ error: "Ingredient not found" });
+    } else {
+      console.log("OK Ingredient:", ingredient);
     }
-    */
 
-    // CLASSIFY MULTIPLE ALLERGIES
-    if (allergies.length > 0 && allergyList.length > 0) {
-      for (let i = 0; i < allergies.length; i++) {
-        // GET ALLERGY ID
-        const allergyId: { id: number; name: string } | undefined = allergyList.find((item) => item.name.toLowerCase() === allergies[i]);
-        if (allergyId !== undefined && ingredient.id !== undefined) {
-          allergyObj.push({
-            // ingredient_id: Number(ingredient.id),
-            ingredient_id: Number(ingredient.id),
-            allergy_id: Number(allergyId.id),
-            updated_at: new Date(),
-          });
-          // allergyObj.push({
-          //   // ingredient_id: Number(ingredient.id),
-          //   ingredient: { connect: { id: Number(ingredient.id) } },
-          //   allergy: { connect: { id: Number(allergyId.id) } },
-          //   updated_at: new Date(),
-          // });
-        }
-      }
-
-      allergyObj = allergyObj.filter(Boolean); // Remove null entries
-
-      console.log("15. allergyObj>>>>>>>>>>>>>>>:", allergyObj);
-      // Only create records if there are valid entries
-      if (allergyObj.length === 1) {
-        await prisma.allergy_ingredient.create({
-          data: allergyObj[0],
-        });
-      } else if (allergyObj.length > 1) {
-        await prisma.allergy_ingredient.createMany({
-          data: allergyObj,
-        });
-      }
+    if (!jsonData.cooked_yields) {
+      console.log("Cooked yields not found");
+      return NextResponse.json({ error: "Cooked yields not found" });
+    } else {
+      console.log("OK Cooked yields:", jsonData.cooked_yields);
     }
-    return NextResponse.json({ message: "Success", resultJson: jsonData }, { status: 200 });
+
+    if (!jsonData.nutritional_data) {
+      console.log("Nutritional data not found");
+      return NextResponse.json({ error: "Nutritional data not found" });
+    } else {
+      console.log("OK Nutritional data:", jsonData.nutritional_data);
+    }
+
+    if (!jsonData.raw_to_prepped_yields) {
+      console.log("Raw to prepped yields not found");
+      return NextResponse.json({ error: "Raw to prepped yields not found" });
+    } else {
+      console.log("OK Raw to prepped yields:", jsonData.raw_to_prepped_yields);
+    }
+
+    const allergyObj = matchAllergyId(allergyArray, jsonData.allergies, ingredient.id);
+    if (!allergyObj) {
+      console.log("Allergy object not found");
+      return NextResponse.json({ error: "Allergy object not found" });
+    } else {
+      console.log("OK Allergy object:", allergyObj);
+    }
+
+    await Promise.all([
+      // INSERT COOKED YIELDS into the cooked_yields table
+      prisma.ingredient_cooked_yields.create({
+        data: {
+          ingredients_id: ingredient.id,
+          raw: jsonData.cooked_yields?.raw || 1,
+          cooked: jsonData.cooked_yields?.cooked || 0,
+          deep_fry: jsonData.cooked_yields?.deep_fry || 0,
+          shallow_fry: jsonData.cooked_yields?.shallow_fry || 0,
+          boiled: jsonData.cooked_yields?.boiled || 0,
+          roasted: jsonData.cooked_yields?.roasted || 0,
+        },
+      }),
+      prisma.ingredients_nutrition.create({
+        data: {
+          ingredients_id: ingredient.id,
+          kcal_per_100g: jsonData.nutritional_data?.kcal_per_100g || 0,
+          kj_per_100g: jsonData.nutritional_data?.kj_per_100g || 0,
+          protein_per_100g: jsonData.nutritional_data?.protein_per_100g || 0,
+          fat_per_100g: jsonData.nutritional_data?.fat_per_100g || 0,
+          saturated_fat_per_100g: jsonData.nutritional_data?.saturated_fat_per_100g || 0,
+          monounsaturate_per_100g: jsonData.nutritional_data?.monounsaturate_per_100g || 0,
+          polyunsaturate_per_100g: jsonData.nutritional_data?.polyunsaturate_per_100g || 0,
+        },
+      }),
+      // Insert data into the raw_to_prepped_yields table
+      prisma.raw_to_prepped_yields.create({
+        data: {
+          ingredients_id: ingredient.id,
+          whole: jsonData.raw_to_prepped_yields?.whole || 0,
+          peeled: jsonData.raw_to_prepped_yields?.peeled || 0,
+          peeled_and_cored: jsonData.raw_to_prepped_yields?.peeled_and_cored || 0,
+          diced: jsonData.raw_to_prepped_yields?.diced || 0,
+          sliced: jsonData.raw_to_prepped_yields?.sliced || 0,
+          grated: jsonData.raw_to_prepped_yields?.grated || 0,
+        },
+      }),
+
+      prisma.allergy_ingredient.createMany({
+        data: allergyObj,
+      }),
+    ]);
+
+    const totalTimeSecs = (Date.now() - startTime) / 1000 + " seconds";
+    console.log("Total time taken:", totalTimeSecs);
+
+    return NextResponse.json({ message: "Success", timer: totalTimeSecs, resultJson: jsonData }, { status: 200 });
   } catch (error: any) {
     console.error("Webhook error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Failure - errors" }, { status: 500 });
   }
 }
 
-export async function GET(request: Request) {
-  try {
-    console.log("GET METHOD");
-    // Handle GET request
-    const url = new URL(request.url);
-    const id = Number(url.searchParams.get("id"));
-    const name = url.searchParams.get("name");
-    if (!id || !name) {
-      return NextResponse.json({ error: "USE POST instead - Missing id or name" }, { status: 400 });
-    }
-    // Process the webhook payload
-    // return NextResponse.json({ message: `GET METHOD name: ${name}, id: ${id}` }, { status: 200 });
-  } catch (error) {
-    // Determine the HTTP method of the request
-    return NextResponse.json({ error: `Please use POST` }, { status: 405 });
-  }
-}
+// export async function GET(request: Request) {
+//   try {
+//     console.log("GET METHOD");
+//     // Handle GET request
+//     const url = new URL(request.url);
+//     const id = Number(url.searchParams.get("id"));
+//     const name = url.searchParams.get("name");
+//     if (!id || !name) {
+//       return NextResponse.json({ error: "USE POST instead - Missing id or name" }, { status: 400 });
+//     }
+//     // Process the webhook payload
+//     // return NextResponse.json({ message: `GET METHOD name: ${name}, id: ${id}` }, { status: 200 });
+//   } catch (error) {
+//     // Determine the HTTP method of the request
+//     return NextResponse.json({ error: `Please use POST` }, { status: 405 });
+//   }
+// }
+
+// export async function POST(request: Request) {

@@ -1,373 +1,32 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "EnumLanguage" AS ENUM ('EN', 'FR', 'SP');
 
-  - You are about to drop the column `createdAt` on the `Brand` table. All the data in the column will be lost.
-  - You are about to drop the column `updatedAt` on the `Brand` table. All the data in the column will be lost.
-  - You are about to drop the `Allergy` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Component` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ConversationThread` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `CookedYields` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `CookedYieldsCategories` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `CostRules` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Customer` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `DryCookedYields` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `DryCookedYieldsCategories` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `IngredientCategoryPrimary` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `IngredientCategorySecondary` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `IngredientDietClassification` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Ingredients` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `IngredientsNutrition` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `IngredientsYields` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Lead` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Markup` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `OtherCosts` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `PackagingCosts` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `PrepInstructions` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ProductionEvent` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ProductionEventTask` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Profiles` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `RawToPreppedYields` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Recipe` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `RecipeBackup` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `RecipeBook` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `RecipeBookAccess` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `RecipeBookCollection` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `RecipeBookIndex` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `RecipePortions` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Stock` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `StockLocation` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `StockMinimum` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Supplier` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Todo` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `TodoDocument` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `TodoStatus` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `_ComponentToIngredients` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `_CookedYieldsToIngredients` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `_DryCookedYieldsToIngredients` table. If the table is not empty, all the data it contains will be lost.
-  - Added the required column `updated_at` to the `Brand` table without a default value. This is not possible if the table is not empty.
+-- CreateEnum
+CREATE TYPE "EnumMarkUpType" AS ENUM ('markup', 'margin', 'xcost');
 
-*/
+-- CreateEnum
+CREATE TYPE "EnumRecipeType" AS ENUM ('local', 'master', 'unlinked_master');
+
+-- CreateEnum
+CREATE TYPE "EnumDietClassification" AS ENUM ('vegan', 'vegetarian', 'animal_product', 'unknown');
+
 -- CreateEnum
 CREATE TYPE "EnumcomponentIngredientType" AS ENUM ('ingredient', 'step', 'sub');
 
--- DropForeignKey
-ALTER TABLE "Allergy" DROP CONSTRAINT "Allergy_customerId_fkey";
+-- CreateEnum
+CREATE TYPE "EnumPrepInstruction" AS ENUM ('none', 'n10x10', 'n15x15', 'n20x20', 'fine', 'ground', 'grate', 'fresh', 'whole', 'brunoise', 'chiffonade', 'chop', 'cube', 'dice', 'dietClassification', 'julienne', 'mince', 'slice', 'rondelle', 'diagonal', 'batonnet', 'jardiniere', 'macedoine', 'other');
 
--- DropForeignKey
-ALTER TABLE "Component" DROP CONSTRAINT "Component_parentId_fkey";
+-- CreateEnum
+CREATE TYPE "EnumOilPurpose" AS ENUM ('added', 'thin_coating', 'shallow_fry', 'deep_fry');
 
--- DropForeignKey
-ALTER TABLE "Component" DROP CONSTRAINT "Component_recipeId_fkey";
+-- CreateEnum
+CREATE TYPE "EnumUnitType" AS ENUM ('weight', 'liquid');
 
--- DropForeignKey
-ALTER TABLE "ConversationThread" DROP CONSTRAINT "ConversationThread_customerId_fkey";
+-- CreateEnum
+CREATE TYPE "EnumMetricOrImperial" AS ENUM ('metric', 'imperial');
 
--- DropForeignKey
-ALTER TABLE "ConversationThread" DROP CONSTRAINT "ConversationThread_recipeId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ConversationThread" DROP CONSTRAINT "ConversationThread_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "CookedYields" DROP CONSTRAINT "CookedYields_cookedYieldsCategoriesId_fkey";
-
--- DropForeignKey
-ALTER TABLE "CookedYields" DROP CONSTRAINT "CookedYields_ingredientsYieldsId_fkey";
-
--- DropForeignKey
-ALTER TABLE "CostRules" DROP CONSTRAINT "CostRules_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "DryCookedYields" DROP CONSTRAINT "DryCookedYields_dryCookedYieldsCategoriesId_fkey";
-
--- DropForeignKey
-ALTER TABLE "IngredientCategorySecondary" DROP CONSTRAINT "IngredientCategorySecondary_ingredientCategoryPrimaryId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Ingredients" DROP CONSTRAINT "Ingredients_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Ingredients" DROP CONSTRAINT "Ingredients_ingredientDietClassificationId_fkey";
-
--- DropForeignKey
-ALTER TABLE "IngredientsNutrition" DROP CONSTRAINT "IngredientsNutrition_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "IngredientsNutrition" DROP CONSTRAINT "IngredientsNutrition_ingredientsId_fkey";
-
--- DropForeignKey
-ALTER TABLE "IngredientsYields" DROP CONSTRAINT "IngredientsYields_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "IngredientsYields" DROP CONSTRAINT "IngredientsYields_ingredientsId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Markup" DROP CONSTRAINT "Markup_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "OtherCosts" DROP CONSTRAINT "OtherCosts_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "PackagingCosts" DROP CONSTRAINT "PackagingCosts_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "PrepInstructions" DROP CONSTRAINT "PrepInstructions_ingredientsId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ProductionEvent" DROP CONSTRAINT "ProductionEvent_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ProductionEvent" DROP CONSTRAINT "ProductionEvent_recipeId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ProductionEvent" DROP CONSTRAINT "ProductionEvent_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ProductionEventTask" DROP CONSTRAINT "ProductionEventTask_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ProductionEventTask" DROP CONSTRAINT "ProductionEventTask_productionEventId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ProductionEventTask" DROP CONSTRAINT "ProductionEventTask_recipeId_fkey";
-
--- DropForeignKey
-ALTER TABLE "ProductionEventTask" DROP CONSTRAINT "ProductionEventTask_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RawToPreppedYields" DROP CONSTRAINT "RawToPreppedYields_ingredientsId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Recipe" DROP CONSTRAINT "Recipe_brandId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Recipe" DROP CONSTRAINT "Recipe_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBackup" DROP CONSTRAINT "RecipeBackup_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBook" DROP CONSTRAINT "RecipeBook_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBookAccess" DROP CONSTRAINT "RecipeBookAccess_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBookAccess" DROP CONSTRAINT "RecipeBookAccess_recipeBookId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBookCollection" DROP CONSTRAINT "RecipeBookCollection_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBookCollection" DROP CONSTRAINT "RecipeBookCollection_recipeBookId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBookIndex" DROP CONSTRAINT "RecipeBookIndex_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipeBookIndex" DROP CONSTRAINT "RecipeBookIndex_recipeBookId_fkey";
-
--- DropForeignKey
-ALTER TABLE "RecipePortions" DROP CONSTRAINT "RecipePortions_recipeId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Stock" DROP CONSTRAINT "Stock_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Stock" DROP CONSTRAINT "Stock_stockLocationId_fkey";
-
--- DropForeignKey
-ALTER TABLE "StockLocation" DROP CONSTRAINT "StockLocation_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "StockMinimum" DROP CONSTRAINT "StockMinimum_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "StockMinimum" DROP CONSTRAINT "StockMinimum_stockId_fkey";
-
--- DropForeignKey
-ALTER TABLE "StockMinimum" DROP CONSTRAINT "StockMinimum_stockLocationId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Supplier" DROP CONSTRAINT "Supplier_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Todo" DROP CONSTRAINT "Todo_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Todo" DROP CONSTRAINT "Todo_statusId_fkey";
-
--- DropForeignKey
-ALTER TABLE "Todo" DROP CONSTRAINT "Todo_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "TodoDocument" DROP CONSTRAINT "TodoDocument_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "TodoDocument" DROP CONSTRAINT "TodoDocument_todoId_fkey";
-
--- DropForeignKey
-ALTER TABLE "TodoDocument" DROP CONSTRAINT "TodoDocument_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "TodoStatus" DROP CONSTRAINT "TodoStatus_customerId_fkey";
-
--- DropForeignKey
-ALTER TABLE "TodoStatus" DROP CONSTRAINT "TodoStatus_userId_fkey";
-
--- DropForeignKey
-ALTER TABLE "_ComponentToIngredients" DROP CONSTRAINT "_ComponentToIngredients_A_fkey";
-
--- DropForeignKey
-ALTER TABLE "_ComponentToIngredients" DROP CONSTRAINT "_ComponentToIngredients_B_fkey";
-
--- DropForeignKey
-ALTER TABLE "_CookedYieldsToIngredients" DROP CONSTRAINT "_CookedYieldsToIngredients_A_fkey";
-
--- DropForeignKey
-ALTER TABLE "_CookedYieldsToIngredients" DROP CONSTRAINT "_CookedYieldsToIngredients_B_fkey";
-
--- DropForeignKey
-ALTER TABLE "_DryCookedYieldsToIngredients" DROP CONSTRAINT "_DryCookedYieldsToIngredients_A_fkey";
-
--- DropForeignKey
-ALTER TABLE "_DryCookedYieldsToIngredients" DROP CONSTRAINT "_DryCookedYieldsToIngredients_B_fkey";
-
--- AlterTable
-ALTER TABLE "Brand" DROP COLUMN "createdAt",
-DROP COLUMN "updatedAt",
-ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "updated_at" TIMESTAMP(3) NOT NULL;
-
--- DropTable
-DROP TABLE "Allergy";
-
--- DropTable
-DROP TABLE "Component";
-
--- DropTable
-DROP TABLE "ConversationThread";
-
--- DropTable
-DROP TABLE "CookedYields";
-
--- DropTable
-DROP TABLE "CookedYieldsCategories";
-
--- DropTable
-DROP TABLE "CostRules";
-
--- DropTable
-DROP TABLE "Customer";
-
--- DropTable
-DROP TABLE "DryCookedYields";
-
--- DropTable
-DROP TABLE "DryCookedYieldsCategories";
-
--- DropTable
-DROP TABLE "IngredientCategoryPrimary";
-
--- DropTable
-DROP TABLE "IngredientCategorySecondary";
-
--- DropTable
-DROP TABLE "IngredientDietClassification";
-
--- DropTable
-DROP TABLE "Ingredients";
-
--- DropTable
-DROP TABLE "IngredientsNutrition";
-
--- DropTable
-DROP TABLE "IngredientsYields";
-
--- DropTable
-DROP TABLE "Lead";
-
--- DropTable
-DROP TABLE "Markup";
-
--- DropTable
-DROP TABLE "OtherCosts";
-
--- DropTable
-DROP TABLE "PackagingCosts";
-
--- DropTable
-DROP TABLE "PrepInstructions";
-
--- DropTable
-DROP TABLE "ProductionEvent";
-
--- DropTable
-DROP TABLE "ProductionEventTask";
-
--- DropTable
-DROP TABLE "Profiles";
-
--- DropTable
-DROP TABLE "RawToPreppedYields";
-
--- DropTable
-DROP TABLE "Recipe";
-
--- DropTable
-DROP TABLE "RecipeBackup";
-
--- DropTable
-DROP TABLE "RecipeBook";
-
--- DropTable
-DROP TABLE "RecipeBookAccess";
-
--- DropTable
-DROP TABLE "RecipeBookCollection";
-
--- DropTable
-DROP TABLE "RecipeBookIndex";
-
--- DropTable
-DROP TABLE "RecipePortions";
-
--- DropTable
-DROP TABLE "Stock";
-
--- DropTable
-DROP TABLE "StockLocation";
-
--- DropTable
-DROP TABLE "StockMinimum";
-
--- DropTable
-DROP TABLE "Supplier";
-
--- DropTable
-DROP TABLE "Todo";
-
--- DropTable
-DROP TABLE "TodoDocument";
-
--- DropTable
-DROP TABLE "TodoStatus";
-
--- DropTable
-DROP TABLE "User";
-
--- DropTable
-DROP TABLE "_ComponentToIngredients";
-
--- DropTable
-DROP TABLE "_CookedYieldsToIngredients";
-
--- DropTable
-DROP TABLE "_DryCookedYieldsToIngredients";
-
--- DropEnum
-DROP TYPE "EnumComponentIngredientType";
+-- CreateEnum
+CREATE TYPE "EnumPrimaryCategory" AS ENUM ('alcoholic_beverages', 'baking_ingredients', 'broths_stocks', 'condiments_sauces', 'dairy', 'eggs', 'fats_oils', 'fermented_foods', 'flavorings_extracts', 'fruits', 'grains_cereals', 'herbs_spices', 'legumes', 'meat', 'mushrooms', 'non_alcoholic_beverages', 'nuts_seeds', 'other', 'pasta_noodles', 'plant_based_proteins', 'poultry', 'seafood', 'seaweed', 'sugars_sweeteners', 'vegetables', 'vitamins_minerals_supplements', 'water');
 
 -- CreateTable
 CREATE TABLE "profiles" (
@@ -422,7 +81,7 @@ CREATE TABLE "prep_instructions" (
     "yield" DOUBLE PRECISION,
     "is_live" BOOLEAN NOT NULL DEFAULT true,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "ingredientsId" INTEGER,
+    "ingredients_id" INTEGER,
 
     CONSTRAINT "prep_instructions_pkey" PRIMARY KEY ("id")
 );
@@ -451,6 +110,7 @@ CREATE TABLE "cooked_yields_categories" (
     "yield" DOUBLE PRECISION,
     "is_live" BOOLEAN NOT NULL DEFAULT true,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "cooked_yields_categories_pkey" PRIMARY KEY ("id")
 );
@@ -458,13 +118,13 @@ CREATE TABLE "cooked_yields_categories" (
 -- CreateTable
 CREATE TABLE "cooked_yields" (
     "id" SERIAL NOT NULL,
-    "raw" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "cooked" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "deep_fry" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "shallow_fry" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "boiled" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "roasted" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "name" TEXT NOT NULL,
+    "translation" JSONB,
+    "desc" TEXT,
+    "is_live" BOOLEAN NOT NULL DEFAULT true,
+    "yield" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "cooked_yields_categories_id" INTEGER,
     "ingredients_yields_id" INTEGER,
 
@@ -499,20 +159,50 @@ CREATE TABLE "dry_cooked_yields" (
 );
 
 -- CreateTable
+CREATE TABLE "ingredients_religious_certification" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL DEFAULT 'unknown',
+
+    CONSTRAINT "ingredients_religious_certification_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "ingredients" (
     "id" SERIAL NOT NULL,
-    "customer_id" INTEGER,
-    "isDefault" BOOLEAN DEFAULT false,
     "name" TEXT NOT NULL,
-    "nameAlt" TEXT,
+    "name_orig" TEXT,
+    "names_alt" TEXT,
+    "customer_id" INTEGER,
+    "is_default" BOOLEAN DEFAULT false,
     "translation" JSONB,
-    "primary_category" TEXT,
+    "primary_category_id" INTEGER,
     "secondary_category" TEXT,
-    "dietary_classificationId" INTEGER,
-    "created_nat" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "dietary_classification_id" INTEGER,
+    "kosher_id" INTEGER,
+    "halal_id" INTEGER,
+    "confidence" DOUBLE PRECISION,
+    "ai_model" TEXT,
+    "allergyId" INTEGER,
 
     CONSTRAINT "ingredients_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ingredient_cooked_yields" (
+    "id" SERIAL NOT NULL,
+    "ingredients_id" INTEGER,
+    "raw" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "cooked" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "deep_fry" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "shallow_fry" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "boiled" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "roasted" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "ingredient_cooked_yields_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -521,7 +211,7 @@ CREATE TABLE "ingredient_category_primary" (
     "name" TEXT NOT NULL,
     "translation" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3),
 
     CONSTRAINT "ingredient_category_primary_pkey" PRIMARY KEY ("id")
 );
@@ -530,10 +220,10 @@ CREATE TABLE "ingredient_category_primary" (
 CREATE TABLE "ingredient_category_secondary" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "ingredientCategoryPrimaryId" INTEGER NOT NULL,
+    "ingredient_category_primary_id" INTEGER NOT NULL,
     "translation" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3),
 
     CONSTRAINT "ingredient_category_secondary_pkey" PRIMARY KEY ("id")
 );
@@ -553,9 +243,9 @@ CREATE TABLE "dietary_classification" (
 CREATE TABLE "ingredients_yields" (
     "id" SERIAL NOT NULL,
     "customer_id" INTEGER,
-    "isDefault" BOOLEAN DEFAULT false,
+    "is_default" BOOLEAN DEFAULT false,
     "name" TEXT NOT NULL,
-    "ingredientsId" INTEGER,
+    "ingredients_id" INTEGER,
     "yield" DOUBLE PRECISION,
     "is_live" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -568,8 +258,8 @@ CREATE TABLE "ingredients_yields" (
 CREATE TABLE "ingredients_nutrition" (
     "id" SERIAL NOT NULL,
     "customer_id" INTEGER,
-    "isDefault" BOOLEAN DEFAULT false,
-    "ingredientsId" INTEGER,
+    "is_default" BOOLEAN DEFAULT false,
+    "ingredients_id" INTEGER,
     "kcal_per_100g" DOUBLE PRECISION DEFAULT 0,
     "kj_per_100g" DOUBLE PRECISION DEFAULT 0,
     "protein_per_100g" DOUBLE PRECISION DEFAULT 0,
@@ -611,7 +301,7 @@ CREATE TABLE "supplier" (
     "whatsapp" TEXT,
     "account_email" TEXT,
     "account_name" TEXT,
-    "accountTel" TEXT,
+    "account_tel" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -621,8 +311,10 @@ CREATE TABLE "supplier" (
 -- CreateTable
 CREATE TABLE "allergy" (
     "id" SERIAL NOT NULL,
-    "customer_id" INTEGER NOT NULL,
+    "customer_id" INTEGER,
     "name" TEXT NOT NULL,
+    "desc" TEXT NOT NULL,
+    "translation" JSONB,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -630,9 +322,20 @@ CREATE TABLE "allergy" (
 );
 
 -- CreateTable
+CREATE TABLE "allergy_ingredient" (
+    "id" SERIAL NOT NULL,
+    "allergy_id" INTEGER NOT NULL,
+    "ingredient_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+
+    CONSTRAINT "allergy_ingredient_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "stock" (
     "id" SERIAL NOT NULL,
-    "stock_locationId" INTEGER NOT NULL,
+    "stock_location_id" INTEGER NOT NULL,
     "customer_id" INTEGER NOT NULL,
     "qty" DOUBLE PRECISION NOT NULL,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
@@ -645,8 +348,8 @@ CREATE TABLE "stock" (
 -- CreateTable
 CREATE TABLE "stock_minimum" (
     "id" SERIAL NOT NULL,
-    "stockId" INTEGER NOT NULL,
-    "stock_locationId" INTEGER NOT NULL,
+    "stock_id" INTEGER NOT NULL,
+    "stock_location_id" INTEGER NOT NULL,
     "customer_id" INTEGER NOT NULL,
     "qty" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -661,7 +364,7 @@ CREATE TABLE "stock_location" (
     "customer_id" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "stock_location_pkey" PRIMARY KEY ("id")
 );
@@ -695,7 +398,7 @@ CREATE TABLE "recipe_book" (
 );
 
 -- CreateTable
-CREATE TABLE "recipe_bookIndex" (
+CREATE TABLE "recipe_book_index" (
     "id" SERIAL NOT NULL,
     "recipe_book_id" INTEGER NOT NULL,
     "customer_id" INTEGER NOT NULL,
@@ -704,7 +407,7 @@ CREATE TABLE "recipe_bookIndex" (
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "recipe_bookIndex_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "recipe_book_index_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -736,7 +439,7 @@ CREATE TABLE "todo" (
     "id" SERIAL NOT NULL,
     "profiles_id" INTEGER NOT NULL,
     "customer_id" INTEGER NOT NULL,
-    "statusId" INTEGER NOT NULL,
+    "status_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -797,7 +500,7 @@ CREATE TABLE "production_event" (
 -- CreateTable
 CREATE TABLE "production_event_task" (
     "id" SERIAL NOT NULL,
-    "production_eventId" INTEGER NOT NULL,
+    "production_event_id" INTEGER NOT NULL,
     "profiles_id" INTEGER NOT NULL,
     "customer_id" INTEGER NOT NULL,
     "recipe_id" INTEGER NOT NULL,
@@ -865,12 +568,12 @@ CREATE TABLE "recipe" (
     "markup_id" JSONB NOT NULL,
     "setting" JSONB NOT NULL,
     "customer_id" INTEGER NOT NULL,
+    "brand_id" INTEGER NOT NULL,
     "type" "EnumRecipeType" NOT NULL,
     "version" TEXT NOT NULL,
     "versions" JSONB NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "brandId" INTEGER NOT NULL,
 
     CONSTRAINT "recipe_pkey" PRIMARY KEY ("id")
 );
@@ -908,11 +611,25 @@ CREATE TABLE "component" (
 );
 
 -- CreateTable
-CREATE TABLE "_cooked_yieldsToingredients" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
+CREATE TABLE "brand" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "logoSrc" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "_cooked_yieldsToingredients_AB_pkey" PRIMARY KEY ("A","B")
+    CONSTRAINT "brand_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "webhook_queue" (
+    "id" SERIAL NOT NULL,
+    "ingredient_id" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "processed" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "webhook_queue_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -938,7 +655,7 @@ CREATE UNIQUE INDEX "profiles_profiles_id_key" ON "profiles"("profiles_id");
 CREATE UNIQUE INDEX "customer_email_key" ON "customer"("email");
 
 -- CreateIndex
-CREATE INDEX "_cooked_yieldsToingredients_B_index" ON "_cooked_yieldsToingredients"("B");
+CREATE UNIQUE INDEX "ingredients_name_key" ON "ingredients"("name");
 
 -- CreateIndex
 CREATE INDEX "_dry_cooked_yieldsToingredients_B_index" ON "_dry_cooked_yieldsToingredients"("B");
@@ -947,7 +664,7 @@ CREATE INDEX "_dry_cooked_yieldsToingredients_B_index" ON "_dry_cooked_yieldsToi
 CREATE INDEX "_componentToingredients_B_index" ON "_componentToingredients"("B");
 
 -- AddForeignKey
-ALTER TABLE "prep_instructions" ADD CONSTRAINT "prep_instructions_ingredientsId_fkey" FOREIGN KEY ("ingredientsId") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "prep_instructions" ADD CONSTRAINT "prep_instructions_ingredients_id_fkey" FOREIGN KEY ("ingredients_id") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "raw_to_prepped_yields" ADD CONSTRAINT "raw_to_prepped_yields_ingredients_id_fkey" FOREIGN KEY ("ingredients_id") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -965,40 +682,61 @@ ALTER TABLE "dry_cooked_yields" ADD CONSTRAINT "dry_cooked_yields_dry_cooked_yie
 ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_dietary_classificationId_fkey" FOREIGN KEY ("dietary_classificationId") REFERENCES "dietary_classification"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_primary_category_id_fkey" FOREIGN KEY ("primary_category_id") REFERENCES "ingredient_category_primary"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ingredient_category_secondary" ADD CONSTRAINT "ingredient_category_secondary_ingredientCategoryPrimaryId_fkey" FOREIGN KEY ("ingredientCategoryPrimaryId") REFERENCES "ingredient_category_primary"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_dietary_classification_id_fkey" FOREIGN KEY ("dietary_classification_id") REFERENCES "dietary_classification"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_kosher_id_fkey" FOREIGN KEY ("kosher_id") REFERENCES "ingredients_religious_certification"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_halal_id_fkey" FOREIGN KEY ("halal_id") REFERENCES "ingredients_religious_certification"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ingredients" ADD CONSTRAINT "ingredients_allergyId_fkey" FOREIGN KEY ("allergyId") REFERENCES "allergy"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ingredient_cooked_yields" ADD CONSTRAINT "ingredient_cooked_yields_ingredients_id_fkey" FOREIGN KEY ("ingredients_id") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ingredient_category_secondary" ADD CONSTRAINT "ingredient_category_secondary_ingredient_category_primary__fkey" FOREIGN KEY ("ingredient_category_primary_id") REFERENCES "ingredient_category_primary"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ingredients_yields" ADD CONSTRAINT "ingredients_yields_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ingredients_yields" ADD CONSTRAINT "ingredients_yields_ingredientsId_fkey" FOREIGN KEY ("ingredientsId") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ingredients_yields" ADD CONSTRAINT "ingredients_yields_ingredients_id_fkey" FOREIGN KEY ("ingredients_id") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ingredients_nutrition" ADD CONSTRAINT "ingredients_nutrition_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ingredients_nutrition" ADD CONSTRAINT "ingredients_nutrition_ingredientsId_fkey" FOREIGN KEY ("ingredientsId") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ingredients_nutrition" ADD CONSTRAINT "ingredients_nutrition_ingredients_id_fkey" FOREIGN KEY ("ingredients_id") REFERENCES "ingredients"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "supplier" ADD CONSTRAINT "supplier_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "allergy" ADD CONSTRAINT "allergy_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "allergy" ADD CONSTRAINT "allergy_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "stock" ADD CONSTRAINT "stock_stock_locationId_fkey" FOREIGN KEY ("stock_locationId") REFERENCES "stock_location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "allergy_ingredient" ADD CONSTRAINT "allergy_ingredient_allergy_id_fkey" FOREIGN KEY ("allergy_id") REFERENCES "allergy"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "allergy_ingredient" ADD CONSTRAINT "allergy_ingredient_ingredient_id_fkey" FOREIGN KEY ("ingredient_id") REFERENCES "ingredients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "stock" ADD CONSTRAINT "stock_stock_location_id_fkey" FOREIGN KEY ("stock_location_id") REFERENCES "stock_location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "stock" ADD CONSTRAINT "stock_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "stock_minimum" ADD CONSTRAINT "stock_minimum_stockId_fkey" FOREIGN KEY ("stockId") REFERENCES "stock"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "stock_minimum" ADD CONSTRAINT "stock_minimum_stock_id_fkey" FOREIGN KEY ("stock_id") REFERENCES "stock"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "stock_minimum" ADD CONSTRAINT "stock_minimum_stock_locationId_fkey" FOREIGN KEY ("stock_locationId") REFERENCES "stock_location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "stock_minimum" ADD CONSTRAINT "stock_minimum_stock_location_id_fkey" FOREIGN KEY ("stock_location_id") REFERENCES "stock_location"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "stock_minimum" ADD CONSTRAINT "stock_minimum_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1013,10 +751,10 @@ ALTER TABLE "recipe_backup" ADD CONSTRAINT "recipe_backup_customer_id_fkey" FORE
 ALTER TABLE "recipe_book" ADD CONSTRAINT "recipe_book_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "recipe_bookIndex" ADD CONSTRAINT "recipe_bookIndex_recipe_book_id_fkey" FOREIGN KEY ("recipe_book_id") REFERENCES "recipe_book"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recipe_book_index" ADD CONSTRAINT "recipe_book_index_recipe_book_id_fkey" FOREIGN KEY ("recipe_book_id") REFERENCES "recipe_book"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "recipe_bookIndex" ADD CONSTRAINT "recipe_bookIndex_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recipe_book_index" ADD CONSTRAINT "recipe_book_index_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipe_book_collection" ADD CONSTRAINT "recipe_book_collection_recipe_book_id_fkey" FOREIGN KEY ("recipe_book_id") REFERENCES "recipe_book"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1037,7 +775,7 @@ ALTER TABLE "todo" ADD CONSTRAINT "todo_profiles_id_fkey" FOREIGN KEY ("profiles
 ALTER TABLE "todo" ADD CONSTRAINT "todo_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "todo" ADD CONSTRAINT "todo_statusId_fkey" FOREIGN KEY ("statusId") REFERENCES "todo_status"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "todo" ADD CONSTRAINT "todo_status_id_fkey" FOREIGN KEY ("status_id") REFERENCES "todo_status"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "todo_status" ADD CONSTRAINT "todo_status_profiles_id_fkey" FOREIGN KEY ("profiles_id") REFERENCES "profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1073,7 +811,7 @@ ALTER TABLE "production_event" ADD CONSTRAINT "production_event_customer_id_fkey
 ALTER TABLE "production_event" ADD CONSTRAINT "production_event_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "recipe"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "production_event_task" ADD CONSTRAINT "production_event_task_production_eventId_fkey" FOREIGN KEY ("production_eventId") REFERENCES "production_event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "production_event_task" ADD CONSTRAINT "production_event_task_production_event_id_fkey" FOREIGN KEY ("production_event_id") REFERENCES "production_event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "production_event_task" ADD CONSTRAINT "production_event_task_profiles_id_fkey" FOREIGN KEY ("profiles_id") REFERENCES "profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1100,7 +838,7 @@ ALTER TABLE "markup" ADD CONSTRAINT "markup_customer_id_fkey" FOREIGN KEY ("cust
 ALTER TABLE "recipe" ADD CONSTRAINT "recipe_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customer"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "recipe" ADD CONSTRAINT "recipe_brandId_fkey" FOREIGN KEY ("brandId") REFERENCES "Brand"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recipe" ADD CONSTRAINT "recipe_brand_id_fkey" FOREIGN KEY ("brand_id") REFERENCES "brand"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipe_portions" ADD CONSTRAINT "recipe_portions_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "recipe"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -1112,10 +850,7 @@ ALTER TABLE "component" ADD CONSTRAINT "component_parent_id_fkey" FOREIGN KEY ("
 ALTER TABLE "component" ADD CONSTRAINT "component_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "recipe"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "_cooked_yieldsToingredients" ADD CONSTRAINT "_cooked_yieldsToingredients_A_fkey" FOREIGN KEY ("A") REFERENCES "cooked_yields"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "_cooked_yieldsToingredients" ADD CONSTRAINT "_cooked_yieldsToingredients_B_fkey" FOREIGN KEY ("B") REFERENCES "ingredients"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "webhook_queue" ADD CONSTRAINT "webhook_queue_ingredient_id_fkey" FOREIGN KEY ("ingredient_id") REFERENCES "ingredients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_dry_cooked_yieldsToingredients" ADD CONSTRAINT "_dry_cooked_yieldsToingredients_A_fkey" FOREIGN KEY ("A") REFERENCES "dry_cooked_yields"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -1128,3 +863,4 @@ ALTER TABLE "_componentToingredients" ADD CONSTRAINT "_componentToingredients_A_
 
 -- AddForeignKey
 ALTER TABLE "_componentToingredients" ADD CONSTRAINT "_componentToingredients_B_fkey" FOREIGN KEY ("B") REFERENCES "ingredients"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+

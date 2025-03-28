@@ -2,10 +2,16 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider  = "postgresql"
+//   url       = env("POSTGRESQL_URI")
+//   directUrl = env("POSTGRESQL_DIRECT_URI")
+// }
+
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRESQL_URI")
-  directUrl = env("POSTGRESQL_DIRECT_URI")
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // OLD AUTH MODEL
@@ -276,6 +282,7 @@ model raw_to_prepped_yields {
   updated_at       DateTime     @updatedAt
   ingredients      ingredients? @relation(fields: [ingredients_id], references: [id])
   ingredients_id   Int?
+  // @@map("raw_to_prepped_yields")
 }
 
 // LISTS of cooked yield categories for dropdown menus
@@ -400,9 +407,9 @@ model ingredient_category_primary {
   id                            Int                             @id @default(autoincrement())
   name                          String
   translation                   Json?
-  ingredient_category_secondary ingredient_category_secondary[]
   created_at                    DateTime                        @default(now())
-  updated_at                    DateTime                        @updatedAt
+  updated_at                    DateTime?                       @updatedAt
+  ingredient_category_secondary ingredient_category_secondary[]
   ingredients                   ingredients[]
 }
 
@@ -413,7 +420,7 @@ model ingredient_category_secondary {
   ingredient_category_primary_id Int
   translation                    Json?
   created_at                     DateTime                    @default(now())
-  updated_at                     DateTime                    @updatedAt
+  updated_at                     DateTime?                   @updatedAt
 }
 
 // Vegan, Veg, Animal Product, None
