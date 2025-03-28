@@ -1,11 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
+import prisma from "@/libs/prisma";
 
 // // Initialize Prisma and Supabase clients
-export const prisma = new PrismaClient();
+// export const prisma = new PrismaClient();
 // const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!);
 
-// TODO: For Image Uplaod
+// TODO: For Image Upload
 export const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 // the URL to access table Define supported table names
@@ -30,7 +31,6 @@ export const TABLES = [
   "stocklocations",
   "stockminimum",
   "todos",
-
 ] as const;
 
 export type TableName = (typeof TABLES)[number];
@@ -59,7 +59,6 @@ export const modelMap: {
   stocklocations: prisma.stock_location,
   stockminimum: prisma.stock_minimum,
   todos: prisma.todo,
-
 
   // Add remaining mappings
 };
