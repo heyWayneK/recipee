@@ -127,8 +127,12 @@ export async function GET(request: Request) {
       name = body?.name;
       if (!id || !name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
     } else if (method === "GET") {
-      id = 1;
-      name = "garlic";
+      const url = new URL(request.url);
+      id = Number(url.searchParams.get("id"));
+      name = url.searchParams.get("name") || "";
+      if (!id || !name) {
+        return NextResponse.json({ error: "GET method no supported - Missing id or name" }, { status: 400 });
+      }
     } else {
       return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
     }
