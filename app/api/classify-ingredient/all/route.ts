@@ -124,7 +124,7 @@ export async function POST(request: Request) {
 
     if (method === "POST") {
       const body = await request.json();
-      if (!body.id || !body.name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
+      if (!body.id || !body.name) NextResponse.json({ error: "Missing POST: id & name" }, { status: 400 });
       id = body?.id;
       name = body?.name;
       if (!id || !name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
@@ -260,9 +260,10 @@ export async function POST(request: Request) {
     // CORRECT SPELLING OF INGREDIENT NAME to most common spelling or use the original names
     const name_correct_spelling = jsonData.name_correct_spelling || name;
 
-    // GET id = name arrays for relational checks
     // Execute all database queries concurrently using Promise.all
-    const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray, correctSpellingNameExists] = await Promise.all([
+    // GET id/name arrays for relational checks
+    // const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray, correctSpellingNameExists] = await Promise.all([
+    const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray] = await Promise.all([
       // INGREDIENT CATEGORY e.g. Vegetable, Fruit, Meat, etc.
       prisma.ingredient_category_primary.findMany({
         select: {
@@ -296,14 +297,15 @@ export async function POST(request: Request) {
       }),
 
       // DOES CORRECT SPELLING OF INGREDIENT NAME ALREADY EXIST IN THE DATABASE
-      prisma.ingredients.findFirst({
-        select: {
-          id: true,
-        },
-        where: {
-          name: name_correct_spelling,
-        },
-      }),
+      //  FUTURE: Think we can delete this - We always correct the spelling
+      // prisma.ingredients.findFirst({
+      //   select: {
+      //     id: true,
+      //   },
+      //   where: {
+      //     name: name_correct_spelling,
+      //   },
+      // }),
     ]);
 
     if (!primaryCatArray || primaryCatArray.length === 0) {
@@ -519,22 +521,22 @@ export async function POST(request: Request) {
   }
 }
 
-// export async function GET(request: Request) {
-//   try {
-//     console.log("GET METHOD");
-//     // Handle GET request
-//     const url = new URL(request.url);
-//     const id = Number(url.searchParams.get("id"));
-//     const name = url.searchParams.get("name");
-//     if (!id || !name) {
-//       return NextResponse.json({ error: "USE POST instead - Missing id or name" }, { status: 400 });
-//     }
-//     // Process the webhook payload
-//     // return NextResponse.json({ message: `GET METHOD name: ${name}, id: ${id}` }, { status: 200 });
-//   } catch (error) {
-//     // Determine the HTTP method of the request
-//     return NextResponse.json({ error: `Please use POST` }, { status: 405 });
-//   }
-// }
+export async function GET(request: Request) {
+  try {
+    console.log("GET METHOD - Use POST instead");
+    // Handle GET request
+    const url = new URL(request.url);
+    const id = Number(url.searchParams.get("id"));
+    const name = url.searchParams.get("name");
+    if (!id || !name) {
+      return NextResponse.json({ error: "USE POST instead - Missing id or name" }, { status: 400 });
+    }
+    // Process the webhook payload
+    return NextResponse.json({ message: `Error - USE POST INSTEAD` }, { status: 200 });
+  } catch (error) {
+    // Determine the HTTP method of the request
+    return NextResponse.json({ error: `Error - Please use POST` }, { status: 405 });
+  }
+}
 
 // export async function POST(request: Request) {
