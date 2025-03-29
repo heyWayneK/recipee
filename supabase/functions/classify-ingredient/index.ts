@@ -17,6 +17,7 @@ Deno.serve(async (req: Request) => {
   console.log("STARTING Ingredients:", ingredients);
 
   if (fetchError) {
+    console.log("Error fetching ingredients:", fetchError);
     return new Response(JSON.stringify({ error: fetchError.message }), { status: 400 });
   }
 
