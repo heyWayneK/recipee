@@ -260,28 +260,28 @@ model customer {
 // }
 
 model prep_instructions {
-  id             Int          @id @default(autoincrement())
+  id             Int         @id @default(autoincrement())
   name           String
   translation    Json?
   desc           String?
   yield          Float?
-  is_live        Boolean      @default(true)
-  updated_at     DateTime     @updatedAt
-  ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
-  ingredients_id Int?
+  is_live        Boolean     @default(true)
+  updated_at     DateTime    @updatedAt
+  ingredients    ingredients @relation(fields: [ingredients_id], references: [id])
+  ingredients_id Int
 }
 
 model raw_to_prepped_yields {
-  id               Int          @id @default(autoincrement())
-  whole            Float        @default(0)
-  peeled           Float        @default(0)
-  peeled_and_cored Float        @default(0)
-  diced            Float        @default(0)
-  sliced           Float        @default(0)
-  grated           Float        @default(0)
-  updated_at       DateTime     @updatedAt
-  ingredients      ingredients? @relation(fields: [ingredients_id], references: [id])
-  ingredients_id   Int?
+  id               Int         @id @default(autoincrement())
+  whole            Float       @default(0)
+  peeled           Float       @default(0)
+  peeled_and_cored Float       @default(0)
+  diced            Float       @default(0)
+  sliced           Float       @default(0)
+  grated           Float       @default(0)
+  updated_at       DateTime    @updatedAt
+  ingredients      ingredients @relation(fields: [ingredients_id], references: [id])
+  ingredients_id   Int         @unique
   // @@map("raw_to_prepped_yields")
 }
 
@@ -390,17 +390,17 @@ model ingredients {
 
 // LISTS of cooked yield for dropdown menus
 model ingredient_cooked_yields {
-  id             Int          @id @default(autoincrement())
-  ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
-  ingredients_id Int?
-  raw            Float        @default(0)
-  cooked         Float        @default(0)
-  deep_fry       Float        @default(0)
-  shallow_fry    Float        @default(0)
-  boiled         Float        @default(0)
-  roasted        Float        @default(0)
-  updated_at     DateTime     @updatedAt
-  created_at     DateTime     @default(now())
+  id             Int         @id @default(autoincrement())
+  ingredients    ingredients @relation(fields: [ingredients_id], references: [id])
+  ingredients_id Int         @unique
+  raw            Float       @default(0)
+  cooked         Float       @default(0)
+  deep_fry       Float       @default(0)
+  shallow_fry    Float       @default(0)
+  boiled         Float       @default(0)
+  roasted        Float       @default(0)
+  updated_at     DateTime    @updatedAt
+  created_at     DateTime    @default(now())
 }
 
 model ingredient_category_primary {
@@ -449,33 +449,33 @@ model ingredients_yields {
 }
 
 model ingredients_nutrition {
-  id                        Int          @id @default(autoincrement())
-  customer                  customer?    @relation(fields: [customer_id], references: [id])
+  id                        Int         @id @default(autoincrement())
+  customer                  customer?   @relation(fields: [customer_id], references: [id])
   customer_id               Int?
-  is_default                Boolean?     @default(false)
-  ingredients               ingredients? @relation(fields: [ingredients_id], references: [id])
-  ingredients_id            Int?
-  kcal_per_100g             Float?       @default(0)
-  kj_per_100g               Float?       @default(0)
-  protein_per_100g          Float?       @default(0)
-  fat_per_100g              Float?       @default(0)
-  saturated_fat_per_100g    Float?       @default(0)
-  monounsaturate_per_100g   Float?       @default(0)
-  polyunsaturate_per_100g   Float?       @default(0)
-  trans_fats_per_100g       Float?       @default(0)
-  omega3_per_100g           Float?       @default(0)
-  omega6_per_100g           Float?       @default(0)
-  omega9_per_100g           Float?       @default(0)
-  carbs_per_100g            Float?       @default(0)
-  net_carbs_per_100g        Float?       @default(0)
-  carbohydrates_per_100g    Float?       @default(0)
-  total_sugar_per_100g      Float?       @default(0)
-  added_sugar_per_100g      Float?       @default(0)
-  artificial_sugar_per_100g Float?       @default(0)
-  fibre_per_100g            Float?       @default(0)
-  starch_per_100g           Float?       @default(0)
-  salt_per_100g             Float?       @default(0)
-  sodium_per_100g           Float?       @default(0)
+  is_default                Boolean?    @default(false)
+  ingredients               ingredients @relation(fields: [ingredients_id], references: [id])
+  ingredients_id            Int         @unique
+  kcal_per_100g             Float?      @default(0)
+  kj_per_100g               Float?      @default(0)
+  protein_per_100g          Float?      @default(0)
+  fat_per_100g              Float?      @default(0)
+  saturated_fat_per_100g    Float?      @default(0)
+  monounsaturate_per_100g   Float?      @default(0)
+  polyunsaturate_per_100g   Float?      @default(0)
+  trans_fats_per_100g       Float?      @default(0)
+  omega3_per_100g           Float?      @default(0)
+  omega6_per_100g           Float?      @default(0)
+  omega9_per_100g           Float?      @default(0)
+  carbs_per_100g            Float?      @default(0)
+  net_carbs_per_100g        Float?      @default(0)
+  carbohydrates_per_100g    Float?      @default(0)
+  total_sugar_per_100g      Float?      @default(0)
+  added_sugar_per_100g      Float?      @default(0)
+  artificial_sugar_per_100g Float?      @default(0)
+  fibre_per_100g            Float?      @default(0)
+  starch_per_100g           Float?      @default(0)
+  salt_per_100g             Float?      @default(0)
+  sodium_per_100g           Float?      @default(0)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

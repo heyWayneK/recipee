@@ -3,14 +3,18 @@ import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 import OpenAI from "openai"; //for X/grok too
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// FIXME: Add Jest and Cypres tests - based on server TotalTimeSecs < 15 seconds
+// FIXME: 15 secs is the Vercel Max time limit (It can be longer, with MUCH higher pricing)
 import { all } from "cypress/types/bluebird";
-import { el } from "date-fns/locale";
-import { PrismaClient } from "@prisma/client";
 
-// import { PrismaClient } from "@prisma/client";
-// const prisma = new PrismaClient();
+/* TESTING: CHECK WHAT OPEN-AI MODELS ARE AVAILABLE TO MY ACCOUNT
+ curl https://api.openai.com/v1/models \
+  -H "Authorization: Bearer OPENAI_API_KEY" */
 
-// Genreric Ai Prompt
+// TESTING: XAI:  curl -X GET "https://api.x.ai/v1" -H "Authorization: Bearer OPENAI_API_KEY" -H "Content-Type: application/json"
+
+// GENERIC role/content Ai Prompt [{}]
 interface PromptMessage {
   role: "system" | "user" | "assistant";
   content: string;
@@ -25,7 +29,7 @@ interface OpenAIPrompt {
   presence_penalty?: number; // sOptional: Encourages new topics
 }
 
-// Gemini prompt/request
+// GEMINI prompt/request
 interface GeminiPrompt {
   model: string; // e.g., "gemini-pro" (hypothetical)
   messages: PromptMessage[]; // Array of messages
@@ -33,22 +37,18 @@ interface GeminiPrompt {
   maxTokens?: number; // Optional: Limits response length
   stream?: boolean; // Optional: Stream responses
 }
+
 type openAiModels = "gpt-4o-2024-05-13" | "gpt-4" | "gpt-3.5-turbo" | "gpt-4o-2024-05-13";
 
-/* TESTING: CHECK WHAT OPEN AI MODELS ARE AVAILABLE
- curl https://api.openai.com/v1/models \
-  -H "Authorization: Bearer OPENAI_API_KEY" */
-
 const sdks = {
-  openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
   xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-2-latest" },
-  gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
+  // FUTURE: Switch Models if Xai is not available
+  // openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
+  // gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
 };
 
 type TSDK = "openai" | "xai" | "gemini";
-const useSdk: TSDK = "xai";
-
-// TESTING: curl -X GET "https://api.x.ai/v1" -H "Authorization: Bearer OPENAI_API_KEY" -H "Content-Type: application/json"
+let useSdk: TSDK = "xai"; // Default
 
 // type TAllergyConnect = { id: number };
 // type TIngredientObj = { ingredient: { connect: TAllergyConnect }; allergy: { connect: TAllergyConnect }; updated_at: Date };
@@ -110,12 +110,14 @@ function matchPrimaryCategoryId(primaryCatArray: { id: number; name: string }[],
 }
 
 // export async function handler(request: Request) {
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
     const startTime = Date.now();
     let jsonData = null;
     let id: number;
     let name: string;
+    // WHICH AI SDK TO USE
+    useSdk = "xai";
 
     // Determine the HTTP method of the request
     const method = request.method;
@@ -126,13 +128,15 @@ export async function GET(request: Request) {
       id = body?.id;
       name = body?.name;
       if (!id || !name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
-    } else if (method === "GET") {
-      const url = new URL(request.url);
-      id = Number(url.searchParams.get("id"));
-      name = url.searchParams.get("name") || "";
-      if (!id || !name) {
-        return NextResponse.json({ error: "GET method no supported - Missing id or name" }, { status: 400 });
-      }
+      // TESTING: For testing in future using GET
+      // TESTING: https://recipee.app/api/classify-ingredient/all?name=all%20bran%20Flakes&id=33
+      // } else if (method === "GET") {
+      //   const url = new URL(request.url);
+      //   id = Number(url.searchParams.get("id"));
+      //   name = url.searchParams.get("name") || "";
+      //   if (!id || !name) {
+      //     return NextResponse.json({ error: "GET method no supported - Missing id or name" }, { status: 400 });
+      //   }
     } else {
       return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
     }
@@ -141,7 +145,9 @@ export async function GET(request: Request) {
       {
         role: "system",
         content:
-          "You are a food classification and nutrition expert. Cooked_yields values can be higher than 1 (e.g. rice and pasta). Alternative_names are for wholefoods that have other names (e.g. aubergine, eggplant). Provide a JSON response with no extra text, following this structure:\n" +
+          "You are a food classification and nutrition expert. Cooked_yields values can be higher than 1 (e.g. rice and pasta). Alternative_names are for wholefoods that have other names (e.g. aubergine, eggplant).\n" +
+          "Multiple Allergies can be returned as a pipe delimited list please e.g. (wheat|gluten)\n" +
+          "Provide a JSON response with no extra text, following this structure:\n" +
           `Rules for halal classification:
           - Pork and its derivatives (e.g., bacon, ham, sausage from pork) are always haram, so "halal" must be "no".
           - Meat is halal ("likely") only if from a permissible animal (e.g., cow, sheep, chicken) and slaughtered per Islamic guidelines (blessing said, blood drained).
@@ -223,35 +229,38 @@ export async function GET(request: Request) {
         temperature: 0.3, // Lows temperature for consistency
       });
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
-    } else if (useSdk === "openai") {
-      const response = await sdks.openai.connect.chat.completions.create(
-        {
-          model: sdks.openai.model,
-          messages: prompt,
-          temperature: 0.3,
-          // max_tokens: 150,
-        },
-        {
-          headers: {
-            organization: "org-qqfxsQUxiycsDzEmw7bCxleY",
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      jsonData = JSON.parse(response.choices[0].message.content?.replace("```json\n", "").replace("\n```", "") ?? "{}");
-    } else if (useSdk === "gemini") {
-      const genAI = sdks.gemini.connect;
-      const model = genAI.getGenerativeModel({ model: sdks.gemini.model });
-      const response = await model.generateContent(JSON.stringify(prompt));
-      jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
     }
+    // FUTURE: Switch Models if Xai is not available
+    // else if (useSdk === "openai") {
+    //   const response = await sdks.openai.connect.chat.completions.create(
+    //     {
+    //       model: sdks.openai.model,
+    //       messages: prompt,
+    //       temperature: 0.3,
+    //       // max_tokens: 150,
+    //     },
+    //     {
+    //       headers: {
+    //         organization: "org-qqfxsQUxiycsDzEmw7bCxleY",
+    //         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    //         "Content-Type": "application/json",
+    //       },
+    //     }
+    //   );
+    //   jsonData = JSON.parse(response.choices[0].message.content?.replace("```json\n", "").replace("\n```", "") ?? "{}");
+    // } else if (useSdk === "gemini") {
+    //   const genAI = sdks.gemini.connect;
+    //   const model = genAI.getGenerativeModel({ model: sdks.gemini.model });
+    //   const response = await model.generateContent(JSON.stringify(prompt));
+    //   jsonData = JSON.parse(response.response.text().replace("```json\n", "").replace("\n```", ""));
+    // }
 
     if (!jsonData) NextResponse.json({ message: "Fail", error: `No data returned from ${sdks[useSdk].model} Ai` });
 
     // CORRECT SPELLING OF INGREDIENT NAME to most common spelling or use the original names
     const name_correct_spelling = jsonData.name_correct_spelling || name;
 
+    // GET id = name arrays for relational checks
     // Execute all database queries concurrently using Promise.all
     const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray, correctSpellingNameExists] = await Promise.all([
       // INGREDIENT CATEGORY e.g. Vegetable, Fruit, Meat, etc.
@@ -260,7 +269,6 @@ export async function GET(request: Request) {
           id: true,
           name: true,
         },
-        // where: {},
       }),
 
       // ALLERGIES
@@ -269,7 +277,6 @@ export async function GET(request: Request) {
           id: true,
           name: true,
         },
-        // where: {},
       }),
 
       // RELIGIOUS CERTIFICATION e.g. kosher, halal
@@ -278,7 +285,6 @@ export async function GET(request: Request) {
           id: true,
           name: true,
         },
-        // where: {},
       }),
 
       // DIET CATEGORY e.g. vegan, vegetarian, animal_product, unknown
@@ -287,7 +293,6 @@ export async function GET(request: Request) {
           id: true,
           name: true,
         },
-        // where: {},
       }),
 
       // DOES CORRECT SPELLING OF INGREDIENT NAME ALREADY EXIST IN THE DATABASE
@@ -357,13 +362,13 @@ export async function GET(request: Request) {
       console.log("OK Dietary category id:", dietaryCatArrayId);
     }
 
+    // FIXME: Think we can delete this - We always correct the spelling
     // FIXME: CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-
-    if (correctSpellingNameExists?.id !== undefined) {
-      return NextResponse.json({ error: `Corrected Name Already Exists in Ingredients Table. orig: ${name}, corrected: ${name_correct_spelling}` }, { status: 200 });
-    } else {
-      console.log("OK Corrected Name does not exist");
-    }
+    // if (correctSpellingNameExists?.id !== undefined) {
+    //   return NextResponse.json({ error: `Corrected Name Already Exists in Ingredients Table. orig: ${name}, corrected: ${name_correct_spelling}` }, { status: 200 });
+    // } else {
+    //   console.log("OK Corrected Name does not exist");
+    // }
 
     // INSERT INGREDIENT data into the ingredients table
     const ingredient: { id: number } = await prisma.ingredients.update({
@@ -425,10 +430,18 @@ export async function GET(request: Request) {
       console.log("OK Allergy object:", allergyObj);
     }
 
+    // DELETE ALLERGY allergy_ingredient table
+    await prisma.allergy_ingredient.deleteMany({
+      where: {
+        ingredient_id: ingredient.id,
+      },
+    });
+
     await Promise.all([
-      // INSERT COOKED YIELDS into the cooked_yields table
-      prisma.ingredient_cooked_yields.create({
-        data: {
+      // UPSERT COOKED YIELDS into the cooked_yields table
+      prisma.ingredient_cooked_yields.upsert({
+        where: { ingredients_id: ingredient.id },
+        create: {
           ingredients_id: ingredient.id,
           raw: jsonData.cooked_yields?.raw || 1,
           cooked: jsonData.cooked_yields?.cooked || 0,
@@ -437,9 +450,19 @@ export async function GET(request: Request) {
           boiled: jsonData.cooked_yields?.boiled || 0,
           roasted: jsonData.cooked_yields?.roasted || 0,
         },
+        update: {
+          raw: jsonData.cooked_yields?.raw || 1,
+          cooked: jsonData.cooked_yields?.cooked || 0,
+          deep_fry: jsonData.cooked_yields?.deep_fry || 0,
+          shallow_fry: jsonData.cooked_yields?.shallow_fry || 0,
+          boiled: jsonData.cooked_yields?.boiled || 0,
+          roasted: jsonData.cooked_yields?.roasted || 0,
+        },
       }),
-      prisma.ingredients_nutrition.create({
-        data: {
+      // UPSERT NUTRITIONAL DATA into the ingredients_nutrition table
+      prisma.ingredients_nutrition.upsert({
+        where: { ingredients_id: ingredient.id },
+        create: {
           ingredients_id: ingredient.id,
           kcal_per_100g: jsonData.nutritional_data?.kcal_per_100g || 0,
           kj_per_100g: jsonData.nutritional_data?.kj_per_100g || 0,
@@ -449,10 +472,20 @@ export async function GET(request: Request) {
           monounsaturate_per_100g: jsonData.nutritional_data?.monounsaturate_per_100g || 0,
           polyunsaturate_per_100g: jsonData.nutritional_data?.polyunsaturate_per_100g || 0,
         },
+        update: {
+          kcal_per_100g: jsonData.nutritional_data?.kcal_per_100g || 0,
+          kj_per_100g: jsonData.nutritional_data?.kj_per_100g || 0,
+          protein_per_100g: jsonData.nutritional_data?.protein_per_100g || 0,
+          fat_per_100g: jsonData.nutritional_data?.fat_per_100g || 0,
+          saturated_fat_per_100g: jsonData.nutritional_data?.saturated_fat_per_100g || 0,
+          monounsaturate_per_100g: jsonData.nutritional_data?.monounsaturate_per_100g || 0,
+          polyunsaturate_per_100g: jsonData.nutritional_data?.polyunsaturate_per_100g || 0,
+        },
       }),
-      // Insert data into the raw_to_prepped_yields table
-      prisma.raw_to_prepped_yields.create({
-        data: {
+      // UPSERT RAW TO PREPPED YIELDS into the raw_to_prepped_yields table
+      prisma.raw_to_prepped_yields.upsert({
+        where: { ingredients_id: ingredient.id },
+        create: {
           ingredients_id: ingredient.id,
           whole: jsonData.raw_to_prepped_yields?.whole || 0,
           peeled: jsonData.raw_to_prepped_yields?.peeled || 0,
@@ -461,8 +494,16 @@ export async function GET(request: Request) {
           sliced: jsonData.raw_to_prepped_yields?.sliced || 0,
           grated: jsonData.raw_to_prepped_yields?.grated || 0,
         },
+        update: {
+          whole: jsonData.raw_to_prepped_yields?.whole || 0,
+          peeled: jsonData.raw_to_prepped_yields?.peeled || 0,
+          peeled_and_cored: jsonData.raw_to_prepped_yields?.peeled_and_cored || 0,
+          diced: jsonData.raw_to_prepped_yields?.diced || 0,
+          sliced: jsonData.raw_to_prepped_yields?.sliced || 0,
+          grated: jsonData.raw_to_prepped_yields?.grated || 0,
+        },
       }),
-
+      // INSERT ALLERGY INGREDIENTS into the allergy_ingredient table
       prisma.allergy_ingredient.createMany({
         data: allergyObj,
       }),
