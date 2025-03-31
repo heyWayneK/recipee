@@ -374,6 +374,7 @@ export async function POST(request: Request) {
         where: { id: id },
         data: {
           name: `DELETE - name exists: ${name}`,
+          deleted: true,
         },
       });
       // FUTURE: Allow Customers to use the customers original name

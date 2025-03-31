@@ -348,7 +348,7 @@ model ingredients_religious_certification {
 
 model ingredients {
   id          Int       @id @default(autoincrement())
-  name        String    @unique
+  name        String
   name_orig   String?
   names_alt   String?
   customer    customer? @relation(fields: [customer_id], references: [id])
@@ -386,6 +386,7 @@ model ingredients {
   WebhookQueue       WebhookQueue[]
   allergy            allergy?             @relation(fields: [allergyId], references: [id])
   allergyId          Int?
+  deleted            Boolean              @default(false)
 }
 
 // LISTS of cooked yield for dropdown menus
