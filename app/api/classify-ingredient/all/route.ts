@@ -304,14 +304,16 @@ export async function POST(request: Request) {
         },
       }),
 
-      // DOES CORRECT SPELLING OF INGREDIENT NAME ALREADY EXIST IN THE DATABASE
-      //  FUTURE: Think we can delete this - We always correct the spelling
+      // DOES CORRECT SPELLING OF INGREDIENT NAME ALREADY EXIST IN THE DATABASE, not current id
       prisma.ingredients.findFirst({
         select: {
           id: true,
         },
         where: {
           name: name_correct_spelling,
+          id: {
+            not: id,
+          },
         },
       }),
     ]);
