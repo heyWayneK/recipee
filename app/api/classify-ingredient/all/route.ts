@@ -259,7 +259,7 @@ export async function POST(request: Request) {
     if (!jsonData) NextResponse.json({ message: "Fail", error: `No data returned from ${sdks[useSdk].model} Ai` });
 
     // CORRECT SPELLING OF INGREDIENT NAME to most common spelling or use the original names
-    const name_correct_spelling = jsonData.name_correct_spelling;
+    const name_correct_spelling = jsonData?.name_correct_spelling || undefined;
 
     // Execute all database queries concurrently using Promise.all
     // GET id/name arrays for relational checks
@@ -368,7 +368,7 @@ export async function POST(request: Request) {
 
     // CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
     if (correctSpellingNameExists) {
-      // prisma.ingredients.delete({ where: { id: correctSpellingNameExists.id } });
+      // IF CORRECT SPELLING OF INGREDIENT NAME ALREADY EXISTS IN THE DATABASE DELETE THE INGREDIENT
       await prisma.ingredients.update({
         where: { id: id },
         data: {
@@ -387,7 +387,7 @@ export async function POST(request: Request) {
       where: { id },
       data: {
         // FIXME: name should not be updated on the update
-        name: name_correct_spelling || name,
+        name: name_correct_spelling,
         name_orig: name,
         names_alt: jsonData.alternative_names.names_alt.split("|").join(",") || "",
         primary_category: { connect: { id: primaryCategoryId } },
