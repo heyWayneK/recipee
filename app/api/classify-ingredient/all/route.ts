@@ -263,8 +263,7 @@ export async function POST(request: Request) {
 
     // Execute all database queries concurrently using Promise.all
     // GET id/name arrays for relational checks
-    // const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray, correctSpellingNameExists] = await Promise.all([
-    const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray] = await Promise.all([
+    const [primaryCatArray, allergyArray, religiousCertArray, dietaryCatArray, correctSpellingNameExists] = await Promise.all([
       // INGREDIENT CATEGORY e.g. Vegetable, Fruit, Meat, etc.
       prisma.ingredient_category_primary.findMany({
         select: {
@@ -299,14 +298,14 @@ export async function POST(request: Request) {
 
       // DOES CORRECT SPELLING OF INGREDIENT NAME ALREADY EXIST IN THE DATABASE
       //  FUTURE: Think we can delete this - We always correct the spelling
-      // prisma.ingredients.findFirst({
-      //   select: {
-      //     id: true,
-      //   },
-      //   where: {
-      //     name: name_correct_spelling,
-      //   },
-      // }),
+      prisma.ingredients.findFirst({
+        select: {
+          id: true,
+        },
+        where: {
+          name: name_correct_spelling,
+        },
+      }),
     ]);
 
     if (!primaryCatArray || primaryCatArray.length === 0) {
@@ -360,7 +359,7 @@ export async function POST(request: Request) {
     let dietaryCatArrayId: number = matchDietaryCatId(dietaryCatArray, jsonData.dietary_classification);
     if (!dietaryCatArrayId) {
       console.log("Dietary category not found", jsonData.dietary_classification);
-      // FIXME: Set to default value for now.
+      // INFO: This shouldnt happen, but if it does, set to 0
       dietaryCatArrayId = 0;
       return NextResponse.json({ error: "Dietary category not found" });
     } else {
@@ -369,11 +368,19 @@ export async function POST(request: Request) {
 
     // FIXME: Think we can delete this - We always correct the spelling
     // FIXME: CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-    // if (correctSpellingNameExists?.id !== undefined) {
-    //   return NextResponse.json({ error: `Corrected Name Already Exists in Ingredients Table. orig: ${name}, corrected: ${name_correct_spelling}` }, { status: 200 });
-    // } else {
-    //   console.log("OK Corrected Name does not exist");
-    // }
+    if (correctSpellingNameExists?.id !== undefined) {
+      // prisma.ingredients.delete({ where: { id: correctSpellingNameExists.id } });
+      await prisma.ingredients.update({
+        where: { id: id },
+        data: {
+          name: `DELETE - name exists: ${name}`,
+        },
+      });
+      // FUTURE: Allow Customers to use the customers original name
+      return NextResponse.json({ error: `Corrected Name Already Exists in Ingredients Table. orig: ${name}, corrected: ${name_correct_spelling}` }, { status: 200 });
+    } else {
+      console.log("OK Corrected Name does not exist");
+    }
 
     // INSERT INGREDIENT data into the ingredients table
     const ingredient: { id: number } = await prisma.ingredients.update({
@@ -382,7 +389,7 @@ export async function POST(request: Request) {
         // FIXME: name should not be updated on the update
         name: name_correct_spelling,
         name_orig: name,
-        names_alt: jsonData.alternative_names.names_alt || "",
+        names_alt: jsonData.alternative_names.names_alt.split("|").join(",") || "",
         primary_category: { connect: { id: primaryCategoryId } },
         secondary_category: jsonData.secondary_category || "",
         updated_at: new Date(),
