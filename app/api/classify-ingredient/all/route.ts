@@ -259,7 +259,13 @@ export async function POST(request: Request) {
     if (!jsonData) NextResponse.json({ message: "Fail", error: `No data returned from ${sdks[useSdk].model} Ai` });
 
     // CORRECT SPELLING OF INGREDIENT NAME to most common spelling or use the original names
-    const name_correct_spelling = jsonData?.name_correct_spelling || undefined;
+    const name_correct_spelling = jsonData?.name_correct_spelling;
+
+    if (!name_correct_spelling) {
+      return NextResponse.json({ error: "no name_correct_spelling" });
+    } else {
+      console.log("OK name_correct_spelling:", name_correct_spelling);
+    }
 
     // Execute all database queries concurrently using Promise.all
     // GET id/name arrays for relational checks
