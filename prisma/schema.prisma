@@ -510,8 +510,8 @@ model allergy {
   translation        Json?
   created_at         DateTime             @default(now())
   updated_at         DateTime             @updatedAt
-  ingredients        ingredients[]
   allergy_ingredient allergy_ingredient[]
+  ingredients        ingredients[]
 }
 
 model allergy_ingredient {
