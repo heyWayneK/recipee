@@ -405,7 +405,7 @@ export async function POST(request: Request) {
         primary_category: { connect: { id: primaryCategoryId } },
         secondary_category: jsonData.secondary_category || "",
         updated_at: new Date(),
-        dietary_classification: { connect: { id: dietaryCatArrayId } },
+        dietary_classification: { connect: { id: dietaryCatArrayId || 0 } },
         kosher: { connect: { id: kosherId } },
         halal: { connect: { id: halalId } },
         confidence: jsonData.confidence || 0,
