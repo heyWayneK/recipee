@@ -24,7 +24,7 @@ Deno.serve(async (req: Request) => {
   try {
     console.log("Processing webhook tasks...");
     // Delete all rows where processed is TRUE
-    const { data: tasks, error: fetchError } = await supabase.from("webhook_queue").select("id, ingredient_id, name, run_count").eq("processed", false).lte("run_count", 2).limit(4);
+    const { data: tasks, error: fetchError } = await supabase.from("webhook_queue").select("id, ingredient_id, name, run_count").eq("processed", false).lte("run_count", 2).limit(2);
     console.log("Feched Tasks...");
 
     if (fetchError) {

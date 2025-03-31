@@ -230,6 +230,8 @@ export async function POST(request: Request) {
         temperature: 0.3, // Lows temperature for consistency
       });
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
+
+      console.log(`jsonData: ${JSON.stringify(jsonData)}`);
     }
     // FUTURE: Switch Models if Xai is not available
     // else if (useSdk === "openai") {
@@ -372,8 +374,10 @@ export async function POST(request: Request) {
       console.log("OK Dietary category id:", dietaryCatArrayId);
     }
 
+    console.log("Correct Spelling Name Exists:", correctSpellingNameExists);
+
     // CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-    if (correctSpellingNameExists) {
+    if (correctSpellingNameExists?.id !== null) {
       // IF CORRECT SPELLING OF INGREDIENT NAME ALREADY EXISTS IN THE DATABASE DELETE THE INGREDIENT
       await prisma.ingredients.update({
         where: { id: id },
@@ -393,7 +397,7 @@ export async function POST(request: Request) {
       where: { id },
       data: {
         // FIXME: name should not be updated on the update
-        name: name_correct_spelling,
+        name: name_correct_spelling || name,
         name_orig: name,
         names_alt: jsonData.alternative_names.names_alt.split("|").join(",") || "",
         primary_category: { connect: { id: primaryCategoryId } },
