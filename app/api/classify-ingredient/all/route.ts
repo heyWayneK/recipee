@@ -2,11 +2,11 @@
 import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 import OpenAI from "openai"; //for X/grok too
-import { GoogleGenerativeAI } from "@google/generative-ai";
+// FUTURE: import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // FIXME: Add Jest and Cypres tests - based on server TotalTimeSecs < 15 seconds
 // FIXME: 15 secs is the Vercel Max time limit (It can be longer, with MUCH higher pricing)
-import { all } from "cypress/types/bluebird";
+// import { all } from "cypress/types/bluebird";
 
 /* TESTING: CHECK WHAT OPEN-AI MODELS ARE AVAILABLE TO MY ACCOUNT
  curl https://api.openai.com/v1/models \
@@ -127,6 +127,7 @@ export async function POST(request: Request) {
       if (!body.id || !body.name) NextResponse.json({ error: "Missing POST: id & name" }, { status: 400 });
       id = body?.id;
       name = body?.name;
+      console.log("**POST id:", id, "name:", name);
       if (!id || !name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
       // TESTING: For testing in future using GET
       // TESTING: https://recipee.app/api/classify-ingredient/all?name=all%20bran%20Flakes&id=33
@@ -151,7 +152,7 @@ export async function POST(request: Request) {
           `Rules for halal classification:
           - Pork and its derivatives (e.g., bacon, ham, sausage from pork) are always haram, so "halal" must be "no".
           - Meat is halal ("likely") only if from a permissible animal (e.g., cow, sheep, chicken) and slaughtered per Islamic guidelines (blessing said, blood drained).
-          - If the ingredient’s source or preparation is unclear, use "unknown".
+          - If the ingredients source or preparation is unclear, use "unknown".
           - Non-meat items (e.g., vegetables, fruits) are halal ("yes") unless contaminated with haram substances (e.g., alcohol, pork fat).
           Examples:
           - "pork bacon": {"religious_certification": {"halal": "no"}}
@@ -356,9 +357,11 @@ export async function POST(request: Request) {
       console.log("OK Halal id:", halalId);
     }
 
-    const dietaryCatArrayId: number = matchDietaryCatId(dietaryCatArray, jsonData.dietary_classification);
+    let dietaryCatArrayId: number = matchDietaryCatId(dietaryCatArray, jsonData.dietary_classification);
     if (!dietaryCatArrayId) {
-      console.log("Dietary category not found");
+      console.log("Dietary category not found", jsonData.dietary_classification);
+      // FIXME: Set to default value for now.
+      dietaryCatArrayId = 0;
       return NextResponse.json({ error: "Dietary category not found" });
     } else {
       console.log("OK Dietary category id:", dietaryCatArrayId);

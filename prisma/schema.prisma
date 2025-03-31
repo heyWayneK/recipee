@@ -813,8 +813,11 @@ model WebhookQueue {
   ingredient    ingredients @relation(fields: [ingredient_id], references: [id])
   ingredient_id Int         @map("ingredient_id")
   name          String
-  createdAt     DateTime    @default(now()) @map("created_at")
+  run_count     Int?        @default(0)
+  created_at    DateTime    @default(now())
+  // createdAt     DateTime    @default(now()) @map("created_at")
   processed     Boolean     @default(false)
+  type          String?
 
   @@map("webhook_queue")
 }
