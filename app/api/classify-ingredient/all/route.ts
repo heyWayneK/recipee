@@ -379,7 +379,7 @@ export async function POST(request: Request) {
     console.log("Correct Spelling Name Exists:", correctSpellingNameExists);
 
     // CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-    if (correctSpellingNameExists?.id !== null) {
+    if (correctSpellingNameExists !== null) {
       // IF CORRECT SPELLING OF INGREDIENT NAME ALREADY EXISTS IN THE DATABASE DELETE THE INGREDIENT
       await prisma.ingredients.update({
         where: { id: id },
