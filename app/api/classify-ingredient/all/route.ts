@@ -368,7 +368,7 @@ export async function POST(request: Request) {
 
     // FIXME: Think we can delete this - We always correct the spelling
     // FIXME: CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-    if (correctSpellingNameExists?.id !== undefined) {
+    if (correctSpellingNameExists?.id == undefined) {
       // prisma.ingredients.delete({ where: { id: correctSpellingNameExists.id } });
       await prisma.ingredients.update({
         where: { id: id },

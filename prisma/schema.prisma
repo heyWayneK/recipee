@@ -260,14 +260,14 @@ model customer {
 // }
 
 model prep_instructions {
-  id             Int         @id @default(autoincrement())
+  id             Int          @id @default(autoincrement())
   name           String
   translation    Json?
   desc           String?
   yield          Float?
-  is_live        Boolean     @default(true)
-  updated_at     DateTime    @updatedAt
-  ingredients    ingredients @relation(fields: [ingredients_id], references: [id])
+  is_live        Boolean      @default(true)
+  updated_at     DateTime     @updatedAt
+  ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
   ingredients_id Int
 }
 
