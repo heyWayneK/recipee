@@ -370,7 +370,7 @@ export async function POST(request: Request) {
     }
 
     let dietaryCatArrayId: number = matchDietaryCatId(dietaryCatArray, jsonData.dietary_classification);
-    if (dietaryCatArrayId === undefined || dietaryCatArrayId === null) {
+    if (dietaryCatArrayId === null || dietaryCatArrayId === undefined) {
       console.log("Dietary category not found", jsonData.dietary_classification);
       // INFO: This shouldnt happen, but if it does, set to 0
       dietaryCatArrayId = 0;
@@ -379,10 +379,10 @@ export async function POST(request: Request) {
       console.log("OK Dietary category id:", dietaryCatArrayId);
     }
 
-    console.log("Correct Spelling Name Exists:", correctSpellingNameExists);
+    console.log("Correct Spelling Name Exists. VALUE:", correctSpellingNameExists);
 
     // CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-    if (correctSpellingNameExists !== null || correctSpellingNameExists !== undefined) {
+    if (correctSpellingNameExists !== null) {
       // IF CORRECT SPELLING OF INGREDIENT NAME ALREADY EXISTS IN THE DATABASE DELETE THE INGREDIENT
       await prisma.ingredients.update({
         where: { id: id },
