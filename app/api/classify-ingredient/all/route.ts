@@ -464,6 +464,9 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log("Cleared Any Existing Allergies in allergy_ingredient");
+    console.log("Start Upserting Data for promise");
+
     await Promise.all([
       // UPSERT COOKED YIELDS into the cooked_yields table
       prisma.ingredient_cooked_yields.upsert({
