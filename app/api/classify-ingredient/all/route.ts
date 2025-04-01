@@ -99,7 +99,7 @@ function matchAllergyId(allergyArray: { id: number; name: string }[], allergies:
 
 function matchDietaryCatId(dietaryCatArray: { id: number; name: string }[], dietaryCat: string): number {
   const match = dietaryCatArray.find((item) => item.name.toLowerCase() === dietaryCat.toLowerCase());
-  const id = match ? Number(match.id) : 0; // 0: unknown
+  const id = match ? Number(match.id) : 4; // 4: unknown
   return id;
 }
 
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
       // } else if (method === "GET") {
       //   const url = new URL(request.url);
       //   id = Number(url.searchParams.get("id"));
-      //   name = url.searchParams.get("name") || "";
+      //   name = url.searchParams.get("name") || "";Dietary category not found unknown
       //   if (!id || !name) {
       //     return NextResponse.json({ error: "GET method no supported - Missing id or name" }, { status: 400 });
       //   }
@@ -229,6 +229,7 @@ export async function POST(request: Request) {
         messages: prompt,
         temperature: 0.3, // Lows temperature for consistency
       });
+
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
 
       console.log(`jsonData: ${JSON.stringify(jsonData)}`);
@@ -318,32 +319,34 @@ export async function POST(request: Request) {
       }),
     ]);
 
+    // WAS ARRAY DATA RETURNED
     if (!primaryCatArray || primaryCatArray.length === 0) {
       return NextResponse.json({ error: "no data from ingredient_category_primary" });
     } else {
       console.log("OK primaryCatArray:", primaryCatArray);
     }
-
+    // WAS ARRAY DATA RETURNED
     if (!allergyArray || allergyArray.length === 0) {
       return NextResponse.json({ error: "no data from allergy" });
     } else {
       console.log("OK allergyArray:", allergyArray);
     }
-
+    // WAS ARRAY DATA RETURNED
     if (!religiousCertArray || religiousCertArray.length === 0) {
       return NextResponse.json({ error: "no data from ingredients_religious_certification" });
     } else {
       console.log("OK religiousCertArray:", religiousCertArray);
     }
-
+    // WAS ARRAY DATA RETURNED
     if (!dietaryCatArray || dietaryCatArray.length === 0) {
       return NextResponse.json({ error: "no data from dietary_classification" });
     } else {
       console.log("OK dietaryCatArray:", dietaryCatArray);
     }
 
+    // WAS NAME MATCHED TO id: number
     const primaryCategoryId: number = matchPrimaryCategoryId(primaryCatArray, jsonData.primary_category);
-    if (!primaryCategoryId) {
+    if (primaryCategoryId === undefined || primaryCategoryId === null) {
       console.log("Primary category not found");
       return NextResponse.json({ error: "Primary category not found" });
     } else {
@@ -351,7 +354,7 @@ export async function POST(request: Request) {
     }
 
     const kosherId: number = matchReligiousCertId(jsonData.religious_certification.kosher, religiousCertArray);
-    if (!kosherId) {
+    if (kosherId === undefined || kosherId === null) {
       console.log("Kosher id not found");
       return NextResponse.json({ error: "Kosher id not found" });
     } else {
@@ -359,7 +362,7 @@ export async function POST(request: Request) {
     }
 
     const halalId: number = matchReligiousCertId(jsonData.religious_certification.halal, religiousCertArray);
-    if (!halalId) {
+    if (halalId === undefined || halalId === null) {
       console.log("Halal id not found");
       return NextResponse.json({ error: "Halal id not found" });
     } else {
@@ -367,11 +370,11 @@ export async function POST(request: Request) {
     }
 
     let dietaryCatArrayId: number = matchDietaryCatId(dietaryCatArray, jsonData.dietary_classification);
-    if (!dietaryCatArrayId) {
+    if (dietaryCatArrayId === undefined || dietaryCatArrayId === null) {
       console.log("Dietary category not found", jsonData.dietary_classification);
       // INFO: This shouldnt happen, but if it does, set to 0
       dietaryCatArrayId = 0;
-      return NextResponse.json({ error: "Dietary category not found" });
+      return NextResponse.json({ error: `Dietary category not found ${jsonData.dietary_classification}` });
     } else {
       console.log("OK Dietary category id:", dietaryCatArrayId);
     }
@@ -379,7 +382,7 @@ export async function POST(request: Request) {
     console.log("Correct Spelling Name Exists:", correctSpellingNameExists);
 
     // CHECK IF INGREDIENT NAME (CORRECT SPELLING) IS ALREADY IN THE DATABASE
-    if (correctSpellingNameExists !== null) {
+    if (correctSpellingNameExists !== null || correctSpellingNameExists !== undefined) {
       // IF CORRECT SPELLING OF INGREDIENT NAME ALREADY EXISTS IN THE DATABASE DELETE THE INGREDIENT
       await prisma.ingredients.update({
         where: { id: id },
@@ -539,6 +542,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Success", timer: totalTimeSecs, resultJson: jsonData }, { status: 200 });
   } catch (error: any) {
     console.error("Webhook error:", error);
+
+    if (error.status === 429) {
+      //  insert error into slack and or email/whatsapp
+      console.log("Out of Xai credits", error?.message);
+    }
     return NextResponse.json({ error: "Failure - errors" }, { status: 500 });
   }
 }
