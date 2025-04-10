@@ -41,37 +41,6 @@ export async function GET(request: NextRequest, { params }: { params: { customer
   }
 }
 
-// [id]+ POST - MOST LIKELY DONT NEED THIS
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
-  try {
-    const id = params.id; // Access the dynamic 'id' from params
-
-    // Parse the request body and handle potential parsing errors
-    let body;
-    try {
-      body = await request.json();
-    } catch (parseError) {
-      return NextResponse.json({ error: "Invalid JSON in request body" }, { status: 400 });
-    }
-
-    // Validate that body contains the expected data
-    if (!body || typeof body !== "object") {
-      return NextResponse.json({ error: "Request body is required" }, { status: 400 });
-    }
-
-    // Simulate creating/updating data
-    const newData: ExampleData = {
-      id,
-      name: body.name || `Example ${id}`,
-    };
-
-    return NextResponse.json({ message: "success", dats: newData }, { status: 201 });
-  } catch (error) {
-    console.error("Error in POST:", error);
-    return NextResponse.json({ error: "Internal Server Error", message: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
-  }
-}
-
 // id                       Int                        @id @default(autoincrement())
 //   name                     String
 //   email                    String                     @unique
