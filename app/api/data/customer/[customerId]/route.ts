@@ -24,9 +24,9 @@ interface ExampleData {
 }
 
 // GET request handler
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { customerId: string } }) {
   try {
-    const id = params.id; // Access the dynamic 'id' from params
+    const id = params.customerId; // Access the dynamic 'id' from params
 
     // Simulate fetching data based on ID
     const data: ExampleData = {
