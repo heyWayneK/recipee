@@ -1,7 +1,4 @@
 /* TESTING:
- 
-    
-
       curl -X POST http://localhost:3000/api/example2/123456 \ 
       -H "Content-Type: application/json" \
       -d '{"id": "123", "name": "John"}'
@@ -34,8 +31,8 @@ export async function GET(request: NextRequest, { params }: { params: { customer
       name: `Example ${id}`,
     };
 
-    return NextResponse.json(data, { status: 200 });
-  } catch (error) {
+    return NextResponse.json({ data: data }, { status: 200 });
+  } catch (error: any) {
     console.error("Error in GET:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
