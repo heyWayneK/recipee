@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
+import { RecipeProps } from "@/app/data/recipe";
 
 interface Row_SubRecipeAddButtonsProps {
-  subRecipeId: number;
-  className?: string;
+  recipe: RecipeProps;
 }
-const Row_SubRecipeAddButtons: React.FC<Row_SubRecipeAddButtonsProps> = ({ className = "" }) => {
+const Row_SubRecipeAddButtons: React.FC<Row_SubRecipeAddButtonsProps> = ({ recipe }) => {
   return (
     <Table_Cell type="controls">
       <Pill tone="dark" iconName="add_circle">

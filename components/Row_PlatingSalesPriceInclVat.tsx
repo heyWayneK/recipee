@@ -3,7 +3,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import { formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 
 interface Row_PlatingSalesPriceInclVatProps {
@@ -15,12 +15,20 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
   const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   const name = "sale_price_(incl_vat)";
 
-  // // UPDATE OBJECT
-  // const update = (portionSize: number, ruleId: number) => {
-  //   const newObj = { ...recipeData.data., ...{ [portionSize]: ruleId } };
-  //   updateRecipeData((recipeData.data.packagingCostsId = { ...newObj }));
-  //   // ADD HISTORY
-  // };
+  // UPDATE OBJECT
+  const update = (portionSize: number, ruleId: number) => {
+    const updatedObj: Partial<PreCalculatedRecipeData> = {
+      data: {
+        ...recipeData.data,
+        markupId: {
+          ...recipeData.data.markupId,
+          [portionSize]: ruleId,
+        },
+      },
+    };
+    updateRecipeData(updatedObj);
+    //FUTURE:  ADD HISTORY
+  };
 
   return (
     <>
@@ -32,32 +40,27 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
 
       {/* OTHER COLUMNS START */}
       {recipeData.data.portions.map((portionSize, i) => {
-        const salesPriceIncVat = formatCurrency(recipeData.salePricesExVat[i] * (1 + data.setting.vat));
-
-        const dropDownInfo = [`${getTextTranslation("VAT")}: ${data.setting.vat * 100}%`];
+        const salesPriceIncVat = formatCurrency(recipeData.salePricesExVat[i] * (1 + data.setting.vatDefaultId));
 
         // const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
         const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
         // TODO: MAKE DATA USING LOCAL VAT INCL
-        for (const [key, value] of Object.entries(recipeData.data.costRules.packagingCosts)) {
-          dropDownLinks.push(
-            {
-              jsx: (
-                <>
-                  <span className="font-bold">{value.name}</span>
-                  <br />
-                  <span>
-                    {formatCurrency(value.cost)} (#{key})
-                  </span>
-                </>
-              ),
-              handler: () => {},
-            }
-            //   handler: () => update(recipeData.portionSizes[i], +key),
-            //   selectedId: recipeData.packingCostPriceRules[i],
-            //   id: +key,
-            // }
-          );
+
+        for (const [key, value] of Object.entries(recipeData.data.vatRuleArray)) {
+          dropDownLinks.push({
+            jsx: (
+              <>
+                <span className="font-bold">{value.name}</span>
+                <br />
+                <span>
+                  {value.factor} (#{key})
+                </span>
+              </>
+            ),
+            handler: () => update(recipeData.portionSizes[i], +key),
+            selectedId: recipeData.markUpPriceRules[i],
+            id: +key,
+          });
         }
         // DROP DOWN MODAL INFO__________END
 

@@ -31,6 +31,7 @@ const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
     <DottedBorder className=" grid grid-cols-1 justify-items-center mb-8">
       {/* TODO: <Row_EditOrProduction data={data} /> */}
       <Row_PlatingHeading />
+
       {/* COL LENGTH ARRAY defines how many cols needed */}
       <Table_DynamicTableCols className=" gap-x-7" colLengthArray={recipeData.portionSizes.length}>
         <Row_ControlsPlating viewPrices={viewPrices} handleViewPrices={handleViewPrices} />

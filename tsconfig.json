@@ -45,7 +45,7 @@
     "cypress.config.js",
     // "jest__.config____.js"
     "jest.config.ts",
-    "app/api/get-seed/[table]/route.ts"
+    "app/api/get-seed/route.ts"
   ],
   // "exclude": ["node_modules"]
   "exclude": ["node_modules"]

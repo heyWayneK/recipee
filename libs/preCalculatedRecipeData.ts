@@ -1,9 +1,10 @@
 import { PreCalculatedRecipeData } from "@/contexts/UseRecipeData";
 import { calcProfit, formatCurrency } from "@/libs/utils";
 
-export async function preCalculateData(recipeData: PreCalculatedRecipeData, updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void) {
-  // HOW TO USE:
-  /** 
+// export async function preCalculateData(recipeData: PreCalculatedRecipeData, updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void): Promise<void> {
+export function preCalculateData(recipeData: PreCalculatedRecipeData): Partial<PreCalculatedRecipeData> {
+  console.log("*** preCalculateData() Called", recipeData);
+  /**  INFO::
      const updatePackagingRule = (portionSize: number, ruleId: number) => {
        const newObj = { ...recipeData.data.packagingCostsId, ...{ [portionSize]: ruleId } };
        updateRecipeData((recipeData.data.packagingCostsId = { ...newObj }));
@@ -18,35 +19,47 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, upda
 
   // ERROR if portions do not match______________________
   if (portionSizes.toString() !== recipeData.data.portions.toString()) {
-    throw new Error(`Recipe plating portions do not match expected plating portion: ${portionSizes.toString()} NOT ${recipeData.data.portions.toString()} grams`);
+    console.error("******portionSizes DO NOT MATCH", portionSizes);
+    // throw new Error(`Recipe plating portions do not match expected plating portion: ${portionSizes.toString()} NOT ${recipeData.data.portions.toString()} grams`);
   }
 
   // COMPONENT WEIGHTS ARRAY : number[][]________________
-  const componentsWeights: number[][] = [];
   const componentsNamesArray: string[] = [];
+  const componentsWeights: number[][] = [];
   const componentsIDArray: any[] = [];
   for (const component of recipeData.data.components) {
-    // NAME
+    if (!component.name) {
+      throw new Error(`Component ${component.name} does not have portions name`);
+    }
+    // NAM
     componentsNamesArray.push(component.name);
     // WEIGHTS BY PORTION ARRAY
     componentsWeights.push(recipeData.data.portions.map((val) => (component.portions ? component.portions[val] : 0)));
 
     // TODO: dont need name length once db is being used
     // ID GENERATED FOR component KEY = unique key
-    componentsIDArray.push(recipeData.data.portions.map((val) => component.id + "" + component.name.length + "" + val));
+    componentsIDArray.push(recipeData.data.portions.map((val) => component.id + "" + component.name?.length + "" + val));
   }
 
   // COSTS PER 1000/COMPONENT____________________________
   const componentsPricePer1000: number[] = [];
   for (const component of recipeData.data.components) {
-    // RECIPE NAME component.name
-    const totalPrice = component.recipe.recipeDetail.reduce((ttlPrice, val): number => {
+    // FIND RECIPE
+    const recipeId = component.recipeId;
+    // FIND RECIPE
+    const recipe = recipeData.data.recipes.find((recipe) => recipe.id === recipeId);
+
+    if (!recipe) {
+      throw new Error(`Recipe with ID ${recipeId} not found. Component recipeId and Recipe id must match`);
+    }
+
+    const totalPrice = recipe?.recipeDetail.reduce((ttlPrice, val): number => {
       if (val.type !== "ingredient") return ttlPrice;
       // TOTAL RAW WEIGHT
       return (ttlPrice += val.costPer1000 * (val.qty / 1000));
     }, 0);
 
-    const totalWeight = component.recipe.recipeDetail.reduce((ttlWeight, val): number => {
+    const totalWeight = recipe?.recipeDetail.reduce((ttlWeight, val): number => {
       if (val.type !== "ingredient") return ttlWeight;
       // TOTAL PRICE OF COMPONENT
       return (ttlWeight += val.qty);
@@ -74,16 +87,25 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, upda
   }
 
   // COMPONENT PRICES [][][]_____________________________
+  // CREATE FROP DOWN LIST OF INGREDIENT PRICES (To understand where costs are high)
   const componentsPricesDesc: string[][][] = [];
   for (let iC = 0; iC < recipeData.data.components.length; iC++) {
+    // find the recipe
+    const recipeId = recipeData.data.components[iC].recipeId;
+    const recipe = recipeData.data.recipes.find((recipe) => recipe.id === recipeId);
+
+    if (!recipe) {
+      throw new Error(`Recipe with ID ${recipeId} not found. Component recipeId and Recipe id must match`);
+    }
+
     componentsPricesDesc.push(
       portionSizes.map((_, iP) =>
-        recipeData.data.components[iC].recipe.recipeDetail.flatMap((recipe, iR) => {
-          if (recipe.type !== "ingredient") return [];
+        recipe.recipeDetail.flatMap((row, iR) => {
+          if (row.type !== "ingredient") return [];
 
-          const componentTotalWeight = recipeData.data.components[iC].recipe.recipeDetail.reduce((arr, val) => (arr += val.qty), 0);
+          const componentTotalWeight = recipe.recipeDetail.reduce((arr, val) => (arr += val.qty), 0);
           // Work out igred % in original comp = % * price
-          return recipe.ingredName + ": " + formatCurrency((recipe.qty / componentTotalWeight) * componentsPrices[iC][iP]);
+          return row.ingredName + ": " + formatCurrency((row.qty / componentTotalWeight) * componentsPrices[iC][iP]);
         })
       )
     );
@@ -123,10 +145,33 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, upda
   const salePricesExVat: number[] = portionSizes.map((portion, i) => costsSubTotals[i] + markUpPriceAmounts[i]);
 
   // SALES PRICE EX VAT _____________________________________
-  const salesPricesIncVat: number[] = portionSizes.map((portion, i) => salePricesExVat[i] * (1 + recipeData.data.setting.vat));
+  // TODO: ADD VAT RULES
+  const salesPricesIncVat: number[] = portionSizes.map((portion, i) => salePricesExVat[i] * (1 + 0.15));
+  // const salesPricesIncVat: number[] = portionSizes.map((portion, i) => salePricesExVat[i] * (1 + recipeData.data.vatRuless[recipeData.data.setting.vatDefaultId].));
 
   // // UPDATE OBJECT with precalculated recipe plating data:
-  updateRecipeData({
+  // updateRecipeData({
+  //   portionSizes,
+  //   componentsNamesArray,
+  //   componentsIDArray,
+  //   componentsWeights,
+  //   componentsPricePer1000,
+  //   componentsPrices,
+  //   componentsPricesDesc,
+  //   componentsSubTotalsPrices,
+  //   packingCostPriceTotals,
+  //   packingCostPriceRules,
+  //   otherCostsPriceTotals,
+  //   otherCostsPriceRules,
+  //   markUpPriceAmounts,
+  //   markUpPriceRules,
+  //   costsSubTotals,
+  //   salePricesExVat,
+  //   salesPricesIncVat,
+  // });
+
+  // // UPDATE OBJECT with precalculated recipe plating data:
+  const obj: Partial<PreCalculatedRecipeData> = {
     portionSizes,
     componentsNamesArray,
     componentsIDArray,
@@ -144,5 +189,10 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, upda
     costsSubTotals,
     salePricesExVat,
     salesPricesIncVat,
-  });
+  };
+  // return obj;
+  // console.log("*** preCalculateData() ENDED new object:", { ...recipeData, ...obj });
+
+  return obj;
+  // return { ...recipeData, ...obj };
 }

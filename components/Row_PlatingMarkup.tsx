@@ -2,7 +2,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import { calcProfit, formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
 import MenuDynamicChildren, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 
 interface Row_PlatingMarkupProps {
@@ -16,11 +16,17 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
 
   // UPDATE OBJECT
   const update = (portionSize: number, ruleId: number) => {
-    const newObj = { ...recipeData.data?.markupId, ...{ [portionSize]: ruleId } };
-    // TODO: this was wierd. check if it is correct (= sign)
-    // updateRecipeData((recipeData.data.markupId = { ...newObj }));
-    updateRecipeData((recipeData.data.markupId, { ...newObj }));
-    // ADD HISTORY
+    const updatedObj: Partial<PreCalculatedRecipeData> = {
+      data: {
+        ...recipeData.data,
+        markupId: {
+          ...recipeData.data.markupId,
+          [portionSize]: ruleId,
+        },
+      },
+    };
+    updateRecipeData(updatedObj);
+    //FUTURE:  ADD HISTORY
   };
 
   return (
@@ -36,9 +42,6 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
       {recipeData.markUpPriceAmounts.map((price, i) => {
         let { name: markupName, factor, type } = data.costRules.markUps[recipeData.markUpPriceRules[i]];
 
-        const dropDownInfo = [`${getTextTranslation("name")}: ${markupName}`, `${getTextTranslation("factor")}: ${factor}`, `${getTextTranslation("type")}: ${type}`, "Change"];
-
-        // TODO: WHY IS HANDLER null or ()=>{}
         const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
 
         for (const [key, value] of Object.entries(recipeData.data.costRules.markUps)) {

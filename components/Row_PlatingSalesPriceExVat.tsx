@@ -6,11 +6,10 @@ import { data } from "@/app/data/recipe";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 
 interface Row_PlatingSalesPriceExVatProps {
-  className?: string;
   viewPrices: boolean;
 }
 
-const Row_PlatingSalesPriceExVat: React.FC<Row_PlatingSalesPriceExVatProps> = ({ className = "", viewPrices }) => {
+const Row_PlatingSalesPriceExVat: React.FC<Row_PlatingSalesPriceExVatProps> = ({ viewPrices }) => {
   const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   const name = "sale_price_(ex_vat)";
 

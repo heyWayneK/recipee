@@ -81,6 +81,12 @@ export const convertKjToKcal = (kj: number): number => {
   return kj / 4.184;
 };
 
+export const saltToSodium = (salt: number): number => {
+  //Sodium vs. Salt: Percentages refer to salt (sodium chloride), but sodium content can be calculated as ~39.3% of salt by weight (e.g., 1g salt = 393 mg sodium).
+
+  return salt * 0.3934;
+};
+
 // FUNCTIONS_______________________________________________::
 export const formatCurrency = (cost: number): number | string => {
   if (!cost) return "";

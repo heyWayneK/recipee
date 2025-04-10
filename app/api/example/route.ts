@@ -1,55 +1,47 @@
-"use server";
-import { NextResponse } from "next/server";
+/* TESTING:
+    curl "http://localhost:3000/api/example?name=test&id=123"
 
-/* INFO: submit either"
-- http://localhost:3000/api/example/route?id=123&name=John
-- http://localhost:3000/api/example/route
-with the following body:
-{
-  "id": "123",   // string
-  "name": "John" // string
-}
-curl -X http://localhost:3000/api/example \
+    curl -X POST http://localhost:3000/api/example \
      -H "Content-Type: application/json" \
-     -d '{"id": 6, "name": "pear"}'
+     -d '{"id": "123", "name": "John"}'
 
-curl "http://localhost:3000/api/example?id=6&name=pear"
+     curl -X PUT http://localhost:3000/api/example
 */
+import { NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    // Determine the HTTP method of the request
-    const method = request.method;
+    const body = await request.json();
+    const { id, name } = body;
+    console.log(`POST request received: id=${id}, name=${name}`);
+    // Process the webhook payload
 
-    if (method === "POST") {
-      // Handle POST request
-      const body = await request.json();
-      const { id, name } = body;
-
-      console.log(`POST request received: id=${id}, name=${name}`);
-
-      // Process the webhook payload
-      return NextResponse.json({ message: `Success POST 2 id=${id}, name=${name}` }, { status: 200 });
-    } else if (method === "GET") {
-      // Handle GET request
-      const url = new URL(request.url);
-      const id = url.searchParams.get("id");
-      const name = url.searchParams.get("name");
-
-      console.log(`GET request received: id=${id}, name=${name}`);
-
-      // Process the webhook payload
-      return NextResponse.json({ message: `Success GET 2 --- id=${id}, name=${name}` }, { status: 200 });
-    } else {
-      // Unsupported HTTP method
-      return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
-    }
+    return NextResponse.json({ message: `Hello World, body=${body}` }, { status: 200 });
   } catch (error: any) {
     console.error(`Webhook error: ${error.message}`);
     return NextResponse.json({ error: `Webhook error: ${error.message}` }, { status: 400 });
   }
 }
 
-// // Export the handler as POST and GET
-// export const POST = handler;
-// export const GET = handler;
+export async function GET(request: Request, res: NextApiResponse) {
+  try {
+    // Get the table parameter from the URL
+    const url = new URL(request.url);
+    const table = url.searchParams?.get("table");
+
+    if (!table) {
+      console.log("Table parameter is missing");
+      //   return NextResponse.json({ error: "Table parameter is required" }, { status: 400 });
+    }
+    const mockData = [
+      {
+        id: "Hello World 1",
+      },
+    ];
+    return NextResponse.json(mockData, { status: 200 });
+  } catch (error) {
+    console.error(`Error fetching data: ${error}`);
+    return NextResponse.json({ error: `Error fetching data: ${error}` }, { status: 500 });
+  }
+}

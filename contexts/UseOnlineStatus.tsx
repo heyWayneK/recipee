@@ -30,7 +30,7 @@ export const OnlineStatusProvider: React.FC<{ children: ReactNode }> = ({ childr
 
   // Render nothing or a placeholder until the client determines the state
   if (isOnline === null) {
-    return null; // Or a loading placeholder: <div>Loading...</div>
+    return true; // Or a loading placeholder: <div>Loading...</div>
   }
 
   return <OnlineStatusContext.Provider value={{ isOnline }}>{children}</OnlineStatusContext.Provider>;

@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { data } from "@/app/data/recipe";
+import React from "react";
+import { RecipeProps, data, ComponentsProps } from "@/app/data/recipe";
 import Row_SubRecipeControls from "./Row_SubRecipeControls";
 import Row_SubRecipeSubName from "./Row_SubRecipeName";
 import Row_SubRecipeHeader from "./Row_SubRecipeHeader";
@@ -8,30 +8,36 @@ import Row_SubRecipeAddButtons from "./Row_SubRecipeAddButtons";
 import Row_SubRecipeMethod from "./Row_SubRecipeMethod";
 import DottedBorder from "./DottedBorder";
 
-interface Row_SubRecipesAllProps {
-  className?: string;
-}
+interface Row_SubRecipesAllProps {}
 
 export const recipeeUI = {
   sub_recipe: ["ingredName", "instruction", "qty", "costPer1000", "%", "move"],
 };
 
-const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = ({ className = "" }) => {
-  return data.components.map((subRecipe, iSub) => {
+const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
+  return data.components.map((subRecipe, i) => {
+    const findRecipe: RecipeProps | undefined = data.recipes.find((recipe) => recipe.id === subRecipe.recipeId);
+
+    if (!findRecipe) {
+      const e = `Recipe with ID ${subRecipe.id} not found.`;
+      console.log(e);
+      throw new Error(e);
+    }
+
     return (
-      <DottedBorder key={"recipe_" + iSub + "_" + subRecipe.name}>
+      <DottedBorder key={findRecipe.id + "_" + i}>
         <div
           className={`grid gap-y-2 gap-x-2`}
           style={{
             gridTemplateColumns: `2fr repeat(${recipeeUI.sub_recipe.length - 1}, max-content)`,
           }}
         >
-          <Row_SubRecipeControls subRecipeId={iSub} />
-          <Row_SubRecipeSubName subRecipeId={iSub} />
+          <Row_SubRecipeControls recipe={findRecipe} />
+          <Row_SubRecipeSubName subRecipe={subRecipe} colorNum={i} />
           <Row_SubRecipeHeader />
-          <Row_SubRecipeIngredients subRecipeId={iSub} subRecipe={subRecipe} />
-          <Row_SubRecipeAddButtons subRecipeId={iSub} />
-          <Row_SubRecipeMethod subRecipeId={iSub} />
+          <Row_SubRecipeIngredients recipe={findRecipe} />
+          <Row_SubRecipeAddButtons recipe={findRecipe} />
+          <Row_SubRecipeMethod recipe={findRecipe} />
         </div>
       </DottedBorder>
     );

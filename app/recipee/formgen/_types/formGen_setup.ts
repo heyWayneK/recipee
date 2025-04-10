@@ -10,13 +10,13 @@ import prisma from "@/libs/prisma";
 export const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 // the URL to access table Define supported table names
+// export const TABLES: keyof PrismaClient[] = [
 export const TABLES = [
   "profile",
   "allergies",
   "brands",
   "costrules",
   "customers",
-
   "ingredients",
   "leads",
   "markuprules",
@@ -48,7 +48,7 @@ export const modelMap: {
   ingredients: prisma.ingredients,
   leads: prisma.lead,
   markuprules: prisma.markup,
-  othercosts: prisma.other_costs,
+  othercosts: prisma.other_costs_category,
   productionevents: prisma.production_event,
   packagingcosts: prisma.packaging_costs,
   recipes: prisma.recipe,

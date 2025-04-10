@@ -2,10 +2,8 @@ import React from "react";
 
 import Table_Cell from "./Table_Cell";
 import { formatCurrency, formatWeight, getTextTranslation, replace_ } from "@/libs/utils";
-import { data } from "@/app/data/recipe";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
 import MenuDynamicChildren, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
-import { Span } from "next/dist/trace";
 
 interface Row_PlatingOtherCostProps {
   className?: string;
@@ -17,23 +15,19 @@ const Row_PlatingOtherCost: React.FC<Row_PlatingOtherCostProps> = ({ className =
   const name = getTextTranslation(replace_("other_costs"));
   // UPDATE OBJECT
   const update = (portionSize: number, ruleId: number) => {
-    const newObj = { ...recipeData.data.otherCostsId, ...{ [portionSize]: ruleId } };
-    updateRecipeData((recipeData.data.otherCostsId = { ...newObj }));
-    // ADD HISTORY
+    const updatedObj: Partial<PreCalculatedRecipeData> = {
+      data: {
+        ...recipeData.data,
+        otherCostsId: {
+          ...recipeData.data.otherCostsId,
+          [portionSize]: ruleId,
+        },
+      },
+    };
+    updateRecipeData(updatedObj);
+    //FUTURE:  ADD HISTORY
   };
 
-  const dropDownInfoHead: MenuOptionsProps[] = [
-    {
-      jsx: (
-        <>
-          <span className=" text-lg capitalize font-bold">{name}</span>
-          <br />
-          <span>rule name (#78)</span>
-        </>
-      ),
-      handler: () => {},
-    },
-  ];
   return (
     <>
       {/* FIRST COLUMN START */}

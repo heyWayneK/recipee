@@ -1,13 +1,13 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
+import { RecipeProps } from "@/app/data/recipe";
 
 interface Row_SubRecipeMethodProps {
-  subRecipeId: number;
-  className?: string;
+  recipe: RecipeProps;
 }
-const Row_SubRecipeMethod: React.FC<Row_SubRecipeMethodProps> = ({ subRecipeId, className = "" }) => {
+const Row_SubRecipeMethod: React.FC<Row_SubRecipeMethodProps> = ({ recipe }) => {
   return (
-    <Table_Cell className="" firstCol={false} header={false} type="method" iconName="" key={"method" + "_" + subRecipeId}>
+    <Table_Cell className="" firstCol={false} header={false} type="method" iconName="" key={"method" + "_" + recipe.id}>
       <div className="grid justify-items text-left">
         <h4>Method</h4>
         <div className="">

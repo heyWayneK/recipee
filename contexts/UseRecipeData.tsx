@@ -1,5 +1,7 @@
 import { DataProps, data } from "@/app/data/recipe";
-import React, { createContext, useContext, useState } from "react";
+import { preCalculateData } from "@/libs/preCalculatedRecipeData";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { mergeDeep } from "@/libs/mergeDeep";
 
 // interface PreCalculatedTypes {
 //   [key: string]: string;
@@ -46,6 +48,7 @@ export const preCalculatedRecipeData: PreCalculatedRecipeData = {
   markUpPriceRules: [],
   salePricesExVat: [],
   salesPricesIncVat: [],
+  // Create a deep copy of the data object (Recipe Data)
   data: JSON.parse(JSON.stringify(data)),
 };
 
@@ -53,6 +56,8 @@ export const preCalculatedRecipeData: PreCalculatedRecipeData = {
 interface RecipeDataContextType {
   qty: number;
   setQty: React.Dispatch<React.SetStateAction<number>>;
+  recipeMode: RecipeModeType;
+  setRecipeMode: React.Dispatch<React.SetStateAction<RecipeModeType>>;
   recipeData: PreCalculatedRecipeData;
   updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void;
   // updateRecipeData: Partial<PreCalculatedRecipeData>;
@@ -64,50 +69,53 @@ interface RecipeDataProviderProps {
   children: React.ReactNode;
 }
 
+type RecipeModeType = "easy" | "advanced";
 // Context provider component
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
   const [qty, setQty] = useState<number>(1);
-
-  // const [recipeDataState, setRecipeDataState] = useState<PreCalculatedRecipeData>(JSON.parse(JSON.stringify(data)));
+  const [recipeMode, setRecipeMode] = useState<RecipeModeType>("easy");
   const [recipeDataState, setRecipeDataState] = useState<PreCalculatedRecipeData>(preCalculatedRecipeData);
 
-  // Function to update any part of the recipe data
-  // const updateRecipeData = (newData: Partial<PreCalculatedRecipeData>) => {
-  //   // console.log("UPDATE NEW DATA", newData);
-  //   setRecipeDataState((prevData) => ({ ...prevData, ...newData }));
-  // };
+  useEffect(() => {
+    console.log("useEffect ---- ");
+    updateRecipeData(preCalculateData(preCalculatedRecipeData));
+  }, []);
 
-  // PARTIAL SAVE recipeData.data structure
+  /* INFO: Function to update any part of the recipe data
+  const updateRecipeData = (newData: Partial<PreCalculatedRecipeData>) => {
+    // console.log("UPDATE NEW DATA", newData);
+    setRecipeDataState((prevData) => ({ ...prevData, ...newData }));
+  }; */
+
+  // PARTIAL SAVE OF THE RECIPE DATA STATE
+  /**
+   *
+   * @param newData
+   * @returns new DataProps Object
+   *
+   * INFO: Usage Example
+      const complexUpdate = {
+          portionSizes: [4, 5],
+          components: {
+            0: { val: "updated one" },
+            1: { val: "updated two" }
+          }
+        };
+        updateRecipeData = (complexUpdate)
+   */
   const updateRecipeData = (newData: Partial<PreCalculatedRecipeData>) => {
     setRecipeDataState((prevData) => {
-      const mergeDeep = (target: any, source: any): any => {
-        // If source value is not object or is null, return source directly
-        if (source === null || typeof source !== "object") return source;
-
-        // Target and source must be objects
-        for (const key in source) {
-          // TODO: DOES THIS STILL WORK... new option below
-          // if (source.hasOwnProperty(key)) {
-          if (Object.prototype.hasOwnProperty.call(source, key)) {
-            if (target[key] && typeof target[key] === "object" && typeof source[key] === "object") {
-              // If both target[key] and source[key] are objects, merge deeply
-              target[key] = mergeDeep(target[key], source[key]);
-            } else {
-              // Otherwise, overwrite the target property
-              target[key] = source[key];
-            }
-          }
-        }
-        return target;
-      };
-
-      return mergeDeep({ ...prevData }, newData);
+      const merge: PreCalculatedRecipeData = mergeDeep(prevData, { ...newData });
+      const preCalculated = { ...merge, ...preCalculateData(merge) };
+      return preCalculated;
     });
   };
 
   const value: RecipeDataContextType = {
     qty,
     setQty,
+    recipeMode,
+    setRecipeMode,
     recipeData: recipeDataState,
     updateRecipeData,
   };

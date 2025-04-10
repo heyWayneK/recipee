@@ -2,23 +2,32 @@ import React from "react";
 
 import Table_Cell from "./Table_Cell";
 import { formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "@/components/MenuPopupOnMouseOver";
+import { preCalculateData } from "@/libs/preCalculatedRecipeData";
 
 interface Row_PlatingPackagingCostsProps {
-  className?: string;
   viewPrices: boolean;
 }
 
-const Row_PlatingPackagingCosts: React.FC<Row_PlatingPackagingCostsProps> = ({ className = "", viewPrices }) => {
+const Row_PlatingPackagingCosts: React.FC<Row_PlatingPackagingCostsProps> = ({ viewPrices }) => {
   const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+
   const name = getTextTranslation(replace_("packaging_costs"));
 
   // UPDATE OBJECT
   const update = (portionSize: number, ruleId: number) => {
-    const newObj = { ...recipeData.data.packagingCostsId, ...{ [portionSize]: ruleId } };
-    updateRecipeData((recipeData.data.packagingCostsId = { ...newObj }));
-    // ADD HISTORY
+    const updatedObj: Partial<PreCalculatedRecipeData> = {
+      data: {
+        ...recipeData.data,
+        packagingCostsId: {
+          ...recipeData.data.packagingCostsId,
+          [portionSize]: ruleId,
+        },
+      },
+    };
+    updateRecipeData(updatedObj);
+    //FUTURE:  ADD HISTORY
   };
 
   return (

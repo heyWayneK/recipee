@@ -3,12 +3,14 @@ import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
 import { getTextTranslation } from "@/libs/utils";
 import { useRecipeData } from "@/contexts/UseRecipeData";
+import { RecipeProps } from "@/app/data/recipe";
 
 interface Row_SubRecipeControlsProps {
-  className?: string;
-  subRecipeId: number;
+  // className?: string;
+  // subRecipeId: string;
+  recipe: RecipeProps;
 }
-const Row_SubRecipeControls: React.FC<Row_SubRecipeControlsProps> = ({ className = "", subRecipeId }) => {
+const Row_SubRecipeControls: React.FC<Row_SubRecipeControlsProps> = ({ recipe }) => {
   const { qty, setQty } = useRecipeData();
 
   return (
