@@ -1,65 +1,74 @@
 /* TESTING:
-    curl "http://localhost:3000/api/data/customer/123456?name=test&id=123"
+ 
+    
 
-    curl -X POST http://localhost:3000/api/data/customer/123456 \
-     -H "Content-Type: application/json" \
-     -d '{"id": "123", "name": "John"}'
-
-     curl -X PUT http://localhost:3000/api/data/customer/123456
+      curl -X POST http://localhost:3000/api/example2/123456 \ 
+      -H "Content-Type: application/json" \
+      -d '{"id": "123", "name": "John"}'
+      
+      curl -X POST http://localhost:3000/api/example2/123456 \
+  -H "Content-Type: application/json" \
+  -d '{"id": "123", "name": "John"}'
+    
+      curl -X GET http://localhost:3000/api/example2/12345/ 
 */
+"use server";
+// Shared handler logic for GET and POST
+// app/api/example2/[id]/route.ts
+import { NextRequest, NextResponse } from "next/server";
 
-import { type NextRequest, NextResponse } from "next/server";
-
-// Define the expected data structure
-interface UserData {
+// Define your data type
+interface ExampleData {
   id: string;
   name: string;
 }
 
-// Shared handler logic for processing user data
-async function handleUserData(data: UserData): Promise<NextResponse> {
+// GET request handler
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    // Validate the data
-    if (!data.id || !data.name) {
-      return NextResponse.json({ error: "Missing required fields: id and name" }, { status: 400 });
-    }
+    const id = params.id; // Access the dynamic 'id' from params
 
-    // Process the data (replace with your actual logic)
-    const result = {
-      success: true,
-      user: data,
-      timestamp: new Date().toISOString(),
+    // Simulate fetching data based on ID
+    const data: ExampleData = {
+      id,
+      name: `Example ${id}`,
     };
 
-    return NextResponse.json(result, { status: 200 });
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("Error processing user data:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error("Error in GET:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
-// GET handler
-export async function GET(request: NextRequest): Promise<NextResponse> {
-  // Extract query parameters
-  const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get("id");
-  const name = searchParams.get("name");
-
-  if (!id || !name) {
-    return NextResponse.json({ error: "Missing required query parameters: id and name" }, { status: 400 });
-  }
-
-  return handleUserData({ id, name });
-}
-
-// POST handler
-export async function POST(request: NextRequest): Promise<NextResponse> {
+// [id]+ POST - MOST LIKELY DONT NEED THIS
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    // Parse JSON body
-    const body = await request.json();
-    return handleUserData(body);
+    const id = params.id; // Access the dynamic 'id' from params
+
+    // Parse the request body and handle potential parsing errors
+    let body;
+    try {
+      body = await request.json();
+    } catch (parseError) {
+      return NextResponse.json({ error: "Invalid JSON in request body" }, { status: 400 });
+    }
+
+    // Validate that body contains the expected data
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Request body is required" }, { status: 400 });
+    }
+
+    // Simulate creating/updating data
+    const newData: ExampleData = {
+      id,
+      name: body.name || `Example ${id}`,
+    };
+
+    return NextResponse.json({ message: "success", dats: newData }, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
+    console.error("Error in POST:", error);
+    return NextResponse.json({ error: "Internal Server Error", message: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
   }
 }
 
