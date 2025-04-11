@@ -18,17 +18,21 @@ import { NextRequest, NextResponse } from "next/server";
 interface ExampleData {
   customerid: string;
   name: string;
+  test: string;
 }
 
 // GET request handler
-export async function GET(request: NextRequest, { params }: { params: { customerid: any } }) {
+// export async function GET(request: NextRequest, { params }: { params: { customerid: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ customerid: string }> }) {
   try {
-    const customerid = params.customerid; // Access the dynamic 'id' from params
+    const { customerid } = await params;
+    // const customerid = params.customerid; // Access dynamic 'customerid' from params
 
     // Simulate fetching data based on ID
     const data: ExampleData = {
-      customerid,
+      customerid: `${customerid}`,
       name: `Example ${customerid}`,
+      test: "test2",
     };
 
     return NextResponse.json({ data: data }, { status: 200 });
