@@ -9,24 +9,18 @@
     
       curl -X GET http://localhost:3000/api/example2/12345/ 
 */
-"use server";
-// Shared handler logic for GET and POST
-// app/api/example2/[id]/route.ts
-import { NextRequest, NextResponse } from "next/server";
+// api/data/customer/[customerid]/route.ts
+import { NextResponse } from "next/server";
 
-// Define your data type
 interface ExampleData {
   customerid: string;
   name: string;
   test: string;
 }
 
-// GET request handler
-// export async function GET(request: NextRequest, { params }: { params: { customerid: string } }) {
-export async function GET({ params }) {
+export async function GET(request: Request, context: { params: { customerid: string } }) {
   try {
-    const { customerid } = await params;
-    // const customerid = params.customerid; // Access dynamic 'customerid' from params
+    const { customerid } = await context.params;
 
     // Simulate fetching data based on ID
     const data: ExampleData = {
