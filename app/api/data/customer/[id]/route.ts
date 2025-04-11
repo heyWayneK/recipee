@@ -18,14 +18,14 @@ interface ExampleData {
   test: string;
 }
 
-export async function GET(request: Request, context: { params: { customerid: string } }) {
+export async function GET(request: Request, context: { params: { id: string } }) {
   try {
-    const { customerid } = await context.params;
+    const { id } = await context.params;
 
     // Simulate fetching data based on ID
     const data: ExampleData = {
-      customerid: `${customerid}`,
-      name: `Example ${customerid}`,
+      customerid: `${id}`,
+      name: `Example ${id}`,
       test: "test3",
     };
 
