@@ -16,19 +16,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Define your data type
 interface ExampleData {
-  id: string;
+  customerid: string;
   name: string;
 }
 
 // GET request handler
 export async function GET(request: NextRequest, { params }: { params: { customerid: any } }) {
   try {
-    const id = params.customerid; // Access the dynamic 'id' from params
+    const customerid = params.customerid; // Access the dynamic 'id' from params
 
     // Simulate fetching data based on ID
     const data: ExampleData = {
-      id,
-      name: `Example ${id}`,
+      customerid,
+      name: `Example ${customerid}`,
     };
 
     return NextResponse.json({ data: data }, { status: 200 });
