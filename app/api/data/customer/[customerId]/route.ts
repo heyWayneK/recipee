@@ -23,7 +23,7 @@ interface ExampleData {
 
 // GET request handler
 // export async function GET(request: NextRequest, { params }: { params: { customerid: string } }) {
-export async function GET(request: NextRequest, { params }: { params: Promise<{ customerid: string }> }) {
+export async function GET({ params }) {
   try {
     const { customerid } = await params;
     // const customerid = params.customerid; // Access dynamic 'customerid' from params
