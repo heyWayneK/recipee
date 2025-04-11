@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const data: ExampleData = {
       customerid: `${customerid}`,
       name: `Example ${customerid}`,
-      test: "test2",
+      test: "test3",
     };
 
     return NextResponse.json({ data: data }, { status: 200 });
