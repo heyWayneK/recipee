@@ -20,7 +20,7 @@ const nextConfig = {
   //INFO:  IMPORTANT FOR JEST TESTING.
   // to allow live to use SWC
   experimental: {
-    forceSwcTransforms: true,
+    // forceSwcTransforms: true,
   },
 };
 
