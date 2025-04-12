@@ -10,9 +10,15 @@
       curl -X GET http://localhost:3000/api/example2/12345/ 
 */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request, context: { params: { id: string } }) {
+type RouteContext = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(request: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
 
@@ -32,6 +38,37 @@ export async function GET(request: Request, context: { params: { id: string } })
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
+//_____________________________
+//_____________________________
+//_____________________________
+//_____________________________
+
+// export async function GET(request: Request, context: { params: { id: string } }) {
+//   try {
+//     const { id } = await context.params;
+
+//     if (!id) {
+//       return NextResponse.json({ error: "Parameter 'id' is required" }, { status: 400 });
+//     }
+
+//     return NextResponse.json(
+//       {
+//         message: `Hello World 1bb! Received: id: ${id}`,
+//         id: id,
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Error processing GET request:", error);
+//     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+//   }
+// }
+
+//____________________________
+//____________________________
+//____________________________
+//____________________________
 
 // // api/data/customer/[customerid]/route.ts
 // import { NextResponse } from "next/server";
