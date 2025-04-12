@@ -12,23 +12,31 @@ import prisma from "@/libs/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { GetStaticProps } from "next";
 
-interface Props {
-  lookupData: any[]; // Replace with proper typing for your data
+/* TESTING:
+    curl "http://localhost:3000/api/example?name=test&id=123"
+
+    curl -X POST http://localhost:3000/api/example \
+     -H "Content-Type: application/json" \
+     -d '{"id": "123", "name": "John"}'
+
+     curl -X PUT http://localhost:3000/api/example
+
+*/
+// Filename: app/data/system/route.ts
+
+interface ExampleResponseData {
+  message: string;
+  id: string | null; // Allow null if parameter might be missing (though we check below)
+  name: string | null; // Allow null if parameter might be missing (though we check below)
 }
 
-// GET request handler
-export async function GET() {
+/**
+ * Handles GET requests to /api/example
+ * Expects 'id' and 'name' query parameters.
+ * Example: /api/example?id=123&name=test
+ */
+export async function GET(request: NextRequest) {
   try {
-    // FUTURE:
-    // const pid = params.profileId; // Access the dynamic 'id' from params
-    // if (!pid) {
-    //   // CHECK IF ACCESS IS AUTHORIZED
-    //   return NextResponse.json({ error: "Profile ID is required" }, { status: 400 });
-    // }
-
-    // const getStaticProps: GetStaticProps = async () => {
-    // Simulate fetching data based on ID
-
     const queries = {
       // unit_type: prisma.unit_type.findMany(),
       // unit_measurement: prisma.unit_measurement.findMany(),
@@ -66,27 +74,19 @@ export async function GET() {
     const results = await Promise.all(Object.values(queries));
     const jsonObj = Object.fromEntries(Object.keys(queries).map((key, index) => [key, results[index]]));
 
-    //
-    //
-    //
-
-    //   return {
-    //     props: {
-    //       lookupData: dataCustomer,
-    //     },
-    //     revalidate: 86400, // Revalidate every 24 hours (optional ISR)
-    //   };
-    // };
-
-    // console.log("results", jsonObj);
-
+    // Return the successful JSON response with a 200 OK status
     return NextResponse.json(jsonObj, { status: 200 });
   } catch (error) {
-    console.error("Error in GET:", error);
-    return NextResponse.json({ error: "Internal Server Error", message: error }, { status: 500 });
+    // Log the error for server-side debugging
+    console.error("Error processing GET request:", error);
+
+    // Return a generic server error response with a 500 Internal Server Error status
+    // Avoid sending detailed error messages to the client in production
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
+// FUTURE: CREATE INDEXES ON SUPERBASE
 // FUTURE: POSSIBLY MAKE EDGE FUNCTION
 /*
 // supabase/functions/get-lookup-data.ts

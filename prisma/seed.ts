@@ -86693,73 +86693,122 @@ const seed = {
 
 async function seedInsert() {
   console.log("Start seeding...");
+
+  // NEW METHOD TO DO THIS____________________
+  // NEW METHOD TO DO THIS____________________
+  // NEW METHOD TO DO THIS____________________
+
+  // CHANGE to insert of seed file from above using data: seed.alllergy
+  // prisma.allergy.createMany({ data: seed.allergy }),
+
+  const queries = {
+    // unit_type: prisma.unit_type.findMany(),
+    // unit_measurement: prisma.unit_measurement.findMany(),
+    // prep_instructions: prisma.prep_instructions.findMany(),
+    // raw_to_prepped_yields: prisma.raw_to_prepped_yields.findMany(),
+    // cooked_yields_categories: prisma.cooked_yields_categories.findMany(),
+    // cooked_yields: prisma.cooked_yields.findMany(),
+    // dry_cooked_yields_categories: prisma.dry_cooked_yields_categories.findMany(),
+    // dry_cooked_yields: prisma.dry_cooked_yields.findMany(),
+    // ingredients_religious_certification: prisma.ingredients_religious_certification.findMany(),
+    // language: prisma.language.findMany(),
+    // country_locale: prisma.country_locale.findMany(),
+    // ingredient_cooked_yields: prisma.ingredient_cooked_yields.findMany(),
+    // ingredient_category_secondary: prisma.ingredient_category_secondary.findMany(),
+    // dietary_classification: prisma.dietary_classification.findMany(),
+    // ingredients_yields: prisma.ingredients_yields.findMany(),
+    // allergy: prisma.allergy.findMany(),
+    // recipe_mode: prisma.recipe_mode.findMany(),
+    // recipe_type: prisma.recipe_type.findMany(),
+    // oil_purpose: prisma.oil_purpose.findMany(),
+    // salt_purpose: prisma.salt_purpose.findMany(),
+    // todo_status: prisma.todo_status.findMany(),
+    // cost_rules: prisma.cost_rules.findMany(),
+    // markup_type: prisma.markup_type.findMany(),
+    // ingredient_type: prisma.ingredient_type.findMany(),
+    // packaging_costs_category_example: prisma.packaging_costs_category_example.findMany(),
+    // packaging_costs_line_item_example: prisma.packaging_costs_line_item_example.findMany(),
+    // other_costs_category_example: prisma.other_costs_category_example.findMany(),
+    // other_costs_line_item_example: prisma.other_costs_line_item_example.findMany(),
+    // other_costs_category: prisma.other_costs_category.findMany(),
+    // packaging_costs_category: prisma.packaging_costs_category.findMany(),
+    // vat_rules: prisma.vat_rules.findMany(),
+  };
+
+  // const results = await Promise.all(Object.values(queries));
+  // const jsonObj = Object.fromEntries(Object.keys(queries).map((key, index) => [key, results[index]]));
+
+  // NEW METHOD TO DO THIS____________________
+  // NEW METHOD TO DO THIS____________________
+  // NEW METHOD TO DO THIS____________________
+
   // IMPORTANT: DELETE SECONDARY DATA FIRST
-  await Promise.all([
-    prisma.allergy.deleteMany(),
-    prisma.allergy_ingredient.deleteMany(),
-    prisma.allergy.deleteMany(),
-    prisma.cost_rules.deleteMany(),
-    prisma.customer.deleteMany(),
-    prisma.dry_cooked_yields.deleteMany(),
-    prisma.ingredient_category_secondary.deleteMany(),
-    prisma.ingredient_cooked_yields.deleteMany(),
-    prisma.ingredients.deleteMany(),
-    prisma.ingredients_nutrition.deleteMany(),
-    prisma.markup.deleteMany(),
-    prisma.other_costs.deleteMany(),
-    prisma.packaging_costs.deleteMany(),
-    prisma.prep_instructions.deleteMany(),
-    prisma.profiles.deleteMany(),
-    prisma.raw_to_prepped_yields.deleteMany(),
-    prisma.recipe.deleteMany(),
-    prisma.stock_location.deleteMany(),
-    prisma.supplier.deleteMany(),
-    prisma.todo.deleteMany(),
-  ]);
+  // await Promise.all([
+  //   // prisma.allergy.deleteMany(),
+  //   // prisma.allergy_ingredient.deleteMany(),
+  //   // prisma.allergy.deleteMany(),
+  //   // prisma.cost_rules.deleteMany(),
+  //   // prisma.customer.deleteMany(),
+  //   // prisma.dry_cooked_yields.deleteMany(),
+  //   // prisma.ingredient_category_secondary.deleteMany(),
+  //   // prisma.ingredient_cooked_yields.deleteMany(),
+  //   // prisma.ingredients.deleteMany(),
+  //   // prisma.ingredients_nutrition.deleteMany(),
+  //   // prisma.markup.deleteMany(),
+  //   // prisma.other_costs.deleteMany(),
+  //   // prisma.packaging_costs.deleteMany(),
+  //   // prisma.prep_instructions.deleteMany(),
+  //   // prisma.profiles.deleteMany(),
+  //   // prisma.raw_to_prepped_yields.deleteMany(),
+  //   // prisma.recipe.deleteMany(),
+  //   // prisma.stock_location.deleteMany(),
+  //   // prisma.supplier.deleteMany(),
+  //   // prisma.todo.deleteMany(),
+  // ]);
 
   //  IMPORTANT: DELETE PRIMARY DATA SECOND
-  await Promise.all([
-    prisma.dietary_classification.deleteMany(),
-    prisma.cooked_yields_categories.deleteMany(),
-    prisma.ingredient_category_primary.deleteMany(),
-    prisma.dry_cooked_yields_categories.deleteMany(),
-    prisma.ingredients_religious_certification.deleteMany(),
-  ]);
+  // await Promise.all([
+  //   // prisma.dietary_classification.deleteMany(),
+  //   // prisma.cooked_yields_categories.deleteMany(),
+  //   // prisma.ingredient_category_primary.deleteMany(),
+  //   // prisma.dry_cooked_yields_categories.deleteMany(),
+  //   // prisma.ingredients_religious_certification.deleteMany(),
+  // ]);
 
   console.log("Tables data deleted.");
 
   //  IMPORTANT: CATEGORY FILES FIRST so relational index is created
-  await Promise.all([
-    prisma.dietary_classification.createMany({ data: seed.dietary_classification }),
-    prisma.cooked_yields_categories.createMany({ data: seed.cooked_yields_categories }),
-    prisma.ingredient_category_primary.createMany({ data: seed.ingredient_category_primary }),
-    prisma.dry_cooked_yields_categories.createMany({ data: seed.dry_cooked_yields_categories }),
-    prisma.ingredients_religious_certification.createMany({ data: seed.ingredients_religious_certification }),
-  ]);
+  // await Promise.all([
+  //   // prisma.dietary_classification.createMany({ data: seed.dietary_classification }),
+  //   // prisma.cooked_yields_categories.createMany({ data: seed.cooked_yields_categories }),
+  //   // prisma.ingredient_category_primary.createMany({ data: seed.ingredient_category_primary }),
+  //   // prisma.dry_cooked_yields_categories.createMany({ data: seed.dry_cooked_yields_categories }),
+  //   // prisma.ingredients_religious_certification.createMany({ data: seed.ingredients_religious_certification }),
+  // ]);
 
   // IMPORTANT: CATEGORY DEPENDANT FILES SECOND
-  await Promise.all([
-    prisma.allergy.createMany({ data: seed.allergy }),
-    prisma.allergy_ingredient.createMany({ data: seed.allergy_ingredient }),
-    prisma.allergy.createMany({ data: seed.allergy }),
-    prisma.cost_rules.createMany({ data: seed.cost_rules }),
-    prisma.customer.createMany({ data: seed.customer }),
-    prisma.dry_cooked_yields.createMany({ data: seed.dryCookedYields }),
-    prisma.ingredient_category_secondary.createMany({ data: seed.ingredient_category_secondary }),
-    prisma.ingredient_cooked_yields.createMany({ data: seed.ingredient_cooked_yields }),
-    prisma.ingredients.createMany({ data: seed.ingredients }),
-    prisma.ingredients_nutrition.createMany({ data: seed.ingredients_nutrition }),
-    prisma.markup.createMany({ data: seed.markup }),
-    prisma.other_costs.createMany({ data: seed.other_costs }),
-    prisma.packaging_costs.createMany({ data: seed.packaging_costs }),
-    prisma.prep_instructions.createMany({ data: seed.prep_instructions }),
-    prisma.profiles.createMany({ data: seed.profiles }),
-    prisma.raw_to_prepped_yields.createMany({ data: seed.raw_to_prepped_yields }),
-    prisma.recipe.createMany({ data: seed.recipe }),
-    prisma.stock_location.createMany({ data: seed.stock_location }),
-    prisma.supplier.createMany({ data: seed.supplier }),
-    prisma.todo.createMany({ data: seed.todo }),
-  ]);
+  // await Promise.all([
+  //   // prisma.allergy.createMany({ data: seed.allergy }),
+  //   // prisma.allergy_ingredient.createMany({ data: seed.allergy_ingredient }),
+  //   // prisma.allergy.createMany({ data: seed.allergy }),
+  //   // prisma.cost_rules.createMany({ data: seed.cost_rules }),
+  //   // prisma.customer.createMany({ data: seed.customer }),
+  //   // prisma.dry_cooked_yields.createMany({ data: seed.dryCookedYields }),
+  //   // prisma.ingredient_category_secondary.createMany({ data: seed.ingredient_category_secondary }),
+  //   // prisma.ingredient_cooked_yields.createMany({ data: seed.ingredient_cooked_yields }),
+  //   // prisma.ingredients.createMany({ data: seed.ingredients }),
+  //   // prisma.ingredients_nutrition.createMany({ data: seed.ingredients_nutrition }),
+  //   // prisma.markup.createMany({ data: seed.markup }),
+  //   // prisma.other_costs.createMany({ data: seed.other_costs }),
+  //   // prisma.packaging_costs.createMany({ data: seed.packaging_costs }),
+  //   // prisma.prep_instructions.createMany({ data: seed.prep_instructions }),
+  //   // prisma.profiles.createMany({ data: seed.profiles }),
+  //   // prisma.raw_to_prepped_yields.createMany({ data: seed.raw_to_prepped_yields }),
+  //   // prisma.recipe.createMany({ data: seed.recipe }),
+  //   // prisma.stock_location.createMany({ data: seed.stock_location }),
+  //   // prisma.supplier.createMany({ data: seed.supplier }),
+  //   // prisma.todo.createMany({ data: seed.todo }),
+  // ]);
 
   // await prisma.customer.deleteMany(); // Optional: Clear existing data (use with caution)
   // await prisma.customer.createMany({
