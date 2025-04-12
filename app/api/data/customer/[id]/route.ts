@@ -12,24 +12,18 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-// Define the expected structure for the response data (optional but good practice)
+// Define the expected structure for the response data
 interface ExampleResponseData {
   message: string;
-  id: string | null; // Allow null if parameter might be missing (though we check below)
+  id: string;
 }
 
-/**
- * Handles GET requests to /api/example
- * Expects 'id' and 'name' query parameters.
- * Example: /api/example?id=123&name=test
- */
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const id = await params.id;
+    const id = params.id;
+
     if (!id) {
-      console.log("Required query parameters (name, id) are missing");
-      // Return a JSON response with a 400 Bad Request status
-      return NextResponse.json({ error: "Query parameters 'name' and 'id' are required" }, { status: 400 });
+      return NextResponse.json({ error: "Parameter 'id' is required" }, { status: 400 });
     }
 
     // Construct the data you want to return
@@ -38,14 +32,10 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       id: id,
     };
 
-    // Return the successful JSON response with a 200 OK status
+    // Return the successful JSON response
     return NextResponse.json(responseData, { status: 200 });
   } catch (error) {
-    // Log the error for server-side debugging
     console.error("Error processing GET request:", error);
-
-    // Return a generic server error response with a 500 Internal Server Error status
-    // Avoid sending detailed error messages to the client in production
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
