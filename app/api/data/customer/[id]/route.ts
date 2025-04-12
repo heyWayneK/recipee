@@ -13,9 +13,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
 type RouteContext = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function GET(request: NextRequest, context: RouteContext) {
