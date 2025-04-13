@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     return NextResponse.json(
       {
-        message: `Hello World 1bb! Received: id: ${id}`,
+        message: `Hello World 1c! Received: id: ${id}`,
         id: id,
       },
       { status: 200 }
@@ -38,64 +38,6 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
-
-//_____________________________
-//_____________________________
-//_____________________________
-//_____________________________
-
-// export async function GET(request: Request, context: { params: { id: string } }) {
-//   try {
-//     const { id } = await context.params;
-
-//     if (!id) {
-//       return NextResponse.json({ error: "Parameter 'id' is required" }, { status: 400 });
-//     }
-
-//     return NextResponse.json(
-//       {
-//         message: `Hello World 1bb! Received: id: ${id}`,
-//         id: id,
-//       },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Error processing GET request:", error);
-//     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-//   }
-// }
-
-//____________________________
-//____________________________
-//____________________________
-//____________________________
-
-// // api/data/customer/[customerid]/route.ts
-// import { NextResponse } from "next/server";
-
-// interface ExampleData {
-//   customerid: string;
-//   name: string;
-//   test: string;
-// }
-
-// export async function GET(request: Request, context: { params: { id: string } }) {
-//   try {
-//     const { id } = await context.params;
-
-//     // Simulate fetching data based on ID
-//     const data: ExampleData = {
-//       customerid: `${id}`,
-//       name: `Example ${id}`,
-//       test: "test3",
-//     };
-
-//     return NextResponse.json({ data: data }, { status: 200 });
-//   } catch (error: any) {
-//     console.error("Error in GET:", error);
-//     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-//   }
-// }
 
 // id                       Int                        @id @default(autoincrement())
 //   name                     String

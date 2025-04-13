@@ -1,18 +1,12 @@
 /* TESTING:
-    curl "http://localhost:3000/api/example?name=test&id=123"
+    curl "http://localhost:3000/api/examples/url_params?id=123&name=test"
 
-    curl -X POST http://localhost:3000/api/example \
-     -H "Content-Type: application/json" \
-     -d '{"id": "123", "name": "John"}'
+    http://localhost:3000/api/examples/url_params?id=123&name=test
 
-     curl -X PUT http://localhost:3000/api/example
 */
-
-// Filename: app/api/example/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 
-// Define the expected structure for the response data (optional but good practice)
 interface ExampleResponseData {
   message: string;
   id: string | null; // Allow null if parameter might be missing (though we check below)
@@ -20,9 +14,10 @@ interface ExampleResponseData {
 }
 
 /**
- * Handles GET requests to /api/example
+ * Handles GET requests
  * Expects 'id' and 'name' query parameters.
- * Example: /api/example?id=123&name=test
+// Define the expected structure for the response data (optional but good practice)
+ * Example: http://localhost:3000/api/examples/url_params?id=123&name=test
  */
 export async function GET(request: NextRequest) {
   try {

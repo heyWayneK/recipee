@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
     return NextResponse.json(
       {
         message: `Hello World 1bb! Received: id: ${profileid}`,
-        id: profileid,
+        profileid: profileid,
       },
       { status: 200 }
     );
