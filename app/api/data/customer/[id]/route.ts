@@ -1,13 +1,7 @@
 /* TESTING:
-      curl -X POST http://localhost:3000/api/example2/123456 \ 
-      -H "Content-Type: application/json" \
-      -d '{"id": "123", "name": "John"}'
+      http://localhost:3000/api/data/customer/79
       
-      curl -X POST http://localhost:3000/api/example2/123456 \
-  -H "Content-Type: application/json" \
-  -d '{"id": "123", "name": "John"}'
-    
-      curl -X GET http://localhost:3000/api/example2/12345/ 
+      curl -X GET http://localhost:3000/api/data/customer/79 
 */
 
 import { NextRequest, NextResponse } from "next/server";

@@ -1,5 +1,8 @@
 /* TESTING:
       curl -X GET http://localhost:3000/api/data/system/ 
+
+      http://localhost:3000/api/data/system
+      http://recipee.app/api/data/system
 */
 /* FUTURE: CREATE INDEXES
 CREATE INDEX idx_unit_type_name ON unit_type (name);
@@ -9,84 +12,419 @@ CREATE INDEX idx_unit_measurement_name ON unit_measurement (name);
 
 "use server";
 import prisma from "@/libs/prisma";
-import { NextRequest, NextResponse } from "next/server";
-import { GetStaticProps } from "next";
+import { Prisma } from "@prisma/client";
+import { NextResponse } from "next/server";
+// import { GetStaticProps } from "next";
 
-/* TESTING:
-    curl "http://localhost:3000/api/example?name=test&id=123"
+export type UnitTypeSelect = Prisma.unit_typeGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    imperial: true;
+    metric: true;
+  };
+}>;
 
-    curl -X POST http://localhost:3000/api/example \
-     -H "Content-Type: application/json" \
-     -d '{"id": "123", "name": "John"}'
+export type UnitMeasurementSelect = Prisma.unit_measurementGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    is_default: true;
+  };
+}>;
 
-     curl -X PUT http://localhost:3000/api/example
+export type PrepInstructionsSelect = Prisma.prep_instructionsGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    imperial: true;
+    metric: true;
+    translation: true;
+    yield: true;
+  };
+}>;
 
-*/
-// Filename: app/data/system/route.ts
+export type CookedYieldsCategoriesSelect = Prisma.cooked_yields_categoriesGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    translation: true;
+    desc: true;
+    yield: true;
+    is_live?: boolean;
+  };
+}>;
 
-interface ExampleResponseData {
-  message: string;
-  id: string | null; // Allow null if parameter might be missing (though we check below)
-  name: string | null; // Allow null if parameter might be missing (though we check below)
+export type DryCookedYieldsCategoriesSelect = Prisma.dry_cooked_yields_categoriesGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    translation: true;
+    yield: true;
+  };
+}>;
+
+export type DryCookedYieldsSelect = Prisma.dry_cooked_yieldsGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    translation: true;
+    yield: true;
+  };
+}>;
+
+export type IngredientsReligiousCertificationSelect = Prisma.ingredients_religious_certificationGetPayload<{
+  select: {
+    id: true;
+    name: true;
+  };
+}>;
+
+export type LanguageSelect = Prisma.languageGetPayload<{
+  select: {
+    id: true;
+    name: true;
+  };
+}>;
+
+// export type NutritionalDataValuesSelect = Prisma.ingredients_nutritionGetPayload<
+export type NutritionalDataValuesSelect = { column_name: string };
+
+export type IngredientCategoryPrimarySelect = Prisma.ingredient_category_primaryGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    translation: true;
+  };
+}>;
+
+export type IngredientCategorySecondarySelect = Prisma.ingredient_category_secondaryGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    translation: true;
+    ingredient_category_primary_id: true;
+  };
+}>;
+
+export type DietaryClassificationSelect = Prisma.dietary_classificationGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    translation: true;
+  };
+}>;
+
+export type AllergySelect = Prisma.allergyGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    translation: true;
+  };
+}>;
+
+export type RecipeModeSelect = Prisma.recipe_modeGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+  };
+}>;
+
+export type RecipeTypeSelect = Prisma.recipe_typeGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    is_default: true;
+  };
+}>;
+
+export type OilPurposeSelect = Prisma.oil_purposeGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    factor: true;
+    desc: true;
+    is_default: true;
+    confidence: true;
+  };
+}>;
+
+export type SaltPurposeSelect = Prisma.salt_purposeGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    factor: true;
+    desc: true;
+    is_default: true;
+    confidence: true;
+  };
+}>;
+
+export type IngredientTypeSelect = Prisma.ingredient_typeGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+  };
+}>;
+
+export type MarkupTypeSelect = Prisma.markup_typeGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+  };
+}>;
+
+export type MarkupSelect = Prisma.markupGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    customer_id: true;
+    desc: true;
+    markup_type_id: true;
+    factor: true;
+    markup_type: { select: { id: true; name: true; desc: true } };
+  };
+}>;
+
+export type TodoStatusSelect = Prisma.todo_statusGetPayload<{
+  select: {
+    id: true;
+    name: true;
+  };
+}>;
+
+export type OtherCostsCategorySelect = Prisma.other_costs_categoryGetPayload<{
+  select: {
+    id: true;
+    name: true;
+  };
+}>;
+
+export type OtherCostsLineItemsLookupSelect = Prisma.other_costs_line_itemGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    supplier_id: true;
+    cost: true;
+    is_active: true;
+    customer_id: true;
+    category_ids: true;
+  };
+}>;
+
+export type PackagingCostsCategorySelect = Prisma.packaging_costs_categoryGetPayload<{
+  select: {
+    id: true;
+    name: true;
+  };
+}>;
+
+export type PackagingCostsLineItemsLookupSelect = Prisma.packaging_costs_line_itemGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    desc: true;
+    supplier_id: true;
+    cost: true;
+    is_active: true;
+    customer_id: true;
+    category_ids: true;
+  };
+}>;
+
+interface PackagingCostsLineItemsLookup {
+  id: number;
+  name: string;
+  desc: string;
+  supplier_id: number;
+  cost: number;
+  is_active: boolean;
+  customer_id: number;
+  category_ids: number[]; // Adjust type based on your schema (e.g., array of numbers or strings)
 }
+
+export type VatRulesSelect = Prisma.vat_rulesGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    cost: true;
+    description: true;
+    customer_id: true;
+    default: true;
+  };
+}>;
+
+interface obj {
+  [key: string]: Promise<any>;
+}
+
+export const getSystemData = async (customerId: number) => {
+  const queries: obj = {
+    // JUST GET VALUES FORM TABLE AS IS.
+    unit_type: prisma.unit_type.findMany({ select: { id: true, name: true, desc: true, imperial: true, metric: true } }) as Promise<UnitTypeSelect[]>,
+
+    unit_measurement: prisma.unit_measurement.findMany({ select: { id: true, name: true, is_default: true } }) as Promise<UnitMeasurementSelect[]>,
+
+    prep_instructions: prisma.prep_instructions.findMany({
+      where: { is_live: true },
+      select: { id: true, name: true, desc: true, imperial: true, metric: true, translation: true, yield: true },
+    }) as Promise<PrepInstructionsSelect[]>,
+
+    cooked_yields_categories: prisma.cooked_yields_categories.findMany({
+      where: { is_live: true },
+      select: { id: true, name: true, translation: true, desc: true, yield: true, is_live: true },
+    }) as Promise<CookedYieldsCategoriesSelect[]>,
+
+    dry_cooked_yields_categories: prisma.dry_cooked_yields_categories.findMany({ where: { is_live: true }, select: { id: true, name: true, desc: true, translation: true, yield: true } }) as Promise<
+      DryCookedYieldsCategoriesSelect[]
+    >,
+
+    dry_cooked_yields: prisma.dry_cooked_yields.findMany({ where: { is_live: true }, select: { id: true, name: true, desc: true, translation: true, yield: true } }) as Promise<
+      DryCookedYieldsCategoriesSelect[]
+    >,
+
+    ingredients_religious_certification: prisma.ingredients_religious_certification.findMany({ select: { id: true, name: true } }),
+
+    language: prisma.language.findMany({ select: { id: true, name: true } }) as Promise<LanguageSelect[]>,
+
+    nutritional_data_values: prisma.$queryRaw`
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_name = 'ingredients_nutrition'` as Promise<NutritionalDataValuesSelect[]>,
+
+    ingredient_category_primary: prisma.ingredient_category_primary.findMany({ select: { id: true, name: true, translation: true } }) as Promise<IngredientCategoryPrimarySelect[]>,
+
+    // FUTURE: need to create secondary
+    ingredient_category_secondary: prisma.ingredient_category_secondary.findMany({ select: { id: true, name: true, translation: true, ingredient_category_primary_id: true } }) as Promise<
+      IngredientCategorySecondarySelect[]
+    >,
+
+    dietary_classification: prisma.dietary_classification.findMany({ select: { id: true, name: true, translation: true } }) as Promise<DietaryClassificationSelect[]>,
+
+    allergy: prisma.allergy.findMany({ select: { id: true, name: true, desc: true, translation: true } }) as Promise<AllergySelect[]>,
+
+    recipe_mode: prisma.recipe_mode.findMany({ select: { id: true, name: true, desc: true } }) as Promise<RecipeModeSelect[]>,
+
+    recipe_type: prisma.recipe_type.findMany({ select: { id: true, name: true, desc: true, is_default: true } }) as Promise<RecipeTypeSelect[]>,
+
+    oil_purpose: prisma.oil_purpose.findMany({ select: { id: true, name: true, factor: true, desc: true, is_default: true, confidence: true } }) as Promise<OilPurposeSelect[]>,
+
+    salt_purpose: prisma.salt_purpose.findMany({ select: { id: true, name: true, factor: true, desc: true, is_default: true, confidence: true } }) as Promise<SaltPurposeSelect[]>,
+
+    ingredient_type: prisma.ingredient_type.findMany({ select: { id: true, name: true, desc: true } }) as Promise<IngredientTypeSelect[]>,
+
+    markup_type: prisma.markup_type.findMany({ select: { id: true, name: true, desc: true } }) as Promise<MarkupTypeSelect[]>,
+
+    markup: prisma.markup.findMany({
+      where: { customer_id: customerId },
+      select: { id: true, name: true, customer_id: true, desc: true, markup_type_id: true, factor: true, markup_type: { select: { id: true, name: true, desc: true } } },
+      orderBy: { factor: "asc" },
+    }) as Promise<MarkupSelect[]>,
+
+    todo_status: prisma.todo_status.findMany({ select: { id: true, name: true }, where: { customer_id: customerId }, orderBy: { id: "asc" } }) as Promise<TodoStatusSelect[]>,
+
+    // GET VALUES WHERE CUSTOMER = 1 (Default Account)
+    other_costs_category: prisma.other_costs_category.findMany({ where: { customer_id: customerId } }) as Promise<OtherCostsCategorySelect[]>,
+
+    other_costs_line_items_lookup: prisma.$queryRaw`
+        SELECT
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id,
+            string_agg(l.other_costs_category_id::text, ',' ORDER BY l.other_costs_category_id) AS category_ids
+        FROM
+            public.other_costs_line_item li
+        INNER JOIN
+            public.other_costs_lookup l
+            ON li.id = l.other_costs_line_item_id
+        WHERE
+            l.customer_id = ${customerId}
+        GROUP BY
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id
+        ORDER BY
+            li.name;
+    `,
+
+    packaging_costs_category: prisma.packaging_costs_category.findMany({ where: { customer_id: customerId } }) as Promise<PackagingCostsCategorySelect[]>,
+
+    packaging_costs_line_items_lookup: prisma.$queryRaw`
+        SELECT
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id,
+            string_agg(l.packaging_costs_category_id::text, ',' ORDER BY l.packaging_costs_category_id) AS category_ids
+        FROM
+            public.packaging_costs_line_item li
+        INNER JOIN
+            public.packaging_costs_lookup l
+            ON li.id = l.packaging_costs_line_item_id
+        WHERE
+            l.customer_id = ${customerId}
+        GROUP BY
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id
+        ORDER BY
+            li.name;
+    ` as Promise<PackagingCostsLineItemsLookup[]>,
+
+    vat_rules: prisma.vat_rules.findMany({ where: { customer_id: customerId }, select: { id: true, name: true, cost: true, description: true, customer_id: true, default: true } }) as Promise<
+      VatRulesSelect[]
+    >,
+  };
+
+  const results = await Promise.all(Object.values(queries));
+  return Object.fromEntries(Object.keys(queries).map((key, index) => [key, results[index]]));
+};
 
 /**
  * Handles GET requests to /api/example
  * Expects 'id' and 'name' query parameters.
- * Example: /api/example?id=123&name=test
+ * Example: /api/data/system/
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
+  const customerId = 1; // Default customer ID
   try {
-    const queries = {
-      // unit_type: prisma.unit_type.findMany(),
-      // unit_measurement: prisma.unit_measurement.findMany(),
-      // prep_instructions: prisma.prep_instructions.findMany(),
-      // raw_to_prepped_yields: prisma.raw_to_prepped_yields.findMany(),
-      // cooked_yields_categories: prisma.cooked_yields_categories.findMany(),
-      // cooked_yields: prisma.cooked_yields.findMany(),
-      // dry_cooked_yields_categories: prisma.dry_cooked_yields_categories.findMany(),
-      // dry_cooked_yields: prisma.dry_cooked_yields.findMany(),
-      // ingredients_religious_certification: prisma.ingredients_religious_certification.findMany(),
-      // language: prisma.language.findMany(),
-      // country_locale: prisma.country_locale.findMany(),
-      // ingredient_cooked_yields: prisma.ingredient_cooked_yields.findMany(),
-      // ingredient_category_secondary: prisma.ingredient_category_secondary.findMany(),
-      // dietary_classification: prisma.dietary_classification.findMany(),
-      // ingredients_yields: prisma.ingredients_yields.findMany(),
-      // allergy: prisma.allergy.findMany(),
-      // recipe_mode: prisma.recipe_mode.findMany(),
-      // recipe_type: prisma.recipe_type.findMany(),
-      // oil_purpose: prisma.oil_purpose.findMany(),
-      // salt_purpose: prisma.salt_purpose.findMany(),
-      // todo_status: prisma.todo_status.findMany(),
-      // cost_rules: prisma.cost_rules.findMany(),
-      // markup_type: prisma.markup_type.findMany(),
-      // ingredient_type: prisma.ingredient_type.findMany(),
-      // packaging_costs_category_example: prisma.packaging_costs_category_example.findMany(),
-      // packaging_costs_line_item_example: prisma.packaging_costs_line_item_example.findMany(),
-      other_costs_category_example: prisma.other_costs_category_example.findMany(),
-      other_costs_line_item_example: prisma.other_costs_line_item_example.findMany(),
-      // other_costs_category: prisma.other_costs_category.findMany(),
-      // packaging_costs_category: prisma.packaging_costs_category.findMany(),
-      // vat_rules: prisma.vat_rules.findMany(),
-    };
-
-    const results = await Promise.all(Object.values(queries));
-    const jsonObj = Object.fromEntries(Object.keys(queries).map((key, index) => [key, results[index]]));
-
+    const jsonObj = await getSystemData(customerId);
     // Return the successful JSON response with a 200 OK status
     return NextResponse.json(jsonObj, { status: 200 });
   } catch (error) {
     // Log the error for server-side debugging
     console.error("Error processing GET request:", error);
-
-    // Return a generic server error response with a 500 Internal Server Error status
-    // Avoid sending detailed error messages to the client in production
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: "Script or Server Error" }, { status: 500 });
   }
 }
 
 // FUTURE: CREATE INDEXES ON SUPERBASE
+//
 // FUTURE: POSSIBLY MAKE EDGE FUNCTION
 /*
 // supabase/functions/get-lookup-data.ts

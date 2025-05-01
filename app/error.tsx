@@ -129,8 +129,8 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
         <p className="font-medium md:text-xl md:font-semibold text-slate-200">Something went wrong, See Console 🥲</p>
 
         <p className="text-red-500">{error?.message}</p>
-        <p className="text-red-500">{error?.name}</p>
-        <p className="text-red-500">{error?.stack}</p>
+        {/* <p className="text-red-500">{error?.name}</p> */}
+        {/* <p className="text-red-500">{error?.stack}</p> */}
 
         <div className="flex flex-wrap gap-4 justify-center">
           <button className="btn btn-sm" onClick={reset}>

@@ -27,6 +27,7 @@ const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
     // e.preventDefault();
     setViewPrices(!viewPrices);
   }
+
   return (
     <DottedBorder className=" grid grid-cols-1 justify-items-center mb-8">
       {/* TODO: <Row_EditOrProduction data={data} /> */}

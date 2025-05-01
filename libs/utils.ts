@@ -108,9 +108,16 @@ export const formatWeight = (weight: number): number | string => {
 // CALCULATE THE PROFIT on method selected
 export const calcProfit = (costPrice: number, type: string, x: number): number => {
   let m: number = 0;
-  if (type === "markup") m = calcMarkup(costPrice, x);
-  if (type === "margin") m = calcMarkup(costPrice, x);
-  if (type === "xcost") m = calcXCost(costPrice, x);
+  if (type === "markup") {
+    m = calcMarkup(costPrice, x);
+  } else if (type === "margin") {
+    m = calcMarkup(costPrice, x);
+  } else if (type === "x_cost") {
+    m = calcXCost(costPrice, x);
+  } else {
+    throw new Error(`Unknown calcProfit type: ${type}`);
+  }
+
   return m - costPrice;
 };
 

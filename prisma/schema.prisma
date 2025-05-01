@@ -40,16 +40,16 @@ model customer {
   conversation_thread      conversation_thread[]
   production_event         production_event[]
   production_event_task    production_event_task[]
-  cost_rules               cost_rules[]
-  packagingCosts           packaging_costs[]
+  // cost_rules               cost_rules[]
   other_costs_category     other_costs_category[]
   markup                   markup[]
   recipe                   recipe[]
   ingredients_nutrition    ingredients_nutrition[]
-  ingredients_yields       ingredients_yields[]
   packaging_costs_category packaging_costs_category[]
   vat_rules                vat_rules[]
   brand                    brand[]
+  other_costs_lookup       other_costs_lookup[]
+  packaging_costs_lookup   packaging_costs_lookup[]
 }
 
 model supplier {
@@ -70,11 +70,9 @@ model supplier {
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
-  packaging_costs_line_item         packaging_costs_line_item[]
-  packaging_costs_line_item_example packaging_costs_line_item_example[]
+  packaging_costs_line_item packaging_costs_line_item[]
 
-  other_costs_line_item         other_costs_line_item[]
-  other_costs_line_item_example other_costs_line_item_example[]
+  other_costs_line_item other_costs_line_item[]
 }
 
 // model Role {
@@ -109,7 +107,6 @@ model profiles {
   last_sign_in_at       String?
   json                  Json?
   todo                  todo[]
-  todo_status           todo_status[]
   todo_document         todo_document[]
   conversation_thread   conversation_thread[]
   production_event      production_event[]
@@ -132,7 +129,7 @@ model markup {
   customer       customer    @relation(fields: [customer_id], references: [id])
   customer_id    Int
   name           String
-  factor         String
+  factor         Decimal     @db.Decimal(10, 3)
   markup_type    markup_type @relation(fields: [markup_type_id], references: [id])
   markup_type_id Int
   desc           String
@@ -258,33 +255,32 @@ model raw_to_prepped_yields {
 
 model cooked_yields_categories {
   // LISTS of cooked yield categories for dropdown menus
-  id            Int             @id @default(autoincrement())
-  name          String
-  translation   Json?
-  desc          String?
-  yield         Float?
-  is_live       Boolean         @default(true)
-  updated_at    DateTime        @updatedAt
-  created_at    DateTime?       @default(now())
-  cooked_yields cooked_yields[]
+  id          Int       @id @default(autoincrement())
+  name        String
+  translation Json?
+  desc        String?
+  yield       Float?
+  is_live     Boolean   @default(true)
+  updated_at  DateTime  @updatedAt
+  created_at  DateTime? @default(now())
 }
 
-model cooked_yields {
-  // LISTS of cooked yield for dropdown menus
-  id                          Int                       @id @default(autoincrement())
-  name                        String
-  translation                 Json?
-  desc                        String?
-  is_live                     Boolean                   @default(true)
-  yield                       Float                     @default(0)
-  updated_at                  DateTime                  @updatedAt
-  created_at                  DateTime?                 @default(now())
-  cooked_yields_categories    cooked_yields_categories? @relation(fields: [cooked_yields_categories_id], references: [id])
-  cooked_yields_categories_id Int?
+// model cooked_yields {
+//   // LISTS of cooked yield for dropdown menus
+//   id                          Int                       @id @default(autoincrement())
+//   name                        String
+//   translation                 Json?
+//   desc                        String?
+//   is_live                     Boolean                   @default(true)
+//   yield                       Float                     @default(0)
+//   updated_at                  DateTime                  @updatedAt
+//   created_at                  DateTime?                 @default(now())
+//   cooked_yields_categories    cooked_yields_categories? @relation(fields: [cooked_yields_categories_id], references: [id])
+//   cooked_yields_categories_id Int?
 
-  ingredients_yields    ingredients_yields? @relation(fields: [ingredients_yields_id], references: [id])
-  ingredients_yields_id Int?
-}
+//   ingredients_yields    ingredients_yields? @relation(fields: [ingredients_yields_id], references: [id])
+//   ingredients_yields_id Int?
+// }
 
 model dry_cooked_yields_categories {
   id                Int                 @id @default(autoincrement())
@@ -318,16 +314,17 @@ model ingredients_religious_certification {
 }
 
 model language {
-  id        Int     @id @default(autoincrement()) // Unique identifier for each language
-  name      String  @unique // Human-readable name (e.g., "English (UK)")
-  code      String  @unique // Language code (e.g., "en-GB", "fr")
-  is_active Boolean @default(true) // Whether the language is currently supported
+  id             Int              @id @default(autoincrement()) // Unique identifier for each language
+  name           String           @unique // Human-readable name (e.g., "English (UK)")
+  code           String           @unique // Language code (e.g., "en-GB", "fr")
+  is_active      Boolean          @default(true)
+  country_locale country_locale[] // Relation to country_locale
 }
 
 model country_locale {
-  id                Int     @id @default(autoincrement()) // Unique identifier
-  country_name      String  @unique // Full name of the country (e.g., "United Kingdom")
-  country_code      String  @unique // ISO 3166-1 alpha-2 code (e.g., "GB")
+  id                Int      @id @default(autoincrement()) // Unique identifier
+  country_name      String   @unique // Full name of the country (e.g., "United Kingdom")
+  country_code      String   @unique // ISO 3166-1 alpha-2 code (e.g., "GB")
   currency_code     String // ISO 4217 currency code (e.g., "GBP")
   currency_name     String // Full name of the currency (e.g., "British Pound")
   currency_symbol   String // Symbol for the currency (e.g., "£")
@@ -336,7 +333,9 @@ model country_locale {
   time_zone         String // Primary time zone (e.g., "Europe/London")
   date_format       String // Common date format (e.g., "DD/MM/YYYY")
   decimal_separator String // Decimal separator (e.g., "." or ",")
-  is_active         Boolean @default(true) // Whether the locale is currently supported
+  is_active         Boolean  @default(true) // Whether the locale is currently supported
+  language          language @relation(fields: [language_id], references: [id])
+  language_id       Int
 }
 
 model ingredient_cooked_yields {
@@ -384,20 +383,19 @@ model dietary_classification {
   ingredients ingredients[]
 }
 
-model ingredients_yields {
-  id             Int             @id @default(autoincrement())
-  customer       customer?       @relation(fields: [customer_id], references: [id])
-  customer_id    Int?
-  is_default     Boolean?        @default(false)
-  name           String
-  ingredients    ingredients?    @relation(fields: [ingredients_id], references: [id])
-  ingredients_id Int?
-  yield          Float?
-  is_live        Boolean         @default(true)
-  cooked_yields  cooked_yields[]
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
-}
+// model ingredients_yields {
+//   id             Int          @id @default(autoincrement())
+//   customer       customer?    @relation(fields: [customer_id], references: [id])
+//   customer_id    Int?
+//   is_default     Boolean?     @default(false)
+//   name           String
+//   ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
+//   ingredients_id Int?
+//   yield          Float?
+//   is_live        Boolean      @default(true)
+//   created_at     DateTime     @default(now())
+//   updated_at     DateTime     @updatedAt
+// }
 
 model allergy {
   id                 Int                  @id @default(autoincrement())
@@ -444,15 +442,13 @@ model salt_purpose {
   id         Int     @id @default(autoincrement())
   name       String
   factor     Float
-  deSsc      String?
+  desc       String?
   is_default Boolean @default(false)
   confidence Float
 }
 
 model todo_status {
   id          Int      @id @default(autoincrement())
-  profiles    profiles @relation(fields: [profiles_id], references: [id])
-  profiles_id Int
   customer    customer @relation(fields: [customer_id], references: [id])
   customer_id Int
   name        String
@@ -461,14 +457,14 @@ model todo_status {
   updated_at  DateTime @updatedAt
 }
 
-model cost_rules {
-  id          Int      @id @default(autoincrement())
-  customer    customer @relation(fields: [customer_id], references: [id])
-  customer_id Int
-  name        String
-  cost        String
-  description String
-}
+// model cost_rules {
+//   id          Int      @id @default(autoincrement())
+//   customer    customer @relation(fields: [customer_id], references: [id])
+//   customer_id Int
+//   name        String
+//   cost        String
+//   description String
+// }
 
 model markup_type {
   id     Int      @id @default(autoincrement())
@@ -484,63 +480,111 @@ model ingredient_type {
   components component[]
 }
 
-model packaging_costs_category_example {
-  id                                Int                                 @id @default(autoincrement())
-  name                              String
-  desc                              String
-  is_active                         Boolean                             @default(true)
-  packaging_costs_line_item_example packaging_costs_line_item_example[]
-}
+// model packaging_costs_category_example {
+//   id                                Int                                 @id @default(autoincrement())
+//   name                              String
+//   desc                              String
+//   is_active                         Boolean                             @default(true)
+//   packaging_costs_line_item_example packaging_costs_line_item_example[]
+// }
 
-model packaging_costs_line_item_example {
-  id                                  Int                              @id @default(autoincrement())
-  packaging_costs_category_example    packaging_costs_category_example @relation(fields: [packaging_costs_category_example_id], references: [id])
-  packaging_costs_category_example_id Int
-  name                                String
-  cost                                String
-  desc                                String
-  is_active                           Boolean
-  supplier                            supplier?                        @relation(fields: [supplier_id], references: [id])
-  supplier_id                         Int?
-}
+// model packaging_costs_line_item_example {
+//   id                                  Int                              @id @default(autoincrement())
+//   packaging_costs_category_example    packaging_costs_category_example @relation(fields: [packaging_costs_category_example_id], references: [id])
+//   packaging_costs_category_example_id Int
+//   name                                String
+//   cost                                String
+//   desc                                String
+//   is_active                           Boolean
+//   supplier                            supplier?                        @relation(fields: [supplier_id], references: [id])
+//   supplier_id                         Int?
+// }
 
-model other_costs_category_example {
-  id                            Int                             @id @default(autoincrement())
-  name                          String
-  desc                          String
-  is_active                     Boolean                         @default(true)
-  other_costs_line_item_example other_costs_line_item_example[]
-}
+// model other_costs_category_example {
+//   id                            Int                             @id @default(autoincrement())
+//   name                          String
+//   desc                          String
+//   is_active                     Boolean                         @default(true)
+//   other_costs_line_item_example other_costs_line_item_example[]
+// }
 
-model other_costs_line_item_example {
-  id                              Int                          @id @default(autoincrement())
-  other_costs_category_example    other_costs_category_example @relation(fields: [other_costs_category_example_id], references: [id])
-  other_costs_category_example_id Int
-  name                            String
-  cost                            String
-  desc                            String
-  is_active                       Boolean
-  supplier                        supplier?                    @relation(fields: [supplier_id], references: [id])
-  supplier_id                     Int?
-}
+// model other_costs_line_item_example {
+//   id                              Int                          @id @default(autoincrement())
+//   other_costs_category_example    other_costs_category_example @relation(fields: [other_costs_category_example_id], references: [id])
+//   other_costs_category_example_id Int
+//   name                            String
+//   cost                            String
+//   desc                            String
+//   is_active                       Boolean
+//   supplier                        supplier?                    @relation(fields: [supplier_id], references: [id])
+//   supplier_id                     Int?
+// }
 
 model other_costs_category {
-  id                    Int                     @id @default(autoincrement())
-  customer              customer                @relation(fields: [customer_id], references: [id])
-  customer_id           Int
-  name                  String
-  desc                  String
-  other_costs_line_item other_costs_line_item[]
+  id                 Int                  @id @default(autoincrement())
+  customer           customer             @relation(fields: [customer_id], references: [id])
+  customer_id        Int
+  name               String
+  desc               String
+  other_costs_lookup other_costs_lookup[]
+}
+
+model other_costs_lookup {
+  id          Int       @id @default(autoincrement())
+  customer    customer? @relation(fields: [customer_id], references: [id])
+  customer_id Int?
+
+  other_costs_category    other_costs_category @relation(fields: [other_costs_category_id], references: [id])
+  other_costs_category_id Int
+
+  other_costs_line_item    other_costs_line_item @relation(fields: [other_costs_line_item_id], references: [id])
+  other_costs_line_item_id Int
+
+  @@unique([other_costs_category_id, other_costs_line_item_id])
+}
+
+model other_costs_line_item {
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  cost               Float
+  desc               String
+  supplier           supplier?            @relation(fields: [supplier_id], references: [id])
+  supplier_id        Int?
+  is_active          Boolean              @default(true)
+  other_costs_lookup other_costs_lookup[]
 }
 
 model packaging_costs_category {
-  id                        Int                         @id @default(autoincrement())
-  customer                  customer                    @relation(fields: [customer_id], references: [id])
-  customer_id               Int
-  name                      String
-  desc                      String
-  packaging_costs_line_item packaging_costs_line_item[]
-  other_costs_line_item     other_costs_line_item[]
+  id                     Int                      @id @default(autoincrement())
+  customer               customer                 @relation(fields: [customer_id], references: [id])
+  customer_id            Int
+  name                   String
+  desc                   String
+  is_active              Boolean                  @default(true)
+  packaging_costs_lookup packaging_costs_lookup[] @relation("CategoryToLookup")
+}
+
+model packaging_costs_lookup {
+  id                           Int                       @id @default(autoincrement())
+  packaging_costs_category     packaging_costs_category  @relation(name: "CategoryToLookup", fields: [packaging_costs_category_id], references: [id])
+  packaging_costs_category_id  Int
+  packaging_costs_line_item    packaging_costs_line_item @relation(name: "LineItemToLookup", fields: [packaging_costs_line_item_id], references: [id])
+  packaging_costs_line_item_id Int
+  customer                     customer?                 @relation(fields: [customer_id], references: [id])
+  customer_id                  Int?
+
+  @@unique([packaging_costs_category_id, packaging_costs_line_item_id])
+}
+
+model packaging_costs_line_item {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  cost                   Float                    @default(0.00)
+  desc                   String
+  is_active              Boolean                  @default(true)
+  supplier               supplier?                @relation(fields: [supplier_id], references: [id])
+  supplier_id            Int?
+  packaging_costs_lookup packaging_costs_lookup[] @relation("LineItemToLookup")
 }
 
 model vat_rules {
@@ -550,6 +594,10 @@ model vat_rules {
   name        String
   cost        String
   description String
+  is_active   Boolean  @default(true)
+  default     Boolean  @default(false)
+
+  @@unique([customer_id, default])
 }
 
 // SETTINGS___________________________________END
@@ -584,7 +632,6 @@ model ingredients {
   ingredients_nutrition ingredients_nutrition[]
   created_at            DateTime                   @default(now())
   updated_at            DateTime                   @updatedAt
-  ingredients_yields    ingredients_yields[]
 
   dietary_classification    dietary_classification? @relation(fields: [dietary_classification_id], references: [id])
   dietary_classification_id Int?
@@ -813,45 +860,21 @@ model production_event_task {
   updated_at          DateTime         @updatedAt
 }
 
-model packaging_costs {
-  id          Int      @id @default(autoincrement())
-  customer    customer @relation(fields: [customer_id], references: [id])
-  customer_id Int
-  name        String
-  cost        String
-  description String
-}
-
-model packaging_costs_line_item {
-  id                          Int                       @id @default(autoincrement())
-  name                        String
-  cost                        String
-  desc                        String
-  packaging_costs_category    packaging_costs_category? @relation(fields: [packaging_costs_category_id], references: [id])
-  packaging_costs_category_id Int?
-  supplier                    supplier?                 @relation(fields: [supplier_id], references: [id])
-  supplier_id                 Int?
-}
-
-model other_costs_line_item {
-  id                         Int                       @id @default(autoincrement())
-  name                       String
-  cost                       String
-  desc                       String
-  other_costs_category       other_costs_category      @relation(fields: [other_costs_category_id], references: [id])
-  other_costs_category_id    Int
-  supplier                   supplier?                 @relation(fields: [supplier_id], references: [id])
-  supplier_id                Int?
-  packaging_costs_category   packaging_costs_category? @relation(fields: [packaging_costs_categoryId], references: [id])
-  packaging_costs_categoryId Int?
-}
+// model packaging_costs {
+//   id          Int      @id @default(autoincrement())
+//   customer    customer @relation(fields: [customer_id], references: [id])
+//   customer_id Int
+//   name        String
+//   cost        String
+//   description String
+// }
 
 model recipe {
   id                 Int    @id @default(autoincrement())
   name               String
   description        String
   portions           Int[]
-  cost_rules         Json
+  // cost_rules         Json
   packaging_costs_id Json
   other_costs_id     Json
   markup_id          Json
@@ -883,7 +906,7 @@ model recipe_portions {
   recipe             recipe @relation(fields: [recipe_id], references: [id])
   recipe_id          Int
   size               Int
-  cost_rules         Int
+  // cost_rules         Int
   packaging_costs_id Int
   other_costs_id     Int
   markup_id          Int

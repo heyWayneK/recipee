@@ -9,10 +9,9 @@ export interface RecipeModuleProps {
 
 // PAGE
 const RecipeModule: React.FC<RecipeModuleProps> = () => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+  const { qty, setQty, recipeData, updateRecipeData, systemData, userData } = useRecipeData();
 
-  console.log("RecipeModule LOADING************");
-  console.log("recipeData", recipeData);
+  console.log("recipeData", { qty, recipeData, systemData, userData });
 
   if (!recipeData.portionSizes.length) return <Loading />;
 

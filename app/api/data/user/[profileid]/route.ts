@@ -9,8 +9,11 @@
     
       curl -X GET http://localhost:3000/api/example2/12345/ 
 */
-
+"use server";
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/libs/prisma";
+import { UserDataProps } from "@/contexts/UseRecipeData";
+// import { GetStaticProps } from "next";
 
 type RouteContext = {
   params: Promise<{
@@ -18,21 +21,89 @@ type RouteContext = {
   }>;
 };
 
+interface obj {
+  [key: string]: Promise<any>;
+}
+
+export const getUserData = async (customerId: number) => {
+  const queries: obj = {
+    // GET VALUES WHERE CUSTOMER = 1 (Default Account)
+    other_costs_category: prisma.other_costs_category.findMany({ where: { customer_id: customerId } }),
+    other_costs_line_items_lookup: prisma.$queryRaw`
+        SELECT
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id,
+            string_agg(l.other_costs_category_id::text, ',' ORDER BY l.other_costs_category_id) AS category_ids
+        FROM
+            public.other_costs_line_item li
+        INNER JOIN
+            public.other_costs_lookup l
+            ON li.id = l.other_costs_line_item_id
+        WHERE
+            l.customer_id = ${customerId}
+        GROUP BY
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id
+        ORDER BY
+            li.name;
+    `,
+    packaging_costs_category: prisma.packaging_costs_category.findMany({ where: { customer_id: customerId } }),
+    packaging_costs_line_items_lookup: prisma.$queryRaw`
+        SELECT
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id,
+            string_agg(l.packaging_costs_category_id::text, ',' ORDER BY l.packaging_costs_category_id) AS category_ids
+        FROM
+            public.packaging_costs_line_item li
+        INNER JOIN
+            public.packaging_costs_lookup l
+            ON li.id = l.packaging_costs_line_item_id
+        WHERE
+            l.customer_id = ${customerId}
+        GROUP BY
+            li.id,
+            li.name,
+            li.desc,
+            li.supplier_id,
+            li.cost,
+            li.is_active,
+            l.customer_id
+        ORDER BY
+            li.name;
+    `,
+    vat_rules: prisma.vat_rules.findMany({ where: { customer_id: customerId } }),
+  };
+
+  const results = await Promise.all(Object.values(queries));
+  return Object.fromEntries(Object.keys(queries).map((key, index) => [key, results[index]]));
+};
+
 export async function GET(request: NextRequest, context: RouteContext) {
   try {
-    const { profileid } = await context.params;
+    const customerId = Number((await context.params).profileid);
 
-    if (!profileid) {
+    if (!customerId) {
       return NextResponse.json({ error: "Parameter 'id' is required" }, { status: 400 });
     }
 
-    return NextResponse.json(
-      {
-        message: `Hello World 1bb! Received: id: ${profileid}`,
-        profileid: profileid,
-      },
-      { status: 200 }
-    );
+    const jsonObj = await getUserData(customerId);
+    // Return the successful JSON response with a 200 OK status
+    return NextResponse.json(jsonObj, { status: 200 });
   } catch (error) {
     console.error("Error processing GET request:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

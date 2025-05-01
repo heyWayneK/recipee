@@ -16,16 +16,16 @@ export const recipeeUI = {
 
 const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
   return data.components.map((subRecipe, i) => {
-    const findRecipe: RecipeProps | undefined = data.recipes.find((recipe) => recipe.id === subRecipe.recipeId);
+    const findRecipe: RecipeProps | undefined = data.recipes.find((recipe) => recipe.uuid === subRecipe.recipeId);
 
     if (!findRecipe) {
-      const e = `Recipe with ID ${subRecipe.id} not found.`;
+      const e = `Recipe with ID ${subRecipe.uuid} not found.`;
       console.log(e);
       throw new Error(e);
     }
 
     return (
-      <DottedBorder key={findRecipe.id + "_" + i}>
+      <DottedBorder key={findRecipe.uuid + "_" + i}>
         <div
           className={`grid gap-y-2 gap-x-2`}
           style={{

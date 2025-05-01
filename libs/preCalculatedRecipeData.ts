@@ -1,53 +1,91 @@
-import { PreCalculatedRecipeData } from "@/contexts/UseRecipeData";
+import { MarkupSelect } from "@/app/api/data/system/route";
+import { PreCalculatedRecipeData, SystemDataProps, UserDataProps, useRecipeData } from "@/contexts/UseRecipeData";
 import { calcProfit, formatCurrency } from "@/libs/utils";
 
+const getLineItemTotal = (categoryId: number, lineItemObj: {}) => {
+  //
+};
+
 // export async function preCalculateData(recipeData: PreCalculatedRecipeData, updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void): Promise<void> {
-export function preCalculateData(recipeData: PreCalculatedRecipeData): Partial<PreCalculatedRecipeData> {
-  console.log("*** preCalculateData() Called", recipeData);
-  /**  INFO::
-     const updatePackagingRule = (portionSize: number, ruleId: number) => {
-       const newObj = { ...recipeData.data.packagingCostsId, ...{ [portionSize]: ruleId } };
-       updateRecipeData((recipeData.data.packagingCostsId = { ...newObj }));
-      };
-    */
-  // if (recipeData.data.portions.length === 0) return;
+export function preCalculateData(recipeData: PreCalculatedRecipeData, systemData: SystemDataProps, userData: UserDataProps): Partial<PreCalculatedRecipeData> {
+  // ERROR HANDLING
+  if (recipeData.data.portions.length === 0) {
+    console.error("No portions found in recipe data");
+    return {};
+  }
+
+  if (recipeData.data.components.length === 0) {
+    console.error("No components found in recipe data");
+    return {};
+  }
+
+  if (recipeData.data.recipes.length === 0) {
+    console.error("No recipes found in recipe data");
+    return {};
+  }
 
   // TODO: ADD HISTORY
   // PLATING COST CALCULATION ____________________START::
   // RECALC LIVE PORTION SIZES___________________________
-  const portionSizes = recipeData.data.portions.map((val) => recipeData.data.components.reduce((acc2, val2) => (acc2 += val2.portions ? val2.portions[val] : 0), 0));
+  const portionSizes: number[] = [];
+  const portionIds: number[] = [];
+  const portionsSum: number[] = [];
 
-  // ERROR if portions do not match______________________
-  if (portionSizes.toString() !== recipeData.data.portions.toString()) {
-    console.error("******portionSizes DO NOT MATCH", portionSizes);
-    // throw new Error(`Recipe plating portions do not match expected plating portion: ${portionSizes.toString()} NOT ${recipeData.data.portions.toString()} grams`);
+  const o = recipeData.data.portions;
+  for (const portion of o.sort((a, b) => a.order - b.order)) {
+    if (!portion.qty) console.error(`Portion with no qty`);
+    if (!portion.id) console.error(`Portion with no id`);
+    if (!portion.order) console.error(`Portion with no order`);
+
+    portionSizes.push(portion.qty);
+
+    portionIds.push(portion.id);
+
+    portionsSum.push(
+      recipeData.data.components.reduce((acc, comp) => {
+        const getQty = comp.portions.find((p) => p.id === portion.id)?.qty;
+        if (!getQty) {
+          throw new Error(`Portion ${portion.id} not found in component ${comp.name}`);
+        }
+        return acc + getQty;
+      }, 0)
+    );
+
+    // ERROR if expected do not match actual portions sum
+    if (portionSizes.toString() !== portionsSum.toString()) {
+      const e = `Recipe plating portions do not match actual sum of plating portions: ${portionSizes.toString()} !== ${portionsSum.toString()} grams`;
+      console.error(e);
+      throw new Error(e);
+    }
   }
-
   // COMPONENT WEIGHTS ARRAY : number[][]________________
   const componentsNamesArray: string[] = [];
   const componentsWeights: number[][] = [];
-  const componentsIDArray: any[] = [];
-  for (const component of recipeData.data.components) {
+  const componentsIDArray: string[] = [];
+  for (const component of recipeData.data.components.sort((a, b) => a.order - b.order)) {
     if (!component.name) {
       throw new Error(`Component ${component.name} does not have portions name`);
     }
-    // NAM
+    // NAME
     componentsNamesArray.push(component.name);
     // WEIGHTS BY PORTION ARRAY
-    componentsWeights.push(recipeData.data.portions.map((val) => (component.portions ? component.portions[val] : 0)));
+    componentsWeights.push(
+      portionIds.map((portionId) => {
+        const getQty = component.portions.find((p) => p.id === portionId)?.qty || 0;
+        if (!getQty) console.error(`Portion ${portionId} not in ${component.name}`);
+        return getQty;
+      })
+    );
 
-    // TODO: dont need name length once db is being used
-    // ID GENERATED FOR component KEY = unique key
-    componentsIDArray.push(recipeData.data.portions.map((val) => component.id + "" + component.name?.length + "" + val));
+    componentsIDArray.push(component.uuid);
   }
-
   // COSTS PER 1000/COMPONENT____________________________
   const componentsPricePer1000: number[] = [];
   for (const component of recipeData.data.components) {
     // FIND RECIPE
     const recipeId = component.recipeId;
     // FIND RECIPE
-    const recipe = recipeData.data.recipes.find((recipe) => recipe.id === recipeId);
+    const recipe = recipeData.data.recipes.find((recipe) => recipe.uuid === recipeId);
 
     if (!recipe) {
       throw new Error(`Recipe with ID ${recipeId} not found. Component recipeId and Recipe id must match`);
@@ -92,7 +130,7 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData): Partial<P
   for (let iC = 0; iC < recipeData.data.components.length; iC++) {
     // find the recipe
     const recipeId = recipeData.data.components[iC].recipeId;
-    const recipe = recipeData.data.recipes.find((recipe) => recipe.id === recipeId);
+    const recipe = recipeData.data.recipes.find((recipe) => recipe.uuid === recipeId);
 
     if (!recipe) {
       throw new Error(`Recipe with ID ${recipeId} not found. Component recipeId and Recipe id must match`);
@@ -115,64 +153,108 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData): Partial<P
   const packingCostPriceTotals: number[] = [];
   const packingCostPriceRules: number[] = [];
   for (const portion of portionSizes) {
-    packingCostPriceTotals.push(recipeData.data.costRules.packagingCosts[recipeData.data.packagingCostsId[portion]].cost);
-    packingCostPriceRules.push(recipeData.data.packagingCostsId[portion]);
+    const packagingCostId = +recipeData.data.packagingCostsId[portion];
+    const packingCostObj = systemData.packaging_costs_category.find((cost) => cost.id === packagingCostId);
+
+    if (!packingCostObj) {
+      const e = `Packing cost with ID ${packagingCostId} not found. Packing cost id must match`;
+      console.error(e);
+      throw new Error(e);
+    }
+
+    packingCostPriceTotals.push(
+      systemData.packaging_costs_line_items_lookup.reduce((acc, val) => {
+        if (+val.category_ids === packagingCostId) {
+          acc += +val.cost;
+        }
+        return acc;
+      }, 0)
+    );
+    packingCostPriceRules.push(packagingCostId);
   }
 
   // OTHER COSTS AND RULES ARRAY_________________________
   const otherCostsPriceTotals: number[] = [];
   const otherCostsPriceRules: number[] = [];
-  for (const portion of recipeData.data.portions) {
-    const costRuleId = recipeData.data.otherCostsId[portion];
-    otherCostsPriceTotals.push(recipeData.data.costRules.otherCosts[costRuleId].costs.reduce((arr, cost) => (arr += cost.cost), 0));
-    otherCostsPriceRules.push(costRuleId);
+  for (const portion of portionSizes) {
+    const otherCostId = +recipeData.data.otherCostsId[portion];
+    const otherCostObj = systemData.other_costs_category.find((cost) => cost.id === otherCostId);
+
+    if (!otherCostObj) {
+      const e = `Other costs with ID ${otherCostId} not found. Packing cost id must match`;
+      console.error(e);
+      throw new Error(e);
+    }
+
+    otherCostsPriceTotals.push(
+      systemData.other_costs_line_items_lookup.reduce((acc, val) => {
+        if (+val.category_ids === otherCostId) {
+          acc += +val.cost;
+        }
+        return acc;
+      }, 0)
+    );
+    otherCostsPriceRules.push(otherCostId);
   }
 
   // SUB TOTAL COSTS_____________________________________
-  const costsSubTotals: number[] = portionSizes.map((portion, i) => componentsSubTotalsPrices[i] + packingCostPriceTotals[i] + otherCostsPriceTotals[i]);
+  let costsSubTotals: number[] = [];
+  costsSubTotals = portionSizes.map((portion, i) => componentsSubTotalsPrices[i] + packingCostPriceTotals[i] + otherCostsPriceTotals[i]);
 
   // MARKUP CALCULATIONS AND RULES _______________________
   const markUpPriceAmounts: number[] = [];
   const markUpPriceRules: number[] = [];
-  portionSizes.map((portionSize, i) => {
-    let markupRuleId = recipeData.data.markupId[portionSize];
-    let { name, factor, type } = recipeData.data.costRules.markUps[markupRuleId];
-    markUpPriceAmounts.push(calcProfit(costsSubTotals[i], type, factor));
+
+  for (let i = 0; i < portionSizes.length; i++) {
+    const markupRuleId = +recipeData.data.markupId[portionSizes[i]];
+    const foundMarkupRule = systemData.markup.find((m) => m.id === markupRuleId) || undefined;
+
+    if (!foundMarkupRule) throw new Error(`Markup Rule ID: ${markupRuleId} not found in db.`);
+    const { markup_type: name, factor } = foundMarkupRule;
+    markUpPriceAmounts.push(calcProfit(costsSubTotals[i], name.name, Number(factor)));
     markUpPriceRules.push(markupRuleId);
+  }
+
+  // SALES PRICE EX VAT _____________________________________
+  const salePricesExVat: number[] = portionSizes.map((portion, i) => {
+    return recipeData.costsSubTotals[i] + recipeData.markUpPriceAmounts[i];
   });
 
-  // SALES PRICE EX VAT _____________________________________
-  const salePricesExVat: number[] = portionSizes.map((portion, i) => costsSubTotals[i] + markUpPriceAmounts[i]);
+  // SALES PRICE INCL VAT ______________ _______________________
+  const salesPricesIncVat: number[] = [];
+  const vatRuleIds: number[] = [];
+  const vatRulePercs: number[] = [];
+  const vatRuleNames: string[] = [];
+  // GET DEFAULT VAT in case recipe has no VAT
+  const defaultVatByOrg: number | undefined = Number(userData.vat_rules.find((vat) => vat.default === true)?.cost || userData.vat_rules[0].cost || undefined); // or 0%
 
-  // SALES PRICE EX VAT _____________________________________
-  // TODO: ADD VAT RULES
-  const salesPricesIncVat: number[] = portionSizes.map((portion, i) => salePricesExVat[i] * (1 + 0.15));
-  // const salesPricesIncVat: number[] = portionSizes.map((portion, i) => salePricesExVat[i] * (1 + recipeData.data.vatRuless[recipeData.data.setting.vatDefaultId].));
+  console.log("defaultVatByOrg:::", defaultVatByOrg);
+  if (!defaultVatByOrg) console.error(`defaultVatByOrg (#${defaultVatByOrg}) not found.`);
 
-  // // UPDATE OBJECT with precalculated recipe plating data:
-  // updateRecipeData({
-  //   portionSizes,
-  //   componentsNamesArray,
-  //   componentsIDArray,
-  //   componentsWeights,
-  //   componentsPricePer1000,
-  //   componentsPrices,
-  //   componentsPricesDesc,
-  //   componentsSubTotalsPrices,
-  //   packingCostPriceTotals,
-  //   packingCostPriceRules,
-  //   otherCostsPriceTotals,
-  //   otherCostsPriceRules,
-  //   markUpPriceAmounts,
-  //   markUpPriceRules,
-  //   costsSubTotals,
-  //   salePricesExVat,
-  //   salesPricesIncVat,
-  // });
+  // GET RULE then GET RULE ID vat value
+  portionIds.map((pid, i) => {
+    const vatId: number | undefined = recipeData.data.vatRulesId.find((rule) => rule.id === pid)?.rule || undefined;
+
+    const vatRulePerc: number | undefined = Number(systemData.vat_rules.find((rule) => rule.id === vatRuleIds[i])?.cost || undefined);
+
+    console.log("vatId:::", vatId);
+    console.log("vatRulePerc:::", vatRulePerc);
+
+    // ERROR CHECK
+    if (vatRulePerc === undefined) throw new Error(`vatRulePerc (${vatRulePerc}) for portion ${pid} not found.`);
+
+    if (vatId === undefined) throw new Error(`vatId (#${vatId}) for portion ${pid} not found.`);
+
+    salesPricesIncVat.push(salePricesExVat[i] * (1 + (vatRulePerc || Number(defaultVatByOrg))));
+    vatRuleIds.push(vatId);
+    vatRulePercs.push(vatRulePerc || Number(defaultVatByOrg));
+    vatRuleNames.push(systemData.vat_rules.find((vat) => vat.id === vatId)?.name || "No VAT found");
+  });
 
   // // UPDATE OBJECT with precalculated recipe plating data:
   const obj: Partial<PreCalculatedRecipeData> = {
     portionSizes,
+    portionIds,
     componentsNamesArray,
     componentsIDArray,
     componentsWeights,
@@ -189,10 +271,17 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData): Partial<P
     costsSubTotals,
     salePricesExVat,
     salesPricesIncVat,
+    vatRuleIds,
+    vatRulePercs,
+    vatRuleNames,
   };
-  // return obj;
-  // console.log("*** preCalculateData() ENDED new object:", { ...recipeData, ...obj });
 
   return obj;
-  // return { ...recipeData, ...obj };
 }
+
+/* INFO:: 
+      const updatePackagingRule = (portionSize: number, ruleId: number) => {
+       const newObj = { ...recipeData.data.packagingCostsId, ...{ [portionSize]: ruleId } };
+       updateRecipeData((recipeData.data.packagingCostsId = { ...newObj }));
+      };
+  */

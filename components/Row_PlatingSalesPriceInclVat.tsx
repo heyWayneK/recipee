@@ -5,6 +5,7 @@ import { formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
 import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
+import ViewPrices from "./ViewPrices";
 
 interface Row_PlatingSalesPriceInclVatProps {
   className?: string;
@@ -12,7 +13,7 @@ interface Row_PlatingSalesPriceInclVatProps {
 }
 
 const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> = ({ className = "", viewPrices }) => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+  const { qty, setQty, recipeData, updateRecipeData, userData } = useRecipeData();
   const name = "sale_price_(incl_vat)";
 
   // UPDATE OBJECT
@@ -40,20 +41,24 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
 
       {/* OTHER COLUMNS START */}
       {recipeData.data.portions.map((portionSize, i) => {
-        const salesPriceIncVat = formatCurrency(recipeData.salePricesExVat[i] * (1 + data.setting.vatDefaultId));
+        const priceExVat = recipeData.salePricesExVat[i];
+        const vatPercentage = recipeData.vatRulePercs[i];
+        const vatAmount = priceExVat * vatPercentage;
+        const vatRuleName = recipeData.vatRuleNames[i];
+        const salesPriceIncVat = formatCurrency(priceExVat + vatAmount);
 
         // const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
         const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
         // TODO: MAKE DATA USING LOCAL VAT INCL
 
-        for (const [key, value] of Object.entries(recipeData.data.vatRuleArray)) {
+        for (const [key, value] of Object.entries(userData.vat_rules.sort((a, b) => Number(a.cost) - Number(b.cost)))) {
           dropDownLinks.push({
             jsx: (
               <>
                 <span className="font-bold">{value.name}</span>
                 <br />
                 <span>
-                  {value.factor} (#{key})
+                  {value.name} (#{value.id})
                 </span>
               </>
             ),
@@ -69,6 +74,7 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
           <MenuPopupOnMouseOver key={name + "_menu" + i} menuArray={dropDownLinks}>
             <Table_Cell type="total" key={name + "_" + i} edit="edit" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
               {salesPriceIncVat}
+              <ViewPrices viewPrices={viewPrices}>{`VAT: ${formatCurrency(vatAmount)} (${vatPercentage * 100}%) - ${vatRuleName}`}</ViewPrices>
             </Table_Cell>
           </MenuPopupOnMouseOver>
           // COLUMN CELLS END
