@@ -146,6 +146,14 @@ export function splitTextOnCapitals(variableName: string): string {
   return words.join(" ");
 }
 
+export function cleanComponentKeyName(keyName: any): string {
+  // Remove special characters and replace spaces with underscores
+  return keyName
+    .toString()
+    .replace(/[^a-zA-Z0-9_]/g, "")
+    .replace(/\s+/g, "_");
+}
+
 // TODO: convertions
 
 /**

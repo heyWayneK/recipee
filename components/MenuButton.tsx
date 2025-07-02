@@ -1,15 +1,33 @@
 "use client";
 
 import { useModalMenu } from "@/contexts/UseMenuModal";
-import React from "react";
+import React, { ComponentProps } from "react";
 import { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 
-type MenuOption = {
+// type MenuOption
+//   extends ComponentProps<"div"> {
+//     // VariantProps<typeof pillVariants> {
+//   name: string;
+//   handler: () => void;
+//     };
+
+//     export interface PillProps
+//   // ComponentProps includes standard HTML div props e.g onClick
+//   extends ComponentProps<"div">,
+//     VariantProps<typeof pillVariants> {
+//   iconName?: allowedIcon;
+//   iconPosition?: "left" | "right";
+//   edit?: "edit" | "save" | "options" | ""; // Optional edit state
+// }
+
+interface MenuOption {
   name: string;
   handler: () => void;
-};
+}
 
-interface MenuButtonProps {
+interface MenuButtonProps
+  // ComponentProps includes standard HTML div props e.g onClick
+  extends ComponentProps<"div"> {
   // options: MenuOption[];
   options: MenuOptionsProps[];
   children: React.ReactNode;
@@ -22,15 +40,15 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ options, children, type 
   return (
     <>
       {/* CREATE A MOUSEOVER OR MOUSEDOWN COMPONENT */}
-      {type === "onMouseOver" ? (
+      {/* {type === "onMouseOver" ? (
         <button ref={buttonRef} onMouseOver={handleClick} onMouseOut={closeMenu} className=" bg-white text-black py-0 px-0 rounded-full">
           {children}
         </button>
-      ) : (
-        <button ref={buttonRef} onClick={handleClick} className=" bg-white hover:bg-white text-black py-0 px-0 rounded-full">
-          {children}
-        </button>
-      )}
+      ) : ( */}
+      <button ref={buttonRef} onClick={handleClick} className="">
+        {children}
+      </button>
+      {/* )} */}
     </>
   );
 };

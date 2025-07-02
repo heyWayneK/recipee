@@ -1,7 +1,19 @@
-## How to use.
+## How To Use Form Gen.
 
 1. All documents are in the FormGen Folder
    Apart from the Prisma Model that we need to refer to and make copies.
+2. Form Types
+   FieldType =
+   - "hidden" |
+   - "text" |
+   - "number" |
+   - "multiline" |
+   - "radio" |
+   - "checkbox" |
+   - "select" |
+   - "imageupload" |
+   - "daterange" |
+   - "daterangev2";
 
 # How to Set Up the Development Environment
 
@@ -11,7 +23,7 @@
 
 # Heading 1
 
-## TAILWIND
+## TAILWIND & MERGING CLASSES SAFELY
 
 - Merging Tailwind Classes
 
@@ -27,6 +39,8 @@ className={tailwindMerge("mb-2 p-3 overflow-hidden w-full rounded-3xl border bor
 ##### Heading 5
 
 ###### Heading 6
+
+# TEST FORMATTING - DELETE**\_\_\_\_**START:
 
 - Item 1
 - Item 2

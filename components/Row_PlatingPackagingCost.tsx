@@ -10,7 +10,8 @@ interface Row_PlatingPackagingCostsProps {
 }
 
 const Row_PlatingPackagingCosts: React.FC<Row_PlatingPackagingCostsProps> = ({ viewPrices }) => {
-  const { qty, setQty, recipeData, updateRecipeData, systemData } = useRecipeData();
+  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
+  const { recipeData, systemData } = useRecipeData();
 
   // SETUP UNIQUE VARS
   const o = {

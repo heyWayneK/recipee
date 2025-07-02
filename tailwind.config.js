@@ -27,28 +27,28 @@ module.exports = {
       // ],
       colors: {
         primary: {
-          50: "#f0f9ff",
-          100: "#e0f2fe",
-          200: "#bae6fd",
-          300: "#7dd3fc",
-          400: "#38bdf8",
-          500: "#0ea5e9",
-          600: "#0284c7",
-          700: "#0369a1",
-          800: "#075985",
-          900: "#0c4a6e",
+          50: "#f1f5f9",
+          100: "#e2e8f0",
+          200: "#cbd5e1",
+          300: "#94a3b8",
+          400: "#64748b",
+          500: "#475569",
+          600: "#334155",
+          700: "#1e293b",
+          800: "#0f172a",
+          900: "#0f172a",
         },
         secondary: {
-          50: "#fdf2f8",
-          100: "#fce7f3",
-          200: "#fbcfe8",
-          300: "#f9a8d4",
-          400: "#f472b6",
-          500: "#ec4899",
-          600: "#db2777",
-          700: "#be185d",
-          800: "#9d174d",
-          900: "#831843",
+          50: "#fce8e0",
+          100: "#f9c6b5",
+          200: "#f7a28a",
+          300: "#f57e5e",
+          400: "#f37055", // Updated color
+          500: "#f37055", // Same as above
+          600: "#d95b4c",
+          700: "#b44a3d",
+          800: "#8f3a2e",
+          900: "#6b2b20",
         },
         neutral: colors.gray,
         // Add more color ranges as needed
@@ -200,35 +200,51 @@ module.exports = {
       {
         light: {
           ...require("daisyui/src/theming/themes")["light"],
-          primary: "#0f172a",
-          "primary-content": "#ff0000",
-          secondary: "#334155",
-          "secondary-content": "#334155",
-          accent: "#00ffff",
-          neutral: "#94a3b8",
-          "base-100": "#F5F5F5",
-          "text-base-content": "#ff0000",
-          info: "#0000ff",
-          success: "#00ff00",
-          warning: "#ff7f00",
-          "warning-content": "#ff7f00",
-          error: "#ff0000",
+
+          // Your color palette applied
+          primary: "#0f172a", // A strong, dark blue-gray for main actions
+          "primary-content": "#f1f5f9", // Light text for high contrast on primary buttons
+
+          secondary: "#f37055", // Your vibrant secondary orange
+          "secondary-content": "#ffffff", // White text is most readable on this orange
+
+          accent: "#f57e5e", // A slightly lighter orange for emphasis
+
+          neutral: "#94a3b8", // A mid-gray for neutral elements
+
+          "base-100": "#FFFFFF", // Your specified light mode background
+          "base-content": "#0f172a", // Dark text for high readability on the light background
+
+          // Standard semantic colors for clarity
+          info: "#60a5fa", // blue
+          success: "#4ade80", // green
+          warning: "#facc15", // yellow
+          error: "#f87171", // red
         },
+      },
+      {
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
-          primary: "#ff00ff",
-          "primary-content": "#f1f5f9",
-          secondary: "#ff00ff",
-          "secondary-content": "#ff00ff",
-          accent: "#00ffff",
-          neutral: "#94a3b8",
-          "base-100": "#334155",
-          "text-base-content": "#f1f5f9",
-          info: "#0000ff",
-          success: "#00ff00",
-          warning: "#ff7f00",
-          "warning-content": "#ff7f00",
-          error: "#ff0000",
+
+          // Your color palette applied
+          primary: "#f1f5f9", // A light, soft gray for main actions in dark mode
+          "primary-content": "#0f172a", // Dark text for high contrast on primary buttons
+
+          secondary: "#f37055", // Your vibrant secondary orange pops against the dark bg
+          "secondary-content": "#0f172a", // Dark text provides good contrast on the orange
+
+          accent: "#f57e5e", // A slightly lighter orange for emphasis
+
+          neutral: "#e2e8f0", // A subtle dark gray for neutral elements
+
+          "base-100": "#1e293b", // Your specified dark mode background
+          "base-content": "#e2e8f0", // Light text for high readability on the dark background
+
+          // Brighter semantic colors for dark mode
+          info: "#38bdf8",
+          success: "#34d399",
+          warning: "#fbbf24",
+          error: "#ef4444",
         },
       },
     ],

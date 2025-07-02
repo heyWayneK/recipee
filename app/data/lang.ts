@@ -9,15 +9,15 @@ interface languageProps {
  USAGE: {getTextTranslation("my_word")}
  */
 
-// NB MUST BE LOWERCASE Key word assebly NOT Assembly
+// INFO: "key" should be lowercase and without spaces (Caps will be ignored)
 export const language: languageProps = {
   assembly: { EN: "Assembly", FR: "FR-ASSEMBLY", SP: "SP-ASSEMBLY" },
   save: { EN: "Save", FR: "FR-Save", SP: "SP-Save" },
   last_saved: { EN: "Last Saved", FR: "FR-Last Saved", SP: "SP-last Saved" },
   quantity: { EN: "quantity", FR: "FR-Last Saved", SP: "SP-last Saved" },
-};
-
-/**
+  metric: { EN: "metric", FR: "FR-metric", SP: "SP-metric" },
+  component: { EN: "component", FR: "FR-component", SP: "SP-component" },
+  /**
 To Add
 metric
 last saved
@@ -26,7 +26,7 @@ feb
 mar
 apr
 may
-jun
+juns
 jul
 aug
 sep
@@ -70,3 +70,4 @@ paymentoptions
 contacts
 
  */
+};

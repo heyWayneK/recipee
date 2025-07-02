@@ -14,23 +14,25 @@ import React from "react";
 // See https://docs.microsaasfast.me/private-page/
 export default function Recipee() {
   return (
-    <MenuModalProvider>
-      <RecipeDataProvider>
-        <section className="py-5">
-          <div className="grid grid-cols-[2fr_1fr_1fr] gap-6">
-            <Recipe_RecipeNameBlock />
-            <Recipe_ImageBlock />
-            <Recipe_TodoBlock />
-          </div>
-        </section>
-        <section className="py-5">
-          <RecipeModule />
-        </section>
-        <section className="py-5">
-          <Recipe_NoteBlock />
-        </section>
-        <div data-testid="test">test-1234</div>
-      </RecipeDataProvider>
-    </MenuModalProvider>
+    <>
+      {/* // <MenuModalProvider> */}
+      {/* <RecipeDataProvider> */}
+      <section className="py-5">
+        <div className="grid grid-cols-[2fr_1fr_1fr] gap-x-6 sm:gap-x-3 sm:gap-3">
+          <Recipe_RecipeNameBlock />
+          <Recipe_ImageBlock />
+          <Recipe_TodoBlock />
+        </div>
+      </section>
+      <section className="py-5">
+        <RecipeModule />
+      </section>
+      <section className="py-5">
+        <Recipe_NoteBlock />
+      </section>
+      <div data-testid="test">test-1234</div>
+      {/* </RecipeDataProvider> */}
+      {/* // </MenuModalProvider> */}
+    </>
   );
 }

@@ -11,31 +11,24 @@ interface Row_PlatingHeaderProps {
 }
 
 const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = false }) => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+  // INFO: Other useRecipeData vars: qty, setQty, recipeData, updateRecipeData
+  const { recipeData } = useRecipeData();
+  const { openModal } = useModalBig();
 
   // COMPONENTS
   const name = getTextTranslation("components");
 
-  // const dropDownInfo = ["Option 1", "Option 2"];
+  // TODO: fix this dropdown with real actions
   const dropDownInfo = [
     { jsx: <div>Option 1 - 2</div>, handler: () => console.log("Option 1 clicked - 2") },
     { jsx: <div>Option 2 - 2</div>, handler: () => console.log("Option 2 clicked - 2") },
   ];
 
-  const { openModal } = useModalBig();
-
+  // POPUP MODAL
   const handleOpenModal = () => {
     openModal(
       <div>
-        <h2 className="text-lg font-bold mb-4">Custom Modal Content</h2>
-        <p>This is some variable content inside the modal.</p>
-        <p>This is some variable content inside the modal.</p>
-        <p>This is some variable content inside the modal.</p>
-        <p>This is some variable content inside the modal.</p>
-        <p>This is some variable content inside the modal.</p>
-        <p>This is some variable content inside the modal.</p>
-        <p>This is some variable content inside the modal.</p>
-        <p>This is some variable content inside the modal.</p>
+        <h2 className="mb-4">Custom Modal Content</h2>
         <p>This is some variable content inside the modal.</p>
       </div>
     );
@@ -43,14 +36,17 @@ const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = fals
 
   return (
     <>
-      <Table_Cell onClick={handleOpenModal} firstCol={false} header={false} type="plating" iconName="category" key={name}>
+      {/* COMPONENTS HEADING ROW */}
+      <Table_Cell onClick={handleOpenModal} firstCol={false} header={false} type="plating" iconName="category" edit="edit" key={name}>
         <span>
-          <Link href="#">{name.toUpperCase()}</Link>
+          {/* FIRST COLUMN CELL */}
+          <Link href="#">{getTextTranslation(name).toUpperCase()}</Link>
         </span>
       </Table_Cell>
       {recipeData.portionSizes.map((portion, col) => (
         <MenuDynamicChildren key={portion} menuArray={dropDownInfo}>
-          <Table_Cell firstCol={false} header={false} type="plating" key={name + "_" + col} edit="edit">
+          {/* COMPONENT SIZE CELL/s */}
+          <Table_Cell type="plating" key={name + "_" + col} edit="edit">
             <span>{formatWeight(portion)}</span>
           </Table_Cell>
         </MenuDynamicChildren>

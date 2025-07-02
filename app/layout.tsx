@@ -9,9 +9,11 @@ import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import "./globals.css";
 import { ModalProvider } from "@/providers/bigModalProvider";
-import { ThemeContext, ThemeProvider } from "@/contexts/ThemeContext";
+import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
 import { ClerkProvider } from "@clerk/nextjs";
 import { OnlineStatusProvider } from "@/contexts/UseOnlineStatus";
+import HeaderRecipee from "@/components/HeaderRecipee";
+import Footer from "@/components/Footer";
 
 const font = Inter({ subsets: ["latin"] });
 // const font = Inter({ subsets: ["latin"], weight: "100", variable: ""});
@@ -33,7 +35,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     initialScale: 1,
   };
 
-  // const { theme, toggleTheme } = useContext(ThemeContext);
+  // const { theme, toggleTheme } = useContext(useThemeDarkLight);
   // useEffect(() => {
   //   // Apply dynamic classes after hydration
   //   document.documentElement.classList.add("hydrated");
@@ -49,7 +51,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     */
     // <StrictMode>
     <ClerkProvider>
-      <ThemeProvider>
+      <DarkLightThemeProvider>
         <OnlineStatusProvider>
           {/* <html lang="en" data-theme={config.colors.theme} className={font.className} suppressHydrationWarning> */}
           <html lang="en" data-theme={config.colors.theme} className={font.className} suppressHydrationWarning>
@@ -67,15 +69,26 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <link rel="manifest" href="/site.webmanifest" />
               </head>
             )}
-            <body>
-              {/* ClientLayout to provide common layout and functionality */}
-              {/* <ClientLayout>{children}</ClientLayout> */}
-              {children}
+            <body className=" text-xs md:text-sm lg:text-base text-base-content">
+              {/* /* contains <nav> */}
+              <HeaderRecipee />
+
+              <div className="flex flex-col min-h-screen ">
+                <div className="flex-grow grid grid-cols-[min-content_1fr_min-content] h-full gap-0 ">
+                  <aside className=""></aside>
+                  <main className="px-1 md:px-6">{children}</main>
+                  <aside className=""></aside>
+                </div>
+
+                <footer className="min-h-40">
+                  <Footer />
+                </footer>
+              </div>
               <ModalProvider />
             </body>
           </html>
         </OnlineStatusProvider>
-      </ThemeProvider>
+      </DarkLightThemeProvider>
     </ClerkProvider>
     // </StrictMode>
   );

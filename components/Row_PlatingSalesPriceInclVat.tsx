@@ -13,7 +13,8 @@ interface Row_PlatingSalesPriceInclVatProps {
 }
 
 const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> = ({ className = "", viewPrices }) => {
-  const { qty, setQty, recipeData, updateRecipeData, userData } = useRecipeData();
+  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
+  const { recipeData, updateRecipeData, userData } = useRecipeData();
   const name = "sale_price_(incl_vat)";
 
   // UPDATE OBJECT
@@ -28,7 +29,7 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
       },
     };
     updateRecipeData(updatedObj);
-    //FUTURE:  ADD HISTORY
+    //FUTURE:  ADD HISTORY FOR UNDO REDO
   };
 
   return (
@@ -48,14 +49,14 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
         const salesPriceIncVat = formatCurrency(priceExVat + vatAmount);
 
         // const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
-        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: () => {} }];
+        const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold capitalize">{name}</span>, handler: () => {} }];
         // TODO: MAKE DATA USING LOCAL VAT INCL
 
         for (const [key, value] of Object.entries(userData.vat_rules.sort((a, b) => Number(a.cost) - Number(b.cost)))) {
           dropDownLinks.push({
             jsx: (
               <>
-                <span className="font-bold">{value.name}</span>
+                <span className="font-semibold">{value.name}</span>
                 <br />
                 <span>
                   {value.name} (#{value.id})
@@ -72,7 +73,7 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
         return (
           // COLUMN CELLS START
           <MenuPopupOnMouseOver key={name + "_menu" + i} menuArray={dropDownLinks}>
-            <Table_Cell type="total" key={name + "_" + i} edit="edit" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
+            <Table_Cell type="total" key={name + "_" + i} edit="edit" trackChangeVisually={true} trackChangesStorageName={name} rowNum={i}>
               {salesPriceIncVat}
               <ViewPrices viewPrices={viewPrices}>{`VAT: ${formatCurrency(vatAmount)} (${vatPercentage * 100}%) - ${vatRuleName}`}</ViewPrices>
             </Table_Cell>

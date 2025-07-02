@@ -9,6 +9,7 @@ import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@cl
 import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import SvgSprite from "./SvgSprite";
+import { useGetActiveTheme } from "@/contexts/useThemeDarkLight";
 
 // Define types for menu items
 interface MenuItemType {
@@ -130,7 +131,8 @@ const data = {
       ],
     },
   ],
-  logo: { url: "/logo/recipee_logo_black.svg" },
+  logo_black: { url: "/logo/recipee_logo_black.svg" },
+  logo_white: { url: "/logo/recipee_logo_white.svg" },
 };
 
 const geistSans = Geist({
@@ -153,7 +155,7 @@ const AuthButtons: React.FC = () => (
   <div className="flex items-center gap-2">
     <SignedOut>
       <SignInButton mode="modal" />
-      <SignUpButton mode="modal" />
+      {/* <SignUpButton mode="modal" /> */}
     </SignedOut>
     <SignedIn>
       <UserButton showName={true} />
@@ -276,6 +278,9 @@ const HeaderRecipee: React.FC = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useGetActiveTheme();
+  // const getTheme = localStorage.getItem("theme");
+  // console.log("^^^^^^^^^^^^^^HeaderRecipee: getTheme", getTheme);
 
   // Close dropdown when clicking outside (desktop only)
   useEffect(() => {
@@ -312,25 +317,30 @@ const HeaderRecipee: React.FC = () => {
       <div className="px-4 pb-4 flex flex-wrap justify-between items-center">
         {/* Logo */}
         <div className="flex items-center">
-          <Image src={data.logo?.url || "/fallback-logo.svg"} alt="Logo" width={150} height={75} className="mr-4" />
-          <AuthButtons />
+          <Image src={theme === "light" ? "/logo/recipee_logo_black.svg" : "/logo/recipee_logo_white.svg"} alt="Logo" width={150} height={75} color="fill" className="mr-4 fill-red-500" />
         </div>
-
+        <AuthButtons />
         {/* Desktop Navigation */}
-        <nav className="text-xs hidden md:flex flex-wrap gap-x-2 gap-y-2 pt-4" ref={dropdownRef}>
+        <nav className="text-xs hidden md:flex flex-wrap gap-x-2 gap-y-7 pt-4" ref={dropdownRef}>
           {/* <AuthButtons /> */}
-          {data.menuItems.map((item) => (
-            <MenuItem
-              key={item.title}
-              item={item}
-              isMobile={false}
-              setIsMobile={setIsMobile}
-              activeDropdown={activeDropdown}
-              toggleDropdown={toggleDropdown}
-              handleChildClick={handleChildClick}
-              pathname={pathname}
-            />
-          ))}
+
+          <SignedOut>
+            <div>Menu (Coming Soon)</div>
+          </SignedOut>
+          <SignedIn>
+            {data.menuItems.map((item) => (
+              <MenuItem
+                key={item.title}
+                item={item}
+                isMobile={false}
+                setIsMobile={setIsMobile}
+                activeDropdown={activeDropdown}
+                toggleDropdown={toggleDropdown}
+                handleChildClick={handleChildClick}
+                pathname={pathname}
+              />
+            ))}
+          </SignedIn>
         </nav>
 
         {/* Mobile Menu Toggle */}

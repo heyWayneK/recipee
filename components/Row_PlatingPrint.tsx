@@ -1,40 +1,30 @@
 import React from "react";
-
 import Table_Cell from "./Table_Cell";
-import { formatWeight } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
 import SvgSpriteLink from "./SvgSpriteLink";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { cleanComponentKeyName, getTextTranslation } from "@/libs/utils";
 
-interface Row_PlatingPrintProps {
-  className?: string;
+interface Row_PlatingPrintProps {}
 
-  viewPrices: boolean;
-}
-
-const Row_PlatingPrint: React.FC<Row_PlatingPrintProps> = ({ className = "", viewPrices }) => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
-  const name = "print";
+const Row_PlatingPrint: React.FC<Row_PlatingPrintProps> = () => {
+  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
+  // const { recipeData } = useRecipeData();
+  const name = getTextTranslation("print");
+  const keyName = cleanComponentKeyName(name);
 
   return (
     <>
-      {/* FIRST COLUMN START */}
-      <Table_Cell key={name + "_ firstRow"}> </Table_Cell>
-      {/* FIRST COLUMN END */}
+      {/* FIRST COLUMN*/}
+      <Table_Cell type="print" key={keyName + "_ firstRow"}></Table_Cell>
+
       {/* OTHER COLUMNS START */}
       {data.portions.map((portionSize, i) => {
-        // LIVE COSTS - Packaging Costs :: START
-
-        // LIVE COSTS - Packaging Costs :: END
         return (
-          // COLUMN CELLS START
-          <Table_Cell type="print" key={name + "_" + i} className="">
-            <div>{<SvgSpriteLink key={`print_${String(i)}  + "_" + rowNum`} size={30} link={""} iconName="print" className="" />}</div>
+          <Table_Cell type="print" key={keyName + "_" + i}>
+            {<SvgSpriteLink key={`print_${String(i)}  + "_" + rowNum`} size={25} onClick={() => alert("Need to add print feature")} iconName="print" />}
           </Table_Cell>
-          // COLUMN CELLS END
         );
       })}
-      {/* OTHER COLUMNS END */}
     </>
   );
 };

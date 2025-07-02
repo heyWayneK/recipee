@@ -1,17 +1,16 @@
 import React from "react";
-
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/libs/utils";
-import { data } from "@/app/data/recipe";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 
-interface Row_PlatingIngredientSubTotalProps {
+interface Row_PlatingComponentsSubTotalProps {
   className?: string;
   viewPrices: boolean;
 }
 
-const Row_PlatingIngredientSubTotal: React.FC<Row_PlatingIngredientSubTotalProps> = ({ className = "", viewPrices }) => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+const Row_PlatingComponentsSubTotal: React.FC<Row_PlatingComponentsSubTotalProps> = ({ className = "", viewPrices }) => {
+  // INFO: Other useRecipeData vars: qty, setQty, recipeData, updateRecipeData
+  const { recipeData } = useRecipeData();
   const name = "components_sub_total";
   return (
     <>
@@ -35,4 +34,4 @@ const Row_PlatingIngredientSubTotal: React.FC<Row_PlatingIngredientSubTotalProps
   );
 };
 
-export default Row_PlatingIngredientSubTotal;
+export default Row_PlatingComponentsSubTotal;

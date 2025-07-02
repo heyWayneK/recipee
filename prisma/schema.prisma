@@ -612,7 +612,7 @@ model vat_rules {
 
 model ingredients {
   id          Int       @id @default(autoincrement())
-  name        String
+  name        String    @unique
   name_orig   String?
   names_alt   String?
   customer    customer? @relation(fields: [customer_id], references: [id])

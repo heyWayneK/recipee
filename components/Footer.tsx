@@ -36,7 +36,7 @@ const data = {
 const Footer = () => {
   return (
     <footer className="h-40">
-      <div className="flex justify-center items-center pt-10 w-full bg-base-100 text-base-content">
+      <div className="flex justify-center items-center w-full bg-base-100 text-base-content">
         <div className=" flex justify-between items-center flex-col max-w-[1440px] w-full md:flex-row gap-2 md:gap-4 px-4 sm:px-12 py-6 border-t border-[#1F1F1F]">
           <div className="  flex gap-2 items-baseline order-last md:order-first text-xs text-base-content">
             <Link href="/" className=" items-center mb-4">

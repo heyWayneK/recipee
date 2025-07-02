@@ -57,15 +57,15 @@ const config = {
   },
   resend: {
     // Subdomain for sending emails; remove if not using a subdomain
-    subdomain: "mg",
+    subdomain: "",
     // Required email 'From' field for sending magic login links
     fromNoReply: process.env.SEND_EMAIL_FROM,
     // Required email 'From' field for other types of emails like updates
-    fromAdmin: `Wayne <wayne@thinkshift-ai.com>`,
+    fromAdmin: `Wayne <wayne@recipee.app`,
     // Support email shown to customers; leave empty if not needed
-    supportEmail: "wayne@thinkshift-ai.com",
+    supportEmail: "wayne@recipee.app",
     // Forward replies from the support email to another address
-    forwardRepliesTo: "wayne@thinkshift-ai.com",
+    forwardRepliesTo: "wayne@recipee.app",
   },
   colors: {
     // DaisyUI theme name to apply; defaults to dark theme

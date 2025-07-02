@@ -3,10 +3,10 @@ import Row_PlatingHeading from "./Row_PlatingHeading";
 import Table_DynamicTableCols from "./Table_DynamicTableCols";
 import DottedBorder from "./DottedBorder";
 import Row_ControlsPlating from "./Row_ControlsPlating";
-import Row_PlatingQuantity from "./Row_PlatingQuantity";
+// import Row_PlatingQuantity from "./Row_PlatingQuantity";
 import Row_PlatingHeader from "./Row_PlatingHeader";
 import Row_PlatingList from "./Row_PlatingList";
-import Row_PlatingIngredientSubTotal from "./Row_PlatingIngredientSubTotal";
+import Row_PlatingComponentsSubTotal from "./Row_PlatingComponentsSubTotal";
 import Row_PlatingPackagingCosts from "./Row_PlatingPackagingCost";
 import Row_PlatingOtherCost from "./Row_PlatingOtherCost";
 import Row_PlatingCostsSubTotal from "./Row_PlatingCostsSubTotal";
@@ -21,7 +21,8 @@ interface Row_PlatingAllProps {}
 const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
   const [viewPrices, setViewPrices] = useState(false);
 
-  const { qty, recipeData } = useRecipeData();
+  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
+  const { recipeData } = useRecipeData();
 
   function handleViewPrices() {
     // e.preventDefault();
@@ -30,20 +31,21 @@ const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
 
   return (
     <DottedBorder className=" grid grid-cols-1 justify-items-center mb-8">
-      {/* TODO: <Row_EditOrProduction data={data} /> */}
+      {/* TODO: <Row_EditOrProduction data={data} ?? /> */}
       <Row_PlatingHeading />
 
       {/* COL LENGTH ARRAY defines how many cols needed */}
-      <Table_DynamicTableCols className=" gap-x-7" colLengthArray={recipeData.portionSizes.length}>
+      <Table_DynamicTableCols className="" colLengthArray={recipeData.portionSizes.length}>
         <Row_ControlsPlating viewPrices={viewPrices} handleViewPrices={handleViewPrices} />
 
-        {qty > 1 && <Row_PlatingQuantity />}
+        {/* TODO: Will Plating qty be used? */}
+        {/* {qty > 1 && <Row_PlatingQuantity />} */}
 
         <Row_PlatingHeader viewPrices={viewPrices} />
 
         <Row_PlatingList viewPrices={viewPrices} />
 
-        <Row_PlatingIngredientSubTotal viewPrices={viewPrices} />
+        <Row_PlatingComponentsSubTotal viewPrices={viewPrices} />
 
         <Row_PlatingPackagingCosts viewPrices={viewPrices} />
 
@@ -57,7 +59,7 @@ const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
 
         <Row_PlatingSalesPriceInclVat viewPrices={viewPrices} />
 
-        <Row_PlatingPrint viewPrices={viewPrices} />
+        <Row_PlatingPrint />
       </Table_DynamicTableCols>
     </DottedBorder>
   );

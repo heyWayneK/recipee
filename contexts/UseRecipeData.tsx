@@ -1,6 +1,6 @@
 import { DataProps, data } from "@/app/data/recipe";
 import { preCalculateData } from "@/libs/preCalculatedRecipeData";
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { mergeDeep } from "@/libs/mergeDeep";
 import { getUserData } from "@/app/api/data/user/[profileid]/route";
 import {
@@ -129,6 +129,11 @@ export interface SystemDataProps {
   packaging_costs_line_items_lookup: PackagingCostsLineItemsLookupSelect[];
   vat_rules: VatRulesSelect[];
 }
+type localOrDbDataTypeOptions = "localStorage" | "db" | "undefined";
+type localOrDbDataType = {
+  user: localOrDbDataTypeOptions;
+  system: localOrDbDataTypeOptions;
+};
 
 // DEFINE context shape
 interface RecipeDataContextType {
@@ -140,6 +145,7 @@ interface RecipeDataContextType {
   updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void;
   systemData: SystemDataProps;
   userData: UserDataProps;
+  localOrDbData: localOrDbDataType;
 }
 
 const RecipeDataContext = createContext<RecipeDataContextType | undefined>(undefined);
@@ -156,6 +162,8 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
   const [recipeDataState, setRecipeDataState] = useState<PreCalculatedRecipeData>(preCalculatedRecipeData);
   const [systemData, setSystemData] = useState<SystemDataProps>();
   const [userData, setUserData] = useState<UserDataProps>();
+
+  let localOrDbData = useRef<localOrDbDataType>({ user: "undefined", system: "undefined" }); // Default value
 
   // USER DATA__________________________________________START::
   useEffect(() => {
@@ -177,11 +185,16 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     };
 
     const cachedData = localStorage.getItem("userData") ?? undefined;
+    // console.log(" 1: %%%%%%%%%%%%%%%%%%%% cachedData", cachedData);
 
-    if (cachedData === undefined && cachedData === "undefined") {
+    if (cachedData !== undefined && cachedData !== "undefined") {
+      console.log(" 2: %%%%%%%%%%%%%%%%%%%% THERE IS cachedData");
       setUserData(JSON.parse(cachedData));
+      localOrDbData.current.user = "localStorage"; // If we have cached data, we assume it's from localStorage
     } else {
       fetchData();
+      console.log(" 2: %%%%%%%%%%%%%%%%%%%% LOAD FROM DB");
+      localOrDbData.current.user = "db"; // If we fetch from the API, we assume it's from the database
     }
   }, []);
 
@@ -217,8 +230,11 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     const cachedData = localStorage.getItem("systemData") ?? undefined;
     if (cachedData !== undefined && cachedData !== "undefined") {
       setSystemData(JSON.parse(cachedData));
+      localOrDbData.current.system = "localStorage"; // If we have cached data, we assume it's from localStorage
     } else {
       fetchData();
+      localOrDbData.current.system = "db"; // If we have cached data, we assume it's from localStorage
+      
     }
   }, []);
 
@@ -279,6 +295,7 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     updateRecipeData,
     systemData: systemData ?? ({} as SystemDataProps),
     userData: userData ?? ({} as UserDataProps),
+    localOrDbData: localOrDbData.current,
   };
 
   // 2. Return Context

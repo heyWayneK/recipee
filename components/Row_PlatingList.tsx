@@ -1,7 +1,6 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { formatCurrency, formatWeight } from "@/libs/utils"; // Removed unused imports
-import { data } from "@/app/data/recipe"; // Removed unused import
+import { cleanComponentKeyName, formatCurrency, formatWeight } from "@/libs/utils";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useRecipeData } from "@/contexts/UseRecipeData";
 // Removed unused imports
@@ -12,26 +11,29 @@ interface Row_PlatingListProps {
 }
 
 const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewPrices }) => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData(); // Removed unused variables
-  const name = "plating_components"; // Removed unused variable
+  // INFO: Other useRecipeData vars: qty, setQty, recipeData, updateRecipeData
+  const { recipeData } = useRecipeData(); // Removed unused variables
 
   return (
-    // Crucial: Return the result of the map
     <>
-      {/* Added a Fragment to wrap the returned array of arrays */}
       {recipeData.componentsWeights.map((component, iC) => {
         const name = recipeData.componentsNamesArray[iC];
+
+        // TODO: Use real actions in dropdown
         const dropDownInfo = [{ jsx: <div key={1}>one</div> }, { jsx: <div key={2}>two</div> }];
-        const keyName = iC;
+        const keyName = cleanComponentKeyName(iC);
 
-        const firstCell = // No need for an array here, it's a single element
-          (
-            <Table_Cell key={keyName} firstCol={true} rowNum={iC} type="plating_list">
-              {name}
-            </Table_Cell>
-          );
+        // CREATE FIRST COLUMN CELL WITH SUB RECIPE NAME
+        const firstCell = (
+          // firstCol={true} NB responsive resizing first column
+          <Table_Cell firstCol={true} edit={"edit"} key={keyName} rowNum={iC} type="plating_list">
+            {/* NO TRANSLATION NEED - CUSTOMER FIELD */}
+            {name}
+          </Table_Cell>
+        );
 
-        const otherCells: React.ReactElement[] = []; // Initialize as an empty array *before* the inner loop
+        // CREATE OTHER COLUMN CELL WITH SUB RECIPE WEIGHTS
+        const otherCells: React.ReactElement[] = [];
 
         recipeData.portionSizes.forEach((portionSize, iP) => {
           const keyNameSub = keyName + `_${portionSize}_${iP}`;
@@ -39,13 +41,13 @@ const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewP
             <MenuDynamicChildren key={keyNameSub} menuArray={dropDownInfo}>
               <Table_Cell edit="edit" type="plating_list" rowNum={iC}>
                 {formatWeight(component[iP])}
-                {viewPrices && <div className="text-[10px] self-center">{formatCurrency(recipeData.componentsPrices[iC][iP])}</div>}
+                {viewPrices && <div className="self-center">{formatCurrency(recipeData.componentsPrices[iC][iP])}</div>}
               </Table_Cell>
             </MenuDynamicChildren>
           );
         });
 
-        return [firstCell, ...otherCells]; // Return the combined array for this component
+        return [firstCell, ...otherCells];
       })}
     </>
   );

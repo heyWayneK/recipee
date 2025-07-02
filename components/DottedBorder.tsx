@@ -9,7 +9,10 @@ const DottedBorder: React.FC<DottedBorderProps> = ({ children, className = "" })
   return (
     <div
       key={"dottedBorder"}
-      className={tailwindMerge(" bg-base-100-100 mb-2 p-3 overflow-hidden w-full rounded-3xl border border-dotted border-slate-600 shadow-md grid grid-cols-1 justify-center items-stretch", className)}
+      className={tailwindMerge(
+        "text-base-content mb-2 p-3 overflow-hidden w-full rounded-3xl border-2 border-dotted border-primary-200/40 shadow-md grid grid-cols-1 justify-center items-stretch",
+        className
+      )}
     >
       {children}
     </div>

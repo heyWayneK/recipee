@@ -9,7 +9,7 @@ export interface RecipeModuleProps {
 
 // PAGE
 const RecipeModule: React.FC<RecipeModuleProps> = () => {
-  const { qty, setQty, recipeData, updateRecipeData, systemData, userData } = useRecipeData();
+  const { qty, setQty, recipeData, updateRecipeData, systemData, userData, localOrDbData } = useRecipeData();
 
   console.log("recipeData", { qty, recipeData, systemData, userData });
 
@@ -18,6 +18,10 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
   return (
     <Suspense fallback={<Loading />}>
       {/* <div>hellp {myObject?.key}</div> */}
+      {/* DATA STORAGE - From Local Storage or DB */}
+      <div className=" text-xs text-base-content/20 justify-self-end pr-4">
+        USER: {localOrDbData.user} | SYSTEM: {localOrDbData.system}
+      </div>
       <Row_PlatingAll />
       <Row_SubRecipesAll />
     </Suspense>

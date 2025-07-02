@@ -10,7 +10,7 @@ const Table_DynamicTableCols: React.FC<Table_DynamicTableColsProps> = ({ childre
     <div
       key={"dynamicTableCols"}
       // DYNAMICALLY CREATE COLUMNS
-      className={`grid justify-center gap-y-2 gap-x-2 ${className}`}
+      className={`grid justify-center gap-y-2 md:gap-x-2 gap-x-1  ${className}`}
       style={{ gridTemplateColumns: `2fr repeat(${colLengthArray}, min-content)` }}
     >
       {children}
