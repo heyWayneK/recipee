@@ -1,6 +1,6 @@
 "use client";
 
-import { useModalMenu } from "@/contexts/UseMenuModal";
+import { useModalMenu } from "@/contexts/useMenuModal";
 import React, { ComponentProps } from "react";
 import { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 
@@ -45,7 +45,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({ options, children, type 
           {children}
         </button>
       ) : ( */}
-      <button ref={buttonRef} onClick={handleClick} className="">
+      <button ref={buttonRef} onClick={handleClick} className="flex place-content-center place-items-center">
         {children}
       </button>
       {/* )} */}

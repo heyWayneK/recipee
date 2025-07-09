@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SvgSprite from "@/components/SvgSprite";
-import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
+import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/useRecipeData";
 
 // Define a type for paths in PreCalculatedRecipeData, but as a string literal
 type PathString = keyof PreCalculatedRecipeData | `${keyof PreCalculatedRecipeData & string}.${string}`;

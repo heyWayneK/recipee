@@ -1,84 +1,368 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import ButtonSignin from "./ButtonSignin";
-import ButtonSignout from "./ButtonSignout";
+import Image from "next/image";
+import React, { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { tailwindMerge } from "@/utils/tailwindMerge";
+import OnlineOffline from "./OnlineOffline";
+import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import SvgSprite from "./SvgSprite";
+import { useGetActiveTheme } from "@/contexts/useThemeDarkLight";
 
+// Define types for menu items
+interface MenuItemType {
+  title: string;
+  link: string;
+  children: { title: string; link: string }[];
+}
+
+// Props for the MenuItem component
+interface MenuItemProps {
+  item: MenuItemType;
+  isMobile: boolean;
+  activeDropdown: string | null;
+  toggleDropdown: (title: string) => void;
+  handleChildClick?: () => void;
+  setIsMobile: (bool: boolean) => void;
+  pathname: string;
+}
 const data = {
   website_name: "Recipee",
-  links: [
+  menuItems: [
+    { title: "Home", link: "/recipee", children: [] },
     {
-      link: "#pricing",
-      title: "Pricing",
+      title: "Recipes",
+      link: "/recipee/recipes",
+      children: [
+        { title: "customer form", link: "/recipee/formgen/customer" },
+        { title: "ingredients form", link: "/recipee/formgen/ingredients" },
+        { title: "supplier form", link: "/recipee/formgen/supplier" },
+        { title: "Categories", link: "/recipee/stock" },
+        { title: "Recipe Categories", link: "/recipee/categories" },
+        { title: "Recipe Book", link: "/recipee/prep" },
+        { title: "Versions", link: "/recipee/prep" },
+      ],
     },
     {
-      link: "/blog",
-      title: "Blog",
+      title: "Ingredients",
+      link: "/recipee/formgen/ingredients/",
+      children: [
+        { title: "Allergies", link: "/recipee/allergies/" },
+        { title: "Prep Instructions", link: "/recipee/prep" },
+        { title: "Ingredient Categories", link: "/recipee/stock" },
+      ],
+    },
+    {
+      title: "Suppliers",
+      link: "/recipee/stock",
+      children: [
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+      ],
+    },
+    {
+      title: "Production",
+      link: "/recipee/markup",
+      children: [
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+      ],
+    },
+    {
+      title: "e-Commerce",
+      link: "/recipee/markup",
+      children: [
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+      ],
+    },
+    {
+      title: "Stock",
+      link: "/recipee/stock",
+      children: [
+        { title: "Stock Levels", link: "/recipee/allergies/" },
+        { title: "Minimum Levels", link: "/recipee/allergies/" },
+        { title: "Locations", link: "/recipee/prep" },
+      ],
+    },
+    {
+      title: "Cost Rules",
+      link: "/recipee/costs",
+      children: [
+        { title: "Other Costs", link: "/recipee/allergies/" },
+        { title: "Packaging Costs", link: "/recipee/prep" },
+        { title: "Markup Rules", link: "/recipee/prep" },
+      ],
+    },
+
+    {
+      title: "To-do",
+      link: "/recipee/todo",
+      children: [
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+        { title: "Link 1", link: "/recipee/link1/" },
+      ],
+    },
+    {
+      title: "Account",
+      link: "/recipee/admin",
+      children: [
+        { title: "Settings", link: "/recipee/allergies/" },
+        { title: "Users", link: "/recipee/allergies/" },
+        { title: "Roles", link: "/recipee/prep" },
+        { title: "Billing", link: "/recipee/prep" },
+        { title: "Subscription", link: "/recipee/prep" },
+        { title: "Images", link: "/recipee/allergies/" },
+      ],
+    },
+    {
+      title: "Super Admin",
+      link: "/recipee/admin",
+      children: [
+        { title: "Customers", link: "/recipee/allergies/" },
+        { title: "Users", link: "/recipee/allergies/" },
+        { title: "Roles", link: "/recipee/prep" },
+      ],
     },
   ],
-  logo: {
-    // url: "https://res.cloudinary.com/spadasoft/image/upload/v1720100584/logo_2bc425d794.png",
-    url: "/recipee_logo_white_clearbg.svg",
-  },
+  logo_black: { url: "/logo/recipee_logo_black.svg" },
+  logo_white: { url: "/logo/recipee_logo_white.svg" },
 };
 
-const Header = () => {
-  return (
-    <div className="flex justify-center items-center w-full fixed top-0 z-50 bg-black">
-      <div className="max-w-[1440px] w-full flex justify-between items-center gap-4 px-4 sm:px-12 py-6">
-        <Link href="/" className="flex items-center">
-          {data?.logo && <Image src={data?.logo?.url} width={70} height={70} alt="logo" className=" m-3" />}
-          <p className="text-white text-2xl font-bold font-inter">{data?.website_name}</p>
-        </Link>
-        <div className="hidden md:block">
-          <div className={`flex md:items-center flex-col md:flex-row gap-y-8 gap-x-12`}>
-            {data?.links?.map((item: any, index: number) => (
-              <Link key={index} href={item?.link} className={`text-xl text-white text-center font-inter cursor-pointer hover:text-primary`}>
-                {item?.title}
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Clerk Next.js Quickstart",
+  description: "Generated by create next app",
+};
+
+// Reusable component for authentication buttons
+const AuthButtons: React.FC = () => (
+  <div className="flex items-center gap-2">
+    <SignedOut>
+      <SignInButton mode="modal" />
+      {/* <SignUpButton mode="modal" /> */}
+    </SignedOut>
+    <SignedIn>
+      <UserButton showName={true} />
+    </SignedIn>
+  </div>
+);
+
+// Reusable component for rendering individual menu items
+const MenuItem: React.FC<MenuItemProps> = ({ item, isMobile, activeDropdown, toggleDropdown, handleChildClick, pathname, setIsMobile }) => {
+  const hasChildren = item.children.length > 0;
+  const isItemActive = pathname === item.link || item.children.some((child) => pathname === child.link);
+
+  if (isMobile) {
+    return (
+      <div className="relative">
+        {hasChildren ? (
+          <>
+            <button
+              onClick={() => {
+                // STOP the ref from closing the menu prematurely
+                setIsMobile(true);
+                toggleDropdown(item.title);
+              }}
+              className={`block px-4 py-2 text-gray-700 hover:bg-gray-100 w-full text-center ${isItemActive ? "font-semibold bg-gray-50" : ""}`}
+            >
+              {/* MOBILE HAMBURGER */}
+              {item.title}
+              <svg className="w-4 h-4 ml-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {activeDropdown === item.title && (
+              // MOBILE dropdown
+              <div className="pl-4">
+                {item.children.map((child) => (
+                  <Link
+                    // onClick={handleChildClick}
+                    // onClick={(e) => {
+                    //   alert("clicked");
+                    //   e.preventDefault();
+                    //   e.stopPropagation(); // Prevent the click from bubbling up and closing the menu prematurely
+                    // }}
+                    key={child.title}
+                    href={child.link}
+                    className={`block px-4 py-2 text-center text-sm text-gray-700 hover:bg-gray-100 ${pathname === child.link ? "font-semibold bg-gray-50" : ""}`}
+                  >
+                    {/* Mobile Menu Children */}
+                    {child.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <Link href={item.link} className={`block px-4 py-2 text-gray-700 hover:bg-gray-100 ${isItemActive ? "font-semibold bg-gray-50 text-center" : ""}`}>
+            {/* HOME BUTTON MOBILE --- */}
+            <div className="flex text-center justify-center">
+              {/* {item.title} */}
+              <SvgSprite iconName="home" size={20} />
+            </div>
+          </Link>
+        )}
+      </div>
+    );
+  } else {
+    // Desktop version
+    return (
+      <div className="relative">
+        {hasChildren ? (
+          <button
+            onClick={() => {
+              toggleDropdown(item.title);
+              setIsMobile(false);
+            }}
+            className={tailwindMerge(
+              `border text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 rounded-md flex items-center transition-colors duration-200 ${
+                isItemActive ? "font-semibold bg-black text-white border" : ""
+              }`
+            )}
+          >
+            {item.title}
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        ) : (
+          <Link
+            href={item.link}
+            className={`border text-gray-700 hover:text-gray-900 hover:bg-gray-100 px-3 rounded-md flex items-center transition-colors duration-200 ${
+              isItemActive ? "font-semibold bg-primary-500 text-primary-content" : ""
+            }`}
+          >
+            {item.title}
+          </Link>
+        )}
+        {hasChildren && activeDropdown === item.title && (
+          <div className="absolute z-[1001] text-sm left-0 top-full w-48 bg-white shadow-lg rounded-md">
+            {item.children.map((child) => (
+              <Link
+                key={child.title}
+                href={child.link}
+                onClick={handleChildClick}
+                className={`block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors duration-150 ${pathname === child.link ? "font-semibold bg-gray-50" : ""}`}
+              >
+                {/* web menu children */}
+                {child.title}
               </Link>
             ))}
           </div>
+        )}
+      </div>
+    );
+  }
+};
+
+// Main Header component
+const Header: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const pathname = usePathname();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useGetActiveTheme();
+
+  // Close dropdown when clicking outside (desktop only)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        !isMobile ? setActiveDropdown(null) : () => {};
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", !isMobile ? handleClickOutside : () => {});
+  }, [isMobile]);
+
+  // Close mobile menu and dropdowns on route change
+  useEffect(() => {
+    setIsOpen(false);
+    setActiveDropdown(null);
+  }, [pathname]);
+
+  // Toggle mobile menu visibility
+  const toggleMobileMenu = () => {
+    setIsMobile(true);
+    setIsOpen((prev) => !prev);
+  };
+
+  // Toggle dropdown visibility
+  const toggleDropdown = (title: string) => setActiveDropdown((prev) => (prev === title ? null : title));
+
+  // Close dropdown after clicking a child item (desktop only)
+  const handleChildClick = () => setActiveDropdown(null);
+
+  return (
+    <div className="z-[1000]">
+      <OnlineOffline />
+      <div className="px-4 pb-4 flex flex-wrap justify-between items-center">
+        {/* Logo */}
+        <div className="flex items-center">
+          <Image src={theme === "light" ? "/logo/recipee_logo_black.svg" : "/logo/recipee_logo_white.svg"} alt="Logo" width={150} height={75} priority={false} className="mt-1 mr-4 fill-red-500" />
         </div>
-        <div className="hidden md:block">
-          <ButtonSignout text="Logout" />
-        </div>
-        <div className="hidden md:block">
-          <ButtonSignin text="Login" />
-        </div>
-        <div className="md:hidden block">
-          <Sheet>
-            <SheetTrigger>
-              <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6.66663 7.1665H25.3333" stroke="#006FEE" strokeWidth="2" strokeLinecap="round" />
-                <path d="M6.66663 16.5H25.3333" stroke="#006FEE" strokeWidth="2" strokeLinecap="round" />
-                <path d="M6.66663 25.8333H25.3333" stroke="#006FEE" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-            </SheetTrigger>
-            <SheetContent className="bg-black px-0 pt-4 border-l-0 min-w-[320px]">
-              <SheetHeader>
-                <SheetTitle className="text-white text-xl font-bold border-b border-[#b3b3b3] text-left pb-4 pl-4">Menu</SheetTitle>
-              </SheetHeader>
-              <div className="mt-12 mx-auto w-fit block">
-                <ButtonSignin text="Login" />
-              </div>
-              <div className="my-16 mx-auto w-fit">
-                <div className={`flex md:items-center flex-col md:flex-row gap-y-8 gap-x-12`}>
-                  {data?.links?.map((item: any, index: number) => (
-                    <Link key={index} href={item?.link} className={`text-xl text-white text-center font-inter cursor-pointer hover:text-primary`}>
-                      {item?.title}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <Link href="/" className="flex items-center gap-2 mb-16 mx-auto w-fit">
-                {data?.logo && <Image src={data?.logo?.url} width={50} height={50} alt="logo" />}
-                <p className="text-white text-[15px] sm:text-2xl font-bold font-inter">{data?.website_name}</p>
-              </Link>
-            </SheetContent>
-          </Sheet>
+        <AuthButtons />
+        {/* Desktop Navigation */}
+        <nav className="text-xs hidden md:flex flex-wrap gap-x-2 gap-y-7 pt-4" ref={dropdownRef}>
+          {/* <AuthButtons /> */}
+
+          <SignedOut>
+            <div>Menu (Coming Soon)</div>
+          </SignedOut>
+          <SignedIn>
+            {data.menuItems.map((item) => (
+              <MenuItem
+                key={item.title}
+                item={item}
+                isMobile={false}
+                setIsMobile={setIsMobile}
+                activeDropdown={activeDropdown}
+                toggleDropdown={toggleDropdown}
+                handleChildClick={handleChildClick}
+                pathname={pathname}
+              />
+            ))}
+          </SignedIn>
+        </nav>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          <button onClick={toggleMobileMenu} className="text-gray-700 focus:outline-none p-2" aria-label="Toggle navigation menu">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              {isOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              )}
+            </svg>
+          </button>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
+      {isOpen && (
+        <nav className="md:hidden bg-white shadow-md transition-all duration-300 py-4">
+          {data.menuItems.map((item) => (
+            <MenuItem key={item.title} item={item} isMobile={true} setIsMobile={setIsMobile} activeDropdown={activeDropdown} toggleDropdown={toggleDropdown} pathname={pathname} />
+          ))}
+        </nav>
+      )}
     </div>
   );
 };

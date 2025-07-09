@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import DottedBorder from "./DottedBorder";
 import { Suspense } from "react";
-import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import LaunchApp from "@/components/LaunchApp";
 import Problem from "@/components/Problem";
@@ -11,7 +10,7 @@ import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import { getSEOTags, renderSchemaTags } from "@/libs/seo";
-import HeaderRecipee from "@/components/HeaderRecipee";
+import Header from "@/components/Header";
 import Image from "next/image";
 
 export const metadata = getSEOTags({
@@ -47,7 +46,6 @@ const HomePage: React.FC<HomePageProps> = () => {
           </div>
         </DottedBorder>
       </div>
-      {/* <HeaderRecipee /> */}
 
       {/* <Hero />
       <LaunchApp />

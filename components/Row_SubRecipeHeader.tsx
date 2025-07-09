@@ -10,9 +10,10 @@ import { recipeeUI } from "./Row_SubRecipesAll";
 const getColumHeading = (col: string) => {
   switch (col) {
     case "ingredName":
-      return getTextTranslation("INGREDIENT");
+      return getTextTranslation("Ingredient Name");
     case "instruction":
-      return <SvgSprite className="fill-white" iconName="info" size={20} />;
+      return getTextTranslation("Cut Size");
+    // return <SvgSprite className="fill-white" iconName="info" size={20} />;
     case "qty":
       return getTextTranslation("qty");
     case "costPer1000":
@@ -21,7 +22,6 @@ const getColumHeading = (col: string) => {
       return "%";
     case "move":
       return <SvgSprite className="fill-white" iconName="arrow_drop_down" size={20} />;
-
     default:
       return "--";
   }

@@ -7,8 +7,12 @@ interface Row_SubRecipeStepProps {
 }
 const Row_SubRecipeStep: React.FC<Row_SubRecipeStepProps> = ({ children, stepCount }) => {
   return (
-    <Table_Cell firstCol={true} className={"grid grid-flow-col"} type="step" iconName="lightbulb" key={"step" + "_" + stepCount}>
-      STEP{` ${stepCount}`}: {children}
+    <Table_Cell firstCol={false} className={"grid grid-flow-col"} type="step" iconName="lightbulb" key={"step" + "_" + stepCount}>
+      <span className="font-extrabold uppercase ">
+        step
+        {` ${stepCount}`}
+      </span>
+      : {children}
     </Table_Cell>
   );
 };

@@ -1,6 +1,7 @@
 import { is } from "cypress/types/bluebird";
 import { extend } from "cypress/types/lodash";
 
+
 export interface CostRules {
   packagingCosts: {
     [key: number]: PackagingCost;

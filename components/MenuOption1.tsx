@@ -13,11 +13,7 @@ const MenuOption1: React.FC<Props> = ({ children }) => {
     { jsx: <div>Option 2 - 2</div>, handler: () => console.log("Option 2 clicked - 2") },
   ];
 
-  return (
-    <MenuButton className=" px-2 py-1" options={menuOptions}>
-      {children}
-    </MenuButton>
-  );
+  return <MenuButton options={menuOptions}>{children}</MenuButton>;
 };
 
 export default MenuOption1;

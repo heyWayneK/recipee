@@ -2,7 +2,6 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
 import { ComponentsProps } from "@/app/data/recipe";
-import ToggleThemeLightDark from "./ToggleThemeLightDark";
 
 interface Row_SubRecipeSubNameProps {
   subRecipe: ComponentsProps;
@@ -15,9 +14,8 @@ const Row_SubRecipeSubName: React.FC<Row_SubRecipeSubNameProps> = ({ subRecipe, 
       <span className=" text-base-100  line-clamp-1">{subRecipe.name}</span>
 
       <div className="">
-        <ToggleThemeLightDark />
-        <Pill tone="white" className=" text-xs" edit="" onClick={() => {}}>
-          Yield: {subRecipe.yield ?? 0 * 100}%
+        <Pill tone="white" className="" edit="" onClick={() => {}}>
+          Yield: {(subRecipe.yield ?? 0) * 100}%
         </Pill>
         <Pill tone="white" className="flex " iconName="arrow_drop_down" edit="" onClick={() => {}}>
           Version

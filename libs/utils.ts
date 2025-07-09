@@ -1,6 +1,7 @@
 import { language } from "@/app/data/lang";
 import { CostsLiveProps, data } from "@/app/data/recipe";
 import { type ClassValue, clsx } from "clsx";
+import Decimal from "decimal.js";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -97,9 +98,13 @@ export const formatCurrency = (cost: number): number | string => {
 // TODO: imperial
 export const formatWeight = (weight: number): number | string => {
   if (!weight) return "";
+
+  // Set Decimal Places
+  const weightDecimals = Number(weight.toFixed(3));
+
   // RETURN e.g grams or kilograms
-  const unit = weight < 1000 ? data.setting.unitMaster[0] : data.setting.unitMaster[1];
-  const weightUnit = weight < 1000 ? weight + " " + unit : (weight / 1000).toFixed(3) + "\u00A0" + unit;
+  const unit = weightDecimals < 1000 ? data.setting.unitMaster[0] : data.setting.unitMaster[1];
+  const weightUnit = weightDecimals < 1000 ? weightDecimals + " " + unit : weightDecimals / 1000 + "\u00A0" + unit;
   //  TODO: need to handle mls and oz/lbs
   //  TODO: need to handle mls and oz/lbs
   return weightUnit;
@@ -153,6 +158,19 @@ export function cleanComponentKeyName(keyName: any): string {
     .replace(/[^a-zA-Z0-9_]/g, "")
     .replace(/\s+/g, "_");
 }
+
+// // RECURSIVELY IX DECIMAL DATATYPES IN AN OBJECT
+// export const convertDecimalsToNumbers = (obj: any) => {
+//   for (const key in obj) {
+//     if (Array.isArray(obj[key])) {
+//       obj[key].forEach((item: any) => convertDecimalsToNumbers(item));
+//     } else if (typeof obj[key] === "object" && obj[key] !== null) {
+//       convertDecimalsToNumbers(obj[key]);
+//     } else if (obj[key] instanceof Decimal) {
+//       obj[key] = parseFloat(obj[key].toNumber());
+//     }
+//   }
+// };
 
 // TODO: convertions
 

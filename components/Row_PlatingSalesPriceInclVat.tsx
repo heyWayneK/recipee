@@ -3,7 +3,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import { formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
-import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
+import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/useRecipeData";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 import ViewPrices from "./ViewPrices";
 

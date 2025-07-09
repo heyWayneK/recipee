@@ -3,9 +3,9 @@ import React from "react";
 import Pill from "@/components/Pill";
 import { getTextTranslation } from "@/libs/utils";
 
-interface ToggleThemeLightDarkProps {}
+interface ButtonThemeLightDarkProps {}
 
-const ToggleThemeLightDark: React.FC<ToggleThemeLightDarkProps> = () => {
+const ButtonThemeLightDark: React.FC<ButtonThemeLightDarkProps> = () => {
   // TOGGLE DARK & LIGHT THEME
   const { theme, toggleTheme } = useGetActiveTheme();
 
@@ -18,4 +18,4 @@ const ToggleThemeLightDark: React.FC<ToggleThemeLightDarkProps> = () => {
   );
 };
 
-export default ToggleThemeLightDark;
+export default ButtonThemeLightDark;

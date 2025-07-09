@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { formatWeight, getTextTranslation } from "@/libs/utils";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { useRecipeData } from "@/contexts/useRecipeData";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useModalBig } from "@/hooks/UseBigModal";
 import Link from "next/link";

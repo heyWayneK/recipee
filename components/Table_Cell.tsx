@@ -26,11 +26,11 @@ const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none ", {
 
       method: " grid grid-flow-col  self-start [&>*]:items-start ",
 
-      ingredient: "grid grid-flow-col rounded-full bg-base-content/10 truncate line-clamp-1 md:line-clamp-none md:text-wrap active:bg-neutral-content",
+      ingredient: "grid grid-flow-col rounded-full bg-base-content/10 truncate line-clamp-1 md:line-clamp-none md:text-wrap active:bg-neutral-content place-items-center",
 
       sub_recipe: "  ",
 
-      step: " justify-start",
+      step: " justify-start [&>svg]:fill-base-content [&>svg]:size",
 
       clear:
         " rounded-full border border-neutral-content grid-flow-col justify-center gap-x-2 [&>div]:text-base-content hover:opacity-50 active:opacity-30 justify-items-center  [&>svg]:fill-base-content",

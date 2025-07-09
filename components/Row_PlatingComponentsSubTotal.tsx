@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/libs/utils";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_PlatingComponentsSubTotalProps {
   className?: string;

@@ -23,7 +23,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ class
       case "move":
         return (
           <MenuOption1>
-            <SvgSprite iconName="arrow_drop_down" size={10} />
+            <SvgSprite iconName="arrow_drop_down" size={15} />
           </MenuOption1>
         );
       case "costPer1000":
@@ -39,7 +39,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ class
     <>
       {recipeeUI.sub_recipe.map((col, i) => {
         return (
-          <Table_Cell firstCol={i === 0} type="ingredient" key={col + "_" + "_" + i}>
+          <Table_Cell className="" firstCol={i === 0} type="ingredient" key={col + "_" + i}>
             <div>{formatColContent(col, ingredient[col])}</div>
           </Table_Cell>
         );

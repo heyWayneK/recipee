@@ -344,7 +344,7 @@ export const getSystemData = async (customerId: number): Promise<SystemDataProps
     packaging_costs_line_items_lookup,
     vat_rules,
     ingredients,
-  ] = await prisma.$transaction([
+  ] = await Promise.all([
     // ] = await prisma.$transaction([
     // The order of queries here MUST match the destructuring order above
     prisma.unit_type.findMany({ select: { id: true, name: true, desc: true, imperial: true, metric: true } }),
@@ -517,8 +517,7 @@ export async function GET() {
   const customerId = 1; // Default customer ID
   try {
     const response = await getSystemData(customerId);
-    // const response = await JSON.parse(JSON.stringify(getSystemData(customerId)));
-    // console.log("WAYNE DEBUG: Response from getSystemData:", response);
+    // // const response = await JSON.parse(JSON.stringify(getSystemData(customerId)));
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     // Log the error for server-side debugging

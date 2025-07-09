@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ButtonSignin from "./ButtonSignin";
-import ToggleThemeLightDark from "./ToggleThemeLightDark";
+import ButtonThemeLightDark from "./ButtonThemeLightDark";
 
 const data = {
   website_name: "Recipee.app",
@@ -58,7 +58,7 @@ const Footer = () => {
             </div>
           </div>
           <div className="order-first md:order-last"> Sign In{/* <ButtonSignin text="Login" /> */}</div>
-          <ToggleThemeLightDark />
+          <ButtonThemeLightDark />
         </div>
       </div>
     </footer>

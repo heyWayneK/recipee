@@ -3,7 +3,7 @@ import { preCalculateData } from "@/libs/preCalculatedRecipeData";
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { mergeDeep } from "@/libs/mergeDeep";
 import { getUserData } from "@/app/api/data/user/[profileid]/route";
-import {
+import type {
   AllergySelect,
   CookedYieldsCategoriesSelect,
   DietaryClassificationSelect,
@@ -30,8 +30,10 @@ import {
   UnitMeasurementSelect,
   UnitTypeSelect,
   VatRulesSelect,
-  getSystemData,
+  MarkupSelectSerializable,
 } from "@/app/api/data/system/route";
+import { getSystemData } from "@/app/api/data/system/route";
+
 // FUTURE: POTENTIALLY USE GETSTATICPROPS for cache
 // import { GetStaticProps } from "next";
 
@@ -39,27 +41,28 @@ import {
 //- These contain the calulated recipe subTotals, Totals and
 //- lookup values like markup, or the cost of other costs etc
 export interface PreCalculatedRecipeData {
+  // TODO: Need to use DECIMAL type
   portionSizes: number[];
   portionIds: number[];
   componentsNamesArray: string[];
   componentsIDArray: string[];
-  componentsWeights: number[][];
-  componentsPricePer1000: number[];
-  componentsPrices: number[][];
+  componentsWeights: number[][]; // Decimals
+  componentsPricePer1000: number[]; // Decimals
+  componentsPrices: number[][]; // Decimals
   componentsPricesDesc: string[][][];
-  componentsSubTotalsPrices: number[];
-  packingCostPriceTotals: number[];
-  packingCostPriceRules: number[];
-  otherCostsPriceTotals: number[];
-  otherCostsPriceRules: number[];
-  costsSubTotals: number[];
-  markUpPriceAmounts: number[];
-  markUpPriceRules: number[];
-  salePricesExVat: number[];
-  salesPricesIncVat: number[];
-  vatRuleIds: number[];
-  vatRulePercs: number[];
-  vatRuleNames: string[];
+  componentsSubTotalsPrices: number[]; // Decimals
+  packingCostPriceTotals: number[]; // Decimals
+  packingCostPriceRules: number[]; // Decimals
+  otherCostsPriceTotals: number[]; // Decimals
+  otherCostsPriceRules: number[]; // Decimals
+  costsSubTotals: number[]; // Decimals
+  markUpPriceAmounts: number[]; // Decimals
+  markUpPriceRules: number[]; // Decimals
+  salePricesExVat: number[]; // Decimals
+  salesPricesIncVat: number[]; // Decimals
+  vatRuleIds: number[]; // Decimals
+  vatRulePercs: number[]; // Decimals
+  vatRuleNames: string[]; // Decimals
   data: DataProps;
 }
 
@@ -85,9 +88,11 @@ export const preCalculatedRecipeData: PreCalculatedRecipeData = {
   vatRuleIds: [],
   vatRulePercs: [],
   vatRuleNames: [],
+
   // Create a deep copy of the data object (Recipe Data)
   data: JSON.parse(JSON.stringify(data)),
 };
+
 export interface UserDataProps {
   // USER VALUES BELOW (to overwrite System Data {...vals, ... userVals})
   // OVERWRITE OR ADD TO THE SYSTEM DATA
@@ -109,7 +114,7 @@ export interface SystemDataProps {
   language: LanguageSelect[];
   nutritional_data_values: NutritionalDataValuesSelect[];
   ingredient_category_primary: IngredientCategoryPrimarySelect[];
-  // FUTURE: need to create secondary cats
+  // FUTURE: need to create secondary categories
   ingredient_category_secondary: IngredientCategorySecondarySelect[];
   dietary_classification: DietaryClassificationSelect[];
   allergy: AllergySelect[];
@@ -119,7 +124,7 @@ export interface SystemDataProps {
   salt_purpose: SaltPurposeSelect[];
   ingredient_type: IngredientTypeSelect[];
   markup_type: MarkupTypeSelect[];
-  markup: MarkupSelect[];
+  markup: MarkupSelect[] | MarkupSelectSerializable[]; // Decimals
   todo_status: TodoStatusSelect[];
   // DEFAULT VALUES BELOW (to overwritten {...vals, ... userVals})
   // GET VALUES WHERE CUSTOMER = 1 (Default Account)
@@ -128,15 +133,17 @@ export interface SystemDataProps {
   packaging_costs_category: PackagingCostsCategorySelect[];
   packaging_costs_line_items_lookup: PackagingCostsLineItemsLookupSelect[];
   vat_rules: VatRulesSelect[];
+  ingredients: IngredientTypeSelect[];
 }
-type localOrDbDataTypeOptions = "localStorage" | "db" | "undefined";
+
+export type localOrDbDataTypeOptions = "localStorage" | "database" | "undefined";
 type localOrDbDataType = {
   user: localOrDbDataTypeOptions;
   system: localOrDbDataTypeOptions;
 };
 
 // DEFINE context shape
-interface RecipeDataContextType {
+export interface RecipeDataContextType {
   qty: number;
   setQty: React.Dispatch<React.SetStateAction<number>>;
   recipeMode: RecipeModeType;
@@ -154,7 +161,8 @@ interface RecipeDataProviderProps {
   children: React.ReactNode;
 }
 
-type RecipeModeType = "easy" | "advanced";
+export type RecipeModeType = "easy" | "advanced";
+
 // Context provider component
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
   const [qty, setQty] = useState<number>(1);
@@ -167,12 +175,9 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
 
   // USER DATA__________________________________________START::
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUserData = async () => {
       try {
         const response = (await getUserData(1)) ?? undefined;
-        // FUTURE: API CALL ALTERNATIVE
-        // const response = await fetch("/api/user/[profileid]");
-        // const data = await response.json();
 
         if (response === undefined) {
           throw new Error("System data is null");
@@ -184,21 +189,28 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
       }
     };
 
+    // Check Local Storage for cached user data
     const cachedData = localStorage.getItem("userData") ?? undefined;
-    // console.log(" 1: %%%%%%%%%%%%%%%%%%%% cachedData", cachedData);
 
-    if (cachedData !== undefined && cachedData !== "undefined") {
-      console.log(" 2: %%%%%%%%%%%%%%%%%%%% THERE IS cachedData");
+    // DEFINE WHERE THE DATA IS COMING FROM
+    // const userDataMode: localOrDbDataTypeOptions = "database";
+    const userDataMode = cachedData && cachedData ? "localStorage" : "database";
+
+    if (userDataMode === "localStorage" && cachedData !== undefined && cachedData !== "undefined") {
       setUserData(JSON.parse(cachedData));
-      localOrDbData.current.user = "localStorage"; // If we have cached data, we assume it's from localStorage
+    } else if (userDataMode === "database") {
+      fetchUserData();
     } else {
-      fetchData();
-      console.log(" 2: %%%%%%%%%%%%%%%%%%%% LOAD FROM DB");
-      localOrDbData.current.user = "db"; // If we fetch from the API, we assume it's from the database
+      // console.warn("No user data available, using default values");
+      // setUserData({} as UserDataProps); // Set to empty object if no data is available
     }
+    console.log("%%%%%%%%%%%%% USER DATA MODE:", userDataMode);
+    localOrDbData.current.user = userDataMode; // Set the user data source
   }, []);
 
   useEffect(() => {
+    if (!userData && userData !== undefined && userData !== "undefined") return;
+    // SAVE USER DATA TO LOCAL STORAGE
     localStorage.setItem("userData", JSON.stringify(userData));
   }, [userData]);
   // USER DATA__________________________________________END::
@@ -207,14 +219,11 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
   //
   // SYSTEM DATA__________________________________________START::
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchSystemData = async () => {
       try {
         // FUTURE: GET CUSTOMER ID FROM USER DATA
-        const customerId = 1; // organisation ID
-        const response = (await getSystemData(customerId)) ?? undefined;
-        // FUTURE: for APP - API CALL ALTERNATIVE
-        // const response = await fetch("/api/data/system");
-        // const data = await response.json();
+        const customerId = 1; // customerId=1 is the default system account
+        let response = (await getSystemData(customerId)) ?? undefined;
 
         if (response === undefined) {
           throw new Error("System data is null");
@@ -228,17 +237,26 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     };
 
     const cachedData = localStorage.getItem("systemData") ?? undefined;
-    if (cachedData !== undefined && cachedData !== "undefined") {
+    // DEFINE WHERE THE DATA IS COMING FROM
+    // const systemDataMode: localOrDbDataTypeOptions = "database";
+    const systemDataMode = cachedData ? "localStorage" : "database";
+
+    if (systemDataMode === "localStorage" && cachedData !== undefined && cachedData !== "undefined") {
       setSystemData(JSON.parse(cachedData));
-      localOrDbData.current.system = "localStorage"; // If we have cached data, we assume it's from localStorage
+    } else if (systemDataMode === "database") {
+      fetchSystemData();
     } else {
-      fetchData();
-      localOrDbData.current.system = "db"; // If we have cached data, we assume it's from localStorage
-      
+      // console.warn("No system data available, using default values");
+      // setSystemData({} as SystemDataProps); // Set to empty object if no data is available
     }
+
+    console.log("%%%%%%%%%%%%% SYSTEM DATA MODE:", systemDataMode);
+    localOrDbData.current.system = systemDataMode; // If we have cached data, we assume it's from localStorage
   }, []);
 
   useEffect(() => {
+    // SAVE SYSTEM DATA TO LOCAL STORAGE
+    if (!systemData && systemData !== undefined && systemData !== "undefined") return;
     localStorage.setItem("systemData", JSON.stringify(systemData));
   }, [systemData]);
   // SYSTEM DATA__________________________________________END::
@@ -259,6 +277,7 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
   useEffect(() => {
     // console.log("useEffect ---- preCalculatedRecipeData ----");
     if (!systemData || !userData) return;
+    console.log("LAST : %%%%%%%%%%%%%%%%%%%% useEffect ---- updateRecipeData");
     updateRecipeData(preCalculateData(preCalculatedRecipeData, systemData, userData));
   }, [systemData, userData, updateRecipeData]);
 

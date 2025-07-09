@@ -9,7 +9,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { Tooltip } from "react-tooltip";
 import config from "@/config";
-import Header from "./Header";
+import Header from "./HeaderOld";
 
 // Component to configure and manage Crisp chat functionality
 const CrispChat = (): null => {
@@ -22,10 +22,7 @@ const CrispChat = (): null => {
       Crisp.configure(config.crisp.id);
 
       // Hide Crisp chat on routes not included in the configuration
-      if (
-        config.crisp.onlyShowOnRoutes &&
-        !config.crisp.onlyShowOnRoutes?.includes(pathname)
-      ) {
+      if (config.crisp.onlyShowOnRoutes && !config.crisp.onlyShowOnRoutes?.includes(pathname)) {
         Crisp.chat.hide();
 
         // Ensure chat remains hidden when closed
@@ -66,10 +63,7 @@ const ClientLayout = ({ children }: { children: ReactNode }) => {
         />
 
         {/* Tooltip component for displaying tooltips */}
-        <Tooltip
-          id="tooltip"
-          className="z-[60] !opacity-100 max-w-sm shadow-lg"
-        />
+        <Tooltip id="tooltip" className="z-[60] !opacity-100 max-w-sm shadow-lg" />
 
         {/* CrispChat component to handle Crisp chat */}
         <CrispChat />

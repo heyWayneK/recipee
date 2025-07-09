@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { calcProfit, formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
-import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/UseRecipeData";
+import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/useRecipeData";
 import MenuDynamicChildren, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "@/components/ViewPrices";

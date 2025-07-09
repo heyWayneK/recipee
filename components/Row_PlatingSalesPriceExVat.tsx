@@ -3,7 +3,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import { cleanComponentKeyName, formatCurrency, formatWeight, getTextTranslation, replace_ } from "@/libs/utils";
 import { data } from "@/app/data/recipe";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { useRecipeData } from "@/contexts/useRecipeData";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "./ViewPrices";
 

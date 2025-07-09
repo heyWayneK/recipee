@@ -12,7 +12,7 @@
 "use server";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/libs/prisma";
-import { UserDataProps } from "@/contexts/UseRecipeData";
+import { UserDataProps } from "@/contexts/useRecipeData";
 // import { GetStaticProps } from "next";
 
 type RouteContext = {

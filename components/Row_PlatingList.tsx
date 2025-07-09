@@ -2,7 +2,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import { cleanComponentKeyName, formatCurrency, formatWeight } from "@/libs/utils";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { useRecipeData } from "@/contexts/useRecipeData";
 // Removed unused imports
 
 interface Row_PlatingListProps {

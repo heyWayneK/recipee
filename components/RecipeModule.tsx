@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import Row_SubRecipesAll from "./Row_SubRecipesAll";
 import Row_PlatingAll from "./Row_PlatingAll";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { useRecipeData } from "@/contexts/useRecipeData";
 import Loading from "./Loading";
 export interface RecipeModuleProps {
   className?: string;

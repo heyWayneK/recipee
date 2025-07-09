@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { MenuModalProvider } from "../../contexts/UseMenuModal";
-import { RecipeDataProvider } from "../../contexts/UseRecipeData";
+import { MenuModalProvider } from "../../contexts/useMenuModal";
+import { RecipeDataProvider } from "../../contexts/useRecipeData";
 import Recipee from "./page";
 import "@testing-library/jest-dom";
 import React from "react";

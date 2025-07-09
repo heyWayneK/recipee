@@ -4,8 +4,8 @@ import MenuOption1 from "./MenuOption1";
 import MenuOption2 from "./MenuOption2";
 import Pill from "./Pill";
 import { getTextTranslation } from "@/libs/utils";
-import { useRecipeData } from "@/contexts/UseRecipeData";
-import ToggleThemeLightDark from "./ToggleThemeLightDark";
+import { useRecipeData } from "@/contexts/useRecipeData";
+import ButtonThemeLightDark from "./ButtonThemeLightDark";
 
 interface Row_ControlsPlatingProps {
   viewPrices: boolean;
@@ -19,7 +19,7 @@ const Row_ControlsPlating: React.FC<Row_ControlsPlatingProps> = ({ className = "
   return (
     <Table_Cell firstCol={false} header={false} type="controls" iconName="">
       {/* SHOW PRICES BUTTON */}
-      <ToggleThemeLightDark />
+      <ButtonThemeLightDark />
       <MenuOption1>
         <span className=" capitalize">{getTextTranslation("add_component")}</span>
       </MenuOption1>

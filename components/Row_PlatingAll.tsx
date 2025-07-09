@@ -14,7 +14,7 @@ import Row_PlatingMarkup from "./Row_PlatingMarkup";
 import Row_PlatingSalesPriceExVat from "./Row_PlatingSalesPriceExVat";
 import Row_PlatingSalesPriceInclVat from "./Row_PlatingSalesPriceInclVat";
 import Row_PlatingPrint from "./Row_PlatingPrint";
-import { useRecipeData } from "@/contexts/UseRecipeData";
+import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_PlatingAllProps {}
 

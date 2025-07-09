@@ -8,30 +8,43 @@ interface OnlineStatusContextProps {
 const OnlineStatusContext = createContext<OnlineStatusContextProps | undefined>(undefined);
 
 export const OnlineStatusProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  // 1. State to hold the online status.
+  // We initialize with `undefined` to signify that we haven't checked yet.
+  // This is key to avoiding hydration errors.
+  const [isOnline, setIsOnline] = useState<boolean | undefined>(undefined);
 
   useEffect(() => {
-    // This runs only on the client after hydration
-    setIsOnline(navigator.onLine); // Set initial state
+    // This effect hook runs only on the client, after the initial render.
 
-    // Listen for online/offline events
+    // Handler to update state to true
     const handleOnline = () => setIsOnline(true);
+    // Handler to update state to false
     const handleOffline = () => setIsOnline(false);
 
+    // Add event listeners to watch for network status changes
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Cleanup listeners
+    // Set the initial status as soon as the component mounts on the client
+    setIsOnline(navigator.onLine);
+
+    // Cleanup function: remove the event listeners when the component unmounts
+    // to prevent memory leaks.
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, []); // The empty dependency array ensures this effect runs only once on mount.
 
-  // Render nothing or a placeholder until the client determines the state
-  if (isOnline === null) {
-    return true; // Or a loading placeholder: <div>Loading...</div>
+  // 2. On the server, and on the initial client render, `isOnline` is `undefined`.
+  // We return `null` so that the server-rendered output and the initial client
+  // render are identical, preventing a hydration error.
+  if (typeof isOnline === "undefined") {
+    return null;
   }
+
+  // 3. Once the useEffect has run on the client, `isOnline` will be true or false,
+  // and we can safely render the indicator.
 
   return <OnlineStatusContext.Provider value={{ isOnline }}>{children}</OnlineStatusContext.Provider>;
 };
