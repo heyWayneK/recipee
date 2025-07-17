@@ -1,8 +1,9 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { cleanComponentKeyName, formatCurrency, formatWeight } from "@/libs/utils";
+import { cleanComponentKeyName, formatCurrency } from "@/utils/utils";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useRecipeData } from "@/contexts/useRecipeData";
+import IngredientUnits from "./IngredientUnits";
 // Removed unused imports
 
 interface Row_PlatingListProps {
@@ -40,7 +41,7 @@ const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewP
           otherCells.push(
             <MenuDynamicChildren key={keyNameSub} menuArray={dropDownInfo}>
               <Table_Cell edit="edit" type="plating_list" rowNum={iC}>
-                {formatWeight(component[iP])}
+                <IngredientUnits>{component[iP]}</IngredientUnits>
                 {viewPrices && <div className="self-center">{formatCurrency(recipeData.componentsPrices[iC][iP])}</div>}
               </Table_Cell>
             </MenuDynamicChildren>

@@ -1,5 +1,52 @@
 # Recipee — Typescript
 
+## Default: Metric: Grams or mL - Recipe Units Saved to Database
+
+- All recipes are Metric g's & mL's in the database.
+- Weight is always stored in metric grams or metric milliliters.
+- NB: Unit Type is |weight|fluid|each| Pro Mode aims to use weight 99% of the time
+
+  - weight (g kg oz lb),
+  - fluid (mL L fl oz) or
+  - each (ea for eggs) - useful for garnish e.g. 1 Bay Leaf, 1 boiled egg
+
+  **Metric**
+
+  - Fluid Volume
+    - Millilitre: mL : 250 mL
+    - Litre: L : 2 L
+      The "L" for litre is capitalized to avoid confusion with the number "1". While a lowercase "l" is technically permissible in some contexts, the capitalized "L" is internationally recommended for clarity.
+  - Weight (Mass)
+    - Gram: g : 500 g
+    - Kilogram: kg : 10 kg
+    - Milligram: mg : 15 mg
+
+  **Imperial**
+
+  - Fluid Volume
+    - Fluid Ounce: fl oz : 8 fl oz
+    - Pint: pt : 1 pt
+    - Quart: qt : 1 qt
+    - Gallon: gal : 5 gal
+  - Weight
+    - Ounce: oz : 16 oz
+    - Pound: lb : 5 lb
+    - Stone: st. (Primarily used in the UK for body weight : 11 st)
+
+## Recipe Mode Type
+
+type RecipeModeType = "home" | "pro";
+
+- Home is for home recipes, metric with (imperial in cups, tsp tbls, pinch)
+- Pro is weight or volume only, in metric or imperial
+
+## Length and Cuts
+
+- Metric
+  - cm's & mm
+- Imperial
+  - Inches etc
+
 ## isOnline()?
 
 - using hook:
@@ -55,24 +102,30 @@ Reach out to me on [Twitter](https://twitter.com/DennisBabych) or hello@db2.io
 ```
 
 ## DECIMAL DATA TYPES
+
 - Best Practice
-When working with **Prisma**, **Supabase**, and `Decimal` type data in your app, you need to carefully handle precision and compatibility between the database, Prisma, and your application logic. Here's the best way to deal with it:
+  When working with **Prisma**, **Supabase**, and `Decimal` type data in your app, you need to carefully handle precision and compatibility between the database, Prisma, and your application logic. Here's the best way to deal with it:
 
 ---
 
 ### **Plan**
+
 1. **Database Schema**:
+
    - Ensure your database schema uses a `NUMERIC` or `DECIMAL` type for fields requiring high precision (e.g., prices, weights, etc.).
    - Supabase (PostgreSQL) supports `NUMERIC`/`DECIMAL` types natively.
 
 2. **Prisma Schema**:
+
    - Use Prisma's `Decimal` type for fields that map to `NUMERIC`/`DECIMAL` in the database.
    - Prisma uses the `Decimal.js` library under the hood to handle high-precision arithmetic.
 
 3. **Install Decimal.js**:
+
    - Install the `decimal.js` library in your app to work with `Decimal` values in your business logic.
 
 4. **Transform Data**:
+
    - When fetching data from Prisma, ensure you handle `Decimal` objects correctly (e.g., convert to strings or numbers as needed).
    - When sending data to Supabase (if applicable), serialize `Decimal` values properly.
 
@@ -84,6 +137,7 @@ When working with **Prisma**, **Supabase**, and `Decimal` type data in your app,
 ### **Implementation**
 
 #### 1. Prisma Schema Example
+
 ```prisma
 model Product {
   id        Int     @id @default(autoincrement())
@@ -94,13 +148,15 @@ model Product {
 ```
 
 #### 2. Install Decimal.js
+
 ```bash
 npm install decimal.js
 ```
 
 #### 3. Handling Decimal in TypeScript
+
 ```ts
-import { Decimal } from 'decimal.js';
+import { Decimal } from "decimal.js";
 
 // Example: Fetching data from Prisma
 const product = await prisma.product.findUnique({ where: { id: 1 } });
@@ -116,11 +172,13 @@ const supabaseData = {
   ...product,
   price: product.price.toString(), // Convert Decimal to string for Supabase
 };
-await supabase.from('products').insert(supabaseData);
+await supabase.from("products").insert(supabaseData);
 ```
 
 #### 4. Supabase Table Schema
+
 In Supabase, define the `price` column as `NUMERIC(10, 2)` to match Prisma's schema:
+
 ```sql
 CREATE TABLE products (
   id SERIAL PRIMARY KEY,
@@ -131,11 +189,12 @@ CREATE TABLE products (
 ```
 
 #### 5. Validation Example
+
 ```ts
 function validatePrice(input: string): Decimal {
   const price = new Decimal(input);
   if (price.isNegative()) {
-    throw new Error('Price cannot be negative');
+    throw new Error("Price cannot be negative");
   }
   return price;
 }
@@ -144,13 +203,17 @@ function validatePrice(input: string): Decimal {
 ---
 
 ### **Best Practices**
+
 1. **Use Decimal.js for All Arithmetic**:
+
    - Avoid floating-point arithmetic with `number` in JavaScript. Always use `Decimal` for calculations involving money or precision.
 
 2. **Serialize Decimal Properly**:
+
    - Convert `Decimal` to `string` when sending data to external APIs (e.g., Supabase).
 
 3. **Database Consistency**:
+
    - Ensure the precision and scale in your Prisma schema match the database schema.
 
 4. **Testing**:
@@ -159,9 +222,11 @@ function validatePrice(input: string): Decimal {
 ---
 
 By following these steps, you can seamlessly handle `Decimal` type data in your app with Prisma and Supabase.
+
 - Using the Supabase Numeric/Decimal Type
+
 ```typescript
-import { Decimal } from 'decimal.js';
+import { Decimal } from "decimal.js";
 
 // Example: Fetching data from Prisma
 const product = await prisma.product.findUnique({ where: { id: 1 } });
@@ -177,9 +242,8 @@ const supabaseData = {
   ...product,
   price: product.price.toString(), // Convert Decimal to string for Supabase
 };
-await supabase.from('products').insert(supabaseData);
+await supabase.from("products").insert(supabaseData);
 ```
-
 
 ## DATA (loaded on app opening)
 
@@ -312,7 +376,7 @@ There are 2 steps:
 Use the function to convert weights.
 The system works in metric ALWAYS.
 
-- formatWeight(your_weight)
+- <IngredientUnits>{your_weight}</IngredientUnits>
 
 ### Component Key Name Cleaning
 

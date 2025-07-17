@@ -1,6 +1,6 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { getTextTranslation, replace_ } from "@/libs/utils";
+import { getTextTranslation, replace_ } from "@/utils/utils";
 import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_PlatingComponentsSubTotalProps {
@@ -10,7 +10,7 @@ interface Row_PlatingComponentsSubTotalProps {
 
 const Row_PlatingComponentsSubTotal: React.FC<Row_PlatingComponentsSubTotalProps> = ({ className = "", viewPrices }) => {
   // INFO: Other useRecipeData vars: qty, setQty, recipeData, updateRecipeData
-  const { recipeData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeData();
   const name = "components_sub_total";
   return (
     <>
@@ -24,7 +24,7 @@ const Row_PlatingComponentsSubTotal: React.FC<Row_PlatingComponentsSubTotalProps
       {recipeData.componentsSubTotalsPrices.map((price, i) => {
         return (
           <Table_Cell type="sub_total" key={name + "_" + i}>
-            {recipeData.data.setting.currency}
+            {systemData.org.country_locale.currency_symbol}
             {price.toFixed(2)}
           </Table_Cell>
         );

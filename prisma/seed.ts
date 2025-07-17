@@ -86703,7 +86703,7 @@ async function seedInsert() {
 
   const queries = {
     // unit_type: prisma.unit_type.findMany(),
-    // unit_measurement: prisma.unit_measurement.findMany(),
+    // unit_metric_imperial: prisma.unit_metric_imperial.findMany(),
     // prep_instructions: prisma.prep_instructions.findMany(),
     // raw_to_prepped_yields: prisma.raw_to_prepped_yields.findMany(),
     // cooked_yields_categories: prisma.cooked_yields_categories.findMany(),

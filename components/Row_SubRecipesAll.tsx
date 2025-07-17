@@ -1,5 +1,5 @@
 import React from "react";
-import { RecipeProps, data, ComponentsProps } from "@/app/data/recipe";
+import { RecipeProps, data, ComponentsProps } from "@/app/api/recipe";
 import Row_SubRecipeControls from "./Row_SubRecipeControls";
 import Row_SubRecipeSubName from "./Row_SubRecipeName";
 import Row_SubRecipeHeader from "./Row_SubRecipeHeader";

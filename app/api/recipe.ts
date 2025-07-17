@@ -1,177 +1,11 @@
+import { RecipeDataProps } from "@/types/recipeTypes";
 import { is } from "cypress/types/bluebird";
 import { extend } from "cypress/types/lodash";
 
-
-export interface CostRules {
-  packagingCosts: {
-    [key: number]: PackagingCost;
-  };
-  otherCosts: {
-    [key: number]: OtherCost;
-  };
-  markUps: {
-    [key: number]: MarkUp;
-  };
-  vatRules: {
-    [key: number]: { name: string; factor: number; isDefault: boolean };
-  };
-}
-
-export interface PackagingCost {
-  readonly name: string;
-  readonly cost: number;
-}
-
-export interface OtherCost {
-  readonly name: string;
-  readonly costs: OtherCostItem[];
-}
-
-export interface OtherCostItem {
-  readonly id: number;
-  readonly name: string;
-  readonly cost: number;
-}
-
-export interface MarkUp {
-  readonly name: string;
-  readonly factor: number;
-  readonly type: "markup" | "margin" | "xcost";
-}
-
-export interface nutriPer100Props {
-  name: string;
-  valuePer100: number;
-  unit: string;
-}
-
-export interface versionsProps {
-  id: number;
-  datetime: string;
-  user: string;
-}
-
-export interface ComponentsProps {
-  uuid: string;
-  recipeId: string;
-  order: number;
-  name?: string;
-  type?: "ingredient" | "step" | "sub";
-  ingredientId?: number | null;
-  // parentId?: null | number;
-  portions: PortionSizeChildProps[];
-  yield?: number;
-  nutriPer100?: nutriPer100Props[];
-  version?: string;
-  versions?: versionsProps[];
-}
-
-export interface Brand {
-  id: number;
-  name: string;
-  logoSrc: string;
-}
-
-export interface CustomerType {
-  id: number;
-  name: string;
-  logoSrc: string;
-}
-
-export interface RecipeProps {
-  uuid: string;
-  name: string;
-  costPer1000: number;
-  brand: Brand;
-  customer: CustomerType;
-  recipeDetail: recipeDetailProps[];
-  method: string;
-  rationalisedRecipe?: string;
-}
-
-export interface recipeDetailProps {
-  uuid: string;
-  ingredId: number | null;
-  ingredName: string | null;
-  subRecipeId: string | null;
-  dietClassification: "animal_product" | "vegan" | "vegetarian";
-  order: number;
-  type: "ingredient" | "step" | "sub";
-  stepInstruction: string;
-  supplier: string;
-  instruction: string;
-  qty: number;
-  unitType: "weight";
-  costPer1000: number;
-  rationalisedRecipe: string;
-  FQscore: FQProps;
-  needsPrep: boolean;
-  isSalt: boolean;
-  // NEESDS WORK - Salt Absorbtion table
-  isSaltInWater: boolean;
-  isOil: boolean;
-  oilPurpose: "added" | "thin_coating" | "shallow_fry" | "deep_fry";
-}
-
-export interface FQProps {
-  id?: number;
-  // MUSTS BE BETWEEN -1 to 1
-  positive: number;
-  negative: number;
-  neutral: number;
-  overall: number;
-  positiveTxt: string;
-  negativeTxt: string;
-  neutralTxt: string;
-  overallTxt: string;
-}
-
-export interface CostsLiveProps {
-  [key: number]: number;
-}
-
-export interface portionSizeProps {
-  id: number;
-  qty: number;
-  order: number;
-}
-
-export type PortionSizeChildProps = Omit<portionSizeProps, "order">;
-
-export interface DataProps {
-  recipeName: string;
-  recipeDesc: string;
-  readonly setting: {
-    unitMaster: ["g", "kg"]; //|[] "oz" , "lbs"];
-    unitMask: "metric" | "imperial";
-    // unitType: EnumUnitType;
-    // vatDefaultId: number;
-    currency: string;
-    locale: string;
-    language: string;
-  };
-  portions: portionSizeProps[];
-  packagingCostsId: { [key: number]: number };
-  otherCostsId: { [key: number]: number };
-  markupId: { [key: number]: number };
-  vatRulesId: { id: number; rule: number }[];
-  components: ComponentsProps[];
-  recipes: RecipeProps[];
-}
-
-export const data: DataProps = {
+export const data: RecipeDataProps = {
+  recipeUUID: "1234567890",
   recipeName: "My Recipe name that could be very very long",
   recipeDesc: "Thinly sliced beef with a pepper sauce and roasted veg",
-  setting: {
-    // ALL RECIPES ARE IN g
-    // unitType: EnumUnitType,
-    unitMaster: ["g", "kg"] /*[["g", "kg"],["oz", "lbs"],] */,
-    unitMask: "metric",
-
-    currency: "R",
-    locale: "ZAR",
-    language: "EN",
-  },
 
   portions: [
     { id: 1234, qty: 265, order: 1 },
@@ -180,23 +14,23 @@ export const data: DataProps = {
 
   // portions: [265, 350],
   // packagingCostsId: [
-  //   { id: 1234, rule: 5 },
-  //   { id: 1235, rule: 6 },
+  //   { pid: 1234, rule: 5 },
+  //   { pid: 1235, rule: 6 },
   // ],
   packagingCostsId: { 265: 5, 350: 6 },
   // otherCostsId: [
-  //   { id: 1234, rule: 3 },
-  //   { id: 1235, rule: 4 },
+  //   { pid: 1234, rule: 3 },
+  //   { pid: 1235, rule: 4 },
   // ],
   otherCostsId: { 265: 3, 350: 4 },
   // markupId: [
-  //   { id: 1234, rule: 1 },
-  //   { id: 1235, rule: 2 },
+  //   { pid: 1234, rule: 1 },
+  //   { pid: 1235, rule: 2 },
   // ],
   markupId: { 265: 3, 350: 8 },
   vatRulesId: [
-    { id: 1234, rule: 1 },
-    { id: 1235, rule: 2 },
+    { pid: 1234, rule: 1 },
+    { pid: 1235, rule: 2 },
   ],
   // vatRulesId: [2, 2],
 
@@ -415,7 +249,16 @@ export const data: DataProps = {
           uuid: "111",
           ingredId: 666,
           ingredName: "Do not overcook chicken. Remove Chicken from bone while warm",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -434,11 +277,25 @@ export const data: DataProps = {
           FQscore: { positive: 0, negative: 0, neutral: 0, overall: 0, positiveTxt: "", negativeTxt: "", neutralTxt: "", overallTxt: "" },
         },
         {
+          //  pro: g kg ton mL L = qty
+          // home g kg mL L = home_qty
+          //
+          //
           uuid: "222",
           ingredId: 666,
-          ingredName: "Chicken Breast Marination (Novation)",
-          qty: 10000,
+          ingredName: "Chicken Breast Marination (Novation)", // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
+
+          qty: 10000,
           type: "ingredient",
           instruction: "dice",
           dietClassification: "animal_product",
@@ -459,7 +316,16 @@ export const data: DataProps = {
           uuid: "333",
           ingredId: 666,
           ingredName: "Rosemary - Dried Fine",
-          qty: 100,
+          qty: 100, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -481,7 +347,16 @@ export const data: DataProps = {
           uuid: "444",
           ingredId: 666,
           ingredName: "Thyme Fitchef Seasoning",
-          qty: 50,
+          qty: 50, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -503,7 +378,16 @@ export const data: DataProps = {
           uuid: "555",
           ingredId: 666,
           ingredName: "Remove Chicken from bone while warm. Try avoid cartilage or bone",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -544,7 +428,16 @@ export const data: DataProps = {
           uuid: "1111",
           ingredId: 666,
           ingredName: "Sautee onions (light brown)",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -566,7 +459,16 @@ export const data: DataProps = {
           uuid: "2222",
           ingredId: 666,
           ingredName: "Onion - White Fresh Whole",
-          qty: 0.2,
+          qty: 0.2, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -588,7 +490,16 @@ export const data: DataProps = {
           uuid: "3333",
           ingredId: 666,
           ingredName: "Water",
-          qty: 0.035,
+          qty: 0.035, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -610,7 +521,16 @@ export const data: DataProps = {
           uuid: "4444",
           ingredId: 666,
           ingredName: "STEP 2 - Add, Simmer and Blend Fine",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -632,7 +552,16 @@ export const data: DataProps = {
           uuid: "5555",
           ingredId: 666,
           ingredName: "Garlic - Fresh Whole",
-          qty: 0.0267073779399365,
+          qty: 0.0267073779399365, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -654,7 +583,16 @@ export const data: DataProps = {
           uuid: "6666",
           ingredId: 666,
           ingredName: "Water",
-          qty: 0.356708130019699,
+          qty: 0.356708130019699, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -676,7 +614,16 @@ export const data: DataProps = {
           uuid: "7777",
           ingredId: 666,
           ingredName: "Rosemary - Dried Fine",
-          qty: 0.00310347048751908,
+          qty: 0.00310347048751908, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -698,7 +645,16 @@ export const data: DataProps = {
           uuid: "8888",
           ingredId: 666,
           ingredName: "Oreganum - Dried",
-          qty: 0.00195122395908212,
+          qty: 0.00195122395908212, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -720,7 +676,16 @@ export const data: DataProps = {
           uuid: "9999",
           ingredId: 666,
           ingredName: "Salt",
-          qty: 0.00662073704004071,
+          qty: 0.00662073704004071, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -742,7 +707,16 @@ export const data: DataProps = {
           uuid: "101010",
           ingredId: 666,
           ingredName: "Pepper - Black Fine",
-          qty: 0.000827592130005088,
+          qty: 0.000827592130005088, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -764,7 +738,16 @@ export const data: DataProps = {
           uuid: "111111",
           ingredId: 666,
           ingredName: "Lemon - Juice",
-          qty: 0.00393106261752417,
+          qty: 0.00393106261752417, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -786,7 +769,16 @@ export const data: DataProps = {
           uuid: "121212",
           ingredId: 666,
           ingredName: "Purity W",
-          qty: 0.025,
+          qty: 0.025, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -808,7 +800,16 @@ export const data: DataProps = {
           uuid: "131313",
           ingredId: 666,
           ingredName: "Chicken Stock Granules",
-          qty: 0.0479879142436758,
+          qty: 0.0479879142436758, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -830,7 +831,16 @@ export const data: DataProps = {
           uuid: "141414",
           ingredId: 666,
           ingredName: "Add Cream and remove from heat",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -852,7 +862,16 @@ export const data: DataProps = {
           uuid: "151515",
           ingredId: 666,
           ingredName: "Cream (Dairy) - Fresh",
-          qty: 0.1,
+          qty: 0.1, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -874,7 +893,16 @@ export const data: DataProps = {
           uuid: "161616",
           ingredId: 666,
           ingredName: "Milk Low Fat",
-          qty: 0.1,
+          qty: 0.1, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -915,7 +943,16 @@ export const data: DataProps = {
           uuid: "222-666",
           ingredId: 666,
           ingredName: " Dukkah Roasted Butternut with Feta",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -938,7 +975,16 @@ export const data: DataProps = {
           uuid: "333-666",
           ingredId: 666,
           ingredName: "Dukkah Roasted Butternut ",
-          qty: 2.24,
+          qty: 2.24, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "sub",
           instruction: "dice",
@@ -960,7 +1006,16 @@ export const data: DataProps = {
           uuid: "444-666",
           ingredId: 666,
           ingredName: "Feta",
-          qty: 0.2,
+          qty: 0.2, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -982,7 +1037,16 @@ export const data: DataProps = {
           uuid: "555-666",
           ingredId: 666,
           ingredName: "Pumpkin Seeds",
-          qty: 0.05,
+          qty: 0.05, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1004,7 +1068,16 @@ export const data: DataProps = {
           uuid: "666-666",
           ingredId: 666,
           ingredName: "Coriander ",
-          qty: 0.01,
+          qty: 0.01, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1045,7 +1118,16 @@ export const data: DataProps = {
           uuid: "333-111",
           ingredId: 666,
           ingredName: "Spinach ",
-          qty: 0.45,
+          qty: 0.45, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1067,7 +1149,16 @@ export const data: DataProps = {
           uuid: "333-222",
           ingredId: 666,
           ingredName: "Onion",
-          qty: 0.02,
+          qty: 0.02, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1089,7 +1180,16 @@ export const data: DataProps = {
           uuid: "333-333",
           ingredId: 666,
           ingredName: "Mozzarella",
-          qty: 0.05,
+          qty: 0.05, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1111,7 +1211,16 @@ export const data: DataProps = {
           uuid: "333-444",
           ingredId: 666,
           ingredName: "Feta Low Fat",
-          qty: 0.035,
+          qty: 0.035, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1133,7 +1242,16 @@ export const data: DataProps = {
           uuid: "333-555",
           ingredId: 666,
           ingredName: "Sweet Potato Mash",
-          qty: 0.15,
+          qty: 0.15, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1155,7 +1273,16 @@ export const data: DataProps = {
           uuid: "333-666",
           ingredId: 666,
           ingredName: "Eggs",
-          qty: 0.15,
+          qty: 0.15, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1177,7 +1304,16 @@ export const data: DataProps = {
           uuid: "333-777",
           ingredId: 666,
           ingredName: "Blended Oats",
-          qty: 0.04,
+          qty: 0.04, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1199,7 +1335,16 @@ export const data: DataProps = {
           uuid: "333-888",
           ingredId: 666,
           ingredName: "Thyme Fitchef Seasoning",
-          qty: 0.005,
+          qty: 0.005, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1221,7 +1366,16 @@ export const data: DataProps = {
           uuid: "333-999",
           ingredId: 666,
           ingredName: "Paprika",
-          qty: 0.0005,
+          qty: 0.0005, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1243,7 +1397,16 @@ export const data: DataProps = {
           uuid: "333-1010",
           ingredId: 666,
           ingredName: "Coconut Oil Spray",
-          qty: 0.005,
+          qty: 0.005, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1285,7 +1448,16 @@ export const data: DataProps = {
           uuid: "555 -111",
           ingredId: 666,
           ingredName: "Sautee onions (light brown)",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -1307,7 +1479,16 @@ export const data: DataProps = {
           uuid: "555-222",
           ingredId: 666,
           ingredName: "Onion - White Fresh Whole",
-          qty: 0.2,
+          qty: 0.2, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1329,7 +1510,16 @@ export const data: DataProps = {
           uuid: "555-333",
           ingredId: 666,
           ingredName: "Water",
-          qty: 0.035,
+          qty: 0.035, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1351,7 +1541,16 @@ export const data: DataProps = {
           uuid: "555-444",
           ingredId: 666,
           ingredName: "STEP 2 - Add, Simmer and Blend Fine",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -1373,7 +1572,16 @@ export const data: DataProps = {
           uuid: "555-555",
           ingredId: 666,
           ingredName: "Garlic - Fresh Whole",
-          qty: 0.0267073779399365,
+          qty: 0.0267073779399365, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1395,7 +1603,16 @@ export const data: DataProps = {
           uuid: "555-666",
           ingredId: 666,
           ingredName: "Water",
-          qty: 0.356708130019699,
+          qty: 0.356708130019699, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1417,7 +1634,16 @@ export const data: DataProps = {
           uuid: "555-777",
           ingredId: 666,
           ingredName: "Rosemary - Dried Fine",
-          qty: 0.00310347048751908,
+          qty: 0.00310347048751908, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1439,7 +1665,16 @@ export const data: DataProps = {
           uuid: "555-888",
           ingredId: 666,
           ingredName: "Oreganum - Dried",
-          qty: 0.00195122395908212,
+          qty: 0.00195122395908212, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1461,7 +1696,16 @@ export const data: DataProps = {
           uuid: "555-999",
           ingredId: 666,
           ingredName: "Salt",
-          qty: 0.00662073704004071,
+          qty: 0.00662073704004071, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1483,7 +1727,16 @@ export const data: DataProps = {
           uuid: "555-1010",
           ingredId: 666,
           ingredName: "Pepper - Black Fine",
-          qty: 0.000827592130005088,
+          qty: 0.000827592130005088, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1505,7 +1758,16 @@ export const data: DataProps = {
           uuid: "555-1111",
           ingredId: 666,
           ingredName: "Lemon - Juice",
-          qty: 0.00393106261752417,
+          qty: 0.00393106261752417, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1527,7 +1789,16 @@ export const data: DataProps = {
           uuid: "555-1212",
           ingredId: 666,
           ingredName: "Purity W",
-          qty: 0.025,
+          qty: 0.025, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1549,7 +1820,16 @@ export const data: DataProps = {
           uuid: "555-1313",
           ingredId: 666,
           ingredName: "Chicken Stock Granules",
-          qty: 0.0479879142436758,
+          qty: 0.0479879142436758, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1571,7 +1851,16 @@ export const data: DataProps = {
           uuid: "555-1414",
           ingredId: 666,
           ingredName: "Add Cream and remove from heat",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -1593,7 +1882,16 @@ export const data: DataProps = {
           uuid: "555-1515",
           ingredId: 666,
           ingredName: "Cream (Dairy) - Fresh",
-          qty: 0.1,
+          qty: 0.1, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1615,7 +1913,16 @@ export const data: DataProps = {
           uuid: "555-1616",
           ingredId: 666,
           ingredName: "Milk Low Fat",
-          qty: 0.1,
+          qty: 0.1, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1656,7 +1963,16 @@ export const data: DataProps = {
           uuid: "777-111",
           ingredId: 666,
           ingredName: "Dukkah Roasted Butternut",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -1678,7 +1994,16 @@ export const data: DataProps = {
           uuid: "777-222",
           ingredId: 666,
           ingredName: "Butternut ",
-          qty: 1,
+          qty: 1, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1700,7 +2025,16 @@ export const data: DataProps = {
           uuid: "777-333",
           ingredId: 666,
           ingredName: "Dukkah Seasoning",
-          qty: 0.06,
+          qty: 0.06, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "sub",
           instruction: "dice",
@@ -1723,7 +2057,16 @@ export const data: DataProps = {
           uuid: "777-444",
           ingredId: 666,
           ingredName: "Coconut Oil Spray",
-          qty: 0.005,
+          qty: 0.005, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1745,7 +2088,16 @@ export const data: DataProps = {
           uuid: "777-667",
           ingredId: 666,
           ingredName: "Honey",
-          qty: 0.1,
+          qty: 0.1, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1788,7 +2140,16 @@ export const data: DataProps = {
           uuid: "888-111",
           ingredId: 666,
           ingredName: "Dukkah Spice",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "step",
           instruction: "dice",
@@ -1810,7 +2171,16 @@ export const data: DataProps = {
           uuid: "888-222",
           ingredId: 666,
           ingredName: "Hazelnuts",
-          qty: 0.08,
+          qty: 0.08, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1832,7 +2202,16 @@ export const data: DataProps = {
           uuid: "888-333",
           ingredId: 666,
           ingredName: "Almonds",
-          qty: 0.03,
+          qty: 0.03, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1854,7 +2233,16 @@ export const data: DataProps = {
           uuid: "888-444",
           ingredId: 666,
           ingredName: "Sesame Seeds",
-          qty: 0.02,
+          qty: 0.02, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1876,7 +2264,16 @@ export const data: DataProps = {
           uuid: "888-555",
           ingredId: 666,
           ingredName: "Pistachios",
-          qty: 0.03,
+          qty: 0.03, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1898,7 +2295,16 @@ export const data: DataProps = {
           uuid: "888-666",
           ingredId: 666,
           ingredName: "Fennel Seeds",
-          qty: 0.005,
+          qty: 0.005, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1920,7 +2326,16 @@ export const data: DataProps = {
           uuid: "888-777",
           ingredId: 666,
           ingredName: "Cumin",
-          qty: 0.003,
+          qty: 0.003, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1942,7 +2357,16 @@ export const data: DataProps = {
           uuid: "888-999",
           ingredId: 666,
           ingredName: "Corriander ",
-          qty: 0.003,
+          qty: 0.003, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1964,7 +2388,16 @@ export const data: DataProps = {
           uuid: "888-101011",
           ingredId: 666,
           ingredName: "Cayenne Pepper",
-          qty: 0.001,
+          qty: 0.001, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -1986,7 +2419,16 @@ export const data: DataProps = {
           uuid: "888-10111",
           ingredId: 666,
           ingredName: "Salt",
-          qty: 0.001,
+          qty: 0.001, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -2008,7 +2450,16 @@ export const data: DataProps = {
           uuid: "888-10222",
           ingredId: 666,
           ingredName: "0",
-          qty: 0.173,
+          qty: 0.173, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",
@@ -2030,7 +2481,16 @@ export const data: DataProps = {
           uuid: "888-10333",
           ingredId: 666,
           ingredName: "0",
-          qty: 0,
+          qty: 0, // QUANTITY Management : Start
+          // For Pro Mode
+          qty_estimated_from_home: 10000,
+          qty_estimated_confidence: 0.7,
+          // For Home Mode
+          home_qty_frac_numerator: 1,
+          home_qty_frac_denominator: 1,
+          home_qty: 1,
+          home_qty_type: "",
+          // QUANTITY Management : End
           order: 2,
           type: "ingredient",
           instruction: "dice",

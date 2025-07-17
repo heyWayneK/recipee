@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
-import { formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
+import { formatCurrency, getTextTranslation, replace_ } from "@/utils/utils";
 import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/useRecipeData";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "@/components/MenuPopupOnMouseOver";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";

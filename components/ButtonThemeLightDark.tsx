@@ -1,7 +1,7 @@
 import { useGetActiveTheme } from "@/contexts/useThemeDarkLight";
 import React from "react";
 import Pill from "@/components/Pill";
-import { getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 
 interface ButtonThemeLightDarkProps {}
 

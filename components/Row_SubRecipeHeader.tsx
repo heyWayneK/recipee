@@ -1,13 +1,14 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 
-import { data, recipeDetailProps } from "@/app/data/recipe";
+import { data } from "@/app/api/recipe";
 import Pill from "./Pill";
-import { formatCurrency, getTextTranslation } from "@/libs/utils";
+import { formatCurrency, getTextTranslation } from "@/utils/utils";
 import SvgSprite from "./SvgSprite";
 import { recipeeUI } from "./Row_SubRecipesAll";
+import { useRecipeData } from "@/contexts/useRecipeData";
 
-const getColumHeading = (col: string) => {
+const getColumHeading = (col: string, org_unit_metric_imperial: string) => {
   switch (col) {
     case "ingredName":
       return getTextTranslation("Ingredient Name");
@@ -17,7 +18,8 @@ const getColumHeading = (col: string) => {
     case "qty":
       return getTextTranslation("qty");
     case "costPer1000":
-      return getTextTranslation("cost") + "/" + data.setting.unitMaster[1];
+      // return getTextTranslation("cost") + "/" + data.setting.unitMaster[1];
+      return getTextTranslation("cost") + "/" + org_unit_metric_imperial;
     case "%":
       return "%";
     case "move":
@@ -31,10 +33,13 @@ interface Row_SubRecipeHeaderProps {
   className?: string;
 }
 const Row_SubRecipeHeader: React.FC<Row_SubRecipeHeaderProps> = ({ className = "" }) => {
+  const { systemData } = useRecipeData();
   return recipeeUI.sub_recipe.map((col) => {
     return (
       <Table_Cell firstCol={false} header={false} type="plating" iconName="" key={"header" + col}>
-        {getColumHeading(col)}
+        {getColumHeading(col, "kg (needs 2 B dynamic)")}
+        {/* BROKEN BUT SOLUTION IS SOMETHING LIKE THIS BUT NEED METRIC AND WEIGHT OR FLUID???
+        {getColumHeading(col, systemData.unit_metric_imperial[systemData?.org?.unit_metric_imperial.id])} */}
       </Table_Cell>
     );
   });

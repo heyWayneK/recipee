@@ -1,8 +1,8 @@
 import React from "react";
 
 import Table_Cell from "./Table_Cell";
-import { formatCurrency, getTextTranslation, replace_ } from "@/libs/utils";
-import { data } from "@/app/data/recipe";
+import { formatCurrency, getTextTranslation, replace_ } from "@/utils/utils";
+import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_PlatingCostsSubTotalProps {

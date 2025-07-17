@@ -1,7 +1,7 @@
 import React from "react";
 import DottedBorder from "./DottedBorder";
 
-import { getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 import Pill from "./Pill";
 import TextLink from "./TextLink";
 

@@ -1,5 +1,6 @@
+import { data } from "@/app/api/recipe";
 import { language } from "@/app/data/lang";
-import { CostsLiveProps, data } from "@/app/data/recipe";
+
 import { type ClassValue, clsx } from "clsx";
 import Decimal from "decimal.js";
 import { ReactNode } from "react";
@@ -88,26 +89,12 @@ export const saltToSodium = (salt: number): number => {
   return salt * 0.3934;
 };
 
+// TODO: create component with the function to get Currency Symbol
+//  using useRecipeData() Hook
 // FUNCTIONS_______________________________________________::
 export const formatCurrency = (cost: number): number | string => {
   if (!cost) return "";
-  return data.setting.currency + "\u00A0" + cost.toFixed(2);
-};
-
-// FORMAT metric or Imperial > 1000 becomes 3 decils
-// TODO: imperial
-export const formatWeight = (weight: number): number | string => {
-  if (!weight) return "";
-
-  // Set Decimal Places
-  const weightDecimals = Number(weight.toFixed(3));
-
-  // RETURN e.g grams or kilograms
-  const unit = weightDecimals < 1000 ? data.setting.unitMaster[0] : data.setting.unitMaster[1];
-  const weightUnit = weightDecimals < 1000 ? weightDecimals + " " + unit : weightDecimals / 1000 + "\u00A0" + unit;
-  //  TODO: need to handle mls and oz/lbs
-  //  TODO: need to handle mls and oz/lbs
-  return weightUnit;
+  return "ZAR" + "\u00A0" + cost.toFixed(2);
 };
 
 // CALCULATE THE PROFIT on method selected
@@ -134,11 +121,13 @@ export function replace_(text: string): string {
 // TRANSLATE TO FRENCH OR SPANISH (F EXISTS)
 export function getTextTranslation(word: string): string {
   // DOES LANGUAGE EXIST - EN FR SP...
-  if (!data.setting.language) throw new Error(`no language defined in settings`);
+  // TODO: get language in component to translate
+  // if (!data.setting.language) throw new Error(`no language defined in settings`);
   word = word.toLowerCase();
   if (!language[word]) return replace_(word);
 
-  const translatedWord = language[word.toLowerCase()][data.setting.language];
+  // const translatedWord = language[word.toLowerCase()][data.setting.language];
+  const translatedWord = language[word.toLowerCase()]["EN"];
   if (!translatedWord) return replace_(word);
 
   return replace_(translatedWord);

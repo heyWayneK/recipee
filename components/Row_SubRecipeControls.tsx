@@ -1,9 +1,9 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
-import { getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 import { useRecipeData } from "@/contexts/useRecipeData";
-import { RecipeProps } from "@/app/data/recipe";
+import { RecipeProps } from "@/app/api/recipe";
 import ButtonThemeLightDark from "./ButtonThemeLightDark";
 
 interface Row_SubRecipeControlsProps {

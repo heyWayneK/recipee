@@ -31,15 +31,16 @@ const HomePage: React.FC<HomePageProps> = () => {
 
         <DottedBorder className="grid grid-cols-1 p-6  text-center sm:text-left  justify-center text-balance max-w-2xl">
           <div className="grid grid-cols-1  py-6 justify-stretch gap-10 capitalize first:text-2xl first:font-medium text-pretty">
-            <p>Recipe Management Systems have failed chefs and tastebuds...</p>
+            <p>Recipe Management Systems don't work for chefs, or food quality.</p>
             <p className="text-base">
-              Until Now. <span className="py-1 px-2 bg-black text-white rounded-lg">We have the solution.</span>
+              Until Now. <span className="py-1 px-2 bg-black text-white rounded-lg">We have the solution. Easy Recipe Transfer System and Services</span>
             </p>
           </div>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] justify-stretch gap-10  first:text-2xl first:font-medium text-pretty">
-            <span className=" text-xl font-bold">The Future of Accurate Easy Ai-powered E-commerce Food Management</span>
+            <span className=" text-xl font-bold">The Future of Accurate Easy Ai-powered Recipe & Food Management with e-commerce</span>
             <span className=" text-sm">
-              Nutrition. <b>Recipe Lifecycle.</b> Food Management. <b>Food E-Commerce.</b> Suppliers & Stock. <b>Production.</b> Sales. <b>Professional Bulk Management.</b> <br />
+              Most Complete Home Chef System. <b>Professional Bulk Management. </b> Version Control. <b>"FirstTime" Ai New-Recipe Quick Trial-System. </b>
+              Recipe Book Library. <b>Recipe Lifecycle Updates. </b> Food Management. <b>Food E-Commerce.</b> Suppliers & Stock. <b>Production.</b> Sales. <br />
               <br />
               <p className="text-slate-400 text-sm">Coming soon. early bird signup launching shortly.</p>
             </span>

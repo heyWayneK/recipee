@@ -1,4 +1,4 @@
-import { getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 import { DynamicTable } from "../_components/FormGen_DynamicTable";
 import { DynamicObjectArray, DynamicTableComponentProps, TableItem } from "../_types/formGen_types";
 import React from "react";

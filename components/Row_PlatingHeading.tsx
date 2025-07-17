@@ -1,6 +1,6 @@
 import React from "react";
 import Pill from "./Pill";
-import { getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 
 interface Row_PlatingHeadingProps {
   className?: string;

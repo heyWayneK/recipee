@@ -1,10 +1,12 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { formatWeight, getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useModalBig } from "@/hooks/UseBigModal";
 import Link from "next/link";
+import UnitFractions from "./UnitFractions";
+import IngredientUnits from "./IngredientUnits";
 
 interface Row_PlatingHeaderProps {
   viewPrices?: boolean;
@@ -47,7 +49,8 @@ const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = fals
         <MenuDynamicChildren key={portion} menuArray={dropDownInfo}>
           {/* COMPONENT SIZE CELL/s */}
           <Table_Cell type="plating" key={name + "_" + col} edit="edit">
-            <span>{formatWeight(portion)}</span>
+            <IngredientUnits>{portion}</IngredientUnits>
+            {/* <span>{formatWeight(portion)}</span> */}
           </Table_Cell>
         </MenuDynamicChildren>
       ))}

@@ -142,12 +142,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
     }
 
+    // TODO: ADD TO PROMPT and DB
+    // other >>
+    // 1. unit_type fluid or Weight... or g's or ml's | kgs or L
+
     const prompt: PromptMessage[] = [
       {
         role: "system",
         content:
           "You are a food classification and nutrition expert. Cooked_yields values can be higher than 1 (e.g. rice and pasta). Alternative_names are for wholefoods that have other names (e.g. aubergine, eggplant).\n" +
           "Multiple Allergies can be returned as a pipe delimited list please e.g. (wheat|gluten)\n" +
+          "unit_type defines how the ingredient is typically measured or sold, its a suggestion to measure by weight (g,kg,lbs,oz), fluid (mL, L, fl oz) or each (products like eggs, or garnish like bay leaf) \n" +
           "Provide a JSON response with no extra text, following this structure:\n" +
           `Rules for halal classification:
           - Pork and its derivatives (e.g., bacon, ham, sausage from pork) are always haram, so "halal" must be "no".
@@ -165,6 +170,7 @@ export async function POST(request: Request) {
           '  "secondary_category": "<string>",\n' +
           '  "dietary_classification": "vegan|vegetarian|animal_product|unknown",\n' +
           '  "allergies": "unknown|none|buckwheat|celery|chilli|eggs|garlic|gluten|lupin|milk_dairy|mustard|peanuts|rice|seafood_fish|sesame|shellfish|soybeans|sulphur_dioxide|tree_nuts|wheat|nightshade",\n' +
+          '  "unit_type": "weight|fluid|each",\n' +
           '  "nutritional_data": {\n' +
           '    "kcal_per_100g": <number>,\n' +
           '    "kj_per_100g": <number>,\n' +

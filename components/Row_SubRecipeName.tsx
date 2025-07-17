@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
-import { ComponentsProps } from "@/app/data/recipe";
+import { ComponentsProps } from "@/app/api/recipe";
 
 interface Row_SubRecipeSubNameProps {
   subRecipe: ComponentsProps;

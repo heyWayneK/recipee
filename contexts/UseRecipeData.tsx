@@ -1,320 +1,127 @@
-import { DataProps, data } from "@/app/data/recipe";
-import { preCalculateData } from "@/libs/preCalculatedRecipeData";
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+"use client";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { mergeDeep } from "@/libs/mergeDeep";
-import { getUserData } from "@/app/api/data/user/[profileid]/route";
-import type {
-  AllergySelect,
-  CookedYieldsCategoriesSelect,
-  DietaryClassificationSelect,
-  DryCookedYieldsCategoriesSelect,
-  DryCookedYieldsSelect,
-  IngredientCategoryPrimarySelect,
-  IngredientCategorySecondarySelect,
-  IngredientTypeSelect,
-  IngredientsReligiousCertificationSelect,
-  LanguageSelect,
-  MarkupTypeSelect,
-  MarkupSelect,
-  NutritionalDataValuesSelect,
-  OilPurposeSelect,
-  OtherCostsCategorySelect,
-  OtherCostsLineItemsLookupSelect,
-  PackagingCostsCategorySelect,
-  PackagingCostsLineItemsLookupSelect,
-  PrepInstructionsSelect,
-  RecipeModeSelect,
-  RecipeTypeSelect,
-  SaltPurposeSelect,
-  TodoStatusSelect,
-  UnitMeasurementSelect,
-  UnitTypeSelect,
-  VatRulesSelect,
-  MarkupSelectSerializable,
-} from "@/app/api/data/system/route";
-import { getSystemData } from "@/app/api/data/system/route";
+// import { getUserData } from "@/app/api/data/user/[profileid]/route";
+
+import { all } from "cypress/types/bluebird";
+import { set } from "cypress/types/lodash";
+import { use } from "chai";
+import { Console } from "console";
+import { clerkClient } from "@clerk/nextjs/dist/types/server";
+import { useOrganization } from "@clerk/nextjs";
+import { PreCalculatedRecipeData, localOrDbDataType } from "@/types/recipeTypes";
+import { RecipeDataContextType, RecipeModeType, SystemDataProps } from "@/types/recipeTypes";
 
 // FUTURE: POTENTIALLY USE GETSTATICPROPS for cache
 // import { GetStaticProps } from "next";
 
-// DEFINE PRECALCULATED RECIPE DATA
-//- These contain the calulated recipe subTotals, Totals and
-//- lookup values like markup, or the cost of other costs etc
-export interface PreCalculatedRecipeData {
-  // TODO: Need to use DECIMAL type
-  portionSizes: number[];
-  portionIds: number[];
-  componentsNamesArray: string[];
-  componentsIDArray: string[];
-  componentsWeights: number[][]; // Decimals
-  componentsPricePer1000: number[]; // Decimals
-  componentsPrices: number[][]; // Decimals
-  componentsPricesDesc: string[][][];
-  componentsSubTotalsPrices: number[]; // Decimals
-  packingCostPriceTotals: number[]; // Decimals
-  packingCostPriceRules: number[]; // Decimals
-  otherCostsPriceTotals: number[]; // Decimals
-  otherCostsPriceRules: number[]; // Decimals
-  costsSubTotals: number[]; // Decimals
-  markUpPriceAmounts: number[]; // Decimals
-  markUpPriceRules: number[]; // Decimals
-  salePricesExVat: number[]; // Decimals
-  salesPricesIncVat: number[]; // Decimals
-  vatRuleIds: number[]; // Decimals
-  vatRulePercs: number[]; // Decimals
-  vatRuleNames: string[]; // Decimals
-  data: DataProps;
-}
-
-export const preCalculatedRecipeData: PreCalculatedRecipeData = {
-  portionSizes: [],
-  portionIds: [],
-  componentsWeights: [],
-  componentsNamesArray: [],
-  componentsIDArray: [],
-  componentsPricePer1000: [],
-  componentsPrices: [],
-  componentsPricesDesc: [],
-  componentsSubTotalsPrices: [],
-  packingCostPriceTotals: [],
-  packingCostPriceRules: [],
-  otherCostsPriceTotals: [],
-  otherCostsPriceRules: [],
-  costsSubTotals: [],
-  markUpPriceAmounts: [],
-  markUpPriceRules: [],
-  salePricesExVat: [],
-  salesPricesIncVat: [],
-  vatRuleIds: [],
-  vatRulePercs: [],
-  vatRuleNames: [],
-
-  // Create a deep copy of the data object (Recipe Data)
-  data: JSON.parse(JSON.stringify(data)),
-};
-
-export interface UserDataProps {
-  // USER VALUES BELOW (to overwrite System Data {...vals, ... userVals})
-  // OVERWRITE OR ADD TO THE SYSTEM DATA
-  other_costs_category: OtherCostsCategorySelect[];
-  other_costs_line_items_lookup: OtherCostsLineItemsLookupSelect[];
-  packaging_costs_category: PackagingCostsCategorySelect[];
-  packaging_costs_line_items_lookup: PackagingCostsLineItemsLookupSelect[];
-  vat_rules: VatRulesSelect[];
-}
-
-export interface SystemDataProps {
-  unit_type: UnitTypeSelect[];
-  unit_measurement: UnitMeasurementSelect[];
-  prep_instructions: PrepInstructionsSelect[];
-  cooked_yields_categories: CookedYieldsCategoriesSelect[];
-  dry_cooked_yields_categories: DryCookedYieldsCategoriesSelect[];
-  dry_cooked_yields: DryCookedYieldsSelect[];
-  ingredients_religious_certification: IngredientsReligiousCertificationSelect[];
-  language: LanguageSelect[];
-  nutritional_data_values: NutritionalDataValuesSelect[];
-  ingredient_category_primary: IngredientCategoryPrimarySelect[];
-  // FUTURE: need to create secondary categories
-  ingredient_category_secondary: IngredientCategorySecondarySelect[];
-  dietary_classification: DietaryClassificationSelect[];
-  allergy: AllergySelect[];
-  recipe_mode: RecipeModeSelect[];
-  recipe_type: RecipeTypeSelect[];
-  oil_purpose: OilPurposeSelect[];
-  salt_purpose: SaltPurposeSelect[];
-  ingredient_type: IngredientTypeSelect[];
-  markup_type: MarkupTypeSelect[];
-  markup: MarkupSelect[] | MarkupSelectSerializable[]; // Decimals
-  todo_status: TodoStatusSelect[];
-  // DEFAULT VALUES BELOW (to overwritten {...vals, ... userVals})
-  // GET VALUES WHERE CUSTOMER = 1 (Default Account)
-  other_costs_category: OtherCostsCategorySelect[];
-  other_costs_line_items_lookup: OtherCostsLineItemsLookupSelect[];
-  packaging_costs_category: PackagingCostsCategorySelect[];
-  packaging_costs_line_items_lookup: PackagingCostsLineItemsLookupSelect[];
-  vat_rules: VatRulesSelect[];
-  ingredients: IngredientTypeSelect[];
-}
-
-export type localOrDbDataTypeOptions = "localStorage" | "database" | "undefined";
-type localOrDbDataType = {
-  user: localOrDbDataTypeOptions;
-  system: localOrDbDataTypeOptions;
-};
-
-// DEFINE context shape
-export interface RecipeDataContextType {
-  qty: number;
-  setQty: React.Dispatch<React.SetStateAction<number>>;
-  recipeMode: RecipeModeType;
-  setRecipeMode: React.Dispatch<React.SetStateAction<RecipeModeType>>;
-  recipeData: PreCalculatedRecipeData;
-  updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void;
-  systemData: SystemDataProps;
-  userData: UserDataProps;
-  localOrDbData: localOrDbDataType;
-}
-
+// 1. Create Context
 const RecipeDataContext = createContext<RecipeDataContextType | undefined>(undefined);
 
 interface RecipeDataProviderProps {
   children: React.ReactNode;
 }
 
-export type RecipeModeType = "easy" | "advanced";
-
-// Context provider component
+// 2. Context provider component
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
   const [qty, setQty] = useState<number>(1);
-  const [recipeMode, setRecipeMode] = useState<RecipeModeType>("easy");
-  const [recipeDataState, setRecipeDataState] = useState<PreCalculatedRecipeData>(preCalculatedRecipeData);
+  const [recipeMode, setRecipeMode] = useState<RecipeModeType>("advanced");
   const [systemData, setSystemData] = useState<SystemDataProps>();
-  const [userData, setUserData] = useState<UserDataProps>();
+  const [recipeData, setRecipeData] = useState<PreCalculatedRecipeData>();
+  const [localOrDbData, setLocalOrDbData] = useState<localOrDbDataType>({
+    system: undefined,
+    systemUpdated: undefined,
+    recipe: undefined,
+    recipeUpdated: undefined,
+  });
+  // How often should the data come from the database, else use localStorage?
+  const secsToUpdate = 60; // 60 seconds
+  // clerk auth, getting organisation id
+  const { organization, membership, isLoaded: isOrgLoaded } = useOrganization();
+  const orgId = organization?.id || undefined;
 
-  let localOrDbData = useRef<localOrDbDataType>({ user: "undefined", system: "undefined" }); // Default value
-
-  // USER DATA__________________________________________START::
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = (await getUserData(1)) ?? undefined;
+    const fetchData = async () => {
+      console.log("USEEFFECT FETCH:/api/data/all");
 
-        if (response === undefined) {
-          throw new Error("System data is null");
+      try {
+        // TODO: Get Org ID from session.
+        // Decimal safe by using the backend to fetch data
+
+        const systemDataLocal = localStorage.getItem("systemData") || undefined;
+        const recipeDataLocal = localStorage.getItem("recipeData") || undefined;
+        const systemDataUpdated = localStorage.getItem("systemDataUpdated") || undefined;
+        const recipeDataUpdated = localStorage.getItem("recipeDataUpdated") || undefined;
+        const date = new Date();
+
+        if (date.getTime() - new Date(systemDataUpdated ?? 0).getTime() > secsToUpdate * 1000) {
+          console.log("OUTDATED______System data is outdated, fetching from database");
+        } else {
+          console.log("DATE OK");
         }
 
-        setUserData(response as UserDataProps);
+        if ((systemDataLocal === undefined && recipeDataLocal === undefined) || (systemDataUpdated && date.getTime() - new Date(systemDataUpdated).getTime() > 60000)) {
+          setLocalOrDbData({ system: "database", systemUpdated: date, recipe: "database", recipeUpdated: date });
+
+          // TODO: Get OrgId is a string e.g. "org_2tuFiVo2CKPh6oDQVFjn4pZCDZm"
+          if (orgId === "") console.warn("CustomerId cannot be 1 (Admin System Data)");
+
+          const response = await fetch("/api/data/all");
+          // const response = await fetch(`/api/data/all/${orgId}`);
+          const { systemData, recipeData } = await response.json();
+
+          // // Alternative Fetch (Decimal break)
+          // getAllRecipeObject(customerId);
+
+          // Deconstruct the data
+          setSystemData(systemData as SystemDataProps);
+          setRecipeData(recipeData as PreCalculatedRecipeData);
+
+          // Local Storage to avoid calling the databse too often
+          localStorage.setItem("systemData", JSON.stringify(systemData));
+          localStorage.setItem("recipeData", JSON.stringify(recipeData));
+          localStorage.setItem("systemDataUpdated", new Date().toISOString());
+          localStorage.setItem("recipeDataUpdated", new Date().toISOString());
+        } else if (systemDataLocal && recipeDataLocal) {
+          const systemDataLocalParsed = JSON.parse(systemDataLocal);
+          const recipeDataLocalParsed = JSON.parse(recipeDataLocal);
+
+          setSystemData(systemDataLocalParsed as SystemDataProps);
+          setRecipeData(recipeDataLocalParsed as PreCalculatedRecipeData);
+
+          setLocalOrDbData({
+            system: "localStorage",
+            systemUpdated: date,
+            recipe: "localStorage",
+            recipeUpdated: date,
+          });
+        }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    // Check Local Storage for cached user data
-    const cachedData = localStorage.getItem("userData") ?? undefined;
+    // Call the async function
+    fetchData();
+  }, [orgId]); // orgId is used to fetch the data, if not available, it will use the default system data
 
-    // DEFINE WHERE THE DATA IS COMING FROM
-    // const userDataMode: localOrDbDataTypeOptions = "database";
-    const userDataMode = cachedData && cachedData ? "localStorage" : "database";
-
-    if (userDataMode === "localStorage" && cachedData !== undefined && cachedData !== "undefined") {
-      setUserData(JSON.parse(cachedData));
-    } else if (userDataMode === "database") {
-      fetchUserData();
-    } else {
-      // console.warn("No user data available, using default values");
-      // setUserData({} as UserDataProps); // Set to empty object if no data is available
-    }
-    console.log("%%%%%%%%%%%%% USER DATA MODE:", userDataMode);
-    localOrDbData.current.user = userDataMode; // Set the user data source
+  // SURE I DONT NEED THIS?
+  const updateRecipeData = useCallback((newData: Partial<PreCalculatedRecipeData>) => {
+    setRecipeData((prevData) => {
+      const merge: PreCalculatedRecipeData = mergeDeep(prevData, { ...newData });
+      return merge;
+    });
   }, []);
-
-  useEffect(() => {
-    if (!userData && userData !== undefined && userData !== "undefined") return;
-    // SAVE USER DATA TO LOCAL STORAGE
-    localStorage.setItem("userData", JSON.stringify(userData));
-  }, [userData]);
-  // USER DATA__________________________________________END::
-  //
-  //
-  //
-  // SYSTEM DATA__________________________________________START::
-  useEffect(() => {
-    const fetchSystemData = async () => {
-      try {
-        // FUTURE: GET CUSTOMER ID FROM USER DATA
-        const customerId = 1; // customerId=1 is the default system account
-        let response = (await getSystemData(customerId)) ?? undefined;
-
-        if (response === undefined) {
-          throw new Error("System data is null");
-        }
-
-        setSystemData(response as SystemDataProps);
-      } catch (error) {
-        console.error("Error fetching System Data:", error);
-        throw new Error("Error fetching System Data");
-      }
-    };
-
-    const cachedData = localStorage.getItem("systemData") ?? undefined;
-    // DEFINE WHERE THE DATA IS COMING FROM
-    // const systemDataMode: localOrDbDataTypeOptions = "database";
-    const systemDataMode = cachedData ? "localStorage" : "database";
-
-    if (systemDataMode === "localStorage" && cachedData !== undefined && cachedData !== "undefined") {
-      setSystemData(JSON.parse(cachedData));
-    } else if (systemDataMode === "database") {
-      fetchSystemData();
-    } else {
-      // console.warn("No system data available, using default values");
-      // setSystemData({} as SystemDataProps); // Set to empty object if no data is available
-    }
-
-    console.log("%%%%%%%%%%%%% SYSTEM DATA MODE:", systemDataMode);
-    localOrDbData.current.system = systemDataMode; // If we have cached data, we assume it's from localStorage
-  }, []);
-
-  useEffect(() => {
-    // SAVE SYSTEM DATA TO LOCAL STORAGE
-    if (!systemData && systemData !== undefined && systemData !== "undefined") return;
-    localStorage.setItem("systemData", JSON.stringify(systemData));
-  }, [systemData]);
-  // SYSTEM DATA__________________________________________END::
-
-  // PRECALCULATED RECIPE DATA (Totals, SubTotals, Prices)_________START::
-  const updateRecipeData = useCallback(
-    (newData: Partial<PreCalculatedRecipeData>) => {
-      setRecipeDataState((prevData) => {
-        const merge: PreCalculatedRecipeData = mergeDeep(prevData, { ...newData });
-        if (!systemData || !userData) return merge;
-        const preCalculated = { ...merge, ...preCalculateData(merge, systemData, userData) };
-        return preCalculated;
-      });
-    },
-    [systemData, userData]
-  );
-
-  useEffect(() => {
-    // console.log("useEffect ---- preCalculatedRecipeData ----");
-    if (!systemData || !userData) return;
-    console.log("LAST : %%%%%%%%%%%%%%%%%%%% useEffect ---- updateRecipeData");
-    updateRecipeData(preCalculateData(preCalculatedRecipeData, systemData, userData));
-  }, [systemData, userData, updateRecipeData]);
-
-  /* INFO: Function to update any part of the recipe data
-    const updateRecipeData = (newData: Partial<PreCalculatedRecipeData>) => {
-    // console.log("UPDATE NEW DATA", newData);
-    setRecipeDataState((prevData) => ({ ...prevData, ...newData }));
-    }; 
-  */
-
-  // PARTIAL SAVE OF THE RECIPE DATA STATE
-  /**
-   *
-   * @param newData
-   * @returns new DataProps Object
-   *
-   * INFO: Usage Example
-      const complexUpdate = {
-          portionSizes: [4, 5],
-          components: {
-            0: { val: "updated one" },
-            1: { val: "updated two" }
-          }
-        };
-        updateRecipeData = (complexUpdate)
-   */
 
   const value: RecipeDataContextType = {
     qty,
     setQty,
     recipeMode,
     setRecipeMode,
-    recipeData: recipeDataState,
+    recipeData: recipeData ?? ({} as PreCalculatedRecipeData),
     updateRecipeData,
     systemData: systemData ?? ({} as SystemDataProps),
-    userData: userData ?? ({} as UserDataProps),
-    localOrDbData: localOrDbData.current,
+    localOrDbData: localOrDbData,
   };
 
   // 2. Return Context

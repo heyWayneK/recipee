@@ -5,7 +5,7 @@ import { useState, useMemo, Suspense } from "react";
 import { ChevronUpIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import Loading from "@/components/Loading";
-import { splitTextOnCapitals } from "@/libs/utils";
+import { splitTextOnCapitals } from "@/utils/utils";
 import { DynamicTableProps } from "@/app/recipee/formgen/_types/formGen_types";
 import { SortDirection } from "@tanstack/react-table";
 

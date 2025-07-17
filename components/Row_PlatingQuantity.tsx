@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { formatWeight, getTextTranslation } from "@/libs/utils";
-import { data } from "@/app/data/recipe";
+import { getTextTranslation } from "@/utils/utils";
+import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_PlatingQuantityProps {}

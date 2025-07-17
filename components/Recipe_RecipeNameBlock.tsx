@@ -2,7 +2,7 @@ import React from "react";
 import DottedBorder from "@/components/DottedBorder";
 import TextEditable from "@/components/TextEditable";
 import MenuOption1 from "@/components/MenuOption1";
-import { getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 import MenuOption2 from "@/components/MenuOption2";
 import Pill from "@/components/Pill";
 import { useRecipeData } from "@/contexts/useRecipeData";

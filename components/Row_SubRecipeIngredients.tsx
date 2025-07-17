@@ -1,6 +1,6 @@
 import React from "react";
 import Row_SubRecipeIngredient from "./Row_SubRecipeIngredient";
-import { RecipeProps, data } from "@/app/data/recipe";
+import { RecipeProps, data } from "@/app/api/recipe";
 import Row_SubRecipeStep from "./Row_SubRecipeStep";
 
 interface Row_SubRecipeIngredientsProps {

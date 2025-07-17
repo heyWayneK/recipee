@@ -1,9 +1,10 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { recipeeUI } from "./Row_SubRecipesAll";
-import { formatCurrency, formatWeight } from "@/libs/utils";
+import { formatCurrency } from "@/utils/utils";
 import SvgSprite from "./SvgSprite";
 import MenuOption1 from "./MenuOption1";
+import IngredientUnits from "./IngredientUnits";
 
 interface Row_SubRecipeIngredientProps {
   className?: string;
@@ -29,7 +30,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ class
       case "costPer1000":
         return formatCurrency(value);
       case "qty":
-        return <span>{formatWeight(qty)}</span>;
+        return <IngredientUnits>{qty}</IngredientUnits>;
       default:
         return value;
     }

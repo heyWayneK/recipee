@@ -1,5 +1,5 @@
 import React from "react";
-import { getTextTranslation, replace_ } from "@/libs/utils";
+import { getTextTranslation, replace_ } from "@/utils/utils";
 import { useRecipeData } from "@/contexts/useRecipeData";
 
 import Row_CatAndLineItems from "./Row_CatAndLineItems";

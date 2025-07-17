@@ -1,8 +1,8 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { data } from "@/app/data/recipe";
+import { data } from "@/app/api/recipe";
 import SvgSpriteLink from "./SvgSpriteLink";
-import { cleanComponentKeyName, getTextTranslation } from "@/libs/utils";
+import { cleanComponentKeyName, getTextTranslation } from "@/utils/utils";
 
 interface Row_PlatingPrintProps {}
 

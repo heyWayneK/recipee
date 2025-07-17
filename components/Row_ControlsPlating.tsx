@@ -3,7 +3,7 @@ import Table_Cell from "./Table_Cell";
 import MenuOption1 from "./MenuOption1";
 import MenuOption2 from "./MenuOption2";
 import Pill from "./Pill";
-import { getTextTranslation } from "@/libs/utils";
+import { getTextTranslation } from "@/utils/utils";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import ButtonThemeLightDark from "./ButtonThemeLightDark";
 

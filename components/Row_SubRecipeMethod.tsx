@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
-import { RecipeProps } from "@/app/data/recipe";
+import { RecipeProps } from "@/app/api/recipe";
 
 interface Row_SubRecipeMethodProps {
   recipe: RecipeProps;

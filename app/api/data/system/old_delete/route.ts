@@ -6,263 +6,288 @@
 */
 /* FUTURE: CREATE INDEXES
 CREATE INDEX idx_unit_type_name ON unit_type (name);
-CREATE INDEX idx_unit_measurement_name ON unit_measurement (name);
+CREATE INDEX idx_unit_metric_imperial_name ON unit_metric_imperial (name);
 -- Add indexes for other tables as needed
 */
 
 "use server";
 import prisma from "@/libs/prisma";
+import {
+  AllergySelect,
+  CookedYieldsCategoriesSelect,
+  DietaryClassificationSelect,
+  DryCookedYieldsCategoriesSelect,
+  IngredientCategoryPrimarySelect,
+  IngredientCategorySecondarySelect,
+  IngredientTypeSelect,
+  LanguageSelect,
+  MarkupSelect,
+  MarkupTypeSelect,
+  NutritionalDataValuesSelect,
+  OilPurposeSelect,
+  OtherCostsCategorySelect,
+  PackagingCostsCategorySelect,
+  PackagingCostsLineItemsLookup,
+  PrepInstructionsSelect,
+  RecipeModeSelect,
+  RecipeTypeSelect,
+  SaltPurposeSelect,
+  TodoStatusSelect,
+  UnitMetricImperialSelect,
+  UnitTypeSelect,
+  VatRulesSelect,
+} from "@/types/recipeTypes";
 import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 // import { GetStaticProps } from "next";
 
-export type UnitTypeSelect = Prisma.unit_typeGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    imperial: true;
-    metric: true;
-  };
-}>;
+// export type UnitTypeSelect = Prisma.unit_typeGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     imperial: true;
+//     metric: true;
+//   };
+// }>;
 
-export type UnitMeasurementSelect = Prisma.unit_measurementGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    is_default: true;
-  };
-}>;
+// export type UnitMeasurementSelect = Prisma.unit_metric_imperialGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     is_default: true;
+//   };
+// }>;
 
-export type PrepInstructionsSelect = Prisma.prep_instructionsGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    imperial: true;
-    metric: true;
-    translation: true;
-    yield: true;
-  };
-}>;
+// export type PrepInstructionsSelect = Prisma.prep_instructionsGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     imperial: true;
+//     metric: true;
+//     translation: true;
+//     yield: true;
+//   };
+// }>;
 
-export type CookedYieldsCategoriesSelect = Prisma.cooked_yields_categoriesGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    translation: true;
-    desc: true;
-    yield: true;
-    is_live?: boolean;
-  };
-}>;
+// export type CookedYieldsCategoriesSelect = Prisma.cooked_yields_categoriesGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     translation: true;
+//     desc: true;
+//     yield: true;
+//     is_live?: boolean;
+//   };
+// }>;
 
-export type DryCookedYieldsCategoriesSelect = Prisma.dry_cooked_yields_categoriesGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    translation: true;
-    yield: true;
-  };
-}>;
+// export type DryCookedYieldsCategoriesSelect = Prisma.dry_cooked_yields_categoriesGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     translation: true;
+//     yield: true;
+//   };
+// }>;
 
-export type DryCookedYieldsSelect = Prisma.dry_cooked_yieldsGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    translation: true;
-    yield: true;
-  };
-}>;
+// export type DryCookedYieldsSelect = Prisma.dry_cooked_yieldsGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     translation: true;
+//     yield: true;
+//   };
+// }>;
 
-export type IngredientsReligiousCertificationSelect = Prisma.ingredients_religious_certificationGetPayload<{
-  select: {
-    id: true;
-    name: true;
-  };
-}>;
+// export type IngredientsReligiousCertificationSelect = Prisma.ingredients_religious_certificationGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//   };
+// }>;
 
-export type LanguageSelect = Prisma.languageGetPayload<{
-  select: {
-    id: true;
-    name: true;
-  };
-}>;
+// export type LanguageSelect = Prisma.languageGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//   };
+// }>;
 
-// export type NutritionalDataValuesSelect = Prisma.ingredients_nutritionGetPayload<
-export type NutritionalDataValuesSelect = { column_name: string };
+// // export type NutritionalDataValuesSelect = Prisma.ingredients_nutritionGetPayload<
+// export type NutritionalDataValuesSelect = { column_name: string };
 
-export type IngredientCategoryPrimarySelect = Prisma.ingredient_category_primaryGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    translation: true;
-  };
-}>;
+// export type IngredientCategoryPrimarySelect = Prisma.ingredient_category_primaryGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     translation: true;
+//   };
+// }>;
 
-export type IngredientCategorySecondarySelect = Prisma.ingredient_category_secondaryGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    translation: true;
-    ingredient_category_primary_id: true;
-  };
-}>;
+// export type IngredientCategorySecondarySelect = Prisma.ingredient_category_secondaryGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     translation: true;
+//     ingredient_category_primary_id: true;
+//   };
+// }>;
 
-export type DietaryClassificationSelect = Prisma.dietary_classificationGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    translation: true;
-  };
-}>;
+// export type DietaryClassificationSelect = Prisma.dietary_classificationGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     translation: true;
+//   };
+// }>;
 
-export type AllergySelect = Prisma.allergyGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    translation: true;
-  };
-}>;
+// export type AllergySelect = Prisma.allergyGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     translation: true;
+//   };
+// }>;
 
-export type RecipeModeSelect = Prisma.recipe_modeGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-  };
-}>;
+// export type RecipeModeSelect = Prisma.recipe_modeGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//   };
+// }>;
 
-export type RecipeTypeSelect = Prisma.recipe_typeGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    is_default: true;
-  };
-}>;
+// export type RecipeTypeSelect = Prisma.recipe_typeGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     is_default: true;
+//   };
+// }>;
 
-export type OilPurposeSelect = Prisma.oil_purposeGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    factor: true;
-    desc: true;
-    is_default: true;
-    confidence: true;
-  };
-}>;
+// export type OilPurposeSelect = Prisma.oil_purposeGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     factor: true;
+//     desc: true;
+//     is_default: true;
+//     confidence: true;
+//   };
+// }>;
 
-export type SaltPurposeSelect = Prisma.salt_purposeGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    factor: true;
-    desc: true;
-    is_default: true;
-    confidence: true;
-  };
-}>;
+// export type SaltPurposeSelect = Prisma.salt_purposeGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     factor: true;
+//     desc: true;
+//     is_default: true;
+//     confidence: true;
+//   };
+// }>;
 
-export type IngredientTypeSelect = Prisma.ingredient_typeGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-  };
-}>;
+// export type IngredientTypeSelect = Prisma.ingredient_typeGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//   };
+// }>;
 
-export type MarkupTypeSelect = Prisma.markup_typeGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-  };
-}>;
+// export type MarkupTypeSelect = Prisma.markup_typeGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//   };
+// }>;
 
-export type MarkupSelect = Prisma.markupGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    customer_id: true;
-    desc: true;
-    markup_type_id: true;
-    factor: true;
-    markup_type: { select: { id: true; name: true; desc: true } };
-  };
-}>;
+// export type MarkupSelect = Prisma.markupGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     customer_id: true;
+//     desc: true;
+//     markup_type_id: true;
+//     factor: true;
+//     markup_type: { select: { id: true; name: true; desc: true } };
+//   };
+// }>;
 
-export type TodoStatusSelect = Prisma.todo_statusGetPayload<{
-  select: {
-    id: true;
-    name: true;
-  };
-}>;
+// export type TodoStatusSelect = Prisma.todo_statusGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//   };
+// }>;
 
-export type OtherCostsCategorySelect = Prisma.other_costs_categoryGetPayload<{
-  select: {
-    id: true;
-    name: true;
-  };
-}>;
+// export type OtherCostsCategorySelect = Prisma.other_costs_categoryGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//   };
+// }>;
 
-export type OtherCostsLineItemsLookupSelect = Prisma.other_costs_line_itemGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    supplier_id: true;
-    cost: true;
-    is_active: true;
-    customer_id: true;
-    category_ids: true;
-  };
-}>;
+// export type OtherCostsLineItemsLookupSelect = Prisma.other_costs_line_itemGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     supplier_id: true;
+//     cost: true;
+//     is_active: true;
+//     customer_id: true;
+//     category_ids: true;
+//   };
+// }>;
 
-export type PackagingCostsCategorySelect = Prisma.packaging_costs_categoryGetPayload<{
-  select: {
-    id: true;
-    name: true;
-  };
-}>;
+// export type PackagingCostsCategorySelect = Prisma.packaging_costs_categoryGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//   };
+// }>;
 
-export type PackagingCostsLineItemsLookupSelect = Prisma.packaging_costs_line_itemGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    desc: true;
-    supplier_id: true;
-    cost: true;
-    is_active: true;
-    customer_id: true;
-    category_ids: true;
-  };
-}>;
+// export type PackagingCostsLineItemsLookupSelect = Prisma.packaging_costs_line_itemGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     desc: true;
+//     supplier_id: true;
+//     cost: true;
+//     is_active: true;
+//     customer_id: true;
+//     category_ids: true;
+//   };
+// }>;
 
-interface PackagingCostsLineItemsLookup {
-  id: number;
-  name: string;
-  desc: string;
-  supplier_id: number;
-  cost: number;
-  is_active: boolean;
-  customer_id: number;
-  category_ids: number[]; // Adjust type based on your schema (e.g., array of numbers or strings)
-}
+// interface PackagingCostsLineItemsLookup {
+//   id: number;
+//   name: string;
+//   desc: string;
+//   supplier_id: number;
+//   cost: number;
+//   is_active: boolean;
+//   customer_id: number;
+//   category_ids: number[]; // Adjust type based on your schema (e.g., array of numbers or strings)
+// }
 
-export type VatRulesSelect = Prisma.vat_rulesGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    cost: true;
-    description: true;
-    customer_id: true;
-    default: true;
-  };
-}>;
+// export type VatRulesSelect = Prisma.vat_rulesGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     cost: true;
+//     description: true;
+//     customer_id: true;
+//     default: true;
+//   };
+// }>;
 
 interface obj {
   [key: string]: Promise<any>;
@@ -273,7 +298,7 @@ export const getSystemData = async (customerId: number) => {
     // JUST GET VALUES FORM TABLE AS IS.
     unit_type: prisma.unit_type.findMany({ select: { id: true, name: true, desc: true, imperial: true, metric: true } }) as Promise<UnitTypeSelect[]>,
 
-    unit_measurement: prisma.unit_measurement.findMany({ select: { id: true, name: true, is_default: true } }) as Promise<UnitMeasurementSelect[]>,
+    unit_metric_imperial: prisma.unit_metric_imperial.findMany({ select: { id: true, name: true, is_default: true } }) as Promise<UnitMetricImperialSelect[]>,
 
     prep_instructions: prisma.prep_instructions.findMany({
       where: { is_live: true },
@@ -445,7 +470,7 @@ serve(async (req) => {
   if (!cachedData || now - lastFetched > CACHE_DURATION) {
     cachedData = await Promise.all([
       supabase.from('unit_type').select('id, name'),
-      supabase.from('unit_measurement').select('id, name'),
+      supabase.from('unit_metric_imperial').select('id, name'),
       // ... other tables
     ]).then((results) => results.map((result) => result.data));
     lastFetched = now;

@@ -9,9 +9,7 @@ export interface RecipeModuleProps {
 
 // PAGE
 const RecipeModule: React.FC<RecipeModuleProps> = () => {
-  const { qty, setQty, recipeData, updateRecipeData, systemData, userData, localOrDbData } = useRecipeData();
-
-  console.log("recipeData", { qty, recipeData, systemData, userData });
+  const { qty, setQty, recipeData, updateRecipeData, systemData, localOrDbData } = useRecipeData();
 
   if (!recipeData.portionSizes.length) return <Loading />;
 
@@ -20,7 +18,7 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
       {/* <div>hellp {myObject?.key}</div> */}
       {/* DATA STORAGE - From Local Storage or DB */}
       <div className=" text-xs text-base-content/20 justify-self-end pr-4">
-        USER: {localOrDbData.user} | SYSTEM: {localOrDbData.system}
+        Recipe: {localOrDbData.recipe} | SYSTEM: {localOrDbData.system}
       </div>
       <Row_PlatingAll />
       <Row_SubRecipesAll />

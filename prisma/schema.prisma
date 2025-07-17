@@ -53,26 +53,24 @@ model customer {
 }
 
 model supplier {
-  id                 Int      @id @default(autoincrement())
-  customer           customer @relation(fields: [customer_id], references: [id])
-  customer_id        Int
-  name               String
-  vat                String?
-  corporation_number String?
-  logo               String?
-  email              String?
-  tel                String?
-  cell               String?
-  whatsapp           String?
-  account_email      String?
-  account_name       String?
-  account_tel        String?
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
-
+  id                        Int                         @id @default(autoincrement())
+  customer                  customer                    @relation(fields: [customer_id], references: [id])
+  customer_id               Int
+  name                      String
+  vat                       String?
+  corporation_number        String?
+  logo                      String?
+  email                     String?
+  tel                       String?
+  cell                      String?
+  whatsapp                  String?
+  account_email             String?
+  account_name              String?
+  account_tel               String?
+  created_at                DateTime                    @default(now())
+  updated_at                DateTime                    @updatedAt
   packaging_costs_line_item packaging_costs_line_item[]
-
-  other_costs_line_item other_costs_line_item[]
+  other_costs_line_item     other_costs_line_item[]
 }
 
 // model Role {
@@ -93,19 +91,26 @@ model supplier {
 // USER__________________________________________
 // USER__________________________________________
 // USER_____________________________________START
-model profiles {
-  id                    Int                     @id @default(autoincrement())
-  user_id               String                  @unique
-  username              String?
-  emails                Json?
-  phone_numbers         Json?
-  organisations         String?
-  avatar_url            String?
-  roles                 Json?
-  first_name            String?
-  last_name             String?
-  last_sign_in_at       String?
-  json                  Json?
+model org {
+  id                      Int                  @id @default(autoincrement())
+  user_id                 String               @unique
+  username                String?
+  emails                  Json?
+  phone_numbers           Json?
+  organisations           String?
+  avatar_url              String?
+  roles                   Json?
+  first_name              String?
+  last_name               String?
+  last_sign_in_at         String?
+  json                    Json?
+  // Are we using imperial or metric?
+  unit_metric_imperial    unit_metric_imperial @relation(fields: [unit_metric_imperial_id], references: [id])
+  unit_metric_imperial_id Int
+  vat_number              String?
+
+  country_locale        country_locale          @relation(fields: [country_locale_id], references: [id])
+  country_locale_id     Int
   todo                  todo[]
   todo_document         todo_document[]
   conversation_thread   conversation_thread[]
@@ -213,18 +218,20 @@ model markup {
 // SETTINGS_________________________________START
 model unit_type {
   // weight or fluid
-  id       Int     @id @default(autoincrement())
-  name     String
-  desc     String?
-  imperial String?
-  metric   String?
+  id          Int           @id @default(autoincrement())
+  name        String
+  desc        String?
+  imperial    String?
+  metric      String?
+  ingredients ingredients[]
 }
 
-model unit_measurement {
+model unit_metric_imperial {
   // metric or imperial
   id         Int      @id @default(autoincrement())
   name       String
   is_default Boolean? @default(false)
+  org        org[]
 }
 
 model prep_instructions {
@@ -336,6 +343,7 @@ model country_locale {
   is_active         Boolean  @default(true) // Whether the locale is currently supported
   language          language @relation(fields: [language_id], references: [id])
   language_id       Int
+  org               org[]
 }
 
 model ingredient_cooked_yields {
@@ -351,6 +359,25 @@ model ingredient_cooked_yields {
   roasted        Float       @default(0)
   updated_at     DateTime    @updatedAt
   created_at     DateTime    @default(now())
+}
+
+model home_mode_units {
+  // home_mode_units: imperial, metric
+  id                   Int     @id @default(autoincrement())
+  name                 String
+  order                Int     @default(1)
+  desc                 String?
+  primary_category_ids String?
+  group                String?
+  // e.g., "vegetables", "fruits"
+
+  default_g      Decimal @default(0.00)
+  default_g_conf Decimal @default(0.00)
+  fluid_g        Decimal @default(0.00)
+  fluid_g_conf   Decimal @default(0.00)
+  weight_g       Decimal @default(0.00)
+  weight_g_conf  Decimal @default(0.00)
+  is_default     Boolean @default(false)
 }
 
 model ingredient_category_primary {
@@ -612,7 +639,7 @@ model vat_rules {
 
 model ingredients {
   id          Int       @id @default(autoincrement())
-  name        String    @unique
+  name        String
   name_orig   String?
   names_alt   String?
   customer    customer? @relation(fields: [customer_id], references: [id])
@@ -622,8 +649,10 @@ model ingredients {
 
   primary_category    ingredient_category_primary? @relation(fields: [primary_category_id], references: [id])
   primary_category_id Int?
+  secondary_category  String?
 
-  secondary_category String?
+  unit_type    unit_type? @relation(fields: [unit_type_id], references: [id])
+  unit_type_id Int?       @default(1) // 1 = weight (g, kg)
 
   raw_to_prepped_yields raw_to_prepped_yields[]
   cooked_yields         ingredient_cooked_yields[]
@@ -736,7 +765,7 @@ model recipe_backup {
   recipe_id   Int
   customer    customer @relation(fields: [customer_id], references: [id])
   customer_id Int
-  profiles_id Int
+  org_id      Int
   name        String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
@@ -794,8 +823,8 @@ model recipe_book_access {
 
 model todo {
   id          Int             @id @default(autoincrement())
-  profiles    profiles        @relation(fields: [profiles_id], references: [id])
-  profiles_id Int
+  org         org             @relation(fields: [org_id], references: [id])
+  org_id      Int
   customer    customer        @relation(fields: [customer_id], references: [id])
   customer_id Int
   status      todo_status     @relation(fields: [status_id], references: [id])
@@ -809,8 +838,8 @@ model todo_document {
   id          Int      @id @default(autoincrement())
   todo        todo     @relation(fields: [todo_id], references: [id])
   todo_id     Int
-  profiles    profiles @relation(fields: [profiles_id], references: [id])
-  profiles_id Int
+  org         org      @relation(fields: [org_id], references: [id])
+  org_id      Int
   customer    customer @relation(fields: [customer_id], references: [id])
   customer_id Int
   file        String
@@ -820,8 +849,8 @@ model todo_document {
 
 model conversation_thread {
   id          Int      @id @default(autoincrement())
-  profiles    profiles @relation(fields: [profiles_id], references: [id])
-  profiles_id Int
+  org         org      @relation(fields: [org_id], references: [id])
+  org_id      Int
   customer    customer @relation(fields: [customer_id], references: [id])
   customer_id Int
   recipe      recipe   @relation(fields: [recipe_id], references: [id])
@@ -833,8 +862,8 @@ model conversation_thread {
 
 model production_event {
   id          Int                     @id @default(autoincrement())
-  profiles    profiles                @relation(fields: [profiles_id], references: [id])
-  profiles_id Int
+  org         org                     @relation(fields: [org_id], references: [id])
+  org_id      Int
   customer    customer                @relation(fields: [customer_id], references: [id])
   customer_id Int
   recipe      recipe                  @relation(fields: [recipe_id], references: [id])
@@ -849,8 +878,8 @@ model production_event_task {
   id                  Int              @id @default(autoincrement())
   production_event    production_event @relation(fields: [production_event_id], references: [id])
   production_event_id Int
-  profiles            profiles         @relation(fields: [profiles_id], references: [id])
-  profiles_id         Int
+  org                 org              @relation(fields: [org_id], references: [id])
+  org_id              Int
   customer            customer         @relation(fields: [customer_id], references: [id])
   customer_id         Int
   recipe              recipe           @relation(fields: [recipe_id], references: [id])

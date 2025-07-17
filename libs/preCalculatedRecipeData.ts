@@ -1,13 +1,20 @@
+"use server";
+
 // import { MarkupSelect } from "@/app/api/data/system/route";
-import { PreCalculatedRecipeData, SystemDataProps, UserDataProps, useRecipeData } from "@/contexts/useRecipeData";
-import { calcProfit, formatCurrency } from "@/libs/utils";
+// import type { PreCalculatedRecipeData, SystemDataProps, UserDataProps, useRecipeData } from "@/contexts/useRecipeData";
+import type { useRecipeData } from "@/contexts/useRecipeData";
+import { calcProfit, formatCurrency } from "@/utils/utils";
+import { PreCalculatedRecipeData, SystemDataProps } from "@/types/recipeTypes";
+import { th } from "date-fns/locale";
+import { Decimal } from "decimal.js";
 
 const getLineItemTotal = (categoryId: number, lineItemObj: {}) => {
   //
 };
 
 // export async function preCalculateData(recipeData: PreCalculatedRecipeData, updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void): Promise<void> {
-export function preCalculateData(recipeData: PreCalculatedRecipeData, systemData: SystemDataProps, userData: UserDataProps): Partial<PreCalculatedRecipeData> {
+export async function preCalculateData(recipeData: PreCalculatedRecipeData, systemData: SystemDataProps): Promise<Partial<PreCalculatedRecipeData>> {
+  // export async function preCalculateData(recipeData: PreCalculatedRecipeData, systemData: SystemDataProps, userData: UserDataProps): Promise<Partial<PreCalculatedRecipeData>> {
   // ERROR HANDLING
   if (recipeData.data.portions.length === 0) {
     console.error("No portions found in recipe data");
@@ -204,6 +211,7 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, systemData
   // MARKUP CALCULATIONS AND RULES _______________________
   const markUpPriceAmounts: number[] = [];
   const markUpPriceRules: number[] = [];
+  const markUpPriceRuleName: string[] = [];
 
   for (let i = 0; i < portionSizes.length; i++) {
     const markupRuleId = +recipeData.data.markupId[portionSizes[i]];
@@ -213,11 +221,12 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, systemData
     const { markup_type: name, factor } = foundMarkupRule;
     markUpPriceAmounts.push(calcProfit(costsSubTotals[i], name.name, Number(factor)));
     markUpPriceRules.push(markupRuleId);
+    markUpPriceRuleName.push(foundMarkupRule.name);
   }
 
   // SALES PRICE EX VAT _____________________________________
   const salePricesExVat: number[] = portionSizes.map((portion, i) => {
-    return recipeData.costsSubTotals[i] + recipeData.markUpPriceAmounts[i];
+    return costsSubTotals[i] + markUpPriceAmounts[i];
   });
 
   // SALES PRICE INCL VAT ______________ _______________________
@@ -225,29 +234,29 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, systemData
   const vatRuleIds: number[] = [];
   const vatRulePercs: number[] = [];
   const vatRuleNames: string[] = [];
+
   // GET DEFAULT VAT in case recipe has no VAT
-  const defaultVatByOrg: number | undefined = Number(userData.vat_rules.find((vat) => vat.default === true)?.cost || userData.vat_rules[0].cost || undefined); // or 0%
+  // find vat with default === true or the first one in the list or 0
+  const defaultVatByOrg: number | undefined = Number(systemData.vat_rules.find((vat) => vat.default === true)?.cost || Number(systemData.vat_rules[0].cost) || 0);
 
   console.log("defaultVatByOrg:::", defaultVatByOrg);
   if (!defaultVatByOrg) console.error(`defaultVatByOrg (#${defaultVatByOrg}) not found.`);
 
-  // GET RULE then GET RULE ID vat value
+  // GET RULE then GET RULE ID & the VAT VALUE
   portionIds.map((pid, i) => {
-    const vatId: number | undefined = recipeData.data.vatRulesId.find((rule) => rule.id === pid)?.rule || undefined;
+    // Find the vat rule id that matches the portion id
+    const vatId: number | undefined = recipeData.data.vatRulesId.find((rule) => rule.pid === pid)?.rule || undefined;
 
-    const vatRulePerc: number | undefined = Number(systemData.vat_rules.find((rule) => rule.id === vatRuleIds[i])?.cost || undefined);
-
-    console.log("vatId:::", vatId);
-    console.log("vatRulePerc:::", vatRulePerc);
+    const vatRulePerc: number | undefined = Number(systemData.vat_rules.find((vat) => vat.id === vatId)?.cost);
 
     // ERROR CHECK
     if (vatRulePerc === undefined) throw new Error(`vatRulePerc (${vatRulePerc}) for portion ${pid} not found.`);
 
     if (vatId === undefined) throw new Error(`vatId (#${vatId}) for portion ${pid} not found.`);
 
-    salesPricesIncVat.push(salePricesExVat[i] * (1 + (vatRulePerc || Number(defaultVatByOrg))));
+    salesPricesIncVat.push(salePricesExVat[i] * (1 + vatRulePerc));
     vatRuleIds.push(vatId);
-    vatRulePercs.push(vatRulePerc || Number(defaultVatByOrg));
+    vatRulePercs.push(vatRulePerc === undefined ? defaultVatByOrg : vatRulePerc);
     vatRuleNames.push(systemData.vat_rules.find((vat) => vat.id === vatId)?.name || "No VAT found");
   });
 
@@ -268,6 +277,7 @@ export function preCalculateData(recipeData: PreCalculatedRecipeData, systemData
     otherCostsPriceRules,
     markUpPriceAmounts,
     markUpPriceRules,
+    markUpPriceRuleName,
     costsSubTotals,
     salePricesExVat,
     salesPricesIncVat,
