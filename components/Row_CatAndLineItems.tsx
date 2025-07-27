@@ -1,9 +1,10 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
-import { formatCurrency, getTextTranslation, replace_ } from "@/utils/utils";
-import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeData } from "@/contexts/useRecipeData";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "@/components/MenuPopupOnMouseOver";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
+import { PreCalculatedRecipeData } from "@/types/recipeTypes";
+import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
 interface Row_CatAndLineItemsProps {
   // Show prices by expanding the cells
@@ -61,9 +62,8 @@ const Row_CatAndLineItems: React.FC<Row_CatAndLineItemsProps> = ({ viewPrices, n
               <>
                 <span className="font-bold">{value.name}</span>
                 <br />
-                <span>
-                  {formatCurrency(sumLineItems)} (#{value.id})
-                </span>
+                <UnitCurrencyFormatter>{sumLineItems}</UnitCurrencyFormatter>
+                <span>#{value.id}</span>
               </>
             ),
             handler: () => update(recipeData.portionSizes[i], +value.id),
@@ -77,7 +77,7 @@ const Row_CatAndLineItems: React.FC<Row_CatAndLineItemsProps> = ({ viewPrices, n
         return (
           <MenuPopupOnMouseOver key={name + "menu" + i} type="onClick" menuArray={dropDownLinks}>
             <Table_Cell edit="edit" type="text" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
-              {formatCurrency(priceSumObj[i])}
+              <UnitCurrencyFormatter>{priceSumObj[i]}</UnitCurrencyFormatter>
               {viewPrices && <div className="text-[10px] self-center">{name}</div>}
             </Table_Cell>
           </MenuPopupOnMouseOver>

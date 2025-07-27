@@ -14,7 +14,7 @@ const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = () => {
   // const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   return (
     <DottedBorder className="grid grid-cols-1 content-evenly gap-y-6 ">
-      <TextEditable initialTextObject={{ "data.recipeName": recipeData.data?.recipeName }} />
+      <TextEditable initialTextObject={{ "data.name": recipeData.data?.name }} />
       <TextEditable initialTextObject={{ "data.recipeDesc": recipeData.data.recipeDesc }} />
 
       {/* BUTTON: Metric or Imperial Button */}

@@ -33,7 +33,7 @@ const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className =
   if (!systemData || !systemData.org) return console.error("System data is not available"), "";
 
   // Check if unit_metric_imperial_id exists (1 = metric, 2 = imperial)
-  if (!systemData.org.unit_metric_imperial_id) return console.error("unit_metric_imperial_id is not available"), "";
+  if (!systemData.org.unit_metric_imperial_name) return console.error("unit_metric_imperial_id is not available"), "";
 
   // Find the default unit type from systemData
   let defaultUnitType = systemData.unit_metric_imperial.find((val) => val.is_default === true)?.name || "";
@@ -43,7 +43,7 @@ const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className =
   }
 
   // Check if the system is imperial or metric
-  isImperial = systemData.org.unit_metric_imperial_id === 2 || false;
+  isImperial = systemData.org.unit_metric_imperial_name === "imperial" || false;
 
   // TODO: handle fluid ounces and pounds
   isFluid = false;
@@ -128,7 +128,7 @@ const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className =
   // Format Weight or Volume grams, kilograms, milliliters, ounces, pounds, units_ea
 
   // Set Decimal Places
-  const weightDecimals = Number(weight.toFixed(3));
+  weightUnit = weight.toFixed(3);
 
   // RETURN e.g grams or kilograms
   // const unit = weightDecimals < 1000 ? data.setting.unitMaster[0] : data.setting.unitMaster[1];
@@ -140,7 +140,8 @@ const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className =
   //  TODO: need to handle mls and oz/lbs
   //  TODO: need to handle mls and oz/lbs
 
-  return <span className={className}>{`${children} ${weightUnit}${weightUnitsForHome}`}</span>;
+  // return <span className={className}>{`${children} ${weightUnit}${weightUnitsForHome}`}</span>;
+  return <span className={className}>{`${weightUnit}${weightUnitsForHome}`}</span>;
 };
 
 export default IngredientUnits;

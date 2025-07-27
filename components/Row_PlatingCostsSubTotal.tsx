@@ -1,9 +1,10 @@
 import React from "react";
 
 import Table_Cell from "./Table_Cell";
-import { formatCurrency, getTextTranslation, replace_ } from "@/utils/utils";
+import { getTextTranslation, replace_ } from "@/utils/utils";
 import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
+import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
 interface Row_PlatingCostsSubTotalProps {
   className?: string;
@@ -28,7 +29,7 @@ const Row_PlatingCostsSubTotal: React.FC<Row_PlatingCostsSubTotalProps> = ({ cla
         return (
           // COLUMN CELLS START
           <Table_Cell type="sub_total" key={name + "_" + i} trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
-            {formatCurrency(cost)}
+            <UnitCurrencyFormatter>{cost}</UnitCurrencyFormatter>
           </Table_Cell>
           // COLUMN CELLS END
         );

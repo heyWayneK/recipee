@@ -4,7 +4,7 @@
 // import type { PreCalculatedRecipeData, SystemDataProps, UserDataProps, useRecipeData } from "@/contexts/useRecipeData";
 import type { useRecipeData } from "@/contexts/useRecipeData";
 import { calcProfit, formatCurrency } from "@/utils/utils";
-import { PreCalculatedRecipeData, SystemDataProps } from "@/types/recipeTypes";
+import { LineItemsLookup, PreCalculatedRecipeData, SystemDataProps, measurementUnitsObjProps } from "@/types/recipeTypes";
 import { th } from "date-fns/locale";
 import { Decimal } from "decimal.js";
 
@@ -16,6 +16,14 @@ const getLineItemTotal = (categoryId: number, lineItemObj: {}) => {
 export async function preCalculateData(recipeData: PreCalculatedRecipeData, systemData: SystemDataProps): Promise<Partial<PreCalculatedRecipeData>> {
   // export async function preCalculateData(recipeData: PreCalculatedRecipeData, systemData: SystemDataProps, userData: UserDataProps): Promise<Partial<PreCalculatedRecipeData>> {
   // ERROR HANDLING
+  if (!recipeData || !recipeData.data) {
+    console.error("Recipe data is not available");
+    return {};
+  }
+  if (!systemData || !systemData.org) {
+    console.error("System data is not available");
+    return {};
+  }
   if (recipeData.data.portions.length === 0) {
     console.error("No portions found in recipe data");
     return {};
@@ -146,63 +154,117 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     componentsPricesDesc.push(
       portionSizes.map((_, iP) =>
         recipe.recipeDetail.flatMap((row, iR) => {
+          // TODO: Check this.
+          // An ingredient can be a component (like "cheese"), without a recipe.
           if (row.type !== "ingredient") return [];
 
           const componentTotalWeight = recipe.recipeDetail.reduce((arr, val) => (arr += val.qty), 0);
           // Work out igred % in original comp = % * price
-          return row.ingredName + ": " + formatCurrency((row.qty / componentTotalWeight) * componentsPrices[iC][iP]);
+          return row.ingredName + ": " + (row.qty / componentTotalWeight) * componentsPrices[iC][iP];
         })
       )
     );
   }
 
+  const ReturnLookupCostsArr = (categoryId: number, lookupArray: LineItemsLookup[]): number => {
+    // Function to get the total cost for a given category ID from the lookup array
+    const ttl = lookupArray.reduce((acc, val) => {
+      // category_ids can have one or more CSV ids
+      if (+val.category_ids === +categoryId || val.category_ids.split(",").includes(categoryId.toString())) {
+        acc += Number(val.cost);
+      }
+      // console.log("Acc Total", acc);
+      return acc;
+    }, 0);
+    // console.log("_____ categoryId", categoryId, "__total", ttl);
+    return ttl;
+  };
+
   // PACKAGING COSTS AND RULES ARRAYS____________________
   const packingCostPriceTotals: number[] = [];
   const packingCostPriceRules: number[] = [];
-  for (const portion of portionSizes) {
-    const packagingCostId = +recipeData.data.packagingCostsId[portion];
-    const packingCostObj = systemData.packaging_costs_category.find((cost) => cost.id === packagingCostId);
+  // Loop through the portions, always using portion IDs
+  for (const portionId of portionIds) {
+    // Summarise the packaging costs in a single array
+    const packagingIdRuleForPortion = recipeData.data.packagingCostsId.find((p) => p.pid === portionId)?.rule || undefined;
 
-    if (!packingCostObj) {
-      const e = `Packing cost with ID ${packagingCostId} not found. Packing cost id must match`;
-      console.error(e);
-      throw new Error(e);
-    }
+    if (packagingIdRuleForPortion === undefined) throw new Error(`Packaging rule for portion ID ${portionId} not found.`);
 
-    packingCostPriceTotals.push(
-      systemData.packaging_costs_line_items_lookup.reduce((acc, val) => {
-        if (+val.category_ids === packagingCostId) {
-          acc += +val.cost;
-        }
-        return acc;
-      }, 0)
-    );
-    packingCostPriceRules.push(packagingCostId);
+    packingCostPriceRules.push(packagingIdRuleForPortion);
+
+    // Use Lookup, Category and Line Items to get the total cost for the packaging rule
+    // Get all Line Item Ids for the packaging rule
+    // const packingCostLineItemsCost = systemData.packaging_costs_line_items_lookup
+    //   .filter((item) => item.category_ids.split(",").find((id) => +id === +packagingIdRuleForPortion))
+    //   .reduce((acc, val) => (acc += val.cost), 0);
+
+    const packingCostLineItemsCost = ReturnLookupCostsArr(packagingIdRuleForPortion, systemData.packaging_costs_line_items_lookup);
+    console.log("packingCostPriceTotals PUSH_____ portionId", portionId, "__total", packingCostLineItemsCost);
+    packingCostPriceTotals.push(packingCostLineItemsCost);
   }
+
+  // for (const portion of portionSizes) {
+  //   const packagingCostId = +recipeData.data.packagingCostsId[portion];
+  //   const packingCostObj = systemData.packaging_costs_category.find((cost) => cost.id === packagingCostId);
+
+  //   if (!packingCostObj) {
+  //     const e = `Packing cost with ID ${packagingCostId} not found. Packing cost id must match`;
+  //     console.error(e);
+  //     throw new Error(e);
+  //   }
+
+  //   packingCostPriceTotals.push(
+  //     systemData.packaging_costs_line_items_lookup.reduce((acc, val) => {
+  //       if (+val.category_ids === packagingCostId) {
+  //         acc += +val.cost;
+  //       }
+  //       return acc;
+  //     }, 0)
+  //   );
+  //   packingCostPriceRules.push(packagingCostId);
+  // }
 
   // OTHER COSTS AND RULES ARRAY_________________________
   const otherCostsPriceTotals: number[] = [];
   const otherCostsPriceRules: number[] = [];
-  for (const portion of portionSizes) {
-    const otherCostId = +recipeData.data.otherCostsId[portion];
-    const otherCostObj = systemData.other_costs_category.find((cost) => cost.id === otherCostId);
+  for (const portionId of portionIds) {
+    // Summarise the packaging costs in a single array
+    const otherCostsIdRuleForPortion = recipeData.data.otherCostsId.find((p) => p.pid === portionId)?.rule || undefined;
 
-    if (!otherCostObj) {
-      const e = `Other costs with ID ${otherCostId} not found. Packing cost id must match`;
-      console.error(e);
-      throw new Error(e);
-    }
+    if (otherCostsIdRuleForPortion === undefined) throw new Error(`Packaging rule for portion ID ${portionId} not found.`);
 
-    otherCostsPriceTotals.push(
-      systemData.other_costs_line_items_lookup.reduce((acc, val) => {
-        if (+val.category_ids === otherCostId) {
-          acc += +val.cost;
-        }
-        return acc;
-      }, 0)
-    );
-    otherCostsPriceRules.push(otherCostId);
+    otherCostsPriceRules.push(otherCostsIdRuleForPortion);
+
+    // Use Lookup, Category and Line Items to get the total cost for the packaging rule
+    // Get all Line Item Ids for the packaging rule
+    // const packingCostLineItemsCost = systemData.packaging_costs_line_items_lookup
+    //   .filter((item) => item.category_ids.split(",").find((id) => +id === +packagingIdRuleForPortion))
+    //   .reduce((acc, val) => (acc += val.cost), 0);
+
+    const otherCostLineItemsCost = ReturnLookupCostsArr(otherCostsIdRuleForPortion, systemData.other_costs_line_items_lookup);
+    console.log("packingCostPriceTotals PUSH_____ portionId", portionId, "__total", otherCostLineItemsCost);
+    otherCostsPriceTotals.push(otherCostLineItemsCost);
   }
+  // for (const portion of portionSizes) {
+  //   const otherCostId = +recipeData.data.otherCostsId[portion];
+  //   const otherCostObj = systemData.other_costs_category.find((cost) => cost.id === otherCostId);
+
+  //   if (!otherCostObj) {
+  //     const e = `Other costs with ID ${otherCostId} not found. Packing cost id must match`;
+  //     console.error(e);
+  //     throw new Error(e);
+  //   }
+
+  //   otherCostsPriceTotals.push(
+  //     systemData.other_costs_line_items_lookup.reduce((acc, val) => {
+  //       if (+val.category_ids === otherCostId) {
+  //         acc += +val.cost;
+  //       }
+  //       return acc;
+  //     }, 0)
+  //   );
+  //   otherCostsPriceRules.push(otherCostId);
+  // }
 
   // SUB TOTAL COSTS_____________________________________
   let costsSubTotals: number[] = [];
@@ -213,8 +275,14 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   const markUpPriceRules: number[] = [];
   const markUpPriceRuleName: string[] = [];
 
-  for (let i = 0; i < portionSizes.length; i++) {
-    const markupRuleId = +recipeData.data.markupId[portionSizes[i]];
+  for (let i = 0; i < portionIds.length; i++) {
+    const markupRuleId = recipeData.data.markupId.find((p) => portionIds[i] === p.pid)?.rule || undefined; // Get the markup rule ID for the portion size
+    console.log("markupRuleId:::", markupRuleId, "portionIds[i]:::", portionIds[i]);
+    if (markupRuleId === undefined) {
+      throw new Error(`Markup rule for portion size ${portionIds[i]} not found.`);
+    }
+    // const markupRuleId = +recipeData.data.markupId[portionSizes[i]];
+    // const foundMarkupRule = systemData.markup.find((m) => m.id === markupRuleId) || undefined;
     const foundMarkupRule = systemData.markup.find((m) => m.id === markupRuleId) || undefined;
 
     if (!foundMarkupRule) throw new Error(`Markup Rule ID: ${markupRuleId} not found in db.`);
@@ -260,6 +328,27 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     vatRuleNames.push(systemData.vat_rules.find((vat) => vat.id === vatId)?.name || "No VAT found");
   });
 
+  // MEASUREMENT UNITS ______________ _______________________
+  // eg weight = ["g", "kg"], fluid = ["ml", "l"], each = ["each", "each"]
+  const measurementUnitsObj: measurementUnitsObjProps = {} as measurementUnitsObjProps; // Updated type to include index signature
+  // const measurementUnitsObj: { [key: string]: string[] } = {};
+  // do a deep copy of the systemData.unit_type to avoid typescript errors
+  const unit_type_copy = JSON.parse(JSON.stringify(systemData.unit_type));
+  for (const unit of unit_type_copy) {
+    // let metricOrImperial: "metric" | "imperial" = systemData.org?.unit_metric_imperial_name || "metric"; // Default to metric
+    if (unit.name === "fluid") {
+      measurementUnitsObj.fluid = unit[systemData.org.unit_metric_imperial_name].split("|");
+    } else if (unit.name === "weight") {
+      // measurementUnitsObj.weight = "g|kg".split("|");
+      measurementUnitsObj.weight = unit[systemData.org.unit_metric_imperial_name].split("|");
+    } else if (unit.name === "each") {
+      measurementUnitsObj.each = unit[systemData.org.unit_metric_imperial_name].split("|");
+    } else {
+      // Handle other unit types if needed
+      console.warn(`Unknown unit type, not weight, fluid, or each: ${unit.name}`);
+    }
+  }
+
   // // UPDATE OBJECT with precalculated recipe plating data:
   const obj: Partial<PreCalculatedRecipeData> = {
     portionSizes,
@@ -284,6 +373,10 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     vatRuleIds,
     vatRulePercs,
     vatRuleNames,
+    isImperial: systemData.org.unit_metric_imperial_name === "imperial" || false,
+    isHome: recipeData.isHome || false,
+    currencySymbol: systemData.org.country_locale?.currency_symbol || "",
+    measurementUnitsObj,
   };
 
   return obj;

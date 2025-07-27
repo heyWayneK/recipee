@@ -32,5 +32,6 @@
   //     "isCaseSensitive": true
   //   }
   // ],
-  "dart.showTodos": false
+  "dart.showTodos": false,
+  "liveServer.settings.port": 5501
 }

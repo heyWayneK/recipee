@@ -212,7 +212,7 @@ import { NextResponse } from "next/server";
 //   select: {
 //     id: true;
 //     name: true;
-//     customer_id: true;
+//     org_id: true;
 //     desc: true;
 //     markup_type_id: true;
 //     factor: true;
@@ -242,7 +242,7 @@ import { NextResponse } from "next/server";
 //     supplier_id: true;
 //     cost: true;
 //     is_active: true;
-//     customer_id: true;
+//     org_id: true;
 //     category_ids: true;
 //   };
 // }>;
@@ -262,7 +262,7 @@ import { NextResponse } from "next/server";
 //     supplier_id: true;
 //     cost: true;
 //     is_active: true;
-//     customer_id: true;
+//     org_id: true;
 //     category_ids: true;
 //   };
 // }>;
@@ -274,7 +274,7 @@ import { NextResponse } from "next/server";
 //   supplier_id: number;
 //   cost: number;
 //   is_active: boolean;
-//   customer_id: number;
+//   org_id: number;
 //   category_ids: number[]; // Adjust type based on your schema (e.g., array of numbers or strings)
 // }
 
@@ -284,7 +284,7 @@ import { NextResponse } from "next/server";
 //     name: true;
 //     cost: true;
 //     description: true;
-//     customer_id: true;
+//     org_id: true;
 //     default: true;
 //   };
 // }>;
@@ -351,15 +351,15 @@ export const getSystemData = async (customerId: number) => {
     markup_type: prisma.markup_type.findMany({ select: { id: true, name: true, desc: true } }) as Promise<MarkupTypeSelect[]>,
 
     markup: prisma.markup.findMany({
-      where: { customer_id: customerId },
-      select: { id: true, name: true, customer_id: true, desc: true, markup_type_id: true, factor: true, markup_type: { select: { id: true, name: true, desc: true } } },
+      where: { org_id: customerId },
+      select: { id: true, name: true, org_id: true, desc: true, markup_type_id: true, factor: true, markup_type: { select: { id: true, name: true, desc: true } } },
       orderBy: { factor: "asc" },
     }) as Promise<MarkupSelect[]>,
 
-    todo_status: prisma.todo_status.findMany({ select: { id: true, name: true }, where: { customer_id: customerId }, orderBy: { id: "asc" } }) as Promise<TodoStatusSelect[]>,
+    todo_status: prisma.todo_status.findMany({ select: { id: true, name: true }, where: { org_id: customerId }, orderBy: { id: "asc" } }) as Promise<TodoStatusSelect[]>,
 
     // GET VALUES WHERE CUSTOMER = 1 (Default Account)
-    other_costs_category: prisma.other_costs_category.findMany({ where: { customer_id: customerId } }) as Promise<OtherCostsCategorySelect[]>,
+    other_costs_category: prisma.other_costs_category.findMany({ where: { org_id: customerId } }) as Promise<OtherCostsCategorySelect[]>,
 
     other_costs_line_items_lookup: prisma.$queryRaw`
         SELECT
@@ -369,7 +369,7 @@ export const getSystemData = async (customerId: number) => {
             li.supplier_id,
             li.cost,
             li.is_active,
-            l.customer_id,
+            l.org_id,
             string_agg(l.other_costs_category_id::text, ',' ORDER BY l.other_costs_category_id) AS category_ids
         FROM
             public.other_costs_line_item li
@@ -377,7 +377,7 @@ export const getSystemData = async (customerId: number) => {
             public.other_costs_lookup l
             ON li.id = l.other_costs_line_item_id
         WHERE
-            l.customer_id = ${customerId}
+            l.org_id = ${customerId}
         GROUP BY
             li.id,
             li.name,
@@ -385,12 +385,12 @@ export const getSystemData = async (customerId: number) => {
             li.supplier_id,
             li.cost,
             li.is_active,
-            l.customer_id
+            l.org_id
         ORDER BY
             li.name;
     `,
 
-    packaging_costs_category: prisma.packaging_costs_category.findMany({ where: { customer_id: customerId } }) as Promise<PackagingCostsCategorySelect[]>,
+    packaging_costs_category: prisma.packaging_costs_category.findMany({ where: { org_id: customerId } }) as Promise<PackagingCostsCategorySelect[]>,
 
     packaging_costs_line_items_lookup: prisma.$queryRaw`
         SELECT
@@ -400,7 +400,7 @@ export const getSystemData = async (customerId: number) => {
             li.supplier_id,
             li.cost,
             li.is_active,
-            l.customer_id,
+            l.org_id,
             string_agg(l.packaging_costs_category_id::text, ',' ORDER BY l.packaging_costs_category_id) AS category_ids
         FROM
             public.packaging_costs_line_item li
@@ -408,7 +408,7 @@ export const getSystemData = async (customerId: number) => {
             public.packaging_costs_lookup l
             ON li.id = l.packaging_costs_line_item_id
         WHERE
-            l.customer_id = ${customerId}
+            l.org_id = ${customerId}
         GROUP BY
             li.id,
             li.name,
@@ -416,14 +416,12 @@ export const getSystemData = async (customerId: number) => {
             li.supplier_id,
             li.cost,
             li.is_active,
-            l.customer_id
+            l.org_id
         ORDER BY
             li.name;
     ` as Promise<PackagingCostsLineItemsLookup[]>,
 
-    vat_rules: prisma.vat_rules.findMany({ where: { customer_id: customerId }, select: { id: true, name: true, cost: true, description: true, customer_id: true, default: true } }) as Promise<
-      VatRulesSelect[]
-    >,
+    vat_rules: prisma.vat_rules.findMany({ where: { org_id: customerId }, select: { id: true, name: true, cost: true, description: true, org_id: true, default: true } }) as Promise<VatRulesSelect[]>,
   };
 
   const results = await Promise.all(Object.values(queries));

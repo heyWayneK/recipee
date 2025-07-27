@@ -1,5 +1,8 @@
-import { Prisma } from "@prisma/client";
+import { unitDetailProps } from "@/app/data/metricImperial";
+import { Prisma, unit_type } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
+import exp from "constants";
+
 import React from "react";
 
 // TODO: NOT SURE IF THIS IS NEEDED
@@ -84,16 +87,18 @@ export interface CustomerType {
   logoSrc: string;
 }
 
+export type recipeDataRuleProps = { pid: number; rule: number }[];
+
 export interface RecipeDataProps {
-  readonly recipeUUID: string;
-  recipeName: string;
-  recipeDesc: string;
+  readonly uuid: string;
+  name: string;
+  desc: string;
 
   portions: portionSizeProps[];
-  packagingCostsId: { [key: number]: number };
-  otherCostsId: { [key: number]: number };
-  markupId: { [key: number]: number };
-  vatRulesId: { pid: number; rule: number }[];
+  packagingCostsId: recipeDataRuleProps;
+  otherCostsId: recipeDataRuleProps;
+  markupId: recipeDataRuleProps;
+  vatRulesId: recipeDataRuleProps;
   components: ComponentsProps[];
   recipes: RecipeProps[];
 }
@@ -162,7 +167,7 @@ export type IngredientSelect = Prisma.ingredientsGetPayload<{
     name: true;
     names_alt: true;
     name_orig: true;
-    customer_id: true;
+    org_id: true;
     translation: true;
     primary_category_id: true;
     secondary_category: true;
@@ -217,7 +222,7 @@ export type MarkupSelect = Prisma.markupGetPayload<{
   select: {
     id: true;
     name: true;
-    customer_id: true;
+    org_id: true;
     desc: true;
     markup_type_id: true;
     factor: true;
@@ -284,7 +289,7 @@ export type OtherCostsLineItemsLookupSelect = Prisma.other_costs_line_itemGetPay
     supplier_id: true;
     cost: true;
     is_active: true;
-    customer_id: true;
+    org_id: true;
     category_ids: true;
   };
 }>;
@@ -292,19 +297,14 @@ export type OtherCostsLineItemsLookupSelect = Prisma.other_costs_line_itemGetPay
 export type OrgTypeSelect = Prisma.orgGetPayload<{
   select: {
     id: true;
-    user_id: true;
     username: true;
     emails: true;
     phone_numbers: true;
-    organisations: true;
-    avatar_url: true;
-    roles: true;
-    first_name: true;
-    last_name: true;
     last_sign_in_at: true;
     json: true;
-    unit_metric_imperial_id: true;
+    unit_metric_imperial_name: true; // 1 = metric, 2 = imperial
     vat_number: true;
+    country_locale_id: true;
     country_locale: {
       select: {
         id: true;
@@ -320,7 +320,6 @@ export type OrgTypeSelect = Prisma.orgGetPayload<{
         time_zone: true;
       };
     };
-    country_locale_id: true;
   };
 }>;
 
@@ -336,15 +335,25 @@ export type PackagingCostsCategorySelect = Prisma.packaging_costs_categoryGetPay
   };
 }>;
 
-export interface PackagingCostsLineItemsLookup {
+// export interface PackagingCostsLineItemsLookup {
+//   id: number;
+//   name: string;
+//   desc: string;
+//   supplier_id: number;
+//   cost: number;
+//   is_active: boolean;
+//   org_id: number;
+//   category_ids: string; // Could be "3" pr "3,4,5,"
+// }
+export interface LineItemsLookup {
   id: number;
   name: string;
   desc: string;
   supplier_id: number;
   cost: number;
   is_active: boolean;
-  customer_id: number;
-  category_ids: number[]; // Adjust type based on your schema (e.g., array of numbers or strings)
+  org_id: number;
+  category_ids: string; // Could be "3" pr "3,4,5,"
 }
 
 // export type PackagingCostsLineItemsLookupSelect = Prisma.packaging_costs_line_itemGetPayload<{
@@ -355,20 +364,20 @@ export interface PackagingCostsLineItemsLookup {
 //     supplier_id: true;
 //     cost: true;
 //     is_active: true;
-//     customer_id: true;
+//     org_id: true;
 //     category_ids: true;
 //   };
 // }>;
-export interface PackagingCostsLineItemsLookupSelect {
-  id: number;
-  name: string;
-  desc: string;
-  supplier_id: number;
-  cost: number;
-  is_active: boolean;
-  customer_id: number;
-  category_ids: number[];
-}
+// export interface PackagingCostsLineItemsLookupSelect {
+//   id: number;
+//   name: string;
+//   desc: string;
+//   supplier_id: number;
+//   cost: number;
+//   is_active: boolean;
+//   org_id: number;
+//   category_ids: string; // Could be "3" pr "3,4,5,"
+// }
 
 export type PortionSizeChildProps = Omit<portionSizeProps, "order">;
 
@@ -403,6 +412,11 @@ export interface PreCalculatedRecipeData {
   vatRulePercs: number[]; // Decimals
   vatRuleNames: string[]; // Decimals
   data: RecipeDataProps;
+  isImperial: boolean; // true = imperial, false = metric
+  isHome: boolean; // true = home mode, false = professional mode
+  currencySymbol: string; // e.g. $, €, £
+  // measurementUnitsObj: { [key: string]: string[] }; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
+  measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
 }
 
 export type PrepInstructionsSelect = Prisma.prep_instructionsGetPayload<{
@@ -533,12 +547,13 @@ export interface SystemDataProps {
   // DEFAULT VALUES BELOW (to overwritten {...vals, ... userVals})
   // GET VALUES WHERE CUSTOMER = 1 (Default Account)
   other_costs_category: OtherCostsCategorySelect[];
-  other_costs_line_items_lookup: OtherCostsLineItemsLookupSelect[];
+  // other_costs_line_items_lookup: OtherCostsLineItemsLookupSelect[];
+  other_costs_line_items_lookup: LineItemsLookup[];
   packaging_costs_category: PackagingCostsCategorySelect[];
-  packaging_costs_line_items_lookup: PackagingCostsLineItemsLookupSelect[];
+  packaging_costs_line_items_lookup: LineItemsLookup[];
   vat_rules: VatRulesSelect[];
   ingredients: IngredientTypeSelect[];
-  org: OrgTypeSelect;
+  org: OrgTypeSelect | null; // OrgTypeSelect | null;
 }
 
 export type TodoStatusSelect = Prisma.todo_statusGetPayload<{
@@ -566,13 +581,18 @@ export type UnitTypeSelect = Prisma.unit_typeGetPayload<{
   };
 }>;
 
+export interface measurementUnitsObjProps {
+  weight: string[];
+  fluid: string[];
+  each: string[];
+}
 export interface UserDataProps {
   // USER VALUES BELOW (to overwrite System Data {...vals, ... userVals})
   // OVERWRITE OR ADD TO THE SYSTEM DATA
   other_costs_category: OtherCostsCategorySelect[];
   other_costs_line_items_lookup: OtherCostsLineItemsLookupSelect[];
   packaging_costs_category: PackagingCostsCategorySelect[];
-  packaging_costs_line_items_lookup: PackagingCostsLineItemsLookupSelect[];
+  packaging_costs_line_items_lookup: LineItemsLookup[];
   vat_rules: VatRulesSelect[];
 }
 
@@ -582,7 +602,7 @@ export type VatRulesSelect = Prisma.vat_rulesGetPayload<{
     name: true;
     cost: true;
     description: true;
-    customer_id: true;
+    org_id: true;
     default: true;
   };
 }>;

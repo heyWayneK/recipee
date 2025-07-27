@@ -4,6 +4,7 @@ import { cleanComponentKeyName, formatCurrency } from "@/utils/utils";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import IngredientUnits from "./IngredientUnits";
+import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 // Removed unused imports
 
 interface Row_PlatingListProps {
@@ -42,7 +43,7 @@ const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewP
             <MenuDynamicChildren key={keyNameSub} menuArray={dropDownInfo}>
               <Table_Cell edit="edit" type="plating_list" rowNum={iC}>
                 <IngredientUnits>{component[iP]}</IngredientUnits>
-                {viewPrices && <div className="self-center">{formatCurrency(recipeData.componentsPrices[iC][iP])}</div>}
+                {viewPrices && <div className="self-center">{<UnitCurrencyFormatter>(recipeData.componentsPrices[iC][iP])</UnitCurrencyFormatter>}</div>}
               </Table_Cell>
             </MenuDynamicChildren>
           );

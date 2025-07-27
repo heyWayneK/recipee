@@ -3,9 +3,9 @@ import { is } from "cypress/types/bluebird";
 import { extend } from "cypress/types/lodash";
 
 export const data: RecipeDataProps = {
-  recipeUUID: "1234567890",
-  recipeName: "My Recipe name that could be very very long",
-  recipeDesc: "Thinly sliced beef with a pepper sauce and roasted veg",
+  uuid: "1234567890",
+  name: "My Recipe name that could be very very long",
+  desc: "Thinly sliced beef with a pepper sauce and roasted veg",
 
   portions: [
     { id: 1234, qty: 265, order: 1 },
@@ -13,21 +13,21 @@ export const data: RecipeDataProps = {
   ],
 
   // portions: [265, 350],
-  // packagingCostsId: [
-  //   { pid: 1234, rule: 5 },
-  //   { pid: 1235, rule: 6 },
-  // ],
-  packagingCostsId: { 265: 5, 350: 6 },
-  // otherCostsId: [
-  //   { pid: 1234, rule: 3 },
-  //   { pid: 1235, rule: 4 },
-  // ],
-  otherCostsId: { 265: 3, 350: 4 },
-  // markupId: [
-  //   { pid: 1234, rule: 1 },
-  //   { pid: 1235, rule: 2 },
-  // ],
-  markupId: { 265: 3, 350: 8 },
+  packagingCostsId: [
+    { pid: 1234, rule: 5 },
+    { pid: 1235, rule: 6 },
+  ],
+  // packagingCostsId: { 265: 5, 350: 6 },
+  otherCostsId: [
+    { pid: 1234, rule: 4 },
+    { pid: 1235, rule: 3 },
+  ],
+  // otherCostsId: { 265: 3, 350: 4 },
+  markupId: [
+    { pid: 1234, rule: 1 },
+    { pid: 1235, rule: 2 },
+  ],
+  // markupId: { 265: 3, 350: 8 },
   vatRulesId: [
     { pid: 1234, rule: 1 },
     { pid: 1235, rule: 2 },

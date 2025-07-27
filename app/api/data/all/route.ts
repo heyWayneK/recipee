@@ -46,17 +46,17 @@ import { getSystemDataFunc2, getRecipeDataFunc2 } from "./functions/system_user_
 // };
 
 export async function GET() {
-  const customerId = 1; // Default customer ID
+  const orgId = "1"; // Default customer ID
   try {
     const recipeData = await getRecipeDataFunc2();
-    const systemData = await getSystemDataFunc2(customerId);
-    // const userData = await getUserDataFunc(customerId);
+    const systemData = await getSystemDataFunc2(orgId);
+    // const userData = await getUserDataFunc(orgId);
     // const preCalcData = await preCalculateData(recipeData, systemData, userData);
 
     // Precalulate the into a more readable format for object access and debugging
     const preCalcData = await preCalculateData(recipeData, systemData);
-    // const response = await JSON.parse(JSON.stringify(getSystemData(customerId)));
-    console.log("WAYNE DEBUG: PRE DATA", preCalcData);
+    // const response = await JSON.parse(JSON.stringify(getSystemData(orgId)));
+
     // Update the precalulated recipe data with the full recipe data
     return NextResponse.json({ recipeData: { ...recipeData, ...preCalcData }, systemData }, { status: 200 });
     // return NextResponse.json({ hello: "world" }, { status: 200 });

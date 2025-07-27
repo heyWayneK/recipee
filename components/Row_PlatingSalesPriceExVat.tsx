@@ -1,11 +1,12 @@
 import React from "react";
 
 import Table_Cell from "./Table_Cell";
-import { cleanComponentKeyName, formatCurrency, getTextTranslation, replace_ } from "@/utils/utils";
+import { cleanComponentKeyName, getTextTranslation, replace_ } from "@/utils/utils";
 import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "./ViewPrices";
+import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
 interface Row_PlatingSalesPriceExVatProps {
   viewPrices: boolean;
@@ -29,9 +30,12 @@ const Row_PlatingSalesPriceExVat: React.FC<Row_PlatingSalesPriceExVatProps> = ({
         return (
           // COLUMN CELLS START
           <Table_Cell type="text" key={o.name + "_" + i} trackChangeVisually={true} rowNum={i} trackChangesStorageName={o.name}>
-            {formatCurrency(recipeData.salePricesExVat[i])}
+            <UnitCurrencyFormatter>{recipeData.salePricesExVat[i]}</UnitCurrencyFormatter>
 
-            <ViewPrices viewPrices={viewPrices}>sub-total: {formatCurrency(recipeData.costsSubTotals[i]) + " + markup: " + formatCurrency(recipeData.markUpPriceAmounts[i])}</ViewPrices>
+            <ViewPrices viewPrices={viewPrices}>
+              sub-total:{" "}
+              {<UnitCurrencyFormatter>(recipeData.costsSubTotals[i])</UnitCurrencyFormatter> + " + markup: " + <UnitCurrencyFormatter>(recipeData.markUpPriceAmounts[i])</UnitCurrencyFormatter>}
+            </ViewPrices>
           </Table_Cell>
           // COLUMN CELLS END
         );

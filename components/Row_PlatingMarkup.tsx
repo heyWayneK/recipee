@@ -1,10 +1,12 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { calcProfit, formatCurrency, getTextTranslation, replace_ } from "@/utils/utils";
-import { PreCalculatedRecipeData, useRecipeData } from "@/contexts/useRecipeData";
+import { calcProfit, getTextTranslation, replace_ } from "@/utils/utils";
+import { useRecipeData } from "@/contexts/useRecipeData";
 import MenuDynamicChildren, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "@/components/ViewPrices";
+import { PreCalculatedRecipeData } from "@/types/recipeTypes";
+import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
 interface Row_PlatingMarkupProps {
   className?: string;
@@ -23,17 +25,32 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
   };
 
   // UPDATE OBJECT
-  const update = (portionSize: number, ruleId: number) => {
+  const update = (portionId: number, ruleId: number) => {
+    // const update = (portionSize: number, ruleId: number) => {
+    console.log("UPDATE MARKUP RULE", portionId, ruleId);
+    console.log("OLD", ...recipeData.data.markupId);
+    console.log("NEW", { ...recipeData.data.markupId, ...recipeData.data.markupId.map((p) => (p.pid === portionId ? { ...p, rule: ruleId } : { ...p })) });
     const updatedObj: Partial<PreCalculatedRecipeData> = {
       data: {
         ...recipeData.data,
         markupId: {
           ...recipeData.data.markupId,
-          [portionSize]: ruleId,
+          ...recipeData.data.markupId.map((p) => {
+            console.log("should be true", p.pid === portionId);
+            return p.pid === portionId ? { ...p, rule: ruleId } : { ...p };
+          }),
         },
       },
+      // data: {
+      //   ...recipeData.data,
+      //   markupId: {
+      //     ...recipeData.data.markupId,
+      //     [portionSize]: ruleId,
+      //   },
+      // },
     };
     //FUTURE:  ADD HISTORY
+    console.log("UPDATE MARKUP RULE", updatedObj);
     updateRecipeData(updatedObj);
   };
 
@@ -63,18 +80,20 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
               </>
             ),
 
-            handler: () => update(portionSize, value.id),
+            handler: () => update(recipeData.portionIds[i], value.id),
             selectedId: id,
             id: value.id,
           });
         }
         // DROP DOWN MODAL INFO__________END
-
+        const profit = calcProfit(recipeData.costsSubTotals[i], markup_type.name, Number(factor));
+        console.log(profit, "profit", recipeData.costsSubTotals[i], " | ", markup_type.name, " | ", Number(factor));
+        console.log("calcProfit(recipeData.costsSubTotals[i],  markup_type.name, Number(factor))");
         return (
           // COLUMN CELLS START
           <MenuDynamicChildren key={name + "_" + "menu" + "_" + i} menuArray={dropDownLinks}>
             <Table_Cell key={name + "_" + i} className="flex gap-y-1 flex-col" edit="edit" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
-              {formatCurrency(calcProfit(recipeData.costsSubTotals[i], markup_type.name, Number(factor)))}
+              {<UnitCurrencyFormatter>{profit}</UnitCurrencyFormatter>}
               <ViewPrices viewPrices={viewPrices}>
                 {name} ({id})
               </ViewPrices>

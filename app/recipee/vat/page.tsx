@@ -1,11 +1,7 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
-import { SystemDataProps, getRecipeDataFunc2, getSystemDataFunc2 } from "../../api/data/all/functions/system_user_recipe";
-import { RecipeProps } from "../../api/recipe";
+import React from "react";
 import { divide, get, set } from "cypress/types/lodash";
-import { getSystemData } from "../../api/data/system/route";
 import Loading from "@/components/Loading";
-import { PreCalculatedRecipeData } from "../../api/data/all/route";
 import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface pageProps {
@@ -13,7 +9,7 @@ interface pageProps {
   //   className?: string;
 }
 const Page: React.FC<pageProps> = () => {
-  const { localOrDbData, recipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeData();
 
   console.log("___ SYSTEMDATA", systemData);
   console.log("___%RECIPEDATA", recipeData);
@@ -47,8 +43,7 @@ const Page: React.FC<pageProps> = () => {
       ) : (
         <div>
           <div className={`className p-1`}>markup: {systemData?.markup[0].markup_type.name.toString()}</div>
-          <div className={`className p-1`}>recipe: {recipeData?.data.recipeDesc.toString()}</div>
-          <div className={`className p-1`}>localOrDbData: {localOrDbData?.user}</div>
+          <div className={`className p-1`}>recipe: {recipeData?.data.desc.toString()}</div>
         </div>
       )}
     </>

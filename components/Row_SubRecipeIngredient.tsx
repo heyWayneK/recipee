@@ -5,6 +5,7 @@ import { formatCurrency } from "@/utils/utils";
 import SvgSprite from "./SvgSprite";
 import MenuOption1 from "./MenuOption1";
 import IngredientUnits from "./IngredientUnits";
+import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
 interface Row_SubRecipeIngredientProps {
   className?: string;
@@ -28,7 +29,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ class
           </MenuOption1>
         );
       case "costPer1000":
-        return formatCurrency(value);
+        return <UnitCurrencyFormatter>{value}</UnitCurrencyFormatter>;
       case "qty":
         return <IngredientUnits>{qty}</IngredientUnits>;
       default:

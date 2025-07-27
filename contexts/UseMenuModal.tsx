@@ -248,6 +248,7 @@ export default MenuOption1;
  * 
   <MenuDynamicChildren key={id} type="onMouseOver" menuArray={dropDownLinks}>
             <Table_Cell key={id + i} edit="edit">
+            <UnitCurrencyFormat>{formatCurrency(recipeData.packingCostPriceTotals[i])}</UnitCurrencyFormat>
               {formatCurrency(recipeData.packingCostPriceTotals[i])}
               </Table_Cell>
               </MenuDynamicChildren>

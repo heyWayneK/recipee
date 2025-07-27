@@ -6,7 +6,9 @@ import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 import ViewPrices from "./ViewPrices";
-import { PreCalculatedRecipeData } from "@/app/api/data/all/route";
+
+import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
+import { PreCalculatedRecipeData } from "@/types/recipeTypes";
 
 interface Row_PlatingSalesPriceInclVatProps {
   className?: string;
@@ -47,7 +49,7 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
         const vatPercentage = recipeData.vatRulePercs[i];
         const vatAmount = priceExVat * vatPercentage;
         const vatRuleName = recipeData.vatRuleNames[i];
-        const salesPriceIncVat = formatCurrency(priceExVat + vatAmount);
+        const salesPriceIncVat = priceExVat + vatAmount;
 
         // const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold text-base capitalize">{name}</span>, handler: null }];
         const dropDownLinks: MenuOptionsProps[] = [{ jsx: <span className="font-bold capitalize">{name}</span>, handler: () => {} }];
@@ -75,8 +77,8 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
           // COLUMN CELLS START
           <MenuPopupOnMouseOver key={name + "_menu" + i} menuArray={dropDownLinks}>
             <Table_Cell type="total" key={name + "_" + i} edit="edit" trackChangeVisually={true} trackChangesStorageName={name} rowNum={i}>
-              {salesPriceIncVat}
-              <ViewPrices viewPrices={viewPrices}>{`VAT: ${formatCurrency(vatAmount)} (${vatPercentage * 100}%) - ${vatRuleName}`}</ViewPrices>
+              {<UnitCurrencyFormatter>{salesPriceIncVat}</UnitCurrencyFormatter>}
+              <ViewPrices viewPrices={viewPrices}>{`VAT: ${(<UnitCurrencyFormatter>vatAmount</UnitCurrencyFormatter>)} (${vatPercentage * 100}%) - ${vatRuleName}`}</ViewPrices>
             </Table_Cell>
           </MenuPopupOnMouseOver>
           // COLUMN CELLS END

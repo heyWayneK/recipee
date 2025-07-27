@@ -25,7 +25,7 @@ interface RecipeDataProviderProps {
 // 2. Context provider component
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
   const [qty, setQty] = useState<number>(1);
-  const [recipeMode, setRecipeMode] = useState<RecipeModeType>("advanced");
+  const [recipeMode, setRecipeMode] = useState<RecipeModeType>("pro");
   const [systemData, setSystemData] = useState<SystemDataProps>();
   const [recipeData, setRecipeData] = useState<PreCalculatedRecipeData>();
   const [localOrDbData, setLocalOrDbData] = useState<localOrDbDataType>({
@@ -105,7 +105,7 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     fetchData();
   }, [orgId]); // orgId is used to fetch the data, if not available, it will use the default system data
 
-  // SURE I DONT NEED THIS?
+  // TODO: DO I DONT NEED THIS?
   const updateRecipeData = useCallback((newData: Partial<PreCalculatedRecipeData>) => {
     setRecipeData((prevData) => {
       const merge: PreCalculatedRecipeData = mergeDeep(prevData, { ...newData });
