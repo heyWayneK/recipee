@@ -2,7 +2,7 @@
 
 import { preCalculateData } from "@/libs/preCalculatedRecipeData";
 import { NextResponse } from "next/server";
-import { getSystemDataFunc2, getRecipeDataFunc2 } from "./functions/system_user_recipe";
+import { getSystemDataFunc2, getRecipeDataFunc2, getLiveRecipeData } from "./functions/system_user_recipe";
 
 // TODO: Do we need this
 // import { GetStaticProps } from "next";
@@ -48,17 +48,26 @@ import { getSystemDataFunc2, getRecipeDataFunc2 } from "./functions/system_user_
 export async function GET() {
   const orgId = "1"; // Default customer ID
   try {
+    const recipeData2 = await getLiveRecipeData("1234567890", "1"); // Using a static recipe UUID for demo purposes
+    console.log("----->>>>>>>> getAllRecipeObject recipeData2:", recipeData2);
+    const rec2 = { data2: recipeData2 };
     const recipeData = await getRecipeDataFunc2();
     const systemData = await getSystemDataFunc2(orgId);
-    // const userData = await getUserDataFunc(orgId);
-    // const preCalcData = await preCalculateData(recipeData, systemData, userData);
-
-    // Precalulate the into a more readable format for object access and debugging
+    // Pre-calculate Recipe Components and other data
     const preCalcData = await preCalculateData(recipeData, systemData);
-    // const response = await JSON.parse(JSON.stringify(getSystemData(orgId)));
+    // return { recipeData: { ...recipeData, ...preCalcData, ...rec2 }, systemData };
+
+    // const recipeData = await getRecipeDataFunc2();
+    // const systemData = await getSystemDataFunc2(orgId);
+    // // const userData = await getUserDataFunc(orgId);
+    // // const preCalcData = await preCalculateData(recipeData, systemData, userData);
+
+    // // Precalulate the into a more readable format for object access and debugging
+    // const preCalcData = await preCalculateData(recipeData, systemData);
+    // // const response = await JSON.parse(JSON.stringify(getSystemData(orgId)));
 
     // Update the precalulated recipe data with the full recipe data
-    return NextResponse.json({ recipeData: { ...recipeData, ...preCalcData }, systemData }, { status: 200 });
+    return NextResponse.json({ recipeData: { ...recipeData, ...preCalcData, ...rec2 }, systemData }, { status: 200 });
     // return NextResponse.json({ hello: "world" }, { status: 200 });
   } catch (error) {
     // Log the error for server-side debugging

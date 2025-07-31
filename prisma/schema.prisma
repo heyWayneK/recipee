@@ -13,7 +13,7 @@ datasource db {
 // CUSTOMER________________________________START
 
 model org {
-  id              String   @id @default(uuid())
+  uuid            String   @id @default(uuid())
   name            String
   // email           String    @unique
   // email_verified  DateTime?
@@ -43,38 +43,42 @@ model org {
   recipe_mode      recipe_mode @relation(fields: [recipe_mode_name], references: [name])
   recipe_mode_name String      @default("home") // Default to simple mode
 
-  ingredients              ingredients[]
-  suppliers                supplier[]
-  allergies                allergy[]
-  stocks                   stock[]
-  stock_locations          stock_location[]
-  recipe_books             recipe_book[]
-  todos                    todo[]
-  stock_minimum            stock_minimum[]
-  recip_backup             recipe_backup[]
-  recipe_book_index        recipe_book_index[]
-  recipe_book_collection   recipe_book_collection[]
-  recipe_book_ccess        recipe_book_access[]
-  todo_status              todo_status[]
-  todo_document            todo_document[]
-  conversation_thread      conversation_thread[]
-  production_event         production_event[]
-  production_event_task    production_event_task[]
-  other_costs_category     other_costs_category[]
-  markup                   markup[]
-  recipe                   recipe[]
-  ingredients_nutrition    ingredients_nutrition[]
-  packaging_costs_category packaging_costs_category[]
-  vat_rules                vat_rules[]
-  brand                    brand[]
-  other_costs_lookup       other_costs_lookup[]
-  packaging_costs_lookup   packaging_costs_lookup[]
+  ingredients                   ingredients[]
+  suppliers                     supplier[]
+  allergies                     allergy[]
+  stocks                        stock[]
+  stock_locations               stock_location[]
+  recipe_books                  recipe_book[]
+  todos                         todo[]
+  stock_minimum                 stock_minimum[]
+  recipe_backup                 recipe_backup[]
+  recipe_book_index             recipe_book_index[]
+  recipe_book_lookup            recipe_book_lookup[]
+  recipe_book_ccess             recipe_book_access[]
+  todo_status                   todo_status[]
+  todo_document                 todo_document[]
+  conversation_thread           conversation_thread[]
+  production_event              production_event[]
+  production_event_task         production_event_task[]
+  other_costs_category          other_costs_category[]
+  markup                        markup[]
+  recipe                        recipe[]
+  ingredients_nutrition         ingredients_nutrition[]
+  packaging_costs_category      packaging_costs_category[]
+  vat_rules                     vat_rules[]
+  brand                         brand[]
+  other_costs_lookup            other_costs_lookup[]
+  packaging_costs_lookup        packaging_costs_lookup[]
+  component_nutrition           component_nutrition[]
+  rationalised_recipe_on_recipe rationalised_recipe_on_recipe[]
+  change_history_on_recipe      change_history_on_recipe[]
+  recipe_components_on_recipe   recipe_components_on_recipe[]
 }
 
 model supplier {
   id                        Int                         @id @default(autoincrement())
-  org                       org                         @relation(fields: [org_id], references: [id])
-  org_id                    String
+  org                       org                         @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid                  String
   name                      String
   vat                       String?
   corporation_number        String?
@@ -96,8 +100,8 @@ model supplier {
 //   id         Int      @id @default(autoincrement())
 //   profiles_id     Int
 //   role       Int
-//   org   org @relation(fields: [org_id], references: [id])
-//   org_id String
+//   org   org @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+//   org_uuid String
 //   created_at  DateTime @default(now())
 //   updatedAt  DateTime @updatedAt
 // 
@@ -112,27 +116,30 @@ model supplier {
 // USER_____________________________________START
 
 model brand {
-  id         Int      @id @default(autoincrement())
+  uuid       String   @id @default(uuid())
   name       String
-  logoSrc    String
+  logoSrc    String?
   recipes    recipe[]
-  org        org      @relation(fields: [org_id], references: [id])
-  org_id     String
+  org        org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid   String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model markup {
-  id             Int         @id @default(autoincrement())
-  org            org         @relation(fields: [org_id], references: [id])
-  org_id         String
-  name           String
-  factor         Decimal     @db.Decimal(10, 3)
-  markup_type    markup_type @relation(fields: [markup_type_id], references: [id])
-  markup_type_id Int
-  desc           String
-  created_at     DateTime    @default(now())
-  updated_at     DateTime    @updatedAt
+  id               Int                @id @default(autoincrement())
+  org              org                @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid         String
+  name             String
+  factor           Decimal            @db.Decimal(10, 3)
+  markup_type      markup_type        @relation(fields: [markup_type_id], references: [id])
+  markup_type_id   Int
+  desc             String
+  created_at       DateTime           @default(now())
+  updated_at       DateTime           @updatedAt
+  recipe           recipe?            @relation(fields: [recipeUuid], references: [uuid])
+  recipeUuid       String?
+  markup_on_recipe markup_on_recipe[]
 }
 
 // OLD AUTH MODEL
@@ -165,8 +172,8 @@ model markup {
 //   expires      DateTime
 
 //   profiles       profiles      @relation(fields: [profiles_id], references: [id], onDelete: Cascade)
-//   org   org? @relation(fields: [org_id], references: [id])
-//   org_id Int?
+//   org   org? @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+//   org_uuid Int?
 // }
 
 model member {
@@ -174,7 +181,7 @@ model member {
   email          String?   @unique
   email_verified DateTime?
   image          String?
-  org_id         String?
+  org_uuid       String?
   price_id       String?
   hasAccess      Boolean?
   avatar_url     String?
@@ -221,41 +228,44 @@ model unit_metric_imperial {
 }
 
 model prep_instructions {
-  id          Int      @id @default(autoincrement())
-  name        String
-  translation Json?
-  metric      String?
-  imperial    String?
-  desc        String?
-  yield       Decimal? @db.Decimal(10, 3)
-  is_live     Boolean  @default(true)
-  updated_at  DateTime @updatedAt
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique
+  translation       Json?
+  metric            String?
+  imperial          String?
+  desc              String?
+  yield             Decimal?            @db.Decimal(10, 3)
+  is_live           Boolean             @default(true)
+  updated_at        DateTime            @updatedAt
+  recipe_detail_row recipe_detail_row[]
 }
 
 model raw_to_prepped_yields {
-  id               Int         @id @default(autoincrement())
-  whole            Decimal     @db.Decimal(10, 3)
-  peeled           Decimal     @db.Decimal(10, 3)
-  peeled_and_cored Decimal     @db.Decimal(10, 3)
-  diced            Decimal     @db.Decimal(10, 3)
-  sliced           Decimal     @db.Decimal(10, 3)
-  grated           Decimal     @db.Decimal(10, 3)
-  updated_at       DateTime    @updatedAt
-  ingredients      ingredients @relation(fields: [ingredients_id], references: [id])
-  ingredients_id   Int         @unique
+  id                Int                 @id @default(autoincrement())
+  whole             Decimal             @db.Decimal(10, 3)
+  peeled            Decimal             @db.Decimal(10, 3)
+  peeled_and_cored  Decimal             @db.Decimal(10, 3)
+  diced             Decimal             @db.Decimal(10, 3)
+  sliced            Decimal             @db.Decimal(10, 3)
+  grated            Decimal             @db.Decimal(10, 3)
+  updated_at        DateTime            @updatedAt
+  ingredients       ingredients         @relation(fields: [ingredients_id], references: [id])
+  ingredients_id    Int                 @unique
   // @@map("raw_to_prepped_yields")
+  recipe_detail_row recipe_detail_row[]
 }
 
 model cooked_yields_categories {
   // LISTS of cooked yield categories for dropdown menus
-  id          Int       @id @default(autoincrement())
-  name        String
-  translation Json?
-  desc        String?
-  yield       Decimal?  @db.Decimal(10, 3)
-  is_live     Boolean   @default(true)
-  updated_at  DateTime  @updatedAt
-  created_at  DateTime? @default(now())
+  id                Int                 @id @default(autoincrement())
+  name              String
+  translation       Json?
+  desc              String?
+  yield             Decimal?            @db.Decimal(10, 3)
+  is_live           Boolean             @default(true)
+  updated_at        DateTime            @updatedAt
+  created_at        DateTime?           @default(now())
+  recipe_detail_row recipe_detail_row[]
 }
 
 // model cooked_yields {
@@ -284,6 +294,7 @@ model dry_cooked_yields_categories {
   is_live           Boolean             @default(true)
   updated_at        DateTime            @updatedAt
   dry_cooked_yields dry_cooked_yields[]
+  recipe_detail_row recipe_detail_row[]
 }
 
 model dry_cooked_yields {
@@ -297,6 +308,7 @@ model dry_cooked_yields {
   dry_cooked_yields_categories    dry_cooked_yields_categories? @relation(fields: [dry_cooked_yields_categories_id], references: [id])
   dry_cooked_yields_categories_id Int?
   ingredients                     ingredients[]
+  recipe_detail_row               recipe_detail_row[]
 }
 
 model ingredients_religious_certification {
@@ -350,20 +362,21 @@ model ingredient_cooked_yields {
 model home_mode_units {
   // home_mode_units: imperial, metric
   id                   Int     @id @default(autoincrement())
-  name                 String
+  name                 String  @unique
   order                Int     @default(1)
   desc                 String?
   primary_category_ids String?
   group                String?
   // e.g., "vegetables", "fruits"
 
-  default_g      Decimal @default(0.00)
-  default_g_conf Decimal @default(0.00)
-  fluid_g        Decimal @default(0.00)
-  fluid_g_conf   Decimal @default(0.00)
-  weight_g       Decimal @default(0.00)
-  weight_g_conf  Decimal @default(0.00)
-  is_default     Boolean @default(false)
+  default_g         Decimal             @default(0.00)
+  default_g_conf    Decimal             @default(0.00)
+  fluid_g           Decimal             @default(0.00)
+  fluid_g_conf      Decimal             @default(0.00)
+  weight_g          Decimal             @default(0.00)
+  weight_g_conf     Decimal             @default(0.00)
+  is_default        Boolean             @default(false)
+  recipe_detail_row recipe_detail_row[]
 }
 
 model ingredient_category_primary {
@@ -398,8 +411,8 @@ model dietary_classification {
 
 // model ingredients_yields {
 //   id             Int          @id @default(autoincrement())
-//   org       org?    @relation(fields: [org_id], references: [id])
-//   org_id    Int?
+//   org       org?    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+//   org_uuid    Int?
 //   is_default     Boolean?     @default(false)
 //   name           String
 //   ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
@@ -412,8 +425,8 @@ model dietary_classification {
 
 model allergy {
   id                 Int                  @id @default(autoincrement())
-  org                org?                 @relation(fields: [org_id], references: [id])
-  org_id             String?
+  org                org?                 @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid           String?
   name               String
   desc               String
   translation        Json?
@@ -425,28 +438,30 @@ model allergy {
 
 model oil_purpose {
   // oil_purpose: added, shallow fry, etc
-  id         Int      @id @default(autoincrement())
-  name       String
-  factor     Decimal  @db.Decimal(10, 3)
-  desc       String?
-  is_default Boolean  @default(false)
-  confidence Decimal? @db.Decimal(10, 3)
+  id                Int                 @id @default(autoincrement())
+  name              String
+  factor            Decimal             @db.Decimal(10, 3)
+  desc              String?
+  is_default        Boolean             @default(false)
+  confidence        Decimal?            @db.Decimal(10, 3)
+  recipe_detail_row recipe_detail_row[]
 }
 
 model salt_purpose {
   // salt_purpose: added, boiling
-  id         Int     @id @default(autoincrement())
-  name       String
-  factor     Decimal @db.Decimal(10, 3)
-  desc       String?
-  is_default Boolean @default(false)
-  confidence Decimal @db.Decimal(10, 3)
+  id                Int                 @id @default(autoincrement())
+  name              String
+  factor            Decimal             @db.Decimal(10, 3)
+  desc              String?
+  is_default        Boolean             @default(false)
+  confidence        Decimal             @db.Decimal(10, 3)
+  recipe_detail_row recipe_detail_row[]
 }
 
 model todo_status {
   id         Int      @id @default(autoincrement())
-  org        org      @relation(fields: [org_id], references: [id])
-  org_id     String
+  org        org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid   String
   name       String
   todos      todo[]
   created_at DateTime @default(now())
@@ -455,8 +470,8 @@ model todo_status {
 
 // model cost_rules {
 //   id          Int      @id @default(autoincrement())
-//   org    org @relation(fields: [org_id], references: [id])
-//   org_id Int
+//   org    org @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+//   org_uuid Int
 //   name        String
 //   cost        String
 //   description String
@@ -470,10 +485,11 @@ model markup_type {
 }
 
 model ingredient_type {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  desc              String
-  recipe_components recipe_components[]
+  id                          Int                           @id @default(autoincrement())
+  name                        String                        @unique
+  desc                        String
+  recipe_components_on_recipe recipe_components_on_recipe[]
+  recipe_detail_row           recipe_detail_row[]
 }
 
 // model packaging_costs_category_example {
@@ -517,18 +533,21 @@ model ingredient_type {
 // }
 
 model other_costs_category {
-  id                 Int                  @id @default(autoincrement())
-  org                org                  @relation(fields: [org_id], references: [id])
-  org_id             String
-  name               String
-  desc               String
-  other_costs_lookup other_costs_lookup[]
+  id                    Int                     @id @default(autoincrement())
+  org                   org                     @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid              String
+  name                  String
+  desc                  String
+  other_costs_lookup    other_costs_lookup[]
+  recipe                recipe?                 @relation(fields: [recipeUuid], references: [uuid])
+  recipeUuid            String?
+  other_costs_on_recipe other_costs_on_recipe[]
 }
 
 model other_costs_lookup {
-  id     Int     @id @default(autoincrement())
-  org    org?    @relation(fields: [org_id], references: [id])
-  org_id String?
+  id       Int     @id @default(autoincrement())
+  org      org?    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid String?
 
   other_costs_category    other_costs_category @relation(fields: [other_costs_category_id], references: [id])
   other_costs_category_id Int
@@ -551,13 +570,16 @@ model other_costs_line_item {
 }
 
 model packaging_costs_category {
-  id                     Int                      @id @default(autoincrement())
-  org                    org                      @relation(fields: [org_id], references: [id])
-  org_id                 String
-  name                   String
-  desc                   String
-  is_active              Boolean                  @default(true)
-  packaging_costs_lookup packaging_costs_lookup[] @relation("CategoryToLookup")
+  id                        Int                         @id @default(autoincrement())
+  org                       org                         @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid                  String
+  name                      String
+  desc                      String
+  is_active                 Boolean                     @default(true)
+  packaging_costs_lookup    packaging_costs_lookup[]    @relation("CategoryToLookup")
+  recipe                    recipe?                     @relation(fields: [recipeUuid], references: [uuid])
+  recipeUuid                String?
+  packaging_costs_on_recipe packaging_costs_on_recipe[]
 }
 
 model packaging_costs_lookup {
@@ -566,8 +588,8 @@ model packaging_costs_lookup {
   packaging_costs_category_id  Int
   packaging_costs_line_item    packaging_costs_line_item @relation(name: "LineItemToLookup", fields: [packaging_costs_line_item_id], references: [id])
   packaging_costs_line_item_id Int
-  org                          org?                      @relation(fields: [org_id], references: [id])
-  org_id                       String?
+  org                          org?                      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid                     String?
 
   @@unique([packaging_costs_category_id, packaging_costs_line_item_id])
 }
@@ -584,16 +606,19 @@ model packaging_costs_line_item {
 }
 
 model vat_rules {
-  id          Int     @id @default(autoincrement())
-  org         org     @relation(fields: [org_id], references: [id])
-  org_id      String
-  name        String
-  cost        Decimal @db.Decimal(10, 2)
-  description String
-  is_active   Boolean @default(true)
-  default     Boolean @default(false)
+  id            Int             @id @default(autoincrement())
+  org           org             @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid      String
+  name          String
+  cost          Decimal         @db.Decimal(10, 2)
+  description   String
+  is_active     Boolean         @default(true)
+  default       Boolean         @default(false)
+  recipe        recipe?         @relation(fields: [recipeUuid], references: [uuid])
+  recipeUuid    String?
+  vat_on_recipe vat_on_recipe[]
 
-  @@unique([org_id, default])
+  @@unique([org_uuid, default])
 }
 
 // SETTINGS___________________________________END
@@ -611,8 +636,8 @@ model ingredients {
   name        String
   name_orig   String?
   names_alt   String?
-  org         org?     @relation(fields: [org_id], references: [id])
-  org_id      String?
+  org         org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid    String
   is_default  Boolean? @default(false)
   translation Json?
 
@@ -624,12 +649,11 @@ model ingredients {
   unit_type_id Int?       @default(1) // 1 = weight (g, kg)
 
   raw_to_prepped_yields raw_to_prepped_yields[]
-  cooked_yields         ingredient_cooked_yields[]
-  dry_cooked_yields     dry_cooked_yields[]
-  recipe_component      recipe_components[]
+
+  cooked_yields     ingredient_cooked_yields[]
+  dry_cooked_yields dry_cooked_yields[]
+
   ingredients_nutrition ingredients_nutrition[]
-  created_at            DateTime                   @default(now())
-  updated_at            DateTime                   @updatedAt
 
   dietary_classification    dietary_classification? @relation(fields: [dietary_classification_id], references: [id])
   dietary_classification_id Int?
@@ -640,19 +664,33 @@ model ingredients {
   halal    ingredients_religious_certification? @relation(name: "HalalRelation", fields: [halal_id], references: [id])
   halal_id Int?
 
-  confidence         Decimal?             @db.Decimal(10, 3)
-  allergy_ingredient allergy_ingredient[]
-  ai_model           String?
-  WebhookQueue       WebhookQueue[]
-  allergy            allergy?             @relation(fields: [allergyId], references: [id])
-  allergyId          Int?
-  deleted            Boolean              @default(false)
+  confidence Decimal? @default(0.00) @db.Decimal(10, 3)
+
+  is_oil  Boolean? @default(false)
+  is_salt Boolean? @default(false)
+
+  allergy_custom String?
+  ai_model       String?
+
+  WebhookQueue WebhookQueue[]
+  allergy      allergy?       @relation(fields: [allergyId], references: [id])
+  allergyId    Int?
+
+  recipe_components_on_recipe recipe_components_on_recipe[]
+  recipe_detail_row           recipe_detail_row[]
+
+  allergy_ingredient  allergy_ingredient[]
+  component_nutrition component_nutrition?
+
+  deleted    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model ingredients_nutrition {
   id                        Int         @id @default(autoincrement())
-  org                       org?        @relation(fields: [org_id], references: [id])
-  org_id                    String?
+  org                       org?        @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid                  String?
   is_default                Boolean?    @default(false)
   ingredients               ingredients @relation(fields: [ingredients_id], references: [id])
   ingredients_id            Int         @unique
@@ -696,8 +734,8 @@ model stock {
   id                Int             @id @default(autoincrement())
   stock_location    stock_location  @relation(fields: [stock_location_id], references: [id])
   stock_location_id Int
-  org               org             @relation(fields: [org_id], references: [id])
-  org_id            String
+  org               org             @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid          String
   qty               Int
   is_active         Boolean         @default(true)
   minimums          stock_minimum[]
@@ -711,8 +749,8 @@ model stock_minimum {
   stock_id          Int
   stock_location    stock_location @relation(fields: [stock_location_id], references: [id])
   stock_location_id Int
-  org               org            @relation(fields: [org_id], references: [id])
-  org_id            String
+  org               org            @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid          String
   qty               Int
   created_at        DateTime       @default(now())
   updated_at        DateTime       @updatedAt
@@ -720,8 +758,8 @@ model stock_minimum {
 
 model stock_location {
   id            Int             @id @default(autoincrement())
-  org           org             @relation(fields: [org_id], references: [id])
-  org_id        String
+  org           org             @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid      String
   name          String
   created_at    DateTime        @default(now())
   updated_at    DateTime        @updatedAt
@@ -729,52 +767,41 @@ model stock_location {
   stock_minimum stock_minimum[]
 }
 
-model recipe_backup {
-  id        Int    @id @default(autoincrement())
-  recipe_id Int
-  org       org    @relation(fields: [org_id], references: [id])
-  org_id    String
-
-  name       String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
 model recipe_book {
-  id                     Int                      @id @default(autoincrement())
-  org                    org                      @relation(fields: [org_id], references: [id])
-  org_id                 String
-  name                   String
-  desc                   String?
-  image                  String?
-  price                  Decimal?                 @db.Decimal(10, 2)
-  url                    String?
-  indexes                recipe_book_index[]
-  access                 recipe_book_access[]
-  created_at             DateTime                 @default(now())
-  updated_at             DateTime                 @updatedAt
-  recipe_book_collection recipe_book_collection[]
+  id                 Int                  @id @default(autoincrement())
+  org                org                  @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid           String
+  name               String
+  desc               String?
+  image              String?
+  price              Decimal?             @db.Decimal(10, 2)
+  url                String?
+  indexes            recipe_book_index[]
+  access             recipe_book_access[]
+  created_at         DateTime             @default(now())
+  updated_at         DateTime             @updatedAt
+  recipe_book_lookup recipe_book_lookup[]
 }
 
 model recipe_book_index {
   id             Int         @id @default(autoincrement())
   recipe_book    recipe_book @relation(fields: [recipe_book_id], references: [id])
   recipe_book_id Int
-  org            org         @relation(fields: [org_id], references: [id])
-  org_id         String
+  org            org         @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid       String
   order          Int
   name           String
   created_at     DateTime    @default(now())
   updated_at     DateTime    @updatedAt
 }
 
-model recipe_book_collection {
+model recipe_book_lookup {
   id             Int         @id @default(autoincrement())
   recipe_id      Int
   recipe_book    recipe_book @relation(fields: [recipe_book_id], references: [id])
   recipe_book_id Int
-  org            org         @relation(fields: [org_id], references: [id])
-  org_id         String
+  org            org         @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid       String
   name           String
   created_at     DateTime    @default(now())
   updated_at     DateTime    @updatedAt
@@ -784,16 +811,16 @@ model recipe_book_access {
   id             Int         @id @default(autoincrement())
   recipe_book    recipe_book @relation(fields: [recipe_book_id], references: [id])
   recipe_book_id Int
-  org            org         @relation(fields: [org_id], references: [id])
-  org_id         String
+  org            org         @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid       String
   created_at     DateTime    @default(now())
   updated_at     DateTime    @updatedAt
 }
 
 model todo {
   id         Int             @id @default(autoincrement())
-  org        org             @relation(fields: [org_id], references: [id])
-  org_id     String
+  org        org             @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid   String
   status     todo_status     @relation(fields: [status_id], references: [id])
   status_id  Int
   documents  todo_document[]
@@ -806,8 +833,8 @@ model todo_document {
   todo    todo @relation(fields: [todo_id], references: [id])
   todo_id Int
 
-  org        org      @relation(fields: [org_id], references: [id])
-  org_id     String
+  org        org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid   String
   file       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -816,8 +843,8 @@ model todo_document {
 model conversation_thread {
   id Int @id @default(autoincrement())
 
-  org    org    @relation(fields: [org_id], references: [id])
-  org_id String
+  org      org    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid String
 
   message    String
   created_at DateTime @default(now())
@@ -827,9 +854,9 @@ model conversation_thread {
 model production_event {
   id Int @id @default(autoincrement())
 
-  org         org                     @relation(fields: [org_id], references: [id])
-  org_id      String
-  recipe      recipe                  @relation(fields: [recipe_uuid], references: [uuid])
+  org         org                     @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid    String
+  recipe      recipe                  @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
   recipe_uuid String
   pdf         String
   tasks       production_event_task[]
@@ -842,9 +869,9 @@ model production_event_task {
   production_event    production_event @relation(fields: [production_event_id], references: [id])
   production_event_id Int
 
-  org         org      @relation(fields: [org_id], references: [id])
-  org_id      String
-  recipe      recipe   @relation(fields: [recipe_uuid], references: [uuid])
+  org         org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid    String
+  recipe      recipe   @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
   recipe_uuid String
   pdf         String
   created_at  DateTime @default(now())
@@ -853,69 +880,326 @@ model production_event_task {
 
 // model packaging_costs {
 //   id          Int      @id @default(autoincrement())
-//   org    org @relation(fields: [org_id], references: [id])
-//   org_id Int
+//   org    org @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+//   org_uuid Int
 //   name        String
 //   cost        Decimal @db.Decimal(10, 2)
 //   description String
 // }
 
+// recipe_master
 model recipe {
-  uuid String @id @default(uuid())
-  name String
-  desc String
+  uuid    String  @id @default(uuid())
+  name    String
+  desc    String
+  is_live Boolean @default(true)
 
-  org    org    @relation(fields: [org_id], references: [id])
-  org_id String
+  org      org    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid String
 
-  brand    brand @relation(fields: [brand_id], references: [id])
-  brand_id Int
+  brand      brand?  @relation(fields: [brand_uuid], references: [uuid])
+  brand_uuid String?
 
   // recipe_type: local, master, unlinked_master
-  recipe_type    recipe_type @relation(fields: [recipe_type_id], references: [id])
-  recipe_type_id Int
+  recipe_type      recipe_type @relation(fields: [recipe_type_name], references: [name])
+  recipe_type_name String
 
   // recipe_mode: pro, home
   recipe_mode      recipe_mode @relation(fields: [recipe_mode_name], references: [name])
   recipe_mode_name String      @default("pro") // Default to simple mode
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  recipe_portions recipe_portions[]
 
-  recipe_components     recipe_components[]
-  production_event      production_event[]
-  production_event_task production_event_task[]
-  recipe_portions       recipe_portions[]
+  packaging_costs_category packaging_costs_category[]
+  other_costs_category     other_costs_category[]
+  markup_rules             markup[]
+  vat_rules                vat_rules[]
+
+  production_event            production_event[]
+  production_event_task       production_event_task[]
+  recipe_components_on_recipe recipe_components_on_recipe[]
+  packaging_costs_on_recipe   packaging_costs_on_recipe[]
+  other_costs_on_recipe       other_costs_on_recipe[]
+  markup_on_recipe            markup_on_recipe[]
+  vat_on_recipe               vat_on_recipe[]
+  component_portion_on_recipe component_portion_on_recipe[]
+
+  // for future
+  rationalised_recipe_on_recipe rationalised_recipe_on_recipe[]
+  change_history                change_history_on_recipe[]
+
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  recipe_detail_row recipe_detail_row[]
+  fq_score          fq_score[]
 }
 
-model recipe_components {
-  id                 Int                 @id @default(autoincrement())
-  name               String
-  ingredient_type    ingredient_type     @relation(fields: [ingredient_type_id], references: [id])
-  ingredient_type_id Int
-  parent             recipe_components?  @relation("componentHierarchy", fields: [parent_id], references: [id])
-  parent_id          Int?
-  // ingredient    ingredients?       @relation(fields: [ingredient_id], references: [id])
-  // DO I NEED THIS ingredientID - should be optional?
-  ingredient_id      ingredients[]
-  portions           Json
-  yield              Decimal             @db.Decimal(10, 3)
-  nutri_per_100      Json
-  version            String
-  versions           Json
-  recipe             recipe              @relation(fields: [recipe_uuid], references: [uuid])
-  recipe_uuid        String
-  sub_components     recipe_components[] @relation("componentHierarchy")
-  created_at         DateTime            @default(now())
-  updated_at         DateTime            @updatedAt
-}
-
-model recipe_portions {
-  id          Int    @id @default(autoincrement())
-  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid])
+model rationalised_recipe_on_recipe {
+  id          Int      @id @default(autoincrement())
+  org         org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid    String
+  recipe      recipe   @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
   recipe_uuid String
-  portion     Int
-  order       Int
+  data        Json
+  created_at  DateTime @default(now())
+}
+
+model change_history_on_recipe {
+  id          Int      @id @default(autoincrement())
+  org         org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid    String
+  recipe      recipe   @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+  data        Json
+  created_at  DateTime @default(now())
+}
+
+// recipe_portions is the COMMON DATA for all rules, and UI columns
+// What are the portion sizes for this recipe
+model recipe_portions {
+  id                          Int                           @id @default(autoincrement())
+  recipe                      recipe                        @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid                 String
+  // Main Portion g = [265g, 350g, 500g]
+  portion_g                   Int
+  order                       Int
+  // Component portion sizes = [90g, 100g, 150g]
+  component_portion_on_recipe component_portion_on_recipe[]
+  packaging_costs_on_recipe   packaging_costs_on_recipe[]
+  other_costs_on_recipe       other_costs_on_recipe[]
+  markup_on_recipe            markup_on_recipe[]
+  vat_on_recipe               vat_on_recipe[]
+}
+
+// What is the COMPONENT NAME & Meta Detail (e.g. Pasta, Sauce, Meat, Garnish)
+// Should be component_name_on_recipe
+model recipe_components_on_recipe {
+  uuid       String  @id @default(uuid())
+  name       String
+  sort_order Int
+  yield      Decimal @default(0.000) @db.Decimal(10, 3)
+  version    String
+
+  org      org    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid String
+
+  cost_per_1000g Decimal @db.Decimal(10, 3)
+
+  method String?
+
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  component_portion_on_recipe component_portion_on_recipe[]
+
+  // local, master, unlinked_master
+  ingredient_type      ingredient_type @relation(fields: [ingredient_type_name], references: [name])
+  ingredient_type_name String          @default("local") // Default to local
+
+  // Are we using the ingredient as a component?
+  is_ingredient  Boolean      @default(false)
+  // A component can be an ingredient e.g. cheese, a sprig of thyme
+  ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
+  ingredients_id Int?         @unique
+
+  nutri_per_100g component_nutrition[]
+
+  created_at        DateTime            @default(now())
+  updated_at        DateTime            @updatedAt
+  recipe_detail_row recipe_detail_row[]
+}
+
+// How big is the portion grams for this component e.g. 90g on 350g portion
+model component_portion_on_recipe {
+  // component_portion_on_recipe: 90g, 100g, 150g
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  portions           recipe_portions @relation(fields: [recipe_portions_id], references: [id])
+  recipe_portions_id Int
+
+  qty_g Decimal @db.Decimal(10, 3)
+
+  recipe_components_on_recipe     recipe_components_on_recipe? @relation(fields: [recipe_components_on_recipeUuid], references: [uuid])
+  recipe_components_on_recipeUuid String?
+
+  @@id([recipe_uuid, recipe_portions_id])
+}
+
+model packaging_costs_on_recipe {
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  portions           recipe_portions @relation(fields: [recipe_portions_id], references: [id])
+  recipe_portions_id Int
+
+  rule                       packaging_costs_category? @relation(fields: [packaging_costs_categoryId], references: [id])
+  packaging_costs_categoryId Int?
+
+  @@id([recipe_uuid, recipe_portions_id])
+}
+
+model other_costs_on_recipe {
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  portions           recipe_portions @relation(fields: [recipe_portions_id], references: [id])
+  recipe_portions_id Int
+
+  rule                   other_costs_category? @relation(fields: [other_costs_categoryId], references: [id])
+  other_costs_categoryId Int?
+
+  @@id([recipe_uuid, recipe_portions_id])
+}
+
+model markup_on_recipe {
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  portions           recipe_portions @relation(fields: [recipe_portions_id], references: [id])
+  recipe_portions_id Int
+
+  rule              markup? @relation(fields: [markup_categoryId], references: [id])
+  markup_categoryId Int?
+
+  @@id([recipe_uuid, recipe_portions_id])
+}
+
+model vat_on_recipe {
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  portions           recipe_portions @relation(fields: [recipe_portions_id], references: [id])
+  recipe_portions_id Int
+
+  rule           vat_rules? @relation(fields: [vat_categoryId], references: [id])
+  vat_categoryId Int?
+
+  @@id([recipe_uuid, recipe_portions_id])
+}
+
+// Describing the ingredient, subrecipe or step in a recipe component
+model recipe_detail_row {
+  uuid        String @id @default(uuid())
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  recipe_components_on_recipe     recipe_components_on_recipe? @relation(fields: [recipe_components_on_recipeUuid], references: [uuid])
+  recipe_components_on_recipeUuid String?
+
+  name_extra_info String? // e.g. "Place Cheese In Middle"
+
+  ingredients    ingredients? @relation(fields: [ingredients_id], references: [id])
+  ingredients_id Int?
+
+  qty_g Decimal @default(0.000) @db.Decimal(10, 3)
+
+  // For Pro Mode
+  qty_estimated_from_home_g Decimal? @db.Decimal(10, 3)
+  qty_estimated_confidence  Decimal? @db.Decimal(3, 2)
+
+  // For Home Mode
+  // to generate e.g. 1 2/3 cups
+  home_qty_frac_numerator   Int? // e.g. 2
+  home_qty_frac_denominator Int? // e.g. 3
+  home_qty                  Int? // e.g. 1
+  home_mode_units           home_mode_units? @relation(fields: [home_qty_type_name], references: [name])
+  home_qty_type_name        String? // e.g. "cup", "tbsp", "tsp", "oz", "g", "kg"
+
+  salt_purpose    salt_purpose? @relation(fields: [salt_purpose_id], references: [id])
+  salt_purpose_id Int?
+
+  oil_purpose    oil_purpose? @relation(fields: [oil_purpose_id], references: [id])
+  oil_purpose_id Int?
+
+  sort_order Int @default(1)
+
+  raw_to_prepped_yields          raw_to_prepped_yields? @relation(fields: [raw_to_prepped_yield_custom_id], references: [id])
+  raw_to_prepped_yield_custom_id Int?
+  raw_to_prepped_yield_custom    Decimal?               @db.Decimal(4, 2)
+
+  cooking_method_yields      cooked_yields_categories? @relation(fields: [cooked_yield_categories_id], references: [id])
+  cooked_yield_categories_id Int?
+  cooked_yield_custom        Decimal?                  @db.Decimal(4, 2)
+
+  // Categorys for dry cooked yields
+  dry_cooked_yield_categories    dry_cooked_yields_categories? @relation(fields: [dry_cooked_yield_categories_id], references: [id])
+  dry_cooked_yield_categories_id Int?
+  // Dry cooked yields Details
+  dry_cooked_yield               dry_cooked_yields?            @relation(fields: [dry_cooked_yield_id], references: [id])
+  dry_cooked_yield_id            Int?
+  dry_cooked_yield_custom        Decimal?                      @db.Decimal(4, 2)
+
+  // ingredient_type_name: local, master, unlinked_master
+  ingredient_type      ingredient_type? @relation(fields: [ingredient_type_name], references: [name])
+  ingredient_type_name String?          @default("local") // Default to local
+
+  // 10x10mm, 15x15mm, ground fine, whole
+  instruction            prep_instructions? @relation(fields: [prep_instruction_name], references: [name])
+  prep_instruction_name  String?            @default("whole")
+  prep_instruction_other String?
+
+  step_instruction String?
+
+  // unit_type           String? // weight, volume, count
+  cost_per_1000 Decimal? @db.Decimal(10, 3)
+
+  needs_prep   Boolean @default(false)
+  prep_details Json?
+
+  fq_score    fq_score? @relation(fields: [fq_score_id], references: [id])
+  fq_score_id Int?
+}
+
+model fq_score {
+  id                Int                 @id @default(autoincrement())
+  positive          Decimal?            @db.Decimal(10, 3)
+  negative          Decimal?            @db.Decimal(10, 3)
+  neutral           Decimal?            @db.Decimal(10, 3)
+  overall           Decimal?            @db.Decimal(10, 3)
+  positive_txt      String?
+  negative_txt      String?
+  neutral_txt       String?
+  overall_txt       String?
+  recipe            recipe              @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid       String
+  recipe_detail_row recipe_detail_row[]
+}
+
+model component_nutrition {
+  id       Int     @id @default(autoincrement())
+  org      org?    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid String?
+
+  is_default                Boolean?    @default(false)
+  ingredients               ingredients @relation(fields: [ingredients_id], references: [id])
+  ingredients_id            Int         @unique
+  kcal_per_100g             Decimal?    @db.Decimal(10, 3)
+  kj_per_100g               Decimal?    @db.Decimal(10, 3)
+  protein_per_100g          Decimal?    @db.Decimal(10, 3)
+  fat_per_100g              Decimal?    @db.Decimal(10, 3)
+  saturated_fat_per_100g    Decimal?    @db.Decimal(10, 3)
+  monounsaturate_per_100g   Decimal?    @db.Decimal(10, 3)
+  polyunsaturate_per_100g   Decimal?    @db.Decimal(10, 3)
+  trans_fats_per_100g       Decimal?    @db.Decimal(10, 3)
+  omega3_per_100g           Decimal?    @db.Decimal(10, 3)
+  omega6_per_100g           Decimal?    @db.Decimal(10, 3)
+  omega9_per_100g           Decimal?    @db.Decimal(10, 3)
+  carbs_per_100g            Decimal?    @db.Decimal(10, 3)
+  net_carbs_per_100g        Decimal?    @db.Decimal(10, 3)
+  carbohydrates_per_100g    Decimal?    @db.Decimal(10, 3)
+  total_sugar_per_100g      Decimal?    @db.Decimal(10, 3)
+  added_sugar_per_100g      Decimal?    @db.Decimal(10, 3)
+  artificial_sugar_per_100g Decimal?    @db.Decimal(10, 3)
+  fibre_per_100g            Decimal?    @db.Decimal(10, 3)
+  starch_per_100g           Decimal?    @db.Decimal(10, 3)
+  salt_per_100g             Decimal?    @db.Decimal(10, 3)
+  sodium_per_100g           Decimal?    @db.Decimal(10, 3)
+
+  created_at                      DateTime                     @default(now())
+  updated_at                      DateTime                     @updatedAt
+  recipe_components_on_recipe     recipe_components_on_recipe? @relation(fields: [recipe_components_on_recipeUuid], references: [uuid])
+  recipe_components_on_recipeUuid String?
 }
 
 model recipe_mode {
@@ -931,10 +1215,21 @@ model recipe_mode {
 model recipe_type {
   // recipe_mode: local, master, unlinked_master
   id         Int      @id @default(autoincrement())
-  name       String
+  name       String   @unique
   desc       String?
   recipe     recipe[]
   is_default Boolean  @default(false)
+}
+
+model recipe_backup {
+  id        Int    @id @default(autoincrement())
+  recipe_id Int
+  org       org    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid  String
+
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 // RECIPEE__________________________________END

@@ -27,16 +27,15 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
   // UPDATE OBJECT
   const update = (portionId: number, ruleId: number) => {
     // const update = (portionSize: number, ruleId: number) => {
-    console.log("UPDATE MARKUP RULE", portionId, ruleId);
-    console.log("OLD", ...recipeData.data.markupId);
-    console.log("NEW", { ...recipeData.data.markupId, ...recipeData.data.markupId.map((p) => (p.pid === portionId ? { ...p, rule: ruleId } : { ...p })) });
+    // console.log("UPDATE MARKUP RULE", portionId, ruleId);
+    // console.log("OLD", ...recipeData.data.markupId);
+    // console.log("NEW", { ...recipeData.data.markupId, ...recipeData.data.markupId.map((p) => (p.pid === portionId ? { ...p, rule: ruleId } : { ...p })) });
     const updatedObj: Partial<PreCalculatedRecipeData> = {
       data: {
         ...recipeData.data,
         markupId: {
           ...recipeData.data.markupId,
           ...recipeData.data.markupId.map((p) => {
-            console.log("should be true", p.pid === portionId);
             return p.pid === portionId ? { ...p, rule: ruleId } : { ...p };
           }),
         },

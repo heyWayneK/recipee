@@ -48,17 +48,17 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
   const o = recipeData.data.portions;
   for (const portion of o.sort((a, b) => a.order - b.order)) {
-    if (!portion.qty) console.error(`Portion with no qty`);
+    if (!portion.qty_g) console.error(`Portion with no qty`);
     if (!portion.id) console.error(`Portion with no id`);
     if (!portion.order) console.error(`Portion with no order`);
 
-    portionSizes.push(portion.qty);
+    portionSizes.push(portion.qty_g);
 
     portionIds.push(portion.id);
 
     portionsSum.push(
       recipeData.data.components.reduce((acc, comp) => {
-        const getQty = comp.portions.find((p) => p.id === portion.id)?.qty;
+        const getQty = comp.portions.find((p) => p.id === portion.id)?.qty_g;
         if (!getQty) {
           throw new Error(`Portion ${portion.id} not found in component ${comp.name}`);
         }
@@ -86,7 +86,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     // WEIGHTS BY PORTION ARRAY
     componentsWeights.push(
       portionIds.map((portionId) => {
-        const getQty = component.portions.find((p) => p.id === portionId)?.qty || 0;
+        const getQty = component.portions.find((p) => p.id === portionId)?.qty_g || 0;
         if (!getQty) console.error(`Portion ${portionId} not in ${component.name}`);
         return getQty;
       })

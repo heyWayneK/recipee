@@ -2,6 +2,7 @@ import { unitDetailProps } from "@/app/data/metricImperial";
 import { Prisma, unit_type } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 import exp from "constants";
+import Decimal from "decimal.js";
 
 import React from "react";
 
@@ -42,13 +43,12 @@ export interface ComponentsProps {
   order: number;
   name?: string;
   type?: "ingredient" | "step" | "sub";
-  ingredientId?: number | null;
+  ingredient_id?: number | null;
   // parentId?: null | number;
   portions: PortionSizeChildProps[];
-  yield?: number;
-  nutriPer100?: nutriPer100Props[];
+  yield?: Decimal | null; // Yield can be null if not applicable
+  nutri_per_100g?: nutriPer100Props[];
   version?: string;
-  versions?: versionsProps[];
 }
 
 export type CookedYieldsCategoriesSelect = Prisma.cooked_yields_categoriesGetPayload<{
@@ -167,7 +167,7 @@ export type IngredientSelect = Prisma.ingredientsGetPayload<{
     name: true;
     names_alt: true;
     name_orig: true;
-    org_id: true;
+    org_uuid: true;
     translation: true;
     primary_category_id: true;
     secondary_category: true;
@@ -222,7 +222,7 @@ export type MarkupSelect = Prisma.markupGetPayload<{
   select: {
     id: true;
     name: true;
-    org_id: true;
+    org_uuid: true;
     desc: true;
     markup_type_id: true;
     factor: true;
@@ -245,11 +245,21 @@ export type MarkupTypeSelect = Prisma.markup_typeGetPayload<{
 
 export interface nutriPer100Props {
   name: string;
-  valuePer100: number;
+  value_per_100g: number;
   unit: string;
 }
 
-// // export type NutritionalDataValuesSelect = Prisma.ingredients_nutritionGetPayload<
+export type NutritionalDataSelect = Prisma.ingredients_nutritionGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    unit: true;
+    translation: true;
+    is_default: true;
+    confidence: true;
+  };
+}>;
+
 export type NutritionalDataValuesSelect = { column_name: string };
 
 export type OilPurposeSelect = Prisma.oil_purposeGetPayload<{
@@ -289,14 +299,14 @@ export type OtherCostsLineItemsLookupSelect = Prisma.other_costs_line_itemGetPay
     supplier_id: true;
     cost: true;
     is_active: true;
-    org_id: true;
+    org_uuid: true;
     category_ids: true;
   };
 }>;
 
 export type OrgTypeSelect = Prisma.orgGetPayload<{
   select: {
-    id: true;
+    uuid: true;
     username: true;
     emails: true;
     phone_numbers: true;
@@ -342,17 +352,17 @@ export type PackagingCostsCategorySelect = Prisma.packaging_costs_categoryGetPay
 //   supplier_id: number;
 //   cost: number;
 //   is_active: boolean;
-//   org_id: number;
+//   org_uuid: number;
 //   category_ids: string; // Could be "3" pr "3,4,5,"
 // }
 export interface LineItemsLookup {
   id: number;
   name: string;
   desc: string;
-  supplier_id: number;
-  cost: number;
+  supplier_id: number | null; // supplier_id can be null
+  cost: number | Decimal;
   is_active: boolean;
-  org_id: number;
+  org_uuid: string;
   category_ids: string; // Could be "3" pr "3,4,5,"
 }
 
@@ -364,7 +374,7 @@ export interface LineItemsLookup {
 //     supplier_id: true;
 //     cost: true;
 //     is_active: true;
-//     org_id: true;
+//     org_uuid: true;
 //     category_ids: true;
 //   };
 // }>;
@@ -375,7 +385,7 @@ export interface LineItemsLookup {
 //   supplier_id: number;
 //   cost: number;
 //   is_active: boolean;
-//   org_id: number;
+//   org_uuid: number;
 //   category_ids: string; // Could be "3" pr "3,4,5,"
 // }
 
@@ -383,7 +393,7 @@ export type PortionSizeChildProps = Omit<portionSizeProps, "order">;
 
 export interface portionSizeProps {
   id: number;
-  qty: number;
+  qty_g: number;
   order: number;
 }
 
@@ -412,6 +422,7 @@ export interface PreCalculatedRecipeData {
   vatRulePercs: number[]; // Decimals
   vatRuleNames: string[]; // Decimals
   data: RecipeDataProps;
+  data2: [];
   isImperial: boolean; // true = imperial, false = metric
   isHome: boolean; // true = home mode, false = professional mode
   currencySymbol: string; // e.g. $, €, £
@@ -602,7 +613,7 @@ export type VatRulesSelect = Prisma.vat_rulesGetPayload<{
     name: true;
     cost: true;
     description: true;
-    org_id: true;
+    org_uuid: true;
     default: true;
   };
 }>;

@@ -1,7 +1,8 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
-import { ComponentsProps } from "@/app/api/recipe";
+import { ComponentsProps } from "@/types/recipeTypes";
+import Decimal from "decimal.js";
 
 interface Row_SubRecipeSubNameProps {
   subRecipe: ComponentsProps;
@@ -15,7 +16,8 @@ const Row_SubRecipeSubName: React.FC<Row_SubRecipeSubNameProps> = ({ subRecipe, 
 
       <div className="">
         <Pill tone="white" className="" edit="" onClick={() => {}}>
-          Yield: {(subRecipe.yield ?? 0) * 100}%
+          {/* Yield: {(subRecipe.yield ?? 0) * 100}% */}
+          Yield: {new Decimal(subRecipe.yield ?? 0).times(100).toString()}%
         </Pill>
         <Pill tone="white" className="flex " iconName="arrow_drop_down" edit="" onClick={() => {}}>
           Version

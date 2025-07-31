@@ -153,6 +153,8 @@ export async function POST(request: Request) {
           "You are a food classification and nutrition expert. Cooked_yields values can be higher than 1 (e.g. rice and pasta). Alternative_names are for wholefoods that have other names (e.g. aubergine, eggplant).\n" +
           "Multiple Allergies can be returned as a pipe delimited list please e.g. (wheat|gluten)\n" +
           "unit_type defines how the ingredient is typically measured or sold, its a suggestion to measure by weight (g,kg,lbs,oz), fluid (mL, L, fl oz) or each (products like eggs, or garnish like bay leaf) \n" +
+          "is_salt? boolean to determine if this product/ingredient is primarily classified mainly as salt (.e.g. table salt, fleur de sal, Himalayan Pink Salt) \n" +
+          "is_oil? boolean to determine if this product/ingredient is primarily classified mainly as an oil (.e.g. olive oil, canola, sunflower seed oil, coconut oil) \n" +
           "Provide a JSON response with no extra text, following this structure:\n" +
           `Rules for halal classification:
           - Pork and its derivatives (e.g., bacon, ham, sausage from pork) are always haram, so "halal" must be "no".
@@ -217,6 +219,8 @@ export async function POST(request: Request) {
           '  "alternative_names": {\n' +
           '    "names_alt": <string>,\n' +
           "  },\n" +
+          '  "is_oil": <boolean> // true, or false, or false if unknown)\n' +
+          '  "is_salt": <boolean> // true, or false, or false if unknown)\n' +
           '  "confidence": <number> // 0 to 1, e.g., 0.95 for 95% confidence\n' +
           "}\n" +
           "Use 0 for unknown numeric values and null for optional fields if unknown. Base your response on reliable nutritional data where possible.",
