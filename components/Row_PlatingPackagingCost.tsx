@@ -25,6 +25,7 @@ const Row_PlatingPackagingCosts: React.FC<Row_PlatingPackagingCostsProps> = ({ v
     updateObjPath: recipeData.data.packagingCostsId,
     viewPrices: viewPrices,
   };
+  // console.log("Row_PlatingPackagingCsosts: ", o);
   // SETUP OBJ VARS
   return <Row_CatAndLineItems {...o} />;
 };

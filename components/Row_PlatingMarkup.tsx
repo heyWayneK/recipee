@@ -86,8 +86,8 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
         }
         // DROP DOWN MODAL INFO__________END
         const profit = calcProfit(recipeData.costsSubTotals[i], markup_type.name, Number(factor));
-        console.log(profit, "profit", recipeData.costsSubTotals[i], " | ", markup_type.name, " | ", Number(factor));
-        console.log("calcProfit(recipeData.costsSubTotals[i],  markup_type.name, Number(factor))");
+        // console.log(profit, "profit", recipeData.costsSubTotals[i], " | ", markup_type.name, " | ", Number(factor));
+        // console.log("calcProfit(recipeData.costsSubTotals[i],  markup_type.name, Number(factor))");
         return (
           // COLUMN CELLS START
           <MenuDynamicChildren key={name + "_" + "menu" + "_" + i} menuArray={dropDownLinks}>

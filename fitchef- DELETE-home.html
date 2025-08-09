@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FitChef | Healthy Chef-Crafted Meals Delivered</title>
+    <meta
+      name="description"
+      content="Stop trading your health for convenience. Get delicious, dietitian-approved healthy meals and kits delivered to your door. Fuel your body and reclaim your time with FitChef."
+    />
+    <meta name="keywords" content="healthy meal delivery, ready meals south africa, fitchef, thyme fitchef, weight loss meals, convenience food, meal kits" />
+
+    <meta property="og:title" content="FitChef | Healthy Chef-Crafted Meals Delivered" />
+    <meta property="og:description" content="Fuel your body with delicious, clean, and convenient meals. The perfect solution for busy professionals." />
+    <meta property="og:image" content="https://www.fitchef.co.za/social-share-image.jpg" />
+    <meta property="og:url" content="https://www.fitchef.co.za" />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <script>
+      // Paste your Google Analytics or other tracking snippet here
+    </script>
+
+    <style>
+      /* --- DESIGN SYSTEM & CSS --- */
+
+      :root {
+        --primary-color: #2e7d32; /* Healthy, Trustworthy Green */
+        --secondary-color: #1a4a1d;
+        --accent-color: #ff9800; /* Energetic Orange for CTAs */
+        --accent-hover: #fb8c00;
+        --text-dark: #212121;
+        --text-light: #616161;
+        --background-light: #f9f9f9;
+        --background-white: #ffffff;
+        --border-color: #e0e0e0;
+      }
+
+      /* --- BASE & RESPONSIVE FRAMEWORK --- */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.7;
+        color: var(--text-dark);
+        background-color: var(--background-light);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      section {
+        padding: 80px 0;
+      }
+
+      /* --- TYPOGRAPHY --- */
+      h1,
+      h2,
+      h3 {
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text-dark);
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+      h2 {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+      }
+      h3 {
+        font-size: 1.5rem;
+      }
+      p {
+        margin-bottom: 16px;
+        color: var(--text-light);
+        max-width: 650px;
+      }
+      .section-header {
+        text-align: center;
+        max-width: 750px;
+        margin: 0 auto 60px;
+      }
+      .section-header h2 {
+        margin-bottom: 10px;
+      }
+      .section-header p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* --- BUTTONS & CTA --- */
+      .cta-button {
+        display: inline-block;
+        background-color: var(--accent-color);
+        color: var(--background-white);
+        padding: 16px 32px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .cta-button:hover {
+        background-color: var(--accent-hover);
+        transform: translateY(-3px);
+      }
+
+      .secondary-cta {
+        color: var(--primary-color);
+        text-decoration: underline;
+        font-weight: 600;
+      }
+
+      /* --- HEADER & NAVIGATION --- */
+      .main-header {
+        position: sticky;
+        top: 0;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        z-index: 100;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .main-header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+      .main-nav a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 600;
+        transition: color 0.3s;
+      }
+      .main-nav a:hover {
+        color: var(--primary-color);
+      }
+
+      /* --- SECTION SPECIFIC STYLES --- */
+      /* Hero Section */
+      .hero {
+        text-align: center;
+        padding-top: 60px;
+      }
+      .hero h1 {
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .hero p {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        font-size: 1.1rem;
+      }
+      .hero-cta {
+        margin-top: 30px;
+      }
+      .trust-indicators {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        color: var(--text-light);
+        font-weight: 600;
+      }
+      .trust-indicators span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hero-image-placeholder {
+        margin-top: 60px;
+      }
+      .hero-image-placeholder img {
+        width: 100%;
+        height: auto;
+        max-width: 900px;
+      }
+
+      /* Social Proof */
+      #social-proof {
+        background: var(--background-white);
+      }
+      .logo-grid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 40px;
+        margin: 40px 0;
+      }
+      .logo-grid img {
+        max-height: 40px;
+      }
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 60px;
+        text-align: center;
+        margin: 60px 0;
+      }
+      .stat-item .number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+      .video-testimonials {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 40px;
+      }
+      .video-placeholder {
+        background: #000;
+        color: #fff;
+        aspect-ratio: 16 / 9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+      }
+      .video-placeholder .play-button {
+        font-size: 3rem;
+      }
+      .video-placeholder .title {
+        font-weight: 600;
+        margin-top: 10px;
+      }
+      .case-study-highlight {
+        background: var(--background-light);
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        margin-top: 60px;
+        border: 1px solid var(--border-color);
+      }
+
+      /* Problem / Solution */
+      .grid-2-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .pain-points li {
+        list-style: none;
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 15px;
+      }
+      .pain-points li::before {
+        content: "❌";
+        position: absolute;
+        left: 0;
+      }
+      .cost-of-inaction {
+        margin-top: 30px;
+        border-left: 4px solid var(--accent-color);
+        padding-left: 20px;
+        font-style: italic;
+      }
+      #solution {
+        background-color: var(--background-white);
+      }
+      .step-by-step {
+        counter-reset: step;
+      }
+      .step-by-step li {
+        list-style: none;
+        position: relative;
+        margin-bottom: 20px;
+        padding-left: 50px;
+      }
+      .step-by-step li::before {
+        content: counter(step);
+        counter-increment: step;
+        position: absolute;
+        left: 0;
+        top: -5px;
+        width: 35px;
+        height: 35px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 700;
+      }
+      .why-others-fail li {
+        list-style: none;
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 10px;
+      }
+      .why-others-fail li.good::before {
+        content: "✅";
+        color: var(--primary-color);
+        position: absolute;
+        left: 0;
+      }
+      .why-others-fail li.bad::before {
+        content: "❌";
+        position: absolute;
+        left: 0;
+      }
+
+      /* Features */
+      .features-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .feature-item {
+        text-align: center;
+      }
+      .feature-item h3 {
+        margin-top: 15px;
+      }
+
+      /* Story & Testimonials */
+      #story {
+        background: var(--background-white);
+      }
+      .founder-photo {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+      }
+      .testimonial-card {
+        background: var(--background-white);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+      .testimonial-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .testimonial-author strong {
+        display: block;
+        color: var(--text-dark);
+      }
+      .testimonial-author span {
+        color: var(--text-light);
+      }
+      .testimonial-quote {
+        font-style: italic;
+      }
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      /* Offer & Value Stack */
+      #offer {
+        background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+        color: white;
+      }
+      #offer h2,
+      #offer h3,
+      #offer p {
+        color: white;
+      }
+      .offer-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 40px;
+      }
+      .value-stack li {
+        list-style: none;
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+      .value-stack li::before {
+        content: "✔";
+        position: absolute;
+        left: 0;
+        color: var(--accent-color);
+      }
+      .price-display {
+        margin: 30px 0;
+        text-align: center;
+      }
+      .total-value {
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+      .final-price {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin: 10px 0;
+      }
+      .price-per-day {
+        font-size: 1.1rem;
+      }
+      .guarantee {
+        text-align: center;
+        margin-top: 30px;
+        font-weight: 600;
+        padding: 20px;
+        border: 2px dashed var(--accent-color);
+        border-radius: 12px;
+      }
+
+      /* Urgency */
+      #urgency .container {
+        max-width: 800px;
+        text-align: center;
+      }
+      .countdown-timer {
+        font-size: 3rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin: 20px 0;
+      }
+      .scarcity-update {
+        background: #fff3e0;
+        color: #e65100;
+        padding: 10px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 20px;
+        font-weight: 600;
+      }
+
+      /* FAQ */
+      #faq {
+        background: var(--background-white);
+      }
+      .faq-item {
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px 0;
+      }
+      .faq-item summary {
+        font-weight: 600;
+        font-size: 1.2rem;
+        cursor: pointer;
+        position: relative;
+      }
+      .faq-item summary::after {
+        content: "+";
+        position: absolute;
+        right: 0;
+        font-size: 1.5rem;
+        transition: transform 0.3s;
+      }
+      .faq-item[open] summary::after {
+        transform: rotate(45deg);
+      }
+      .faq-item p {
+        padding-top: 15px;
+      }
+
+      /* Final CTA & Footer */
+      #final-cta {
+        text-align: center;
+      }
+      footer {
+        background: var(--text-dark);
+        color: var(--background-light);
+        text-align: center;
+        padding: 40px 20px;
+      }
+      footer a {
+        color: var(--accent-color);
+      }
+
+      /* --- MOBILE OPTIMIZATIONS --- */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+        h2 {
+          font-size: 2rem;
+        }
+        section {
+          padding: 60px 0;
+        }
+        .cta-button {
+          width: 100%;
+          padding: 16px;
+          text-align: center;
+        }
+        .main-nav {
+          display: none;
+        } /* Simple solution for mobile nav */
+        .grid-2-col {
+          grid-template-columns: 1fr;
+        }
+        .trust-indicators {
+          flex-direction: column;
+          gap: 20px;
+        }
+        .stats {
+          flex-direction: column;
+          gap: 40px;
+        }
+      }
+
+      /* --- DESKTOP ENHANCEMENTS --- */
+      @media (min-width: 769px) {
+        .video-testimonials {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .features-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .testimonials-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="container">
+        <a href="#" class="logo">Thyme FitChef</a>
+        <nav class="main-nav">
+          <a href="#solution">Our Difference</a>
+          <a href="#offer">21-Day Kit</a>
+          <a href="#faq">FAQ</a>
+          <a href="#final-cta" class="cta-button" style="padding: 10px 20px">Order Now</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="hero">
+        <div class="container">
+          <div class="section-header">
+            <h1>Stop Trading Your Health for Convenience. Get Chef-Crafted, Dietitian-Approved Meals Delivered.</h1>
+            <p>
+              You're busy. You're ambitious. But your diet is paying the price. Stop the cycle of unhealthy takeaways and bland "health" foods. Fuel your body and reclaim your time with delicious,
+              ready-to-eat meals based on our uncompromising EatClean™ ethos.
+            </p>
+          </div>
+          <div class="hero-cta">
+            <a href="#offer" class="cta-button">Start My 21-Day Transformation</a>
+          </div>
+          <div class="trust-indicators">
+            <span>⭐ 4.9/5 Stars on Google</span>
+            <span>🛡️ HACCP Audited Kitchen</span>
+            <span>🌱 EatClean™ Certified Ingredients</span>
+          </div>
+
+          <div class="hero-image-placeholder">
+            <img
+              src="https://via.placeholder.com/900x500.png?text=Vibrant+FitChef+Meal"
+              alt="Delicious and healthy FitChef meal"
+              style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1)"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="social-proof">
+        <div class="container">
+          <div class="section-header">
+            <h2>Join 30,000+ South Africans Who Trust FitChef to Fuel Their Success</h2>
+          </div>
+
+          <div class="logo-grid">
+            <img src="https://via.placeholder.com/150x40.png?text=MEDIA+LOGO" alt="As Seen In Media Logo" style="filter: grayscale(100%); opacity: 0.7" />
+            <img src="https://via.placeholder.com/150x40.png?text=CLIENT+LOGO" alt="Corporate Client Logo" style="filter: grayscale(100%); opacity: 0.7" />
+            <img src="https://via.placeholder.com/150x40.png?text=MEDIA+LOGO" alt="As Seen In Media Logo" style="filter: grayscale(100%); opacity: 0.7" />
+            <img src="https://via.placeholder.com/150x40.png?text=PARTNER+LOGO" alt="Partner Logo" style="filter: grayscale(100%); opacity: 0.7" />
+          </div>
+
+          <div class="stats">
+            <div class="stat-item">
+              <div class="number">1.5M+</div>
+              <p>Healthy Meals Delivered</p>
+            </div>
+            <div class="stat-item">
+              <div class="number">8,500+</div>
+              <p>5-Star Reviews</p>
+            </div>
+            <div class="stat-item">
+              <div class="number">98%</div>
+              <p>Customer Satisfaction</p>
+            </div>
+          </div>
+
+          <div class="video-testimonials">
+            <div class="video-placeholder">
+              <div class="play-button">▶️</div>
+              <div class="title">"FitChef gives me back 5 hours a week."</div>
+              <p>- Jessica M., Lawyer</p>
+            </div>
+            <div class="video-placeholder">
+              <div class="play-button">▶️</div>
+              <div class="title">"The macros are perfect, and the taste is incredible."</div>
+              <p>- Themba S., Personal Trainer</p>
+            </div>
+          </div>
+
+          <div class="case-study-highlight">
+            <h3>The 21-Day Challenge Results</h3>
+            <p>On average, participants lose 3-6kg, report a 75% increase in energy levels, and save over 15 hours of cooking and cleaning time.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="problem">
+        <div class="container grid-2-col">
+          <div>
+            <h2>The "Busy Professional's Paradox": Too Busy to Be Healthy, Too Unhealthy to Be Productive.</h2>
+            <ul class="pain-points">
+              <li>You end a 10-hour workday, and the thought of chopping vegetables makes you want to scream.</li>
+              <li>You buy "healthy" ready-meals, only to find they're full of hidden sugars, preservatives, and seed oils.</li>
+              <li>You feel a pang of guilt as you order another expensive, greasy takeaway because it's the only quick option.</li>
+              <li>You're stuck. You know your diet is holding back your energy and focus, but finding a real solution feels impossible.</li>
+            </ul>
+            <div class="cost-of-inaction">
+              <p>
+                The average professional spends over <strong>R3,500/month</strong> on last-minute, unhealthy food. The bigger cost? Brain fog, low energy, and the long-term price of a diet that works
+                against you.
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="process-visual">
+              <img
+                src="https://via.placeholder.com/800x600.png?text=Before+%26+After+Lifestyle"
+                alt="Comparison of unhealthy vs healthy lifestyle"
+                style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1)"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="solution" class="section-with-bg">
+        <div class="container">
+          <div class="section-header">
+            <h2>The FitChef Standard: Our Non-Negotiable Commitment to Your Health.</h2>
+            <p>
+              While other services cut corners, we make significant investments where it matters most. We believe true health isn't just about calories; it's about the quality of every ingredient, the
+              safety of every container, and the integrity of our entire process.
+            </p>
+          </div>
+          <div class="grid-2-col">
+            <div>
+              <h3>How It Works</h3>
+              <ol class="step-by-step">
+                <li><strong>You Choose Your Goal:</strong> Select from our dietitian-approved kits, like the best-selling 21-Day Challenge for total transformation.</li>
+                <li><strong>Our Chefs Create Perfection:</strong> We source EatClean™ ingredients and our professional chefs prepare your meals in our HACCP-audited kitchen.</li>
+                <li><strong>We Deliver in Freezer Trucks:</strong> Your meals arrive in our dedicated freezer fleet—not in a box with ice packs—locking in freshness, flavour, and nutrients.</li>
+              </ol>
+            </div>
+            <div>
+              <h3>Why Others Fail</h3>
+              <ul class="why-others-fail">
+                <li class="bad"><strong>They use cheap plastic trays</strong> that can leach chemicals.</li>
+                <li class="good"><strong>We invested in premium foil containers</strong> because your health is non-negotiable.</li>
+                <li class="bad"><strong>They use gel packs,</strong> causing temperature fluctuations.</li>
+                <li class="good"><strong>We invested in a freezer truck fleet</strong> for uncompromised delivery.</li>
+                <li class="bad"><strong>They use additives</strong> to fake flavour.</li>
+                <li class="good"><strong>We mastered clean cooking;</strong> our food tastes incredible because it's real.</li>
+              </ul>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: 60px">
+            <div class="process-visual">
+              <img
+                src="https://via.placeholder.com/800x200.png?text=Leaf+Icon+->+Chef+Icon+->+Truck+Icon+->+Fork+Icon"
+                alt="How It Works Diagram"
+                style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1)"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <div class="container">
+          <div class="section-header">
+            <h2>Everything You Need to Thrive, Nothing You Don't.</h2>
+          </div>
+          <div class="features-grid">
+            <div class="feature-item">
+              <div class="feature-icon">
+                <img src="https://via.placeholder.com/64x64.png?text=🛡️" alt="Green Shield Icon" style="width: 64px; height: 64px" />
+              </div>
+              <h3>The EatClean™ Ethos</h3>
+              <p>Dine with peace of mind. Every bite is guaranteed free from added sugar, gluten, and artificial junk.</p>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <img src="https://via.placeholder.com/64x64.png?text=❄️" alt="Temperature Flake Icon" style="width: 64px; height: 64px" />
+              </div>
+              <h3>Freezer Truck Delivery</h3>
+              <p>Taste the difference true freshness makes. Our cold chain locks in peak nutritional value and flavour.</p>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <img src="https://via.placeholder.com/64x64.png?text=📦" alt="Metal Container Icon" style="width: 64px; height: 64px" />
+              </div>
+              <h3>Premium Foil Containers</h3>
+              <p>Protect your body from microplastics and enjoy a pure, clean meal from freezer to fork.</p>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">
+                <img src="https://via.placeholder.com/64x64.png?text=📅" alt="Calendar Icon" style="width: 64px; height: 64px" />
+              </div>
+              <h3>Structured Meal Kits</h3>
+              <p>Eliminate decision fatigue. Our kits provide everything you need to hit your goals, stress-free.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="story">
+        <div class="container grid-2-col">
+          <div>
+            <div class="founder-photo">
+              <img src="https://via.placeholder.com/500x500.png?text=The+FitChef+Team" alt="The Thyme FitChef Team" style="border-radius: 12px" />
+            </div>
+          </div>
+          <div>
+            <h2>We Started FitChef Because We Were Tired of Compromising.</h2>
+            <p>
+              FitChef was born from a simple, frustrating question: "Why is it so hard to eat consistently healthy food when you're busy?" We were tired of the false choice between health and
+              convenience.
+            </p>
+            <p>
+              <strong>Our mission:</strong> To make exceptional health effortlessly accessible. We do this by creating delicious, trustworthy, and convenient food that empowers our customers to live
+              their most optimal lives.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="testimonials">
+        <div class="container">
+          <div class="section-header">
+            <h2>Don't Just Take Our Word For It. See Their Results.</h2>
+          </div>
+          <div class="testimonials-grid">
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">
+                  <img
+                    src="https://via.placeholder.com/80x80.png?text=DR"
+                    alt="Customer Photo David R."
+                    style="border-radius: 50%; border: 3px solid var(--background-white); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)"
+                  />
+                </div>
+                <div class="testimonial-author">
+                  <strong>David R.</strong>
+                  <span>Financial Director</span>
+                </div>
+              </div>
+              <p class="testimonial-quote">
+                "The 21-Day Challenge was a complete reset. I lost 5kg, but more importantly, my mental clarity is through the roof. It's the best investment I've made in myself, period."
+              </p>
+            </div>
+            <div class="testimonial-card">
+              <div class="testimonial-header">
+                <div class="testimonial-avatar">
+                  <img
+                    src="https://via.placeholder.com/80x80.png?text=SK"
+                    alt="Customer Photo Sarah K."
+                    style="border-radius: 50%; border: 3px solid var(--background-white); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1)"
+                  />
+                </div>
+                <div class="testimonial-author">
+                  <strong>Sarah K.</strong>
+                  <span>Google Review</span>
+                </div>
+              </div>
+              <p class="testimonial-quote">"The convenience is unmatched, but the quality is what shocked me. You can taste that they use better ingredients. Nothing else compares."</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="offer">
+        <div class="container">
+          <div class="section-header">
+            <h2>Get Everything You Need to Transform Your Health in 21 Days.</h2>
+          </div>
+          <div class="offer-card">
+            <div class="grid-2-col">
+              <div>
+                <h3>Here’s Exactly What You Get...</h3>
+                <ul class="value-stack">
+                  <li>21 Chef-Prepared Lunches & Dinners <span>(Value: R 3,780)</span></li>
+                  <li>14 Nutrient-Dense Breakfast Smoothies <span>(Value: R 840)</span></li>
+                  <li>Step-by-Step 21-Day Meal Plan & Guide <span>(Value: R 450)</span></li>
+                  <li>Dedicated Freezer Truck Delivery <span>(Value: R 200)</span></li>
+                  <li><strong>FREE BONUS:</strong> "Beat the Binge" Snack Guide <span>(Value: R 299)</span></li>
+                  <li><strong>FREE BONUS:</strong> VIP Community Access <span>(Priceless)</span></li>
+                </ul>
+              </div>
+              <div>
+                <div class="price-display">
+                  <p class="total-value">Total Value: R 5,568</p>
+                  <p class="final-price">R 3,995</p>
+                  <p class="price-per-day">That's less than R191 per day for all your meals, delivered!</p>
+                </div>
+                <a href="#" class="cta-button">Yes! Start My 21-Day Transformation</a>
+              </div>
+            </div>
+            <div class="guarantee">The FitChef Flavour & Quality Guarantee: Not 100% satisfied with your first meal? We'll credit you for it.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="urgency">
+        <div class="container">
+          <h2>Limited Spots Available for Next Week's Delivery. Act Now.</h2>
+          <p>This introductory price is not guaranteed to last. Lock it in before the next price review.</p>
+          <div class="countdown-timer" id="countdown">01:14:22:10</div>
+          <div class="scarcity-update">
+            Due to our commitment to freshness, we only prepare a limited number of kits each week. <strong>Only <span id="kits-left">11</span> kits left for the Monday delivery slot.</strong>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="container">
+          <div class="section-header">
+            <h2>Your Questions, Answered.</h2>
+          </div>
+          <details class="faq-item">
+            <summary>Is it worth the price?</summary>
+            <p>
+              Consider this: you're not just buying food, you're buying back time, energy, and health. At less than R191/day, you get all your meals planned, cooked by chefs, and delivered. This is
+              often less than the cost of a single unhealthy takeaway dinner and a fancy coffee. It's an investment in your single most important asset: you.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>I'm worried about frozen food. Is it actually healthy?</summary>
+            <p>
+              It's healthier. Unlike "fresh" food that sits in warehouses losing nutrients, our meals are flash-frozen at their peak. This process, combined with our freezer-truck delivery, is the
+              gold standard for locking in vitamins, minerals, and flavour.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>What if I don't like the food?</summary>
+            <p>
+              We stand by our quality with our "First Meal Flavour & Quality Guarantee." If you aren't completely satisfied with the taste and quality of your first meal, we will credit you for it.
+            </p>
+          </details>
+          <details class="faq-item">
+            <summary>Can I choose meals for specific diets?</summary>
+            <p>
+              Absolutely. While the 21-Day Challenge is our most popular starting point, we also have dedicated Keto, Low-Carb, Vegetarian, and Muscle-Gain kits and meal packs. Explore our full range
+              to find your perfect fit.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section id="final-cta">
+        <div class="container section-header">
+          <h2>The Next 21 Days Will Pass No Matter What. Why Not Emerge Healthier, Leaner, and More Energetic?</h2>
+          <p>
+            You can continue the frustrating cycle of compromising your health for convenience. Or you can make a different choice today. A choice to fuel your body with clean, delicious,
+            high-performance food.
+          </p>
+          <a href="#offer" class="cta-button">Yes, I'm Ready. Start My 21-Day Transformation!</a>
+          <p style="margin-top: 20px"><a href="#" class="secondary-cta">Or, explore a la carte meals</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; <span id="year"></span> Thyme FitChef. All Rights Reserved.</p>
+        <p>Have questions? Our team is ready to help. Call us on [Phone Number] or email [Email Address].</p>
+      </div>
+    </footer>
+
+    <script>
+      // Set current year in footer
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Simple Countdown Timer
+      const countdownElement = document.getElementById("countdown");
+      let timeInSeconds = 1 * 24 * 60 * 60 + 14 * 60 * 60 + 22 * 60 + 10; // 1d 14h 22m 10s
+
+      setInterval(() => {
+        if (timeInSeconds <= 0) return;
+        timeInSeconds--;
+        const days = Math.floor(timeInSeconds / (60 * 60 * 24));
+        const hours = Math.floor((timeInSeconds % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((timeInSeconds % (60 * 60)) / 60);
+        const seconds = timeInSeconds % 60;
+        countdownElement.textContent = `${String(days).padStart(2, "0")}:${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }, 1000);
+
+      // Simple Scarcity update
+      const kitsLeftElement = document.getElementById("kits-left");
+      let kitsLeft = 11;
+      setInterval(() => {
+        if (kitsLeft > 3) {
+          const randomDecrement = Math.random() < 0.2 ? 1 : 0; // 20% chance to decrement
+          kitsLeft -= randomDecrement;
+          kitsLeftElement.textContent = kitsLeft;
+        }
+      }, 6000); // Check every 6 seconds
+    </script>
+  </body>
+</html>

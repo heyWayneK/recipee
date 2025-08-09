@@ -63,7 +63,8 @@ const Row_CatAndLineItems: React.FC<Row_CatAndLineItemsProps> = ({ viewPrices, n
                 <span className="font-bold">{value.name}</span>
                 <br />
                 <UnitCurrencyFormatter>{sumLineItems}</UnitCurrencyFormatter>
-                <span>#{value.id}</span>
+                {/* {sumLineItems} */}
+                <span> : Rule {value.id}</span>
               </>
             ),
             handler: () => update(recipeData.portionSizes[i], +value.id),

@@ -2,7 +2,7 @@ import React from "react";
 
 import Table_Cell from "./Table_Cell";
 import { cleanComponentKeyName, getTextTranslation, replace_ } from "@/utils/utils";
-import { data } from "@/app/api/recipe";
+// import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "./ViewPrices";
@@ -26,7 +26,8 @@ const Row_PlatingSalesPriceExVat: React.FC<Row_PlatingSalesPriceExVatProps> = ({
       <Row_FirstRowTableCell translatedName={o.translatedName} />
 
       {/* OTHER COLUMNS START */}
-      {data.portions.map((portionSize, i) => {
+      {/* {data.portions.map((portionSize, i) => { */}
+      {recipeData.data.portions.map((portionSize, i) => {
         return (
           // COLUMN CELLS START
           <Table_Cell type="text" key={o.name + "_" + i} trackChangeVisually={true} rowNum={i} trackChangesStorageName={o.name}>

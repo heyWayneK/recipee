@@ -35,14 +35,14 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     recipeUpdated: undefined,
   });
   // How often should the data come from the database, else use localStorage?
-  const secsToUpdate = 60; // 60 seconds
+  const secsToUpdate = 10; // 60 seconds
   // clerk auth, getting organisation id
   const { organization, membership, isLoaded: isOrgLoaded } = useOrganization();
   const orgId = organization?.id || undefined;
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("USEEFFECT FETCH:/api/data/all");
+      // console.log("USEEFFECT FETCH:/api/data/all");
 
       try {
         // TODO: Get Org ID from session.

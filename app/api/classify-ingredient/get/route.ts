@@ -114,39 +114,37 @@ export async function GET(request: Request) {
   try {
     const startTime = Date.now();
     let jsonData = null;
-    // let id: number;
-    // let name: string;
-    const url = new URL(request.url);
-    const id = Number(url.searchParams.get("id"));
-    const name = url.searchParams.get("name");
-    if (!id || !name) {
-      return NextResponse.json({ error: "USE POST instead - Missing id or name" }, { status: 400 });
-    }
+    let id: number;
+    let name: string;
     // WHICH AI SDK TO USE
     useSdk = "xai";
 
     // Determine the HTTP method of the request
     const method = request.method;
 
-    if (method === "GET") {
-      // const body = await request.json();
-      // if (!body.id || !body.name) NextResponse.json({ error: "Missing POST: id & name" }, { status: 400 });
-      // id = body?.id;
-      // name = body?.name;
-      console.log("**GET id:", id, "name:", name);
-      if (!id || !name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
-      // TESTING: For testing in future using GET
-      // TESTING: https://recipee.app/api/classify-ingredient/all?name=all%20bran%20Flakes&id=33
-      // } else if (method === "GET") {
-      //   const url = new URL(request.url);
-      //   id = Number(url.searchParams.get("id"));
-      //   name = url.searchParams.get("name") || "";Dietary category not found unknown
-      //   if (!id || !name) {
-      //     return NextResponse.json({ error: "GET method no supported - Missing id or name" }, { status: 400 });
-      //   }
-    } else {
-      return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
+    // if (method === "POST") {
+    //   const body = await request.json();
+    //   if (!body.id || !body.name) NextResponse.json({ error: "Missing POST: id & name" }, { status: 400 });
+    //   id = body?.id;
+    //   name = body?.name;
+    //   console.log("**POST id:", id, "name:", name);
+    //   if (!id || !name) NextResponse.json({ error: "Missing id or name" }, { status: 400 });
+    //   // TESTING: For testing in future using GET
+    //   // TESTING: https://recipee.app/api/classify-ingredient/all?name=all%20bran%20Flakes&id=33
+    // } else if (method === "GET") {
+    const url = new URL(request.url);
+    id = Number(url.searchParams.get("id"));
+    name = url.searchParams.get("name") || ""; //;Dietary category not found unknown
+    if (!id || !name) {
+      return NextResponse.json({ error: "GET method no supported - Missing id or name" }, { status: 400 });
     }
+    // } else {
+    //   return NextResponse.json({ error: `Unsupported method: ${method}` }, { status: 405 });
+    // }
+
+    // TODO: ADD TO PROMPT and DB
+    // other >>
+    // 1. unit_type fluid or Weight... or g's or ml's | kgs or L
 
     const prompt: PromptMessage[] = [
       {
@@ -154,6 +152,9 @@ export async function GET(request: Request) {
         content:
           "You are a food classification and nutrition expert. Cooked_yields values can be higher than 1 (e.g. rice and pasta). Alternative_names are for wholefoods that have other names (e.g. aubergine, eggplant).\n" +
           "Multiple Allergies can be returned as a pipe delimited list please e.g. (wheat|gluten)\n" +
+          "unit_type defines how the ingredient is typically measured or sold, its a suggestion to measure by weight (g,kg,lbs,oz), fluid (mL, L, fl oz) or each (products like eggs, or garnish like bay leaf) \n" +
+          "is_salt? boolean to determine if this product/ingredient is primarily classified mainly as salt (.e.g. table salt, fleur de sal, Himalayan Pink Salt) \n" +
+          "is_oil? boolean to determine if this product/ingredient is primarily classified mainly as an oil (.e.g. olive oil, canola, sunflower seed oil, coconut oil) \n" +
           "Provide a JSON response with no extra text, following this structure:\n" +
           `Rules for halal classification:
           - Pork and its derivatives (e.g., bacon, ham, sausage from pork) are always haram, so "halal" must be "no".
@@ -171,6 +172,7 @@ export async function GET(request: Request) {
           '  "secondary_category": "<string>",\n' +
           '  "dietary_classification": "vegan|vegetarian|animal_product|unknown",\n' +
           '  "allergies": "unknown|none|buckwheat|celery|chilli|eggs|garlic|gluten|lupin|milk_dairy|mustard|peanuts|rice|seafood_fish|sesame|shellfish|soybeans|sulphur_dioxide|tree_nuts|wheat|nightshade",\n' +
+          '  "unit_type": "weight|fluid|each",\n' +
           '  "nutritional_data": {\n' +
           '    "kcal_per_100g": <number>,\n' +
           '    "kj_per_100g": <number>,\n' +
@@ -217,6 +219,62 @@ export async function GET(request: Request) {
           '  "alternative_names": {\n' +
           '    "names_alt": <string>,\n' +
           "  },\n" +
+          '  "other": {\n' +
+          '    "water_per_100g: <number>,\n' +
+          '    "nitrogen_g_per_100g": <number>\n' +
+          '    "protein_g_per_100g: <number>,\n' +
+          '    "ash_g_per_100g: <number>,\n' +
+          '    "calcium_mg_per_100g: <number>,\n' +
+          '    "iron_mg_per_100g: <number>,\n' +
+          '    "magnesium_mg_per_100g: <number>,\n' +
+          '    "phosphorus_mg_per_100g: <number>,\n' +
+          '    "potassium_mg_per_100g: <number>,\n' +
+          '    "zinc_mg_per_100g: <number>,\n' +
+          '    "copper_mg_per_100g: <number>,\n' +
+          '    "manganese_mg_per_100g: <number>,\n' +
+          '    "selenium_µg_per_100g: <number>,\n' +
+          '    "vitamin_a_mg_per_100g: <number>,\n' +
+          '    "vitamin_b1_thiamin_mg_per_100g: <number>,\n' +
+          '    "vitamin_b2_mg_per_100g: <number>,\n' +
+          '    "vitamin_b3_niacin_mg_per_100g: <number>,\n' +
+          '    "vitamin_b6_mg_per_100g: <number>,\n' +
+          '    "vitamin_b7_biotin_µg_per_100g: <number>,\n' +
+          '    "vitamin_b9_folate_mg_per_100g: <number>,\n' +
+          '    "vitamin_b12_mg_per_100g: <number>,\n' +
+          '    "vitamin_e_mg_per_100g: <number>,\n' +
+          '    "vitamin_k_µg_per_100g: <number>,\n' +
+          '    "sfa_16_0_palmitic_acid_g_per_100g: <number>,\n' +
+          '    "sfa_18_0_stearic_acid_g_per_100g: <number>,\n' +
+          '    "mufa_16_1_palmitoleic_acid_g_per_100g: <number>,\n' +
+          '    "mufa_18_1__oleic_acid_g_per_100g: <number>,\n' +
+          '    "pufa_18_2_linoleic_acid_g_per_100g: <number>,\n' +
+          '    "tryptophan_g_per_100g: <number>,\n' +
+          '    "threonine_g_per_100g: <number>,\n' +
+          '    "isoleucine_g_per_100g: <number>,\n' +
+          '    "leucine_g_per_100g: <number>,\n' +
+          '    "lysine_g_per_100g: <number>,\n' +
+          '    "methionine_g_per_100g: <number>,\n' +
+          '    "phenylalanine_g_per_100g: <number>,\n' +
+          '    "tyrosine_g_per_100g: <number>,\n' +
+          '    "valine_g_per_100g: <number>,\n' +
+          '    "arginine_g_per_100g: <number>,\n' +
+          '    "histidine_g_per_100g: <number>,\n' +
+          '    "alanine_g_per_100g: <number>,\n' +
+          '    "aspartic_acid_g_per_100g: <number>,\n' +
+          '    "glutamic_acid_g_per_100g: <number>,\n' +
+          '    "glycine_g_per_100g: <number>,\n' +
+          '    "proline_g_per_100g: <number>,\n' +
+          '    "serine_g_per_100g: <number>,\n' +
+          '    "hydroxyproline_g_per_100g: <number>,\n' +
+          '    "cysteine_g_per_100g: <number>,\n' +
+          '    "daidzein_mg_per_100g: <number>,\n' +
+          '    "genistein_mg_per_100g: <number>,\n' +
+          '    "daidzin_mg_per_100g: <number>,\n' +
+          '    "genistin_mg_per_100g: <number>,\n' +
+          '    "glycitin_mg_per_100g": <number>,\n' +
+          "  },\n" +
+          '  "is_oil": <boolean> // true, or false, or false if unknown)\n' +
+          '  "is_salt": <boolean> // true, or false, or false if unknown)\n' +
           '  "confidence": <number> // 0 to 1, e.g., 0.95 for 95% confidence\n' +
           "}\n" +
           "Use 0 for unknown numeric values and null for optional fields if unknown. Base your response on reliable nutritional data where possible.",
@@ -233,7 +291,7 @@ export async function GET(request: Request) {
         model: sdks.xai.model,
         stream: false,
         messages: prompt,
-        temperature: 0.3, // Lows temperature for consistency
+        temperature: 0.3, // Low temperature for consistency
       });
 
       jsonData = JSON.parse(response.choices[0].message.content ?? "{}");
@@ -507,6 +565,59 @@ export async function GET(request: Request) {
           saturated_fat_per_100g: jsonData.nutritional_data?.saturated_fat_per_100g || 0,
           monounsaturate_per_100g: jsonData.nutritional_data?.monounsaturate_per_100g || 0,
           polyunsaturate_per_100g: jsonData.nutritional_data?.polyunsaturate_per_100g || 0,
+          // OTHER
+          water_per_100g: jsonData.other?.water_per_100g || 0,
+          nitrogen_g_per_100g: jsonData.other?.nitrogen_g_per_100g || 0,
+          protein_g_per_100g: jsonData.other?.protein_g_per_100g || 0,
+          ash_g_per_100g: jsonData.other?.ash_g_per_100g || 0,
+          calcium_mg_per_100g: jsonData.other?.calcium_mg_per_100g || 0,
+          iron_mg_per_100g: jsonData.other?.iron_mg_per_100g || 0,
+          magnesium_mg_per_100g: jsonData.other?.magnesium_mg_per_100g || 0,
+          phosphorus_mg_per_100g: jsonData.other?.phosphorus_mg_per_100g || 0,
+          potassium_mg_per_100g: jsonData.other?.potassium_mg_per_100g || 0,
+          zinc_mg_per_100g: jsonData.other?.zinc_mg_per_100g || 0,
+          copper_mg_per_100g: jsonData.other?.copper_mg_per_100g || 0,
+          manganese_mg_per_100g: jsonData.other?.manganese_mg_per_100g || 0,
+          selenium_µg_per_100g: jsonData.other?.selenium_µg_per_100g || 0,
+          vitamin_a_mg_per_100g: jsonData.other?.vitamin_a_mg_per_100g || 0,
+          vitamin_b1_thiamin_mg_per_100g: jsonData.other?.vitamin_b1_thiamin_mg_per_100g || 0,
+          vitamin_b2_mg_per_100g: jsonData.other?.vitamin_b2_mg_per_100g || 0,
+          vitamin_b3_niacin_mg_per_100g: jsonData.other?.vitamin_b3_niacin_mg_per_100g || 0,
+          vitamin_b6_mg_per_100g: jsonData.other?.vitamin_b6_mg_per_100g || 0,
+          vitamin_b7_biotin_µg_per_100g: jsonData.other?.vitamin_b7_biotin_µg_per_100g || 0,
+          vitamin_b9_folate_mg_per_100g: jsonData.other?.vitamin_b9_folate_mg_per_100g || 0,
+          vitamin_b12_mg_per_100g: jsonData.other?.vitamin_b12_mg_per_100g || 0,
+          vitamin_e_mg_per_100g: jsonData.other?.vitamin_e_mg_per_100g || 0,
+          vitamin_k_µg_per_100g: jsonData.other?.vitamin_k_µg_per_100g || 0,
+          sfa_16_0_palmitic_acid_g_per_100g: jsonData.other?.sfa_16_0_palmitic_acid_g_per_100g || 0,
+          sfa_18_0_stearic_acid_g_per_100g: jsonData.other?.sfa_18_0_stearic_acid_g_per_100g || 0,
+          mufa_16_1_palmitoleic_acid_g_per_100g: jsonData.other?.mufa_16_1_palmitoleic_acid_g_per_100g || 0,
+          mufa_18_1__oleic_acid_g_per_100g: jsonData.other?.mufa_18_1__oleic_acid_g_per_100g || 0,
+          pufa_18_2_linoleic_acid_g_per_100g: jsonData.other?.pufa_18_2_linoleic_acid_g_per_100g || 0,
+          tryptophan_g_per_100g: jsonData.other?.tryptophan_g_per_100g || 0,
+          threonine_g_per_100g: jsonData.other?.threonine_g_per_100g || 0,
+          isoleucine_g_per_100g: jsonData.other?.isoleucine_g_per_100g || 0,
+          leucine_g_per_100g: jsonData.other?.leucine_g_per_100g || 0,
+          lysine_g_per_100g: jsonData.other?.lysine_g_per_100g || 0,
+          methionine_g_per_100g: jsonData.other?.methionine_g_per_100g || 0,
+          phenylalanine_g_per_100g: jsonData.other?.phenylalanine_g_per_100g || 0,
+          tyrosine_g_per_100g: jsonData.other?.tyrosine_g_per_100g || 0,
+          valine_g_per_100g: jsonData.other?.valine_g_per_100g || 0,
+          arginine_g_per_100g: jsonData.other?.arginine_g_per_100g || 0,
+          histidine_g_per_100g: jsonData.other?.histidine_g_per_100g || 0,
+          alanine_g_per_100g: jsonData.other?.alanine_g_per_100g || 0,
+          aspartic_acid_g_per_100g: jsonData.other?.aspartic_acid_g_per_100g || 0,
+          glutamic_acid_g_per_100g: jsonData.other?.glutamic_acid_g_per_100g || 0,
+          glycine_g_per_100g: jsonData.other?.glycine_g_per_100g || 0,
+          proline_g_per_100g: jsonData.other?.proline_g_per_100g || 0,
+          serine_g_per_100g: jsonData.other?.serine_g_per_100g || 0,
+          hydroxyproline_g_per_100g: jsonData.other?.hydroxyproline_g_per_100g || 0,
+          cysteine_g_per_100g: jsonData.other?.cysteine_g_per_100g || 0,
+          daidzein_mg_per_100g: jsonData.other?.daidzein_mg_per_100g || 0,
+          genistein_mg_per_100g: jsonData.other?.genistein_mg_per_100g || 0,
+          daidzin_mg_per_100g: jsonData.other?.daidzin_mg_per_100g || 0,
+          genistin_mg_per_100g: jsonData.other?.genistin_mg_per_100g || 0,
+          glycitin_mg_per_100g: jsonData.other?.glycitin_mg_per_100g || 0,
         },
         update: {
           kcal_per_100g: jsonData.nutritional_data?.kcal_per_100g || 0,
@@ -516,6 +627,73 @@ export async function GET(request: Request) {
           saturated_fat_per_100g: jsonData.nutritional_data?.saturated_fat_per_100g || 0,
           monounsaturate_per_100g: jsonData.nutritional_data?.monounsaturate_per_100g || 0,
           polyunsaturate_per_100g: jsonData.nutritional_data?.polyunsaturate_per_100g || 0,
+          trans_fats_per_100g: jsonData.nutritional_data?.trans_fats_per_100g || 0,
+          omega3_per_100g: jsonData.nutritional_data?.omega3_per_100g || 0,
+          omega6_per_100g: jsonData.nutritional_data?.omega6_per_100g || 0,
+          omega9_per_100g: jsonData.nutritional_data?.omega9_per_100g || 0,
+          carbs_per_100g: jsonData.nutritional_data?.carbs_per_100g || 0,
+          net_carbs_per_100g: jsonData.nutritional_data?.net_carbs_per_100g || 0,
+          carbohydrates_per_100g: jsonData.nutritional_data?.carbohydrates_per_100g || 0,
+          total_sugar_per_100g: jsonData.nutritional_data?.total_sugar_per_100g || 0,
+          added_sugar_per_100g: jsonData.nutritional_data?.added_sugar_per_100g || 0,
+          artificial_sugar_per_100g: jsonData.nutritional_data?.artificial_sugar_per_100g || 0,
+          fibre_per_100g: jsonData.nutritional_data?.fibre_per_100g || 0,
+          starch_per_100g: jsonData.nutritional_data?.starch_per_100g || 0,
+          salt_per_100g: jsonData.nutritional_data?.salt || 0,
+          sodium_per_100g: jsonData.nutritional_data?.sodium_per_100g || 0,
+          // OTHER
+          water_per_100g: jsonData.other?.water_per_100g || 0,
+          nitrogen_g_per_100g: jsonData.other?.nitrogen_g_per_100g || 0,
+          protein_g_per_100g: jsonData.other?.protein_g_per_100g || 0,
+          ash_g_per_100g: jsonData.other?.ash_g_per_100g || 0,
+          calcium_mg_per_100g: jsonData.other?.calcium_mg_per_100g || 0,
+          iron_mg_per_100g: jsonData.other?.iron_mg_per_100g || 0,
+          magnesium_mg_per_100g: jsonData.other?.magnesium_mg_per_100g || 0,
+          phosphorus_mg_per_100g: jsonData.other?.phosphorus_mg_per_100g || 0,
+          potassium_mg_per_100g: jsonData.other?.potassium_mg_per_100g || 0,
+          zinc_mg_per_100g: jsonData.other?.zinc_mg_per_100g || 0,
+          copper_mg_per_100g: jsonData.other?.copper_mg_per_100g || 0,
+          manganese_mg_per_100g: jsonData.other?.manganese_mg_per_100g || 0,
+          selenium_µg_per_100g: jsonData.other?.selenium_µg_per_100g || 0,
+          vitamin_a_mg_per_100g: jsonData.other?.vitamin_a_mg_per_100g || 0,
+          vitamin_b1_thiamin_mg_per_100g: jsonData.other?.vitamin_b1_thiamin_mg_per_100g || 0,
+          vitamin_b2_mg_per_100g: jsonData.other?.vitamin_b2_mg_per_100g || 0,
+          vitamin_b3_niacin_mg_per_100g: jsonData.other?.vitamin_b3_niacin_mg_per_100g || 0,
+          vitamin_b6_mg_per_100g: jsonData.other?.vitamin_b6_mg_per_100g || 0,
+          vitamin_b7_biotin_µg_per_100g: jsonData.other?.vitamin_b7_biotin_µg_per_100g || 0,
+          vitamin_b9_folate_mg_per_100g: jsonData.other?.vitamin_b9_folate_mg_per_100g || 0,
+          vitamin_b12_mg_per_100g: jsonData.other?.vitamin_b12_mg_per_100g || 0,
+          vitamin_e_mg_per_100g: jsonData.other?.vitamin_e_mg_per_100g || 0,
+          vitamin_k_µg_per_100g: jsonData.other?.vitamin_k_µg_per_100g || 0,
+          sfa_16_0_palmitic_acid_g_per_100g: jsonData.other?.sfa_16_0_palmitic_acid_g_per_100g || 0,
+          sfa_18_0_stearic_acid_g_per_100g: jsonData.other?.sfa_18_0_stearic_acid_g_per_100g || 0,
+          mufa_16_1_palmitoleic_acid_g_per_100g: jsonData.other?.mufa_16_1_palmitoleic_acid_g_per_100g || 0,
+          mufa_18_1__oleic_acid_g_per_100g: jsonData.other?.mufa_18_1__oleic_acid_g_per_100g || 0,
+          pufa_18_2_linoleic_acid_g_per_100g: jsonData.other?.pufa_18_2_linoleic_acid_g_per_100g || 0,
+          tryptophan_g_per_100g: jsonData.other?.tryptophan_g_per_100g || 0,
+          threonine_g_per_100g: jsonData.other?.threonine_g_per_100g || 0,
+          isoleucine_g_per_100g: jsonData.other?.isoleucine_g_per_100g || 0,
+          leucine_g_per_100g: jsonData.other?.leucine_g_per_100g || 0,
+          lysine_g_per_100g: jsonData.other?.lysine_g_per_100g || 0,
+          methionine_g_per_100g: jsonData.other?.methionine_g_per_100g || 0,
+          phenylalanine_g_per_100g: jsonData.other?.phenylalanine_g_per_100g || 0,
+          tyrosine_g_per_100g: jsonData.other?.tyrosine_g_per_100g || 0,
+          valine_g_per_100g: jsonData.other?.valine_g_per_100g || 0,
+          arginine_g_per_100g: jsonData.other?.arginine_g_per_100g || 0,
+          histidine_g_per_100g: jsonData.other?.histidine_g_per_100g || 0,
+          alanine_g_per_100g: jsonData.other?.alanine_g_per_100g || 0,
+          aspartic_acid_g_per_100g: jsonData.other?.aspartic_acid_g_per_100g || 0,
+          glutamic_acid_g_per_100g: jsonData.other?.glutamic_acid_g_per_100g || 0,
+          glycine_g_per_100g: jsonData.other?.glycine_g_per_100g || 0,
+          proline_g_per_100g: jsonData.other?.proline_g_per_100g || 0,
+          serine_g_per_100g: jsonData.other?.serine_g_per_100g || 0,
+          hydroxyproline_g_per_100g: jsonData.other?.hydroxyproline_g_per_100g || 0,
+          cysteine_g_per_100g: jsonData.other?.cysteine_g_per_100g || 0,
+          daidzein_mg_per_100g: jsonData.other?.daidzein_mg_per_100g || 0,
+          genistein_mg_per_100g: jsonData.other?.genistein_mg_per_100g || 0,
+          daidzin_mg_per_100g: jsonData.other?.daidzin_mg_per_100g || 0,
+          genistin_mg_per_100g: jsonData.other?.genistin_mg_per_100g || 0,
+          glycitin_mg_per_100g: jsonData.other?.glycitin_mg_per_100g || 0,
         },
       }),
       // UPSERT RAW TO PREPPED YIELDS into the raw_to_prepped_yields table

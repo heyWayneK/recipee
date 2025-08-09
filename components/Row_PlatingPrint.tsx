@@ -1,12 +1,14 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { data } from "@/app/api/recipe";
+// import { data } from "@/app/api/recipe";
 import SvgSpriteLink from "./SvgSpriteLink";
 import { cleanComponentKeyName, getTextTranslation } from "@/utils/utils";
+import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_PlatingPrintProps {}
 
 const Row_PlatingPrint: React.FC<Row_PlatingPrintProps> = () => {
+  const { recipeData } = useRecipeData(); // Assuming data is imported from the API
   // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
   // const { recipeData } = useRecipeData();
   const name = getTextTranslation("print");
@@ -18,7 +20,7 @@ const Row_PlatingPrint: React.FC<Row_PlatingPrintProps> = () => {
       <Table_Cell type="print" key={keyName + "_ firstRow"}></Table_Cell>
 
       {/* OTHER COLUMNS START */}
-      {data.portions.map((portionSize, i) => {
+      {recipeData.data.portions.map((portionSize, i) => {
         return (
           <Table_Cell type="print" key={keyName + "_" + i}>
             {<SvgSpriteLink key={`print_${String(i)}  + "_" + rowNum`} size={25} onClick={() => alert("Need to add print feature")} iconName="print" />}

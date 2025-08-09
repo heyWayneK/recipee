@@ -1,13 +1,16 @@
 import React from "react";
 import Row_SubRecipeIngredient from "./Row_SubRecipeIngredient";
-import { RecipeProps, data } from "@/app/api/recipe";
+// import { RecipeProps, data } from "@/app/api/recipe";
 import Row_SubRecipeStep from "./Row_SubRecipeStep";
+import { RecipeProps } from "@/types/recipeTypes";
+import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_SubRecipeIngredientsProps {
   recipe: RecipeProps;
 }
 const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ recipe }) => {
-  const findRecipe = data.recipes.find((rec) => recipe.uuid === rec.uuid);
+  const { recipeData } = useRecipeData();
+  const findRecipe = recipeData.data.recipes.find((rec) => recipe.uuid === rec.uuid);
 
   if (!findRecipe) {
     const e = `Recipe with ID ${recipe.uuid} not found.`;

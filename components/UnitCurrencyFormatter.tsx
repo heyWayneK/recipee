@@ -5,13 +5,13 @@ type UnitCurrenctFormatterProps = {
   children: number | string;
 };
 
-const UnitCurrencyFormatter: React.FC<UnitCurrenctFormatterProps> = ({ children }): React.ReactElement => {
+const UnitCurrencyFormatter: React.FC<UnitCurrenctFormatterProps> = ({ children = undefined }): React.ReactElement => {
   const { recipeData } = useRecipeData();
 
-  if (!children) throw new Error("Invalid children prop");
+  if (children === undefined) throw new Error("Invalid children prop");
 
   return (
-    <span>
+    <span className=" text-nowrap">
       {recipeData.currencySymbol} {Number(children).toFixed(2)}
     </span>
   );

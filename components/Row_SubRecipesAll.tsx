@@ -1,5 +1,5 @@
 import React from "react";
-import { data } from "@/app/api/recipe";
+// import { data } from "@/app/api/recipe";
 import Row_SubRecipeControls from "./Row_SubRecipeControls";
 import Row_SubRecipeSubName from "./Row_SubRecipeName";
 import Row_SubRecipeHeader from "./Row_SubRecipeHeader";
@@ -8,6 +8,7 @@ import Row_SubRecipeAddButtons from "./Row_SubRecipeAddButtons";
 import Row_SubRecipeMethod from "./Row_SubRecipeMethod";
 import DottedBorder from "./DottedBorder";
 import { RecipeProps } from "@/types/recipeTypes";
+import { useRecipeData } from "@/contexts/useRecipeData";
 
 interface Row_SubRecipesAllProps {}
 
@@ -16,8 +17,12 @@ export const recipeeUI = {
 };
 
 const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
-  return data.components.map((subRecipe, i) => {
-    const findRecipe: RecipeProps | undefined = data.recipes.find((recipe) => recipe.uuid === subRecipe.recipeId);
+  const { recipeData } = useRecipeData();
+
+  // return recipeData.data.components.map((subRecipe, i) => {
+  return recipeData.data.components.map((subRecipe, i) => {
+    // Recipes are a flat structure, so we need to find the recipe by its uuid
+    const findRecipe: RecipeProps | undefined = recipeData.data.recipes.find((recipe) => recipe.uuid === subRecipe.uuid);
 
     if (!findRecipe) {
       const e = `Recipe with ID ${subRecipe.uuid} not found.`;

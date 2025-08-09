@@ -49,25 +49,17 @@ export async function GET() {
   const orgId = "1"; // Default customer ID
   try {
     const recipeData2 = await getLiveRecipeData("1234567890", "1"); // Using a static recipe UUID for demo purposes
-    console.log("----->>>>>>>> getAllRecipeObject recipeData2:", recipeData2);
-    const rec2 = { data2: recipeData2 };
+    const recipeLive = { data: recipeData2[0] };
     const recipeData = await getRecipeDataFunc2();
     const systemData = await getSystemDataFunc2(orgId);
-    // Pre-calculate Recipe Components and other data
-    const preCalcData = await preCalculateData(recipeData, systemData);
-    // return { recipeData: { ...recipeData, ...preCalcData, ...rec2 }, systemData };
 
-    // const recipeData = await getRecipeDataFunc2();
-    // const systemData = await getSystemDataFunc2(orgId);
-    // // const userData = await getUserDataFunc(orgId);
-    // // const preCalcData = await preCalculateData(recipeData, systemData, userData);
-
-    // // Precalulate the into a more readable format for object access and debugging
+    const preCalcData = await preCalculateData({ ...recipeData, ...recipeLive }, systemData);
     // const preCalcData = await preCalculateData(recipeData, systemData);
-    // // const response = await JSON.parse(JSON.stringify(getSystemData(orgId)));
+    // const preCalcData = await preCalculateData(recipeData, systemData);
+    // return { recipeData: { ...recipeData, ...preCalcData, ...recipeLive }, systemData };
 
     // Update the precalulated recipe data with the full recipe data
-    return NextResponse.json({ recipeData: { ...recipeData, ...preCalcData, ...rec2 }, systemData }, { status: 200 });
+    return NextResponse.json({ recipeData: { ...recipeData, ...preCalcData, ...recipeLive }, systemData }, { status: 200 });
     // return NextResponse.json({ hello: "world" }, { status: 200 });
   } catch (error) {
     // Log the error for server-side debugging

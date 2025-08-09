@@ -1,8 +1,8 @@
 "use server";
-import { PreCalculatedRecipeData, OtherCostsLineItemsLookupSelect, NutritionalDataValuesSelect, OrgTypeSelect, measurementUnitsObjProps, LineItemsLookup } from "@/types/recipeTypes";
+import { PreCalculatedRecipeData, OtherCostsLineItemsLookupSelect, NutritionalDataValuesSelect, OrgTypeSelect, measurementUnitsObjProps, LineItemsLookup, RecipeDataProps } from "@/types/recipeTypes";
 import prisma from "@/libs/prisma";
 import { Prisma } from "@prisma/client";
-import { data } from "@/app/api/recipe";
+// import { data } from "@/app/api/recipe";
 
 import { preCalculateData } from "@/libs/preCalculatedRecipeData";
 import { SystemDataProps } from "@/types/recipeTypes";
@@ -39,7 +39,7 @@ LEFT JOIN (
     JSON_AGG(
       JSON_BUILD_OBJECT(
         'id', id,
-        'qty', portion_g,
+        'qty_g', portion_g,
         'order', "order"
       ) ORDER BY "order" ASC
     ) AS portions
@@ -139,7 +139,7 @@ LEFT JOIN (
             JSON_AGG(
                 JSON_BUILD_OBJECT(
                     'id', "recipe_portions_id",
-                    'qty', qty_g
+                    'qty_g', qty_g
                 )
             ) as portions
         FROM component_portion_on_recipe
@@ -180,7 +180,8 @@ LEFT JOIN (
                     'home_qty_frac_denominator', rdr.home_qty_frac_denominator, 'home_qty', rdr.home_qty,
                     'home_qty_type', rdr.home_qty_type_name, 'order', rdr.sort_order, 'type', rdr.ingredient_type_name,
                     'instruction', rdr.prep_instruction_name, 'stepInstruction', rdr.step_instruction,
-                    'costPer1000', rdr.cost_per_1000, 'needsPrep', rdr.needs_prep,
+                    'costPer1000', rdr.cost_per_1000g, 'needsPrep', rdr.needs_prep,
+          
                     'isSalt', CASE WHEN rdr.salt_purpose_id IS NOT NULL THEN true ELSE false END,
                     'isOil', CASE WHEN rdr.oil_purpose_id IS NOT NULL THEN true ELSE false END,
                     'FQscore', fq.score
@@ -224,13 +225,14 @@ LEFT JOIN (
                     'home_qty_frac_denominator', rdr.home_qty_frac_denominator, 'home_qty', rdr.home_qty,
                     'home_qty_type', rdr.home_qty_type_name, 'order', rdr.sort_order, 'type', rdr.ingredient_type_name,
                     'instruction', rdr.prep_instruction_name, 'stepInstruction', rdr.step_instruction,
-                    'costPer1000', rdr.cost_per_1000, 'needsPrep', rdr.needs_prep,
+                    'costPer1000', rdr.cost_per_1000g, 'needsPrep', rdr.needs_prep,
                     'isSalt', CASE WHEN rdr.salt_purpose_id IS NOT NULL THEN true ELSE false END,
-                    'isOil', CASE WHEN rdr.oil_purpose_id IS NOT NULL THEN true ELSE false END,
-                    'FQscore', fq.score
+                    'isOil', CASE WHEN rdr.oil_purpose_id IS NOT NULL THEN true ELSE false END
+                    
                 ) ORDER BY rdr.sort_order ASC
             ) as "recipeDetail"
         FROM recipe_detail_row as rdr
+  
         LEFT JOIN (
             SELECT id, JSON_BUILD_OBJECT('positive', positive, 'negative', negative, 'neutral', neutral, 'overall', overall, 'positiveTxt', positive_txt, 'negativeTxt', negative_txt, 'neutralTxt', neutral_txt, 'overallTxt', overall_txt) as score
             FROM fq_score
@@ -243,7 +245,7 @@ WHERE
       r.uuid = ${recipeUuid}
   `;
 
-  console.log("----->>>>>>>> getLiveRecipeData result:", result);
+  console.log("----->>>>>>>> getLiveRecipeData object:", result);
   // $queryRaw returns an array, so we take the first element.
   return result || null;
 };
@@ -442,7 +444,8 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
 
 export const getRecipeDataFunc2 = async (): Promise<PreCalculatedRecipeData> => {
   // INFO: This is the initial state of the recipe data - empty arrays
-  const recipesStatic = JSON.parse(JSON.stringify(data));
+  // const recipesStatic = JSON.parse(JSON.stringify(data));
+  //
   return {
     portionSizes: [],
     portionIds: [],
@@ -467,7 +470,8 @@ export const getRecipeDataFunc2 = async (): Promise<PreCalculatedRecipeData> => 
     vatRulePercs: [],
     vatRuleNames: [],
     // Create a deep copy of the data object (Recipe Data)
-    data: recipesStatic,
+    data: {} as RecipeDataProps, // Initialize as an empty array
+    // data: recipesStatic,
     data2: [],
     isImperial: false,
     isHome: false,

@@ -6,6 +6,7 @@ import SvgSprite from "./SvgSprite";
 import MenuOption1 from "./MenuOption1";
 import IngredientUnits from "./IngredientUnits";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
+import { textAlign } from "html2canvas/dist/types/css/property-descriptors/text-align";
 
 interface Row_SubRecipeIngredientProps {
   className?: string;
@@ -32,6 +33,15 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ class
         return <UnitCurrencyFormatter>{value}</UnitCurrencyFormatter>;
       case "qty":
         return <IngredientUnits>{qty}</IngredientUnits>;
+      case "ingredName":
+        return (
+          <div>
+            {value}{" "}
+            <span className=" !text-xs">
+              isSalt:{ingredient.isSalt} isOil:{ingredient.isOil}
+            </span>
+          </div>
+        );
       default:
         return value;
     }

@@ -9,7 +9,7 @@ const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none ", {
   variants: {
     firstCol: {
       // First Row
-      true: "flex flex-grow flex-shrink font-normal uppercase content-center line-clamp-1",
+      true: "flex flex-grow flex-shrink font-normal uppercase justify-items-start line-clamp-1",
     },
     type: {
       plating: "flex justify-center items-baseline border text-nowrap gap-x-2 rounded-full bg-base-100/40 shadow-md [&>svg]:fill-base-content [&>svg]:size [&>svg]:text-base-content capitalize ",

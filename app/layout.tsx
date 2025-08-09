@@ -1,95 +1,47 @@
-"use client";
-require("dotenv").config();
-import { ReactNode, StrictMode, useContext, useEffect } from "react";
+import { ReactNode } from "react";
 import { Inter } from "next/font/google";
 import { Viewport } from "next";
 import PlausibleProvider from "next-plausible";
 import { getSEOTags } from "@/libs/seo";
-import ClientLayout from "@/components/LayoutClient";
 import config from "@/config";
 import "./globals.css";
-import { ModalProvider } from "@/providers/bigModalProvider";
-import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
-import { ClerkProvider } from "@clerk/nextjs";
-import { OnlineStatusProvider } from "@/contexts/useOnlineStatus";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import AppProviders from "./providers"; // Import the new client component
 
 const font = Inter({ subsets: ["latin"] });
-// const font = Inter({ subsets: ["latin"], weight: "100", variable: ""});
 
-// TODO Viewport doesnt like export
-// export const viewport: Viewport = {
-//   themeColor: config.colors.main,
-//   width: "device-width",
-//   initialScale: 1,
-// };
+// Export metadata and viewport as Next.js expects
+export const metadata = {
+  ...getSEOTags(),
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+      { url: "/favicon.ico", rel: "shortcut icon" },
+    ],
+    apple: "/apple-touch-icon.png", // Next.js convention for apple-mobile-web-app-title
+  },
+  manifest: "/site.webmanifest",
+};
 
-// TODO: Need to add MetaData later in own component with "use server"??
-// export const metadata = getSEOTags();
+export const viewport: Viewport = {
+  themeColor: config.colors.main,
+  width: "device-width",
+  initialScale: 1,
+};
 
-export default function RootLayout({ children }: { children: ReactNode }) {
-  const viewport: Viewport = {
-    themeColor: config.colors.main,
-    width: "device-width",
-    initialScale: 1,
-  };
-
-  // const { theme, toggleTheme } = useContext(useThemeDarkLight);
-  // useEffect(() => {
-  //   // Apply dynamic classes after hydration
-  //   document.documentElement.classList.add("hydrated");
-  // }, []);
-
-  // console.log("RootLayout: config.colors.theme", config.colors.theme);
-
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // "use server"; // We dont need this, its autoamtically a server component
   return (
-    /* INFO: 
-            Using suppressHydrationWarning to stop the warning about Hydration
-            of the className={font.className}. This seems to work fine
-            this is an issue related to the daisyUi Light/Dark dynamic css classes 
-    */
-    <html key="htmltag" lang="en" data-theme={config.colors.theme} className={font.className} suppressHydrationWarning>
+    // The suppressHydrationWarning is still useful here because of the dynamic
+    // data-theme attribute managed by your theme provider on the client.
+    <html lang="en" className={font.className} suppressHydrationWarning>
       {config.domainName && (
-        <head aria-label="Recipee.app Recipe, Recipe Book, Nutrition Calculations, Meal Plans, Chef and Bulk Food Management">
+        <head>
           <PlausibleProvider domain={config.domainName} />
-          {/* // OR
-          <title></title>
-        <meta name="description" content=""  /> */}
-          <meta name="apple-mobile-web-app-title" content="recipee.app" />
-          <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-          <link rel="shortcut icon" href="/favicon.ico" />
-          <link rel="manifest" href="/site.webmanifest" />
         </head>
       )}
-      <body className=" text-xs md:text-sm lg:text-base text-base-content">
-        <StrictMode>
-          <ClerkProvider>
-            <DarkLightThemeProvider>
-              <OnlineStatusProvider>
-                <header>
-                  <Header />
-                </header>
-
-                <div className="flex flex-col min-h-screen ">
-                  <div className="flex-grow grid grid-cols-[min-content_1fr_min-content] h-full gap-0 ">
-                    <aside aria-label="Left Cookbook Manager"></aside>
-                    <main aria-label="Main Recipee App Content" className="px-1 md:px-6">
-                      {children}
-                    </main>
-                    <aside aria-label="Right Menu Sidebar "></aside>
-                  </div>
-
-                  <footer aria-label="Recipee footer" className="min-h-40">
-                    <Footer />
-                  </footer>
-                </div>
-                <ModalProvider />
-              </OnlineStatusProvider>
-            </DarkLightThemeProvider>
-          </ClerkProvider>
-        </StrictMode>
+      <body className="text-xs md:text-sm lg:text-base text-base-content">
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

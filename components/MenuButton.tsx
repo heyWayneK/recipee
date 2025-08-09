@@ -1,6 +1,6 @@
 "use client";
 
-import { useModalMenu } from "@/contexts/useMenuModal";
+import { useModalMenu } from "@/contexts/UseMenuModal";
 import React, { ComponentProps } from "react";
 import { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 

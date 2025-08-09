@@ -7,7 +7,7 @@ type IngredientUnitsProps = {
   className?: string;
 };
 
-const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className = "" }): React.ReactNode | "" => {
+const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className = undefined }): React.ReactNode | "" => {
   const { systemData, recipeMode } = useRecipeData();
 
   //   const formatWeight = (weight: number | string): string => {
@@ -19,7 +19,7 @@ const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className =
   let weightUnitsForHome: string = "";
 
   // Check if children is valid. Needs to be a number  or string number
-  if (!children) return console.error("Invalid weight value", children), "";
+  if (children === undefined) return console.error("Invalid weight value", children), "";
 
   let weight: number | string = children ? Number(children) : "";
 
@@ -102,7 +102,7 @@ const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className =
         }
       }
     }
-  } else {
+  } else if (defaultUnitType === "metric") {
     // Handle metric units
     if (isFluid) {
       // Handle milliliters
@@ -128,7 +128,7 @@ const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className =
   // Format Weight or Volume grams, kilograms, milliliters, ounces, pounds, units_ea
 
   // Set Decimal Places
-  weightUnit = weight.toFixed(3);
+  // weightUnit = weight.toFixed(3);
 
   // RETURN e.g grams or kilograms
   // const unit = weightDecimals < 1000 ? data.setting.unitMaster[0] : data.setting.unitMaster[1];

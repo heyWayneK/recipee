@@ -533,15 +533,17 @@ model ingredient_type {
 // }
 
 model other_costs_category {
-  id                    Int                     @id @default(autoincrement())
-  org                   org                     @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
-  org_uuid              String
-  name                  String
-  desc                  String
-  other_costs_lookup    other_costs_lookup[]
-  recipe                recipe?                 @relation(fields: [recipeUuid], references: [uuid])
-  recipeUuid            String?
+  id                 Int                  @id @default(autoincrement())
+  org                org                  @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid           String
+  name               String
+  desc               String
+  other_costs_lookup other_costs_lookup[]
+
   other_costs_on_recipe other_costs_on_recipe[]
+
+  recipe     recipe? @relation(fields: [recipeUuid], references: [uuid])
+  recipeUuid String?
 }
 
 model other_costs_lookup {
@@ -570,16 +572,17 @@ model other_costs_line_item {
 }
 
 model packaging_costs_category {
-  id                        Int                         @id @default(autoincrement())
-  org                       org                         @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
-  org_uuid                  String
-  name                      String
-  desc                      String
-  is_active                 Boolean                     @default(true)
-  packaging_costs_lookup    packaging_costs_lookup[]    @relation("CategoryToLookup")
+  id                     Int                      @id @default(autoincrement())
+  org                    org                      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid               String
+  name                   String
+  desc                   String
+  is_active              Boolean                  @default(true)
+  packaging_costs_lookup packaging_costs_lookup[] @relation("CategoryToLookup")
+
+  packaging_costs_on_recipe packaging_costs_on_recipe[]
   recipe                    recipe?                     @relation(fields: [recipeUuid], references: [uuid])
   recipeUuid                String?
-  packaging_costs_on_recipe packaging_costs_on_recipe[]
 }
 
 model packaging_costs_lookup {
@@ -715,6 +718,60 @@ model ingredients_nutrition {
   starch_per_100g           Decimal?    @db.Decimal(10, 3)
   salt_per_100g             Decimal?    @db.Decimal(10, 3)
   sodium_per_100g           Decimal?    @db.Decimal(10, 3)
+
+  // MICRO NUTRIENTS
+  water_per_100g                        Decimal? @db.Decimal(10, 3)
+  nitrogen_g_per_100g                   Decimal? @db.Decimal(10, 3)
+  protein_g_per_100g                    Decimal? @db.Decimal(10, 3)
+  ash_g_per_100g                        Decimal? @db.Decimal(10, 3)
+  calcium_mg_per_100g                   Decimal? @db.Decimal(10, 3)
+  iron_mg_per_100g                      Decimal? @db.Decimal(10, 3)
+  magnesium_mg_per_100g                 Decimal? @db.Decimal(10, 3)
+  phosphorus_mg_per_100g                Decimal? @db.Decimal(10, 3)
+  potassium_mg_per_100g                 Decimal? @db.Decimal(10, 3)
+  zinc_mg_per_100g                      Decimal? @db.Decimal(10, 3)
+  copper_mg_per_100g                    Decimal? @db.Decimal(10, 3)
+  manganese_mg_per_100g                 Decimal? @db.Decimal(10, 3)
+  selenium_µg_per_100g                 Decimal? @db.Decimal(10, 3)
+  vitamin_a_mg_per_100g                 Decimal? @db.Decimal(10, 3)
+  vitamin_b1_thiamin_mg_per_100g        Decimal? @db.Decimal(10, 3)
+  vitamin_b2_mg_per_100g                Decimal? @db.Decimal(10, 3)
+  vitamin_b3_niacin_mg_per_100g         Decimal? @db.Decimal(10, 3)
+  vitamin_b6_mg_per_100g                Decimal? @db.Decimal(10, 3)
+  vitamin_b7_biotin_µg_per_100g        Decimal? @db.Decimal(10, 3)
+  vitamin_b9_folate_mg_per_100g         Decimal? @db.Decimal(10, 3)
+  vitamin_b12_mg_per_100g               Decimal? @db.Decimal(10, 3)
+  vitamin_e_mg_per_100g                 Decimal? @db.Decimal(10, 3)
+  vitamin_k_µg_per_100g                Decimal? @db.Decimal(10, 3)
+  sfa_16_0_palmitic_acid_g_per_100g     Decimal? @db.Decimal(10, 3)
+  sfa_18_0_stearic_acid_g_per_100g      Decimal? @db.Decimal(10, 3)
+  mufa_16_1_palmitoleic_acid_g_per_100g Decimal? @db.Decimal(10, 3)
+  mufa_18_1__oleic_acid_g_per_100g      Decimal? @db.Decimal(10, 3)
+  pufa_18_2_linoleic_acid_g_per_100g    Decimal? @db.Decimal(10, 3)
+  tryptophan_g_per_100g                 Decimal? @db.Decimal(10, 3)
+  threonine_g_per_100g                  Decimal? @db.Decimal(10, 3)
+  isoleucine_g_per_100g                 Decimal? @db.Decimal(10, 3)
+  leucine_g_per_100g                    Decimal? @db.Decimal(10, 3)
+  lysine_g_per_100g                     Decimal? @db.Decimal(10, 3)
+  methionine_g_per_100g                 Decimal? @db.Decimal(10, 3)
+  phenylalanine_g_per_100g              Decimal? @db.Decimal(10, 3)
+  tyrosine_g_per_100g                   Decimal? @db.Decimal(10, 3)
+  valine_g_per_100g                     Decimal? @db.Decimal(10, 3)
+  arginine_g_per_100g                   Decimal? @db.Decimal(10, 3)
+  histidine_g_per_100g                  Decimal? @db.Decimal(10, 3)
+  alanine_g_per_100g                    Decimal? @db.Decimal(10, 3)
+  aspartic_acid_g_per_100g              Decimal? @db.Decimal(10, 3)
+  glutamic_acid_g_per_100g              Decimal? @db.Decimal(10, 3)
+  glycine_g_per_100g                    Decimal? @db.Decimal(10, 3)
+  proline_g_per_100g                    Decimal? @db.Decimal(10, 3)
+  serine_g_per_100g                     Decimal? @db.Decimal(10, 3)
+  hydroxyproline_g_per_100g             Decimal? @db.Decimal(10, 3)
+  cysteine_g_per_100g                   Decimal? @db.Decimal(10, 3)
+  daidzein_mg_per_100g                  Decimal? @db.Decimal(10, 3)
+  genistein_mg_per_100g                 Decimal? @db.Decimal(10, 3)
+  daidzin_mg_per_100g                   Decimal? @db.Decimal(10, 3)
+  genistin_mg_per_100g                  Decimal? @db.Decimal(10, 3)
+  glycitin_mg_per_100g                  Decimal? @db.Decimal(10, 3)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -910,16 +967,15 @@ model recipe {
 
   recipe_portions recipe_portions[]
 
-  packaging_costs_category packaging_costs_category[]
-  other_costs_category     other_costs_category[]
-  markup_rules             markup[]
-  vat_rules                vat_rules[]
+  other_costs_category other_costs_category[]
+  markup_rules         markup[]
+  vat_rules            vat_rules[]
 
   production_event            production_event[]
   production_event_task       production_event_task[]
   recipe_components_on_recipe recipe_components_on_recipe[]
   packaging_costs_on_recipe   packaging_costs_on_recipe[]
-  other_costs_on_recipe       other_costs_on_recipe[]
+  // other_costs_on_recipe       other_costs_on_recipe[]
   markup_on_recipe            markup_on_recipe[]
   vat_on_recipe               vat_on_recipe[]
   component_portion_on_recipe component_portion_on_recipe[]
@@ -932,6 +988,10 @@ model recipe {
   updated_at        DateTime            @updatedAt
   recipe_detail_row recipe_detail_row[]
   fq_score          fq_score[]
+
+  other_costs_on_recipe    other_costs_on_recipe[]
+  packaging_costs_category packaging_costs_category[]
+  recipe_backup            recipe_backup[]
 }
 
 model rationalised_recipe_on_recipe {
@@ -978,7 +1038,7 @@ model recipe_components_on_recipe {
   name       String
   sort_order Int
   yield      Decimal @default(0.000) @db.Decimal(10, 3)
-  version    String
+  version    String?
 
   org      org    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
   org_uuid String
@@ -1020,10 +1080,10 @@ model component_portion_on_recipe {
 
   qty_g Decimal @db.Decimal(10, 3)
 
-  recipe_components_on_recipe     recipe_components_on_recipe? @relation(fields: [recipe_components_on_recipeUuid], references: [uuid])
-  recipe_components_on_recipeUuid String?
+  recipe_components_on_recipe     recipe_components_on_recipe @relation(fields: [recipe_components_on_recipeUuid], references: [uuid])
+  recipe_components_on_recipeUuid String
 
-  @@id([recipe_uuid, recipe_portions_id])
+  @@id([recipe_uuid, recipe_portions_id, recipe_components_on_recipeUuid])
 }
 
 model packaging_costs_on_recipe {
@@ -1046,8 +1106,8 @@ model other_costs_on_recipe {
   portions           recipe_portions @relation(fields: [recipe_portions_id], references: [id])
   recipe_portions_id Int
 
-  rule                   other_costs_category? @relation(fields: [other_costs_categoryId], references: [id])
-  other_costs_categoryId Int?
+  rule                   other_costs_category @relation(fields: [other_costs_categoryId], references: [id])
+  other_costs_categoryId Int
 
   @@id([recipe_uuid, recipe_portions_id])
 }
@@ -1084,8 +1144,8 @@ model recipe_detail_row {
   recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
   recipe_uuid String
 
-  recipe_components_on_recipe     recipe_components_on_recipe? @relation(fields: [recipe_components_on_recipeUuid], references: [uuid])
-  recipe_components_on_recipeUuid String?
+  recipe_components_on_recipe     recipe_components_on_recipe @relation(fields: [recipe_components_on_recipeUuid], references: [uuid])
+  recipe_components_on_recipeUuid String
 
   name_extra_info String? // e.g. "Place Cheese In Middle"
 
@@ -1131,8 +1191,8 @@ model recipe_detail_row {
   dry_cooked_yield_custom        Decimal?                      @db.Decimal(4, 2)
 
   // ingredient_type_name: local, master, unlinked_master
-  ingredient_type      ingredient_type? @relation(fields: [ingredient_type_name], references: [name])
-  ingredient_type_name String?          @default("local") // Default to local
+  ingredient_type      ingredient_type @relation(fields: [ingredient_type_name], references: [name])
+  ingredient_type_name String          @default("local") // Default to local
 
   // 10x10mm, 15x15mm, ground fine, whole
   instruction            prep_instructions? @relation(fields: [prep_instruction_name], references: [name])
@@ -1142,13 +1202,17 @@ model recipe_detail_row {
   step_instruction String?
 
   // unit_type           String? // weight, volume, count
-  cost_per_1000 Decimal? @db.Decimal(10, 3)
+  cost_per_1000g Decimal @default(0.000) @db.Decimal(10, 3)
 
   needs_prep   Boolean @default(false)
   prep_details Json?
 
   fq_score    fq_score? @relation(fields: [fq_score_id], references: [id])
   fq_score_id Int?
+
+  // this needs to be updated when the recipe is updated
+  // always loaded as false when the recipe is loaded
+  isUpdated Boolean? @default(false)
 }
 
 model fq_score {
@@ -1222,13 +1286,15 @@ model recipe_type {
 }
 
 model recipe_backup {
-  id        Int    @id @default(autoincrement())
-  recipe_id Int
-  org       org    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
-  org_uuid  String
+  id Int @id @default(autoincrement())
 
-  name       String
-  created_at DateTime @default(now())
+  recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
+  recipe_uuid String
+
+  org      org    @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org_uuid String
+
+  desc       String
   updated_at DateTime @updatedAt
 }
 
