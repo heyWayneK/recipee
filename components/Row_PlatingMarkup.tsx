@@ -7,6 +7,7 @@ import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "@/components/ViewPrices";
 import { PreCalculatedRecipeData } from "@/types/recipeTypes";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
+import Decimal from "decimal.js";
 
 interface Row_PlatingMarkupProps {
   className?: string;
@@ -85,14 +86,14 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
           });
         }
         // DROP DOWN MODAL INFO__________END
-        const profit = calcProfit(recipeData.costsSubTotals[i], markup_type.name, Number(factor));
+        const profit = calcProfit(new Decimal(recipeData.costsSubTotals[i]), markup_type.name, new Decimal(factor));
         // console.log(profit, "profit", recipeData.costsSubTotals[i], " | ", markup_type.name, " | ", Number(factor));
         // console.log("calcProfit(recipeData.costsSubTotals[i],  markup_type.name, Number(factor))");
         return (
           // COLUMN CELLS START
           <MenuDynamicChildren key={name + "_" + "menu" + "_" + i} menuArray={dropDownLinks}>
             <Table_Cell key={name + "_" + i} className="flex gap-y-1 flex-col" edit="edit" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
-              {<UnitCurrencyFormatter>{profit}</UnitCurrencyFormatter>}
+              {<UnitCurrencyFormatter>{profit.toString()}</UnitCurrencyFormatter>}
               <ViewPrices viewPrices={viewPrices}>
                 {name} ({id})
               </ViewPrices>

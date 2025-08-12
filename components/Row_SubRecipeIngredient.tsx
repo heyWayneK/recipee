@@ -16,7 +16,7 @@ interface Row_SubRecipeIngredientProps {
 }
 // (typeof toneOptions)[number]
 const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ className = "", ingredient, totalWeight }) => {
-  const { ingredId, ingredName, qty, order, type, instruction, dietClassification, stepInstruction, supplier, unitType, costPer1000, needsPrep, FQscore } = ingredient;
+  const { ingredId, ingredName, qty, order, type, instruction, dietClassification, stepInstruction, supplier, unitType, costPer1000g, needsPrep, FQscore } = ingredient;
 
   const formatColContent = (type: string, value: any) => {
     // TYPEs: col = ingredName, instruction, qty, costPer100, %, move
@@ -29,7 +29,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ class
             <SvgSprite iconName="arrow_drop_down" size={15} />
           </MenuOption1>
         );
-      case "costPer1000":
+      case "costPer1000g":
         return <UnitCurrencyFormatter>{value}</UnitCurrencyFormatter>;
       case "qty":
         return <IngredientUnits>{qty}</IngredientUnits>;

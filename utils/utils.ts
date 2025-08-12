@@ -1,4 +1,4 @@
-import { data } from "@/app/api/recipe";
+// import { data } from "@/app/api/recipe";
 import { language } from "@/app/data/lang";
 
 import { type ClassValue, clsx } from "clsx";
@@ -55,24 +55,44 @@ const textColor: string = brightness === "light" ? "#000000" : "#FFFFFF";
 // // MARGIN AND MARKUP
 // For a product that costs $100 to produce:
 
-export const calcMarkup = (price: number, markup: number): number => {
+export const calcMarkup = <T extends number | Decimal>(price: T, markup: T): T => {
   // Markup of 200%:
   // Selling Price = COGS + (COGS x Markup%)
   // Selling Price = $100 + ($100 x 200%)
-  // Selling Price = $100 + $200 = $300
-  return price + price * markup;
+  // return price + price * markup;
+  if (price instanceof Decimal && markup instanceof Decimal) {
+    return price.mul(markup).plus(price) as T;
+  }
+  if (typeof price === "number" && typeof markup === "number") {
+    return (price + price * markup) as T;
+  }
+  throw new Error("calcMarkup: price and markup must be either both Decimal or both number types");
 };
 
-export const calcMargin = (price: number, margin: number): number => {
+export const calcMargin = <T extends number | Decimal>(price: T, markup: T): T => {
   // Margin of 60%:
   // 0.60 = (Revenue - $100) / Revenue
   // Revenue = $100 / (1 - 0.60)
   // Revenue = $250
-  return price / (1 - margin);
+  if (price instanceof Decimal && markup instanceof Decimal) {
+    return price.div(new Decimal(1).minus(markup)) as T;
+  }
+  if (typeof price === "number" && typeof markup === "number") {
+    return (price / (1 - markup)) as T;
+  }
+  throw new Error("calcMargin: price and markup must be either both Decimal or both number types");
+  // return price / (1 - margin);
 };
 
-export const calcXCost = (price: number, x: number): number => {
-  return price * x;
+export const calcXCost = <T extends number | Decimal>(price: T, markup: T): T => {
+  if (price instanceof Decimal && markup instanceof Decimal) {
+    return price.mul(markup) as T;
+  }
+  if (typeof price === "number" && typeof markup === "number") {
+    return (price * markup) as T;
+  }
+  throw new Error("calcXCost: price and markup must be either both Decimal or both number types");
+  // return price * x;
 };
 
 export const convertKcalToKj = (kcal: number): number => {
@@ -97,20 +117,41 @@ export const formatCurrency = (cost: number): number | string => {
   return "ZAR" + "\u00A0" + cost.toFixed(2);
 };
 
-// CALCULATE THE PROFIT on method selected
-export const calcProfit = (costPrice: number, type: string, x: number): number => {
-  let m: number = 0;
+// // CALCULATE THE PROFIT on method selected
+// export const calcProfitDecimals = (costPrice: Decimal, type: string, x: number | Decimal): number | Decimal => {
+//   let m: Decimal = new Decimal(0);
+//   if (type === "markup") {
+//     m = calcMarkup(costPrice, x);
+//   } else if (type === "margin") {
+//     m = calcMargin(costPrice, x);
+//   } else if (type === "x_cost") {
+//     m = calcXCost(costPrice, x);
+//   } else {
+//     throw new Error(`Unknown calcProfit type: ${type}`);
+//   }
+
+//   return m.sub(costPrice);
+// };
+
+export const calcProfit = <T extends number | Decimal>(costPrice: T, type: string, x: T): T => {
+  let m: T = 0 as T; // Use type assertion to match the generic type
   if (type === "markup") {
     m = calcMarkup(costPrice, x);
   } else if (type === "margin") {
-    m = calcMarkup(costPrice, x);
+    m = calcMargin(costPrice, x); // Fixed to use calcMargin
   } else if (type === "x_cost") {
     m = calcXCost(costPrice, x);
   } else {
     throw new Error(`Unknown calcProfit type: ${type}`);
   }
 
-  return m - costPrice;
+  if (typeof costPrice === "number" && typeof m === "number") {
+    return (m - costPrice) as T;
+  }
+  if (costPrice instanceof Decimal && m instanceof Decimal) {
+    return m.sub(costPrice) as T;
+  }
+  throw new Error("calcProfit: costPrice and x must be either both Decimal or both number types");
 };
 
 // REPLACE UNDERSCORES with space

@@ -123,7 +123,7 @@ LEFT JOIN (
                 'type', rcor.ingredient_type_name,
                 'ingredientId', rcor.ingredients_id,
                 'yield', rcor.yield,
-                'costPer1000', rcor.cost_per_1000g,
+                'costPer1000g', rcor.cost_per_1000g,
                 'method', rcor.method,
                 'portions', cpor.portions,
                 'nutriPer100', cn.nutriPer100,
@@ -180,7 +180,7 @@ LEFT JOIN (
                     'home_qty_frac_denominator', rdr.home_qty_frac_denominator, 'home_qty', rdr.home_qty,
                     'home_qty_type', rdr.home_qty_type_name, 'order', rdr.sort_order, 'type', rdr.ingredient_type_name,
                     'instruction', rdr.prep_instruction_name, 'stepInstruction', rdr.step_instruction,
-                    'costPer1000', rdr.cost_per_1000g, 'needsPrep', rdr.needs_prep,
+                    'costPer1000g', rdr.cost_per_1000g, 'needsPrep', rdr.needs_prep,
           
                     'isSalt', CASE WHEN rdr.salt_purpose_id IS NOT NULL THEN true ELSE false END,
                     'isOil', CASE WHEN rdr.oil_purpose_id IS NOT NULL THEN true ELSE false END,
@@ -204,7 +204,7 @@ LEFT JOIN (
             JSON_BUILD_OBJECT(
                 'name', rcor.name,
                 'uuid', rcor.uuid,
-                'costPer1000', rcor.cost_per_1000g,
+                'costPer1000g', rcor.cost_per_1000g,
                 'brand', 'null'::json, -- Placeholder for brand info
                 'customer', 'null'::json, -- Placeholder for customer info
                 'method', rcor.method,
@@ -225,7 +225,7 @@ LEFT JOIN (
                     'home_qty_frac_denominator', rdr.home_qty_frac_denominator, 'home_qty', rdr.home_qty,
                     'home_qty_type', rdr.home_qty_type_name, 'order', rdr.sort_order, 'type', rdr.ingredient_type_name,
                     'instruction', rdr.prep_instruction_name, 'stepInstruction', rdr.step_instruction,
-                    'costPer1000', rdr.cost_per_1000g, 'needsPrep', rdr.needs_prep,
+                    'costPer1000g', rdr.cost_per_1000g, 'needsPrep', rdr.needs_prep,
                     'isSalt', CASE WHEN rdr.salt_purpose_id IS NOT NULL THEN true ELSE false END,
                     'isOil', CASE WHEN rdr.oil_purpose_id IS NOT NULL THEN true ELSE false END
                     
@@ -452,7 +452,7 @@ export const getRecipeDataFunc2 = async (): Promise<PreCalculatedRecipeData> => 
     componentsNamesArray: [],
     componentsIDArray: [],
     componentsWeights: [],
-    componentsPricePer1000: [],
+    componentsPricePer1000g: [],
     componentsPrices: [],
     componentsPricesDesc: [],
     componentsSubTotalsPrices: [],
@@ -470,9 +470,10 @@ export const getRecipeDataFunc2 = async (): Promise<PreCalculatedRecipeData> => 
     vatRulePercs: [],
     vatRuleNames: [],
     // Create a deep copy of the data object (Recipe Data)
+    // data: {} as Prisma.recipeSelect, // Initialize as an empty array
     data: {} as RecipeDataProps, // Initialize as an empty array
     // data: recipesStatic,
-    data2: [],
+
     isImperial: false,
     isHome: false,
     currencySymbol: "",

@@ -1023,7 +1023,6 @@ model recipe_portions {
   // Main Portion g = [265g, 350g, 500g]
   portion_g                   Int
   order                       Int
-  // Component portion sizes = [90g, 100g, 150g]
   component_portion_on_recipe component_portion_on_recipe[]
   packaging_costs_on_recipe   packaging_costs_on_recipe[]
   other_costs_on_recipe       other_costs_on_recipe[]
@@ -1071,7 +1070,6 @@ model recipe_components_on_recipe {
 
 // How big is the portion grams for this component e.g. 90g on 350g portion
 model component_portion_on_recipe {
-  // component_portion_on_recipe: 90g, 100g, 150g
   recipe      recipe @relation(fields: [recipe_uuid], references: [uuid], onDelete: Cascade)
   recipe_uuid String
 
@@ -1210,9 +1208,7 @@ model recipe_detail_row {
   fq_score    fq_score? @relation(fields: [fq_score_id], references: [id])
   fq_score_id Int?
 
-  // this needs to be updated when the recipe is updated
-  // always loaded as false when the recipe is loaded
-  isUpdated Boolean? @default(false)
+  isUpdated Boolean @default(false)
 }
 
 model fq_score {

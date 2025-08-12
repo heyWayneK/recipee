@@ -89,6 +89,8 @@ export interface CustomerType {
 
 export type recipeDataRuleProps = { pid: number; rule: number }[];
 
+// Partial<Prisma.recipeSelect>
+// The Recipe Data shape from the db
 export interface RecipeDataProps {
   readonly uuid: string;
   name: string;
@@ -101,6 +103,36 @@ export interface RecipeDataProps {
   vatRulesId: recipeDataRuleProps;
   components: ComponentsProps[];
   recipes: RecipeProps[];
+}
+
+export interface RecipeDataApiProps {
+  readonly uuid: string;
+  isHome: boolean;
+  isImperial: boolean; // true = imperial, false = metric
+  componentsIDArray: string[];
+  componentsNamesArray: string[];
+  componentsPricePer1000g: Decimal[];
+  componentsPrices: Decimal[][];
+  componentsPricesDesc: string[][][];
+  componentsSubTotalsPrices: Decimal[];
+  componentsWeights: Decimal[][];
+  costsSubTotals: Decimal[];
+  markUpPriceAmounts: Decimal[];
+  markUpPriceRuleName: string[];
+  markUpPriceRules: number[];
+  measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,]
+  otherCostsPriceRules: number[];
+  otherCostsPriceTotals: Decimal[];
+  packingCostPriceRules: number[];
+  packingCostPriceTotals: Decimal[];
+  portionIds: number[];
+  portionSizes: Decimal[];
+  salePricesExVat: Decimal[];
+  salesPricesIncVat: Decimal[];
+  vatRuleIds: number[];
+  vatRuleNames: string[];
+  vatRulePercs: Decimal[];
+  data: RecipeDataProps; //{}; // Prisma.recipeSelect
 }
 
 export type DietaryClassificationSelect = Prisma.dietary_classificationGetPayload<{
@@ -398,36 +430,64 @@ export interface portionSizeProps {
 }
 
 export interface PreCalculatedRecipeData {
-  // TODO: Need to use DECIMAL type
-  portionSizes: number[];
-  portionIds: number[];
-  componentsNamesArray: string[];
-  componentsIDArray: string[];
-  componentsWeights: number[][]; // Decimals
-  componentsPricePer1000: number[]; // Decimals
-  componentsPrices: number[][]; // Decimals
-  componentsPricesDesc: string[][][];
-  componentsSubTotalsPrices: number[]; // Decimals
-  packingCostPriceTotals: number[]; // Decimals
-  packingCostPriceRules: number[]; // Decimals
-  otherCostsPriceTotals: number[]; // Decimals
-  otherCostsPriceRules: number[]; // Decimals
-  costsSubTotals: number[]; // Decimals
-  markUpPriceAmounts: number[]; // Decimals
-  markUpPriceRules: number[]; // Decimals
-  markUpPriceRuleName: string[]; // Decimals
-  salePricesExVat: number[]; // Decimals
-  salesPricesIncVat: number[]; // Decimals
-  vatRuleIds: number[]; // Decimals
-  vatRulePercs: number[]; // Decimals
-  vatRuleNames: string[]; // Decimals
-  data: RecipeDataProps;
-  data2: [];
+  readonly uuid: string;
+  isHome: boolean;
   isImperial: boolean; // true = imperial, false = metric
-  isHome: boolean; // true = home mode, false = professional mode
+  componentsIDArray: string[];
+  componentsNamesArray: string[];
+  componentsPricePer1000g: Decimal[];
+  componentsPrices: Decimal[][];
+  componentsPricesDesc: string[][][];
+  componentsSubTotalsPrices: Decimal[];
+  componentsWeights: Decimal[][];
+  costsSubTotals: Decimal[];
+  markUpPriceAmounts: Decimal[];
+  markUpPriceRuleName: string[];
+  markUpPriceRules: number[];
+  measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,]
+  otherCostsPriceRules: number[];
+  otherCostsPriceTotals: Decimal[];
+  packingCostPriceRules: number[];
+  packingCostPriceTotals: Decimal[];
+  portionIds: number[];
+  portionSizes: Decimal[];
+  salePricesExVat: Decimal[];
+  salesPricesIncVat: Decimal[];
+  vatRuleIds: number[];
+  vatRuleNames: string[];
+  vatRulePercs: Decimal[];
+  data: RecipeDataProps;
   currencySymbol: string; // e.g. $, €, £
-  // measurementUnitsObj: { [key: string]: string[] }; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
-  measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
+  // TODO: Need to use DECIMAL type
+  // portionSizes: number[];
+  // portionIds: number[];
+  // componentsNamesArray: string[];
+  // componentsIDArray: string[];
+  // componentsWeights: number[][]; // Decimals
+  // componentsPricePer1000g: number[]; // Decimals
+  // componentsPrices: number[][]; // Decimals
+  // componentsPricesDesc: string[][][];
+  // componentsSubTotalsPrices: number[]; // Decimals
+  // packingCostPriceTotals: number[]; // Decimals
+  // packingCostPriceRules: number[]; // Decimals
+  // otherCostsPriceTotals: number[]; // Decimals
+  // otherCostsPriceRules: number[]; // Decimals
+  // costsSubTotals: number[]; // Decimals
+  // markUpPriceAmounts: number[]; // Decimals
+  // markUpPriceRules: number[]; // Decimals
+  // markUpPriceRuleName: string[]; // Decimals
+  // salePricesExVat: number[]; // Decimals
+  // salesPricesIncVat: number[]; // Decimals
+  // vatRuleIds: number[]; // Decimals
+  // vatRulePercs: number[]; // Decimals
+  // vatRuleNames: string[]; // Decimals
+  // data: Prisma.recipeSelect;
+
+  // isImperial: boolean; // true = imperial, false = metric
+  // isHome: boolean; // true = home mode, false = professional mode
+  // currencySymbol: string; // e.g. $, €, £
+  // // measurementUnitsObj: { [key: string]: string[] }; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
+  // measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
 }
 
 export type PrepInstructionsSelect = Prisma.prep_instructionsGetPayload<{
@@ -481,7 +541,7 @@ export interface recipeDetailProps {
   // weight (g kg oz lb), fluid (mL L fl oz) or each (ea for eggs)
   unitType: "weight";
 
-  costPer1000: number;
+  costPer1000g: number;
   rationalisedRecipe: string;
   FQscore: FQProps;
   needsPrep: boolean;
@@ -504,7 +564,7 @@ export type RecipeModeType = "home" | "pro";
 export interface RecipeProps {
   uuid: string;
   name: string;
-  costPer1000: number;
+  costPer1000g: number;
   brand: Brand;
   customer: CustomerType;
   recipeDetail: recipeDetailProps[];

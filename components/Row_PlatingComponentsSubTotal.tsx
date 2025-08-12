@@ -2,6 +2,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/utils/utils";
 import { useRecipeData } from "@/contexts/useRecipeData";
+import Decimal from "decimal.js";
 
 interface Row_PlatingComponentsSubTotalProps {
   className?: string;
@@ -21,11 +22,12 @@ const Row_PlatingComponentsSubTotal: React.FC<Row_PlatingComponentsSubTotalProps
       {/* FIRST COLUMN END */}
 
       {/* OTHER COLUMNS START */}
-      {recipeData.componentsSubTotalsPrices.map((price, i) => {
+      {recipeData.componentsSubTotalsPrices.map((price: Decimal, i) => {
         return (
           <Table_Cell type="sub_total" key={name + "_" + i}>
-            {systemData.org.country_locale.currency_symbol}
-            {price.toFixed(2)}
+            {recipeData.currencySymbol}
+            {/* {price.toDecimalPlaces(2).toString()} */}
+            {Number(price).toFixed(2).toString()}
           </Table_Cell>
         );
       })}
