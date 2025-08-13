@@ -1,13 +1,8 @@
 "use client";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { mergeDeep } from "@/libs/mergeDeep";
-// import { getUserData } from "@/app/api/data/user/[profileid]/route";
-
 import { all } from "cypress/types/bluebird";
 import { set } from "cypress/types/lodash";
-import { use } from "chai";
-import { Console } from "console";
-import { clerkClient } from "@clerk/nextjs/dist/types/server";
 import { useOrganization } from "@clerk/nextjs";
 import { PreCalculatedRecipeData, localOrDbDataType } from "@/types/recipeTypes";
 import { RecipeDataContextType, RecipeModeType, SystemDataProps } from "@/types/recipeTypes";
@@ -67,11 +62,10 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
           if (orgId === "") console.warn("CustomerId cannot be 1 (Admin System Data)");
 
           const response = await fetch("/api/data/all");
-          // const response = await fetch(`/api/data/all/${orgId}`);
-          const { systemData, recipeData } = await response.json();
 
-          // // Alternative Fetch (Decimal break)
-          // getAllRecipeObject(customerId);
+          // TODO: future calls need to use the orgId and recipeId
+          // const response = await fetch(`/api/data/all/${orgId}/${recipeId}`, {);
+          const { systemData, recipeData } = await response.json();
 
           // Deconstruct the data
           setSystemData(systemData as SystemDataProps);

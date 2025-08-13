@@ -2,7 +2,8 @@
 
 import { preCalculateData } from "@/libs/preCalculatedRecipeData";
 import { NextResponse } from "next/server";
-import { getSystemDataFunc2, getRecipeDataFunc2, getLiveRecipeData } from "./functions/system_user_recipe";
+import { getSystemDataFunc2, getLiveRecipeData } from "./functions/system_user_recipe";
+import { PreCalculatedRecipeData } from "@/types/recipeTypes";
 
 // TODO: Do we need this
 // import { GetStaticProps } from "next";
@@ -13,56 +14,21 @@ import { getSystemDataFunc2, getRecipeDataFunc2, getLiveRecipeData } from "./fun
  * http://recipee.app/api/data/system
  * TESTING:________________________________________END::*/
 
-// / DEFINE PRECALCULATED RECIPE DATA
-//- These contain the calulated recipe subTotals, Totals and
-//- lookup values like markup, or the cost of other costs etc
-
-// // INFO: This is the initial state of the recipe data - empty arrays
-// export const preCalculatedRecipeData: PreCalculatedRecipeData = {
-//   portionSizes: [],
-//   portionIds: [],
-//   componentsWeights: [],
-//   componentsNamesArray: [],
-//   componentsIDArray: [],
-//   componentsPricePer1000: [],
-//   componentsPrices: [],
-//   componentsPricesDesc: [],
-//   componentsSubTotalsPrices: [],
-//   packingCostPriceTotals: [],
-//   packingCostPriceRules: [],
-//   otherCostsPriceTotals: [],
-//   otherCostsPriceRules: [],
-//   costsSubTotals: [],
-//   markUpPriceAmounts: [],
-//   markUpPriceRules: [],
-//   salePricesExVat: [],
-//   salesPricesIncVat: [],
-//   vatRuleIds: [],
-//   vatRulePercs: [],
-//   vatRuleNames: [],
-
-//   // Create a deep copy of the data object (Recipe Data)
-//   data: JSON.parse(JSON.stringify(data)),
-// };
-
 export async function GET() {
+  // TODO: Use orgId from session or request
+  // TODO: get recipeId from request parameters
   const orgId = "1"; // Default customer ID
+  const recipeId = "1234567890";
   try {
-    const recipeData2 = await getLiveRecipeData("1234567890", "1"); // Using a static recipe UUID for demo purposes
-    const recipeLive = { data: recipeData2[0] };
-    const recipeData = await getRecipeDataFunc2();
+    const recipeData = await getLiveRecipeData(recipeId, orgId);
+    const recipeLive = { data: recipeData[0] } as PreCalculatedRecipeData;
     const systemData = await getSystemDataFunc2(orgId);
 
-    const preCalcData = await preCalculateData({ ...recipeData, ...recipeLive }, systemData);
-    // const preCalcData = await preCalculateData(recipeData, systemData);
-    // const preCalcData = await preCalculateData(recipeData, systemData);
-    // return { recipeData: { ...recipeData, ...preCalcData, ...recipeLive }, systemData };
+    // Pre-calculate data arrays to build recipe UI
+    const preCalcData = await preCalculateData(recipeLive, systemData);
 
-    // Update the precalulated recipe data with the full recipe data
-    return NextResponse.json({ recipeData: { ...recipeData, ...preCalcData, ...recipeLive }, systemData }, { status: 200 });
-    // return NextResponse.json({ hello: "world" }, { status: 200 });
+    return NextResponse.json({ recipeData: { ...preCalcData, ...recipeLive }, systemData }, { status: 200 });
   } catch (error) {
-    // Log the error for server-side debugging
     console.error("Error processing GET request:", error);
     return NextResponse.json({ error: "Script or Server Error" }, { status: 500 });
   }

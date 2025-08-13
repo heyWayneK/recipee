@@ -384,6 +384,19 @@ Cleans the "key" so we dont have special character or spaces
 (I use customer text for recipe names)
 use cleanComponentKeyName(keyName)
 
+### Serverside SSR error, success logs
+
+Its important to log console type logs in a SSR so we can track problems.
+This provides a morwe complete log with context
+
+```javascript
+// Example usage of the logger
+logger.info("Server started", { port: 3000 });
+logger.warn("Deprecated API endpoint", { endpoint: "/api/v1/old" });
+logger.error("Database connection failed", { error: "Connection timeout" });
+logger.debug("User data fetched", { userId: 123, userName: "JohnDoe" });
+```
+
 # EXAMPLE ON MARKDOWN
 
 ### Heading 3

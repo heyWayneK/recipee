@@ -363,18 +363,18 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
         id: true,
         name: true,
         names_alt: true,
-        name_orig: true,
+        // name_orig: true,
         org_uuid: true,
         translation: true,
         primary_category_id: true,
         secondary_category: true,
-        updated_at: true,
+        // updated_at: true,
         is_default: true,
-        confidence: true,
+        // confidence: true,
         dietary_classification_id: true,
         kosher_id: true,
         halal_id: true,
-        ai_model: true,
+        // ai_model: true,
       },
     }),
     prisma.org.findFirst({
@@ -442,61 +442,57 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
   };
 };
 
-export const getRecipeDataFunc2 = async (): Promise<PreCalculatedRecipeData> => {
-  // INFO: This is the initial state of the recipe data - empty arrays
-  // const recipesStatic = JSON.parse(JSON.stringify(data));
-  //
-  return {
-    portionSizes: [],
-    portionIds: [],
-    componentsNamesArray: [],
-    componentsIDArray: [],
-    componentsWeights: [],
-    componentsPricePer1000g: [],
-    componentsPrices: [],
-    componentsPricesDesc: [],
-    componentsSubTotalsPrices: [],
-    packingCostPriceTotals: [],
-    packingCostPriceRules: [],
-    otherCostsPriceTotals: [],
-    otherCostsPriceRules: [],
-    costsSubTotals: [],
-    markUpPriceAmounts: [],
-    markUpPriceRules: [],
-    markUpPriceRuleName: [],
-    salePricesExVat: [],
-    salesPricesIncVat: [],
-    vatRuleIds: [],
-    vatRulePercs: [],
-    vatRuleNames: [],
-    // Create a deep copy of the data object (Recipe Data)
-    // data: {} as Prisma.recipeSelect, // Initialize as an empty array
-    data: {} as RecipeDataProps, // Initialize as an empty array
-    // data: recipesStatic,
+// export const getRecipeDataFunc2 = async (): Promise<PreCalculatedRecipeData> => {
+//   // INFO: This is the initial state of the recipe data - empty arrays
+//   return {
+//     uuid: "",
+//     portionSizes: [],
+//     portionIds: [],
+//     componentsNamesArray: [],
+//     componentsIDArray: [],
+//     componentsWeights: [],
+//     componentsPricePer1000g: [],
+//     componentsPrices: [],
+//     componentsPricesDesc: [],
+//     componentsSubTotalsPrices: [],
+//     packingCostPriceTotals: [],
+//     packingCostPriceRules: [],
+//     otherCostsPriceTotals: [],
+//     otherCostsPriceRules: [],
+//     costsSubTotals: [],
+//     markUpPriceAmounts: [],
+//     markUpPriceRules: [],
+//     markUpPriceRuleName: [],
+//     salePricesExVat: [],
+//     salesPricesIncVat: [],
+//     vatRuleIds: [],
+//     vatRulePercs: [],
+//     vatRuleNames: [],
+//     // data: {} as Prisma.recipeSelect, // Initialize as an empty array
+//     data: {} as RecipeDataProps, // Initialize as an empty array
 
-    isImperial: false,
-    isHome: false,
-    currencySymbol: "",
-    measurementUnitsObj: {} as measurementUnitsObjProps,
-  };
-};
+//     isImperial: false,
+//     isHome: false,
+//     currencySymbol: "",
+//     measurementUnitsObj: {} as measurementUnitsObjProps,
+//   };
+// };
 export interface All {
   recipeData: PreCalculatedRecipeData;
   systemData: SystemDataProps;
 }
 
-export async function getAllRecipeObject(orgId: string): Promise<All> {
-  try {
-    const recipeData2 = await getLiveRecipeData("1234567890", "1"); // Using a static recipe UUID for demo purposes
-    console.log("----->>>>>>>> getAllRecipeObject recipeData2:", recipeData2);
-    const rec2 = { data2: recipeData2 };
-    const recipeData = await getRecipeDataFunc2();
-    const systemData = await getSystemDataFunc2(orgId);
-    // Pre-calculate Recipe Components and other data
-    const preCalcData = await preCalculateData(recipeData, systemData);
-    return { recipeData: { ...recipeData, ...preCalcData, ...rec2 }, systemData };
-  } catch (error) {
-    console.error("Error fetching system data:", error);
-    throw error; // Re-throw the error for further handling if needed
-  }
-}
+// export async function getAllRecipeObject(orgId: string): Promise<All> {
+//   try {
+//     const recipeData2 = await getLiveRecipeData("1234567890", "1"); // Using a static recipe UUID for demo purposes
+//     const rec2 = { data2: recipeData2 };
+//     const recipeData = await getRecipeDataFunc2();
+//     const systemData = await getSystemDataFunc2(orgId);
+//     // Pre-calculate Recipe Components and other data
+//     const preCalcData = await preCalculateData(recipeData, systemData);
+//     return { recipeData: { ...recipeData, ...preCalcData, ...rec2 }, systemData };
+//   } catch (error) {
+//     console.error("Error fetching system data:", error);
+//     throw error; // Re-throw the error for further handling if needed
+//   }
+// }

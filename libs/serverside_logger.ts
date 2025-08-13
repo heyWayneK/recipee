@@ -33,3 +33,9 @@ export const logger = {
   error: (message: string, context?: LogContext): void => log("error", message, context),
   debug: (message: string, context?: LogContext): void => log("debug", message, context),
 };
+
+// Example usage of the logger
+// logger.info("Server started", { port: 3000 });
+// logger.warn("Deprecated API endpoint", { endpoint: "/api/v1/old" });
+// logger.error("Database connection failed", { error: "Connection timeout" });
+// logger.debug("User data fetched", { userId: 123, userName: "JohnDoe" });
