@@ -9,243 +9,145 @@ import { SystemDataProps } from "@/types/recipeTypes";
 
 // import { GetStaticProps } from "next";
 
-// export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string): Promise<Partial<PreCalculatedRecipeData>> => {
+const transformRecipeData = (recipe: any) => {
+  if (!recipe) {
+    return null;
+  }
+
+  return {
+    uuid: recipe.uuid,
+    name: recipe.name,
+    desc: recipe.desc,
+    portions: recipe.recipe_portions.map((p: any) => ({
+      id: p.id,
+      qty: p.portion_g,
+      order: p.order,
+    })),
+    packagingCostsId: recipe.packaging_costs_on_recipe.map((pc: any) => ({
+      pid: pc.recipe_portions_id,
+      rule: pc.packaging_costs_categoryId,
+    })),
+    otherCostsId: recipe.other_costs_on_recipe.map((oc: any) => ({
+      pid: oc.recipe_portions_id,
+      rule: oc.other_costs_categoryId,
+    })),
+    markupId: recipe.markup_on_recipe.map((m: any) => ({
+      pid: m.recipe_portions_id,
+      rule: m.markup_categoryId,
+    })),
+    vatRulesId: recipe.vat_on_recipe.map((v: any) => ({
+      pid: v.recipe_portions_id,
+      rule: v.vat_categoryId,
+    })),
+    components: recipe.recipe_components_on_recipe.map((comp: any) => ({
+      name: comp.name,
+      uuid: comp.uuid,
+      recipeId: comp.recipe_uuid,
+      order: comp.sort_order,
+      version: comp.version,
+      versions: [], // Placeholder as in original query
+      type: comp.ingredient_type_name,
+      ingredientId: comp.ingredients_id,
+      yield: comp.yield,
+      costPer1000: comp.cost_per_1000g,
+      method: comp.method,
+      portions: comp.component_portion_on_recipe.map((p: any) => ({
+        id: p.recipe_portions_id,
+        qty: p.qty_g,
+      })),
+      nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
+      recipeDetail: comp.recipe_detail_row.map((row: any) => {
+        const { ingredients, ...restOfRow } = row;
+        return {
+          ...restOfRow,
+          ingredId: row.ingredients_id,
+          ingredName: row.name_extra_info, // Keeping for compatibility
+          ingredient: ingredients, // The main new data
+          isSalt: !!row.salt_purpose_id,
+          isOil: !!row.oil_purpose_id,
+          FQscore: row.fq_score,
+        };
+      }),
+    })),
+    recipes: recipe.recipe_components_on_recipe.map((comp: any) => ({
+      name: comp.name,
+      uuid: comp.uuid,
+      costPer1000: comp.cost_per_1000g,
+      brand: null,
+      customer: null,
+      method: comp.method,
+      recipeDetail: comp.recipe_detail_row.map((row: any) => ({
+        uuid: row.uuid,
+        ingredId: row.ingredients_id,
+        ingredName: row.name_extra_info,
+        qty: row.qty_g,
+        // Simplified for the 'recipes' array as in original query
+      })),
+    })),
+  };
+};
+
 export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => {
-  // TODO: Make sure its impossible to call this function with an empty recipeId or org_uuid
   if (!recipeUuid || !orgUuid) {
     throw new Error("Invalid recipeUuid or org_uuid provided");
   }
 
-  const result: any = await prisma.$queryRaw`
-   SELECT
-  r.uuid,
-  r.name,
-  r.desc,
-  -- Use COALESCE to ensure that if a recipe has no related items,
-  -- we return an empty JSON array '[]' instead of SQL NULL.
-  COALESCE(rp.portions, '[]'::json) AS "portions",
-  COALESCE(pcor."packagingCostsId", '[]'::json) AS "packagingCostsId",
-  COALESCE(ocor."otherCostsId", '[]'::json) AS "otherCostsId",
-  COALESCE(mor."markupId", '[]'::json) AS "markupId",
-  COALESCE(vor."vatRulesId", '[]'::json) AS "vatRulesId",
-  COALESCE(rc.components, '[]'::json) AS "components",
-  COALESCE(recipes_agg.recipes, '[]'::json) AS "recipes"
-FROM
-  recipe AS r
--- Subquery to aggregate recipe_portions into a JSON array
-LEFT JOIN (
-  SELECT
-    "recipe_uuid",
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'id', id,
-        'qty', portion_g,
-        'order', "order"
-      ) ORDER BY "order" ASC
-    ) AS portions
-  FROM
-    recipe_portions
-  GROUP BY
-    "recipe_uuid"
-) AS rp ON r.uuid = rp."recipe_uuid"
--- Subquery to aggregate packaging_costs_on_recipe
-LEFT JOIN (
-  SELECT
-    "recipe_uuid",
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'pid', "recipe_portions_id",
-        'rule', "packaging_costs_categoryId"
-      )
-    ) AS "packagingCostsId"
-  FROM
-    packaging_costs_on_recipe
-  GROUP BY
-    "recipe_uuid"
-) AS pcor ON r.uuid = pcor."recipe_uuid"
--- Subquery to aggregate other_costs_on_recipe
-LEFT JOIN (
-  SELECT
-    "recipe_uuid",
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'pid', "recipe_portions_id",
-        'rule', "other_costs_categoryId"
-      )
-    ) AS "otherCostsId"
-  FROM
-    other_costs_on_recipe
-  GROUP BY
-    "recipe_uuid"
-) AS ocor ON r.uuid = ocor."recipe_uuid"
--- Subquery to aggregate markup_on_recipe
-LEFT JOIN (
-  SELECT
-    "recipe_uuid",
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'pid', "recipe_portions_id",
-        'rule', "markup_categoryId"
-      )
-    ) AS "markupId"
-  FROM
-    markup_on_recipe
-  GROUP BY
-    "recipe_uuid"
-) AS mor ON r.uuid = mor."recipe_uuid"
--- Subquery to aggregate vat_on_recipe
-LEFT JOIN (
-  SELECT
-    "recipe_uuid",
-    JSON_AGG(
-      JSON_BUILD_OBJECT(
-        'pid', "recipe_portions_id",
-        'rule', "vat_categoryId"
-      )
-    ) AS "vatRulesId"
-  FROM
-    vat_on_recipe
-  GROUP BY
-    "recipe_uuid"
-) AS vor ON r.uuid = vor."recipe_uuid"
--- Subquery to aggregate the FULL recipe components array
-LEFT JOIN (
-    SELECT
-        rcor."recipe_uuid",
-        JSON_AGG(
-            JSON_BUILD_OBJECT(
-                'name', rcor.name,
-                'uuid', rcor.uuid,
-                'recipeId', rcor."recipe_uuid",
-                'order', rcor.sort_order,
-                'version', rcor.version,
-                'versions', '[]'::json,
-                'type', rcor.ingredient_type_name,
-                'ingredientId', rcor.ingredients_id,
-                'yield', rcor.yield,
-                'costPer1000', rcor.cost_per_1000g,
-                'method', rcor.method,
-                'portions', cpor.portions,
-                'nutriPer100', cn.nutriPer100,
-                'recipeDetail', rdr."recipeDetail"
-            ) ORDER BY rcor.sort_order ASC
-        ) as components
-    FROM
-        recipe_components_on_recipe as rcor
-    -- Subquery for component-specific portions
-    LEFT JOIN (
-        SELECT
-            "recipe_components_on_recipeUuid",
-            JSON_AGG(
-                JSON_BUILD_OBJECT(
-                    'id', "recipe_portions_id",
-                    'qty', qty_g
-                )
-            ) as portions
-        FROM component_portion_on_recipe
-        GROUP BY "recipe_components_on_recipeUuid"
-    ) as cpor ON rcor.uuid = cpor."recipe_components_on_recipeUuid"
-    -- Subquery to transform nutrition data
-    LEFT JOIN (
-        SELECT
-            "recipe_components_on_recipeUuid",
-            JSON_AGG(nutri.item) as nutriPer100
-        FROM component_nutrition,
-        LATERAL (
-            VALUES
-                ('kcal', kcal_per_100g, 'kcal'), ('kj', kj_per_100g, 'kcal'),
-                ('protein', protein_per_100g, 'g'), ('fat', fat_per_100g, 'g'),
-                ('saturated fat', saturated_fat_per_100g, 'g'), ('monounsaturate fat', monounsaturate_per_100g, 'g'),
-                ('Polyunsaturate fat', polyunsaturate_per_100g, 'g'), ('trans fats', trans_fats_per_100g, 'g'),
-                ('omega-3', omega3_per_100g, 'g'), ('omega-6', omega6_per_100g, 'g'), ('omega-9', omega9_per_100g, 'g'),
-                ('net carbohydrate', net_carbs_per_100g, 'g'), ('total carbohydrate', carbohydrates_per_100g, 'g'),
-                ('starch', starch_per_100g, 'g'), ('total sugars', total_sugar_per_100g, 'g'),
-                ('added sugar', added_sugar_per_100g, 'g'), ('artificial sugar', artificial_sugar_per_100g, 'g'),
-                ('fibre', fibre_per_100g, 'g'), ('sodium', sodium_per_100g, 'g (#mg)'),
-                ('salt', salt_per_100g, 'g (#mg)')
-        ) AS t(name, "valuePer100", unit),
-        LATERAL (SELECT JSON_BUILD_OBJECT('name', t.name, 'valuePer100', t."valuePer100", 'unit', t.unit) as item) as nutri
-        WHERE t."valuePer100" IS NOT NULL
-        GROUP BY "recipe_components_on_recipeUuid"
-    ) as cn ON rcor.uuid = cn."recipe_components_on_recipeUuid"
-    -- Subquery for recipe detail rows
-    LEFT JOIN (
-        SELECT
-            "recipe_components_on_recipeUuid",
-            JSON_AGG(
-                JSON_BUILD_OBJECT(
-                    'uuid', rdr.uuid, 'ingredId', rdr.ingredients_id, 'ingredName', rdr.name_extra_info,
-                    'qty', rdr.qty_g, 'qty_estimated_from_home', rdr.qty_estimated_from_home_g,
-                    'qty_estimated_confidence', rdr.qty_estimated_confidence, 'home_qty_frac_numerator', rdr.home_qty_frac_numerator,
-                    'home_qty_frac_denominator', rdr.home_qty_frac_denominator, 'home_qty', rdr.home_qty,
-                    'home_qty_type', rdr.home_qty_type_name, 'order', rdr.sort_order, 'type', rdr.ingredient_type_name,
-                    'instruction', rdr.prep_instruction_name, 'stepInstruction', rdr.step_instruction,
-                    'costPer1000', rdr.cost_per_1000, 'needsPrep', rdr.needs_prep,
-                    'isSalt', CASE WHEN rdr.salt_purpose_id IS NOT NULL THEN true ELSE false END,
-                    'isOil', CASE WHEN rdr.oil_purpose_id IS NOT NULL THEN true ELSE false END,
-                    'FQscore', fq.score
-                ) ORDER BY rdr.sort_order ASC
-            ) as "recipeDetail"
-        FROM recipe_detail_row as rdr
-        LEFT JOIN (
-            SELECT id, JSON_BUILD_OBJECT('positive', positive, 'negative', negative, 'neutral', neutral, 'overall', overall, 'positiveTxt', positive_txt, 'negativeTxt', negative_txt, 'neutralTxt', neutral_txt, 'overallTxt', overall_txt) as score
-            FROM fq_score
-        ) as fq ON rdr.fq_score_id = fq.id
-        GROUP BY "recipe_components_on_recipeUuid"
-    ) as rdr ON rcor.uuid = rdr."recipe_components_on_recipeUuid"
-    GROUP BY rcor."recipe_uuid"
-) AS rc ON r.uuid = rc."recipe_uuid"
--- Subquery to aggregate the new top-level 'recipes' array
-LEFT JOIN (
-    SELECT
-        rcor."recipe_uuid",
-        JSON_AGG(
-            JSON_BUILD_OBJECT(
-                'name', rcor.name,
-                'uuid', rcor.uuid,
-                'costPer1000', rcor.cost_per_1000g,
-                'brand', 'null'::json, -- Placeholder for brand info
-                'customer', 'null'::json, -- Placeholder for customer info
-                'method', rcor.method,
-                'recipeDetail', rdr."recipeDetail"
-            ) ORDER BY rcor.sort_order ASC
-        ) as recipes
-    FROM
-        recipe_components_on_recipe as rcor
-    -- This is the same subquery for recipe details as used above
-    LEFT JOIN (
-        SELECT
-            "recipe_components_on_recipeUuid",
-            JSON_AGG(
-                JSON_BUILD_OBJECT(
-                    'uuid', rdr.uuid, 'ingredId', rdr.ingredients_id, 'ingredName', rdr.name_extra_info,
-                    'qty', rdr.qty_g, 'qty_estimated_from_home', rdr.qty_estimated_from_home_g,
-                    'qty_estimated_confidence', rdr.qty_estimated_confidence, 'home_qty_frac_numerator', rdr.home_qty_frac_numerator,
-                    'home_qty_frac_denominator', rdr.home_qty_frac_denominator, 'home_qty', rdr.home_qty,
-                    'home_qty_type', rdr.home_qty_type_name, 'order', rdr.sort_order, 'type', rdr.ingredient_type_name,
-                    'instruction', rdr.prep_instruction_name, 'stepInstruction', rdr.step_instruction,
-                    'costPer1000', rdr.cost_per_1000, 'needsPrep', rdr.needs_prep,
-                    'isSalt', CASE WHEN rdr.salt_purpose_id IS NOT NULL THEN true ELSE false END,
-                    'isOil', CASE WHEN rdr.oil_purpose_id IS NOT NULL THEN true ELSE false END,
-                    'FQscore', fq.score
-                ) ORDER BY rdr.sort_order ASC
-            ) as "recipeDetail"
-        FROM recipe_detail_row as rdr
-        LEFT JOIN (
-            SELECT id, JSON_BUILD_OBJECT('positive', positive, 'negative', negative, 'neutral', neutral, 'overall', overall, 'positiveTxt', positive_txt, 'negativeTxt', negative_txt, 'neutralTxt', neutral_txt, 'overallTxt', overall_txt) as score
-            FROM fq_score
-        ) as fq ON rdr.fq_score_id = fq.id
-        GROUP BY "recipe_components_on_recipeUuid"
-    ) as rdr ON rcor.uuid = rdr."recipe_components_on_recipeUuid"
-    GROUP BY rcor."recipe_uuid"
-) AS recipes_agg ON r.uuid = recipes_agg."recipe_uuid"
-WHERE
-      r.uuid = ${recipeUuid}
-  `;
+  const recipeData = await prisma.recipe.findFirst({
+    where: {
+      uuid: recipeUuid,
+      org_uuid: orgUuid,
+    },
+    include: {
+      recipe_portions: {
+        orderBy: { order: "asc" },
+      },
+      packaging_costs_on_recipe: true,
+      other_costs_on_recipe: true,
+      markup_on_recipe: true,
+      vat_on_recipe: true,
+      recipe_components_on_recipe: {
+        orderBy: { sort_order: "asc" },
+        include: {
+          component_portion_on_recipe: true,
+          nutri_per_100g: true,
+          recipe_detail_row: {
+            orderBy: { sort_order: "asc" },
+            include: {
+              ingredients: {
+                include: {
+                  primary_category: true,
+                  unit_type: true,
+                  raw_to_prepped_yields: true,
+                  cooked_yields: true,
+                  dry_cooked_yields: true,
+                  ingredients_nutrition: true,
+                  dietary_classification: true,
+                  kosher: true,
+                  halal: true,
+                  allergy: true,
+                },
+              },
+              home_mode_units: true,
+              salt_purpose: true,
+              oil_purpose: true,
+              raw_to_prepped_yields: true,
+              cooking_method_yields: true,
+              dry_cooked_yield_categories: true,
+              dry_cooked_yield: true,
+              ingredient_type: true,
+              instruction: true,
+              fq_score: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
-  console.log("----->>>>>>>> getLiveRecipeData result:", result);
-  // $queryRaw returns an array, so we take the first element.
-  return result || null;
+  const transformedData = transformRecipeData(recipeData);
+
+  console.log("----->>>>>>>> getLiveRecipeData result:", transformedData);
+  return transformedData ? [transformedData] : [];
 };
 
 // Using prisma.$transaction to run multiple queries in a single transaction and
@@ -360,19 +262,17 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
       select: {
         id: true,
         name: true,
-        names_alt: true,
         name_orig: true,
+        names_alt: true,
         org_uuid: true,
         translation: true,
         primary_category_id: true,
         secondary_category: true,
-        updated_at: true,
-        is_default: true,
-        confidence: true,
+        unit_type_id: true,
         dietary_classification_id: true,
         kosher_id: true,
         halal_id: true,
-        ai_model: true,
+        confidence: true,
       },
     }),
     prisma.org.findFirst({
