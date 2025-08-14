@@ -1053,7 +1053,7 @@ model recipe_components_on_recipe {
 
   // local, master, unlinked_master
   ingredient_type      ingredient_type @relation(fields: [ingredient_type_name], references: [name])
-  ingredient_type_name String          @default("local") // Default to local
+  ingredient_type_name String          @default("ingredient") // Default to ingredient,not sub or step
 
   // Are we using the ingredient as a component?
   is_ingredient  Boolean      @default(false)

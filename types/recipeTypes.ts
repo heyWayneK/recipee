@@ -42,7 +42,7 @@ export interface ComponentsProps {
   recipeId: string;
   order: number;
   name?: string;
-  type?: "ingredient" | "step" | "sub";
+  type?: RecipeRowTypes;
   ingredient_id?: number | null;
   // parentId?: null | number;
   portions: PortionSizeChildProps[];
@@ -514,6 +514,8 @@ export interface RecipeDataContextType {
   localOrDbData: localOrDbDataType;
 }
 
+export type RecipeRowTypes = "ingredient" | "step" | "sub";
+
 export interface recipeDetailProps {
   uuid: string;
   ingredId: number | null;
@@ -521,12 +523,12 @@ export interface recipeDetailProps {
   subRecipeId: string | null;
   dietClassification: "animal_product" | "vegan" | "vegetarian";
   order: number;
-  type: "ingredient" | "step" | "sub";
+  type: RecipeRowTypes;
   stepInstruction: string;
   supplier: string;
   instruction: string;
   // Professional Mode
-  qty: number; // g kg ml l oz lb fl oz
+  qty_g: Decimal; // g
   qty_estimated_from_home: number | null; // g kg ml l oz lb fl oz
   qty_estimated_confidence: number | null; // from Ai confidence 0.0 - 1.0
   // Low confidence (<0.8) means we need to ask the user to confirm

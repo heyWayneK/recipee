@@ -13,7 +13,7 @@ import { useRecipeData } from "@/contexts/useRecipeData";
 interface Row_SubRecipesAllProps {}
 
 export const recipeeUI = {
-  sub_recipe: ["ingredName", "instruction", "qty", "costPer1000", "%", "move"],
+  sub_recipe: ["ingredName", "this_qty", "instruction", "costPer1000g", "qty_g", "%", "move"],
 };
 
 const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {

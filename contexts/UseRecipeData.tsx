@@ -63,6 +63,10 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
 
           const response = await fetch("/api/data/all");
 
+          if (response.status === 500) {
+            throw new Error("Offline, Please check connection");
+          }
+
           // TODO: future calls need to use the orgId and recipeId
           // const response = await fetch(`/api/data/all/${orgId}/${recipeId}`, {);
           const { systemData, recipeData } = await response.json();

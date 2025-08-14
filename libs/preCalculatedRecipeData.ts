@@ -129,7 +129,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   }
 
   // COSTS PER 1000/COMPONENT____________________________
-  const componentsPricePer1000gDecimals: Decimal[] = [];
+  const componentsPricePer1000g: Decimal[] = [];
   for (const component of recipeData.data.components) {
     const recipeId = component.uuid;
     if (!recipeId) {
@@ -141,15 +141,19 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     }
 
     const totalPrice = recipe.recipeDetail.reduce((ttlPrice, val) => {
-      if (val.type !== "ingredient") return ttlPrice;
+      // is type either sub, step or ingredient : RecipeRowTypes
+      if (!["sub", "step", "ingredient"].includes(val.type)) {
+        throw new Error(`Invalid type ${val.type} in recipeDetail. Not ["sub", "step", "ingredient"], val: ${JSON.stringify(val)}`);
+      }
+      if (val.type === "step" || !val.type) return ttlPrice;
       const costPer1000g = new Decimal(val.costPer1000g);
-      const qty = new Decimal(val.qty);
+      const qty = new Decimal(val.qty_g);
       return ttlPrice.add(costPer1000g.mul(qty.div(1000)));
     }, new Decimal(0));
 
     const totalWeight = recipe.recipeDetail.reduce((ttlWeight, val) => {
-      if (val.type !== "ingredient") return ttlWeight;
-      return ttlWeight.add(val.qty);
+      if (val.type === "step" || !val.type) return ttlWeight;
+      return ttlWeight.add(val.qty_g);
     }, new Decimal(0));
 
     const yld: Decimal = component.yield ? new Decimal(component.yield) : new Decimal(1.0);
@@ -157,16 +161,16 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     // Avoid division by zero
     const effectiveWeight = new Decimal(totalWeight).mul(yld);
     if (effectiveWeight.isZero()) {
-      componentsPricePer1000gDecimals.push(new Decimal(0));
+      componentsPricePer1000g.push(new Decimal(0));
     } else {
-      componentsPricePer1000gDecimals.push(totalPrice.div(effectiveWeight.div(1000)));
+      componentsPricePer1000g.push(totalPrice.div(effectiveWeight.div(1000)));
     }
   }
 
   // COMPONENT PRICES per portion : Decimal[][]___________
   const componentsPricesDecimals: Decimal[][] = [];
   for (let iC = 0; iC < componentsWeights.length; iC++) {
-    componentsPricesDecimals.push(componentsWeights[iC].map((portionWeight) => new Decimal(portionWeight).div(1000).mul(componentsPricePer1000gDecimals[iC])));
+    componentsPricesDecimals.push(componentsWeights[iC].map((portionWeight) => new Decimal(portionWeight).div(1000).mul(componentsPricePer1000g[iC])));
   }
 
   // SUB-TOTALS OF COMPONENT PRICES per portion : Decimal[]
@@ -187,13 +191,13 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
     componentsPricesDesc.push(
       portionSizes.map((_, iP) => {
-        const componentTotalWeight = recipe.recipeDetail.reduce((acc, val) => (val.type === "ingredient" ? acc.add(val.qty) : acc), new Decimal(0));
+        const componentTotalWeight = recipe.recipeDetail.reduce((acc, val) => (val.type === "ingredient" ? acc.add(val.qty_g) : acc), new Decimal(0));
 
         if (componentTotalWeight.isZero()) return [];
 
         return recipe.recipeDetail.flatMap((row) => {
           if (row.type !== "ingredient") return [];
-          const ingredientCost = new Decimal(row.qty).div(componentTotalWeight).mul(componentsPricesDecimals[iC][iP]);
+          const ingredientCost = new Decimal(row.qty_g).div(componentTotalWeight).mul(componentsPricesDecimals[iC][iP]);
           return `${row.ingredName}: ${ingredientCost.toFixed(4)}`; // Using .toFixed for display
         });
       })
@@ -350,7 +354,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     componentsNamesArray,
     componentsIDArray,
     componentsWeights,
-    componentsPricePer1000g: componentsPricePer1000gDecimals.map((d) => new Decimal(d)),
+    componentsPricePer1000g: componentsPricePer1000g.map((d) => new Decimal(d)),
     componentsPrices: componentsPricesDecimals.map((row) => row.map((d) => new Decimal(d))),
     componentsPricesDesc,
     componentsSubTotalsPrices: componentsSubTotalsPricesDecimals.map((d) => new Decimal(d)),

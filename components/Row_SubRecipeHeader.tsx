@@ -10,12 +10,14 @@ const getColumHeading = (col: string, org_unit_metric_imperial: string) => {
   switch (col) {
     case "ingredName":
       return getTextTranslation("Ingredient Name");
+    case "this_qty":
+      return getTextTranslation("Bulk Qty");
     case "instruction":
       return getTextTranslation("Cut Size");
     // return <SvgSprite className="fill-white" iconName="info" size={20} />;
-    case "qty":
-      return getTextTranslation("qty");
-    case "costPer1000":
+    case "qty_g":
+      return getTextTranslation("Orig qty");
+    case "costPer1000g":
       // return getTextTranslation("cost") + "/" + data.setting.unitMaster[1];
       return getTextTranslation("cost") + "/" + org_unit_metric_imperial;
     case "%":
@@ -28,9 +30,9 @@ const getColumHeading = (col: string, org_unit_metric_imperial: string) => {
 };
 
 interface Row_SubRecipeHeaderProps {
-  className?: string;
+  // className?: string;
 }
-const Row_SubRecipeHeader: React.FC<Row_SubRecipeHeaderProps> = ({ className = "" }) => {
+const Row_SubRecipeHeader: React.FC<Row_SubRecipeHeaderProps> = () => {
   const { recipeData } = useRecipeData();
 
   return recipeeUI.sub_recipe.map((col) => {
