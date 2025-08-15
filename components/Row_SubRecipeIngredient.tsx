@@ -54,7 +54,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
     <>
       {recipeeUI.sub_recipe.map((col, i) => {
         return (
-          <Table_Cell firstCol={i === 0} type="ingredient" key={col + "_" + i}>
+          <Table_Cell edit={i === 0 ? "edit" : null} firstCol={i === 0} type="ingredient" key={col + "_" + i}>
             <div>{formatColContent(col, ingredient[col as keyof recipeDetailProps] ? ingredient[col as keyof recipeDetailProps] : "")}</div>
           </Table_Cell>
         );

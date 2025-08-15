@@ -5,11 +5,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 
 // USING CVA to create Prop types for the Table_Cell component
-const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none ", {
+const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none items-center", {
   variants: {
     firstCol: {
       // First Row
-      true: "flex flex-grow flex-shrink font-normal uppercase justify-items-start line-clamp-1",
+      true: "flex flex-grow flex-shrink font-normal uppercase justify-items-start  line-clamp-1",
     },
     type: {
       plating: "flex justify-center items-baseline border text-nowrap gap-x-2 rounded-full bg-base-100/40 shadow-md [&>svg]:fill-base-content [&>svg]:size [&>svg]:text-base-content capitalize ",
@@ -18,7 +18,7 @@ const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none ", {
 
       controls: " grid grid-flow-col justify-between items-center rounded-full [&>*]:grid [&>*]:grid-flow-col [&>*]:gap-x-2",
 
-      sub_total: "border-t border-b border-base-content ",
+      sub_total: "border-t border-b border-base-content justify-center text-center",
 
       total: " border-b-4 border-double border-t-2 border-base-content ",
 
@@ -35,7 +35,7 @@ const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none ", {
       clear:
         " rounded-full border border-neutral-content grid-flow-col justify-center gap-x-2 [&>div]:text-base-content hover:opacity-50 active:opacity-30 justify-items-center  [&>svg]:fill-base-content",
 
-      header: " text-base-content border rounded-full justify-center justify-items-center text-center",
+      header: " text-base-content border rounded-full justify-center justify-items-center text-center capitalize self-baseline font-semibold",
 
       text: " flex bg-base-content/10 text-base-content rounded-full justify-center justify-items-center capitalize ",
 
@@ -153,11 +153,13 @@ const Table_Cell: React.FC<Table_CellProps> = ({
       </div>
 
       {/* ICON */}
-      <div
-        id="icon"
-        className=" flex place-items-center justify-center top-0 left:50px active:bg-white rounded-full 
+      {/* {iconName && (
+        <div
+          id="icon"
+          className=" flex place-items-center justify-center top-0 left:50px active:bg-white rounded-full 
       "
-      ></div>
+        ></div>
+      )} */}
     </div>
   );
 };

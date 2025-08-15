@@ -183,8 +183,8 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   const componentsPricesDesc: string[][][] = [];
   for (let iC = 0; iC < recipeData.data.components.length; iC++) {
     const recipeId = recipeData.data.components[iC].uuid;
-    const recipe = recipeData.data.recipes.find((r) => r.uuid === recipeId);
 
+    const recipe = recipeData.data.recipes.find((r) => r.uuid === recipeId);
     if (!recipe) {
       throw new Error(`Recipe with ID ${recipeId} not found. Component recipeId and Recipe id must match`);
     }
@@ -193,12 +193,13 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
       portionSizes.map((_, iP) => {
         const componentTotalWeight = recipe.recipeDetail.reduce((acc, val) => (val.type === "ingredient" ? acc.add(val.qty_g) : acc), new Decimal(0));
 
+        // Avoid division by zero
         if (componentTotalWeight.isZero()) return [];
 
         return recipe.recipeDetail.flatMap((row) => {
-          if (row.type !== "ingredient") return [];
+          if (row.type === "sub") return [];
           const ingredientCost = new Decimal(row.qty_g).div(componentTotalWeight).mul(componentsPricesDecimals[iC][iP]);
-          return `${row.ingredName}: ${ingredientCost.toFixed(4)}`; // Using .toFixed for display
+          return `${row.ingredName}: ${ingredientCost.toFixed(3)}`; // Using .toFixed for display
         });
       })
     );

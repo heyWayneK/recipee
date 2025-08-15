@@ -37,7 +37,7 @@ const Row_SubRecipeHeader: React.FC<Row_SubRecipeHeaderProps> = () => {
 
   return recipeeUI.sub_recipe.map((col) => {
     return (
-      <Table_Cell firstCol={false} header={false} type="plating" iconName="" key={"header" + col}>
+      <Table_Cell firstCol={false} header={false} type="header" iconName="" key={"header" + col}>
         {getColumHeading(col, recipeData.measurementUnitsObj.weight[1])}
         {/* BROKEN BUT SOLUTION IS SOMETHING LIKE THIS BUT NEED METRIC AND WEIGHT OR FLUID???
         {getColumHeading(col, systemData.unit_metric_imperial[systemData?.org?.unit_metric_imperial.id])} */}

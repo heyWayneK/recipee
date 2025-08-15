@@ -2,16 +2,16 @@ import React from "react";
 
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/utils/utils";
-import { data } from "@/app/api/recipe";
+// import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
 interface Row_PlatingCostsSubTotalProps {
-  className?: string;
+  // className?: string;
   viewPrices: boolean;
 }
 
-const Row_PlatingCostsSubTotal: React.FC<Row_PlatingCostsSubTotalProps> = ({ className = "", viewPrices }) => {
+const Row_PlatingCostsSubTotal: React.FC<Row_PlatingCostsSubTotalProps> = ({ viewPrices }) => {
   // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
   const { recipeData } = useRecipeData();
   const name = "costs_sub_total";
@@ -29,7 +29,7 @@ const Row_PlatingCostsSubTotal: React.FC<Row_PlatingCostsSubTotalProps> = ({ cla
         return (
           // COLUMN CELLS START
           <Table_Cell type="sub_total" key={name + "_" + i} trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
-            <UnitCurrencyFormatter>{cost}</UnitCurrencyFormatter>
+            <UnitCurrencyFormatter>{cost.toString()}</UnitCurrencyFormatter>
           </Table_Cell>
           // COLUMN CELLS END
         );

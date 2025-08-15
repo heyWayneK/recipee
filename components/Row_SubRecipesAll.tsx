@@ -42,8 +42,6 @@ const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
           <Row_SubRecipeSubName subRecipe={subRecipe} colorNum={i} />
           <Row_SubRecipeHeader />
           <Row_SubRecipeIngredients recipe={findRecipe} />
-          <Row_SubRecipeAddButtons recipe={findRecipe} />
-          <Row_SubRecipeMethod recipe={findRecipe} />
         </div>
       </DottedBorder>
     );

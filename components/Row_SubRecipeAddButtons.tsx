@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
-import { RecipeProps } from "@/app/api/recipe";
+import { RecipeProps } from "@/types/recipeTypes";
 
 interface Row_SubRecipeAddButtonsProps {
   recipe: RecipeProps;
@@ -13,7 +13,10 @@ const Row_SubRecipeAddButtons: React.FC<Row_SubRecipeAddButtonsProps> = ({ recip
         Add Ingredient
       </Pill>
       <Pill tone="dark" iconName="add_circle">
-        Add Step
+        Add Method Step
+      </Pill>
+      <Pill tone="dark" iconName="add_circle">
+        Add Existing Sub Recipe
       </Pill>
     </Table_Cell>
   );

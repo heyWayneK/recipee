@@ -30,7 +30,8 @@ const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
   }
 
   return (
-    <DottedBorder className=" grid grid-cols-1 justify-items-center mb-8">
+    // <DottedBorder className=" grid grid-cols-1 justify-items-center mb-8">
+    <DottedBorder className=" grid grid-cols-1  mb-8">
       {/* TODO: <Row_EditOrProduction data={data} ?? /> */}
       <Row_PlatingHeading />
 

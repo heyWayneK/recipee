@@ -1,18 +1,26 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
-import { RecipeProps } from "@/app/api/recipe";
+import { RecipeProps } from "@/types/recipeTypes";
+import { getTextTranslation } from "@/utils/utils";
+// import { RecipeProps } from "@/app/api/recipe";
 
 interface Row_SubRecipeMethodProps {
   recipe: RecipeProps;
+  methods: string[];
+  extraMethods: string;
 }
-const Row_SubRecipeMethod: React.FC<Row_SubRecipeMethodProps> = ({ recipe }) => {
+const Row_SubRecipeMethod: React.FC<Row_SubRecipeMethodProps> = ({ recipe, methods = [], extraMethods = "" }) => {
   return (
-    <Table_Cell className="" firstCol={false} header={false} type="method" iconName="" key={"method" + "_" + recipe.id}>
+    <Table_Cell className="" firstCol={false} header={false} type="method" iconName="" key={"method"}>
       <div className="grid justify-items text-left">
-        <h4>Method</h4>
+        <h4 className=" capitalize">{getTextTranslation("method")}</h4>
         <div className="">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley
-          of type and scrambled it to make a type specimen boe 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen box.
+          {methods.map((method, index) => (
+            <div key={index} className="text-xs text-base-content/80">
+              {`${index + 1}. `} {method}
+            </div>
+          ))}
+          {!extraMethods || <div>{extraMethods}</div>}
         </div>
       </div>
     </Table_Cell>

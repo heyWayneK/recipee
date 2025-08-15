@@ -30,7 +30,7 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     recipeUpdated: undefined,
   });
   // How often should the data come from the database, else use localStorage?
-  const secsToUpdate = 10; // 60 seconds
+  const secsToUpdate = 3600; // 60 seconds
   // clerk auth, getting organisation id
   const { organization, membership, isLoaded: isOrgLoaded } = useOrganization();
   const orgId = organization?.id || undefined;
