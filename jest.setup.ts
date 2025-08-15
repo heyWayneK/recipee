@@ -1,3 +1,5 @@
+require('dotenv').config({ path: '.env.local' });
+
 import "@testing-library/jest-dom"; // Adds DOM-specific matchers like toBeInTheDocument
 // INFO: This adds RTL’s custom matchers (like toBeInTheDocument) to Jest.
 
