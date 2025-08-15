@@ -2,14 +2,8 @@ import React, { useEffect, useState } from "react";
 import SvgSprite from "@/components/SvgSprite";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import { PreCalculatedRecipeData } from "@/types/recipeTypes";
-import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
 import DOMPurify from "dompurify";
-
-// Dynamically import ReactQuill with SSR turned off
-const ReactQuill = dynamic(() => import("react-quill"), {
-  ssr: false,
-});
+import TiptapEditor from "./TiptapEditor";
 
 // Define a type for paths in PreCalculatedRecipeData, but as a string literal
 type PathString = keyof PreCalculatedRecipeData | `${keyof PreCalculatedRecipeData & string}.${string}`;
@@ -32,11 +26,6 @@ const TextEditable = <P extends PathString>({ initialTextObject, onSave, classNa
 
   const [editing, setEditing] = useState<boolean>(false);
   const [text, setText] = useState(value ? String(value) : "");
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   useEffect(() => {
     // Initialize text with the value from initialTextObject
@@ -62,7 +51,7 @@ const TextEditable = <P extends PathString>({ initialTextObject, onSave, classNa
     setEditing(false);
   };
 
-  const handleQuillChange = (content: string) => {
+  const handleTiptapChange = (content: string) => {
     setText(content);
   };
 
@@ -70,13 +59,10 @@ const TextEditable = <P extends PathString>({ initialTextObject, onSave, classNa
     <div className={`relative ${className}`}>
       {editing ? (
         <div>
-          {isClient && (
-            <ReactQuill
-              theme="snow"
-              value={text}
-              onChange={handleQuillChange}
-            />
-          )}
+          <TiptapEditor
+            content={text}
+            onChange={handleTiptapChange}
+          />
           <button onClick={handleSave} style={{ marginTop: "10px" }}>
             Save Content 💾
           </button>
