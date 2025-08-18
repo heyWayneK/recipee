@@ -13,8 +13,28 @@ const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = () => {
   const { recipeData } = useRecipeData();
   return (
     <DottedBorder className="grid grid-cols-1 content-evenly gap-y-6 ">
-      <TextEditable path="data.name" />
-      <TextEditable path="data.desc" />
+      {recipeData?.uuid && (
+        <>
+          <TextEditable
+            path="data.name"
+            instantDbUpdate={true}
+            dbUpdateConfig={{
+              model: "recipe",
+              id: recipeData.uuid,
+              field: "name",
+            }}
+          />
+          <TextEditable
+            path="data.desc"
+            instantDbUpdate={true}
+            dbUpdateConfig={{
+              model: "recipe",
+              id: recipeData.uuid,
+              field: "desc",
+            }}
+          />
+        </>
+      )}
 
       {/* BUTTON: Metric or Imperial Button */}
       <div className="flex flex-wrap justify-center items-stretch gap-1 w-full">
