@@ -4,7 +4,7 @@ import { RecipeDataProvider } from "../../contexts/useRecipeData";
 import Recipee from "./page";
 import "@testing-library/jest-dom";
 import React from "react";
-import { LightDarkThemeProvider } from "@/contexts/useThemeDarkLight";
+import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
 
 // INFO: ignore the errors on describe and expect. Its a known issue with Jest and TypeScript (I think)
 // INFO: It will works even with the errors
@@ -16,9 +16,9 @@ describe("Recipee", () => {
     render(
       //   <MenuModalProvider>
       //     <RecipeDataProvider>
-      <LightDarkThemeProvider>
+      <DarkLightThemeProvider>
         <Recipee />
-      </LightDarkThemeProvider>
+      </DarkLightThemeProvider>
       //     </RecipeDataProvider>
       //   </MenuModalProvider>
     );

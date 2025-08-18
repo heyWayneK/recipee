@@ -6,6 +6,7 @@ import { set } from "cypress/types/lodash";
 import { useOrganization } from "@clerk/nextjs";
 import { PreCalculatedRecipeData, localOrDbDataType } from "@/types/recipeTypes";
 import { RecipeDataContextType, RecipeModeType, SystemDataProps } from "@/types/recipeTypes";
+import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 
 // FUTURE: POTENTIALLY USE GETSTATICPROPS for cache
 // import { GetStaticProps } from "next";
@@ -17,12 +18,20 @@ interface RecipeDataProviderProps {
   children: React.ReactNode;
 }
 
+// Describes the props for our reusable component
+interface DynamicInputProps {
+  data: PreCalculatedRecipeData;
+  setData: React.Dispatch<React.SetStateAction<PreCalculatedRecipeData>>;
+  path: string;
+  label: string;
+}
+
 // 2. Context provider component
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
   const [qty, setQty] = useState<number>(1);
   const [recipeMode, setRecipeMode] = useState<RecipeModeType>("pro");
-  const [systemData, setSystemData] = useState<SystemDataProps>();
-  const [recipeData, setRecipeData] = useState<PreCalculatedRecipeData>();
+  const [systemData, setSystemData] = useState<SystemDataProps>({} as SystemDataProps);
+  const [recipeData, setRecipeData] = useState<PreCalculatedRecipeData>({} as PreCalculatedRecipeData);
   const [localOrDbData, setLocalOrDbData] = useState<localOrDbDataType>({
     system: undefined,
     systemUpdated: undefined,
@@ -103,12 +112,31 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     fetchData();
   }, [orgId]); // orgId is used to fetch the data, if not available, it will use the default system data
 
-  // TODO: DO I DONT NEED THIS?
-  const updateRecipeData = useCallback((newData: Partial<PreCalculatedRecipeData>) => {
-    setRecipeData((prevData) => {
-      const merge: PreCalculatedRecipeData = mergeDeep(prevData, { ...newData });
-      return merge;
+  /**
+   * example usage:
+   * updateRecipeData((recipeData.data.packagingCostsId = { ...newObj })); };
+   * @param newData
+   * @returns
+   * USESES MERGEDEEP
+   *  const complexUpdate = {
+      portionSizes: [4, 5],
+      components: {
+        0: { val: "updated one" },
+        1: { val: "updated two" }
+      }
+    };
+    setMyObjState((prev) => mergeDeep(prev, complexUpdate));
+   */
+
+  const setRecipeDataByPath = useCallback((path: string, value: any, recipeData: PreCalculatedRecipeData) => {
+    setRecipeData((prevData): any => {
+      const merge: Partial<PreCalculatedRecipeData> = setValueByPath(recipeData, path, value);
+      return { ...prevData, ...merge };
     });
+  }, []);
+
+  const getRecipeDataByPath = useCallback((path: string, recipeData: PreCalculatedRecipeData): any => {
+    return getValueByPath(recipeData, path);
   }, []);
 
   const value: RecipeDataContextType = {
@@ -117,7 +145,8 @@ export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children
     recipeMode,
     setRecipeMode,
     recipeData: recipeData ?? ({} as PreCalculatedRecipeData),
-    updateRecipeData,
+    getRecipeDataByPath,
+    setRecipeDataByPath,
     systemData: systemData ?? ({} as SystemDataProps),
     localOrDbData: localOrDbData,
   };

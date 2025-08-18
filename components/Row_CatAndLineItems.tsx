@@ -5,6 +5,7 @@ import MenuPopupOnMouseOver, { MenuOptionsProps } from "@/components/MenuPopupOn
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import { PreCalculatedRecipeData } from "@/types/recipeTypes";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
+import Decimal from "decimal.js";
 
 interface Row_CatAndLineItemsProps {
   // Show prices by expanding the cells
@@ -14,27 +15,24 @@ interface Row_CatAndLineItemsProps {
   catListObj: any[];
   lineItemsObj: any[];
   rulesIdObj: number[];
-  priceSumObj: number[];
+  priceSumObj: Decimal[];
   updateObj: string;
   updateObjPath: any;
 }
 const Row_CatAndLineItems: React.FC<Row_CatAndLineItemsProps> = ({ viewPrices, name, translatedName, catListObj, lineItemsObj, rulesIdObj, priceSumObj, updateObj, updateObjPath }) => {
   // INFO: Other useRecipeData vars: qty, setQty, recipeData,
-  const { recipeData, updateRecipeData } = useRecipeData();
-  const update = (portionSize: number, ruleId: number) => {
+  const { recipeData } = useRecipeData();
+  const update = (portionSize: Decimal, ruleId: number) => {
     // CREATE UPDATE OBJECT
-    const updatedObj: Partial<PreCalculatedRecipeData> = {
-      data: {
-        ...recipeData.data,
-        [updateObj]: {
-          ...updateObjPath,
-          [portionSize]: ruleId,
-        },
-      },
-    };
-
-    //FUTURE:  ADD UPDATE HISTORY
-    updateRecipeData(updatedObj);
+    // const updatedObj: Partial<PreCalculatedRecipeData> = {
+    //   data: {
+    //     ...recipeData.data,
+    //     [updateObj]: {
+    //       ...updateObjPath,
+    //       [portionSize]: ruleId,
+    //     },
+    //   },
+    // };
   };
 
   return (
@@ -78,7 +76,7 @@ const Row_CatAndLineItems: React.FC<Row_CatAndLineItemsProps> = ({ viewPrices, n
         return (
           <MenuPopupOnMouseOver key={name + "menu" + i} type="onClick" menuArray={dropDownLinks}>
             <Table_Cell edit="edit" type="text" trackChangeVisually={true} rowNum={i} trackChangesStorageName={name}>
-              <UnitCurrencyFormatter>{priceSumObj[i]}</UnitCurrencyFormatter>
+              <UnitCurrencyFormatter>{priceSumObj[i].toString()}</UnitCurrencyFormatter>
               {viewPrices && <div className="text-[10px] self-center">{name}</div>}
             </Table_Cell>
           </MenuPopupOnMouseOver>

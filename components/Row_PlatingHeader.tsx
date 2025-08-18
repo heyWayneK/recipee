@@ -5,7 +5,6 @@ import { useRecipeData } from "@/contexts/useRecipeData";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useModalBig } from "@/hooks/UseBigModal";
 import Link from "next/link";
-import UnitFractions from "./UnitFractions";
 import IngredientUnits from "./IngredientUnits";
 
 interface Row_PlatingHeaderProps {
@@ -13,7 +12,6 @@ interface Row_PlatingHeaderProps {
 }
 
 const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = false }) => {
-  // INFO: Other useRecipeData vars: qty, setQty, recipeData, updateRecipeData
   const { recipeData } = useRecipeData();
   const { openModal } = useModalBig();
 
@@ -46,7 +44,7 @@ const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = fals
         </span>
       </Table_Cell>
       {recipeData.portionSizes.map((portion, col) => (
-        <MenuDynamicChildren key={portion} menuArray={dropDownInfo}>
+        <MenuDynamicChildren key={portion.toString()} menuArray={dropDownInfo}>
           {/* COMPONENT SIZE CELL/s */}
           <Table_Cell type="plating" key={name + "_" + col} edit="edit">
             <IngredientUnits>{portion}</IngredientUnits>

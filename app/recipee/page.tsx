@@ -12,7 +12,7 @@ import { useRecipeData } from "@/contexts/useRecipeData";
 // It is wrapped with the LayoutPrivate component to enforce access control.
 // See https://docs.microsaasfast.me/private-page/
 export default function Recipee() {
-  const { qty, setQty, recipeData, updateRecipeData, systemData, localOrDbData } = useRecipeData();
+  const { qty, recipeData, systemData } = useRecipeData();
   // console.log("should have loaded recipe data", qty, recipeData, systemData, localOrDbData);
 
   console.log("recipeData", { qty, recipeData, systemData });

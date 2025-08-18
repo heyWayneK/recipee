@@ -1,9 +1,10 @@
 import { useRecipeData } from "@/contexts/useRecipeData";
+import { Decimal } from "@prisma/client/runtime/library";
 import { el } from "date-fns/locale";
 import React from "react";
 
 type IngredientUnitsProps = {
-  children: React.ReactNode;
+  children: React.ReactNode | Decimal | number | string;
   className?: string;
 };
 

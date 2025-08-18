@@ -15,8 +15,7 @@ interface Row_PlatingMarkupProps {
 }
 
 const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", viewPrices }) => {
-  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
-  const { recipeData, updateRecipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeData();
 
   // SETUP UNIQUE VARS
   const o = {
@@ -50,8 +49,6 @@ const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", v
       // },
     };
     //FUTURE:  ADD HISTORY
-    console.log("UPDATE MARKUP RULE", updatedObj);
-    updateRecipeData(updatedObj);
   };
 
   return (

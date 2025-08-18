@@ -1,10 +1,7 @@
 import React from "react";
-import Table_Cell from "./Table_Cell";
-import { formatCurrency, getTextTranslation, replace_ } from "@/utils/utils";
 import { useRecipeData } from "@/contexts/useRecipeData";
-import MenuPopupOnMouseOver, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
-import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import Row_CatAndLineItems from "./Row_CatAndLineItems";
+import { getTextTranslation, replace_ } from "@/utils/utils";
 
 interface Row_PlatingOtherCostProps {
   // Show prices by expanding the cells
@@ -12,7 +9,6 @@ interface Row_PlatingOtherCostProps {
 }
 
 const Row_PlatingOtherCost: React.FC<Row_PlatingOtherCostProps> = ({ viewPrices }) => {
-  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
   const { recipeData, systemData } = useRecipeData();
 
   // SETUP UNIQUE VARS

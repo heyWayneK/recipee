@@ -1,8 +1,9 @@
 import { useRecipeData } from "@/contexts/useRecipeData";
+import Decimal from "decimal.js";
 import React from "react";
 
 type UnitCurrenctFormatterProps = {
-  children: number | string;
+  children: number | string | Decimal;
 };
 
 const UnitCurrencyFormatter: React.FC<UnitCurrenctFormatterProps> = ({ children = undefined }): React.ReactElement => {

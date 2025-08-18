@@ -5,11 +5,10 @@ import Row_SubRecipeStep from "./Row_SubRecipeStep";
 import { RecipeProps } from "@/types/recipeTypes";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import Decimal from "decimal.js";
-import Table_Cell from "./Table_Cell";
-import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 import Row_SubRecipeSubTotal from "./Row_SubRecipeSubTotal";
 import Row_SubRecipeMethod from "./Row_SubRecipeMethod";
 import Row_SubRecipeAddButtons from "./Row_SubRecipeAddButtons";
+import Row_SubRecipeActions from "./Row_SubRecipeActions";
 
 interface Row_SubRecipeIngredientsProps {
   recipe: RecipeProps;
@@ -50,6 +49,8 @@ const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ rec
       <Row_SubRecipeAddButtons recipe={findRecipe} />
 
       <Row_SubRecipeMethod recipe={findRecipe} methods={allSteps} extraMethods={findRecipe.method} />
+
+      <Row_SubRecipeActions recipe={findRecipe} methods={allSteps} extraMethods={findRecipe.method} />
     </>
   );
 };

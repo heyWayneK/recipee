@@ -11,11 +11,10 @@ interface Recipe_RecipeNameBlockProps {}
 
 const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = () => {
   const { recipeData } = useRecipeData();
-  // const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
   return (
     <DottedBorder className="grid grid-cols-1 content-evenly gap-y-6 ">
-      <TextEditable initialTextObject={{ "data.name": recipeData.data?.name }} />
-      <TextEditable initialTextObject={{ "data.desc": recipeData.data.desc }} />
+      <TextEditable path="data.name" />
+      <TextEditable path="data.desc" />
 
       {/* BUTTON: Metric or Imperial Button */}
       <div className="flex flex-wrap justify-center items-stretch gap-1 w-full">

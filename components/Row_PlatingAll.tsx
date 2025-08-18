@@ -21,7 +21,7 @@ interface Row_PlatingAllProps {}
 const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
   const [viewPrices, setViewPrices] = useState(false);
 
-  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
+  // INFO: useRecipeData: systemData, UserData, localOrDbData
   const { recipeData } = useRecipeData();
 
   function handleViewPrices() {

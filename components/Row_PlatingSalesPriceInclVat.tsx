@@ -15,8 +15,7 @@ interface Row_PlatingSalesPriceInclVatProps {
 }
 
 const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> = ({ className = "", viewPrices }) => {
-  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
-  const { recipeData, updateRecipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeData();
   const name = "sale_price_(incl_vat)";
 
   // UPDATE OBJECT

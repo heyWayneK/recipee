@@ -13,7 +13,7 @@ interface Row_ControlsPlatingProps {
   className?: string;
 }
 const Row_ControlsPlating: React.FC<Row_ControlsPlatingProps> = ({ className = "", viewPrices, handleViewPrices }) => {
-  const { qty, setQty, recipeData, updateRecipeData } = useRecipeData();
+  const { qty, setQty, recipeData } = useRecipeData();
   const name = "controls_for_components";
 
   return (

@@ -1,7 +1,4 @@
-import { unitDetailProps } from "@/app/data/metricImperial";
-import { Prisma, unit_type } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
-import exp from "constants";
+import { Prisma } from "@prisma/client";
 import Decimal from "decimal.js";
 
 import React from "react";
@@ -105,35 +102,36 @@ export interface RecipeDataProps {
   recipes: RecipeProps[];
 }
 
-export interface RecipeDataApiProps {
-  readonly uuid: string;
-  isHome: boolean;
-  isImperial: boolean; // true = imperial, false = metric
-  componentsIDArray: string[];
-  componentsNamesArray: string[];
-  componentsPricePer1000g: Decimal[];
-  componentsPrices: Decimal[][];
-  componentsPricesDesc: string[][][];
-  componentsSubTotalsPrices: Decimal[];
-  componentsWeights: Decimal[][];
-  costsSubTotals: Decimal[];
-  markUpPriceAmounts: Decimal[];
-  markUpPriceRuleName: string[];
-  markUpPriceRules: number[];
-  measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,]
-  otherCostsPriceRules: number[];
-  otherCostsPriceTotals: Decimal[];
-  packingCostPriceRules: number[];
-  packingCostPriceTotals: Decimal[];
-  portionIds: number[];
-  portionSizes: Decimal[];
-  salePricesExVat: Decimal[];
-  salesPricesIncVat: Decimal[];
-  vatRuleIds: number[];
-  vatRuleNames: string[];
-  vatRulePercs: Decimal[];
-  data: RecipeDataProps; //{}; // Prisma.recipeSelect
-}
+// export interface RecipeDataApiProps {
+//   readonly uuid: string;
+//   isHome: boolean;
+//   isImperial: boolean; // true = imperial, false = metric
+//   componentsIDArray: string[];
+//   componentsNamesArray: string[];
+//   componentsPricePer1000g: Decimal[];
+//   componentsPrices: Decimal[][];
+//   componentsPricesDesc: string[][][];
+//   componentsSubTotalsPrices: Decimal[];
+//   componentsWeights: Decimal[][];
+//   costsSubTotals: Decimal[];
+//   markUpPriceAmounts: Decimal[];
+//   markUpPriceRuleName: string[];
+//   markUpPriceRules: number[];
+//   measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,]
+//   otherCostsPriceRules: number[];
+//   otherCostsPriceTotals: Decimal[];
+//   packingCostPriceRules: number[];
+//   packingCostPriceTotals: Decimal[];
+//   portionIds: number[];
+//   portionSizes: Decimal[];
+//   salePricesExVat: Decimal[];
+//   salesPricesIncVat: Decimal[];
+//   vatRuleIds: number[];
+//   vatRuleNames: string[];
+//   vatRulePercs: Decimal[];
+//   data: RecipeDataProps; //{}; // Prisma.recipeSelect
+//   currencySymbol: string; // e.g. $, €, £
+// }
 
 export type DietaryClassificationSelect = Prisma.dietary_classificationGetPayload<{
   select: {
@@ -509,7 +507,8 @@ export interface RecipeDataContextType {
   recipeMode: RecipeModeType;
   setRecipeMode: React.Dispatch<React.SetStateAction<RecipeModeType>>;
   recipeData: PreCalculatedRecipeData;
-  updateRecipeData: (newData: Partial<PreCalculatedRecipeData>) => void;
+  setRecipeDataByPath: (path: string, value: any, recipeData: PreCalculatedRecipeData) => any; // e.g. setRecipeDataByPath("data.packagingCostsId", { ...newObj });
+  getRecipeDataByPath: (path: string, recipeData: PreCalculatedRecipeData) => any; // e.g. getRecipeDataByPath("data.packagingCostsId");
   systemData: SystemDataProps;
   localOrDbData: localOrDbDataType;
 }

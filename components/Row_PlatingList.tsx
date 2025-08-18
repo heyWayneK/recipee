@@ -13,7 +13,6 @@ interface Row_PlatingListProps {
 }
 
 const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewPrices }) => {
-  // INFO: Other useRecipeData vars: qty, setQty, recipeData, updateRecipeData
   const { recipeData } = useRecipeData(); // Removed unused variables
 
   return (

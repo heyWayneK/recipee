@@ -380,10 +380,3 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
   return obj;
 }
-
-/* INFO:: 
-      const updatePackagingRule = (portionSize: number, ruleId: number) => {
-       const newObj = { ...recipeData.data.packagingCostsId, ...{ [portionSize]: ruleId } };
-       updateRecipeData((recipeData.data.packagingCostsId = { ...newObj }));
-      };
-*/

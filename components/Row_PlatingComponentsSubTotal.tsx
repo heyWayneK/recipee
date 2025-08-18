@@ -10,7 +10,6 @@ interface Row_PlatingComponentsSubTotalProps {
 }
 
 const Row_PlatingComponentsSubTotal: React.FC<Row_PlatingComponentsSubTotalProps> = ({ className = "", viewPrices }) => {
-  // INFO: Other useRecipeData vars: qty, setQty, recipeData, updateRecipeData
   const { recipeData, systemData } = useRecipeData();
   const name = "components_sub_total";
   return (

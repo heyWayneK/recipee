@@ -1,8 +1,6 @@
 import React from "react";
-
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/utils/utils";
-// import { data } from "@/app/api/recipe";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
@@ -12,7 +10,6 @@ interface Row_PlatingCostsSubTotalProps {
 }
 
 const Row_PlatingCostsSubTotal: React.FC<Row_PlatingCostsSubTotalProps> = ({ viewPrices }) => {
-  // INFO: useRecipeData: updateRecipeData, systemData, UserData, localOrDbData
   const { recipeData } = useRecipeData();
   const name = "costs_sub_total";
 

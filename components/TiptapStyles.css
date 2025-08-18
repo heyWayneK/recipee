@@ -1,0 +1,121 @@
+/* Overall container for the editor and its menu */
+.tiptap-container {
+  position: relative;
+}
+
+/* Styles for the main editor text area */
+.tiptap-editor {
+  border: 1px solid #ccc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+  /* padding-top: 2rem; */
+  /* min-height: 200px; */
+}
+
+.tiptap-editor:focus-within {
+  outline: 2px solid #68b4f2;
+}
+
+/* Styles for the top menu bar */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.button-group button {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.button-group button:hover {
+  background-color: #f0f0f0;
+  border-color: #aaa;
+}
+
+.button-group button.is-active {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+/* Styles for the floating bubble menu */
+.bubble-menu {
+  display: flex;
+  background-color: #333;
+  padding: 0.3rem;
+  border-radius: 8px;
+  gap: 0.2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.bubble-menu button {
+  border: none;
+  background: transparent;
+  color: #fff;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.bubble-menu button:hover {
+  background-color: #555;
+}
+
+.bubble-menu button.is-active {
+  background-color: #777;
+}
+
+/* --- General Content Styles Inside The Editor --- */
+
+.tiptap-editor > :first-child {
+  margin-top: 0;
+}
+
+.tiptap-editor h1,
+.tiptap-editor h2,
+.tiptap-editor h3 {
+  line-height: 1.2;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.tiptap-editor ul {
+  list-style-type: disc;
+  margin: 0;
+  padding: 0;
+  padding-left: 1.5rem;
+}
+
+.tiptap-editor ol {
+  list-style-type: decimal;
+  margin: 0;
+  padding: 0;
+  padding-left: 1.5rem;
+}
+
+.tiptap-editor blockquote {
+  border-left: 3px solid #ccc;
+  margin-left: 1rem;
+
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+.tiptap-editor code {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 0.2em 0.4em;
+  font-family: monospace;
+}
