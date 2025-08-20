@@ -1,23 +1,24 @@
 "use client";
 
-// WHY: Big modal window popup (Not the small menu options list modal)
-
-/**
- * ModalProvider component
- * This component provides a modal dialog that can be used to display content in a larger view.
- * It uses the `useModalBig` hook to manage the modal's open state and content.
- * It also ensures that the modal is only mounted after the initial render to avoid hydration issues.
- *
- * @returns {JSX.Element | null} The rendered modal dialog or null if not mounted.
- */
-
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/modal";
-import { useModalBig } from "@/hooks/UseBigModal";
+import { useModalBig, SaveStatus } from "@/hooks/UseBigModal";
+import TiptapEditor from "@/components/TiptapEditor";
+import Pill from "@/components/Pill";
+import Spinner from "@/components/Spinner";
+import SvgSprite from "@/components/SvgSprite";
 
 export function ModalProvider() {
   const [isMounted, setIsMounted] = useState(false);
-  const { isOpen, content, closeModal } = useModalBig();
+  const {
+    isOpen,
+    closeModal,
+    title,
+    text,
+    setText,
+    saveStatus,
+    onSave,
+  } = useModalBig();
 
   useEffect(() => {
     setIsMounted(true);
@@ -27,9 +28,61 @@ export function ModalProvider() {
     return null;
   }
 
+  const handleSave = async () => {
+    await onSave();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent>{content}</DialogContent>
+      <DialogContent>
+        <div>
+          <h2 className="text-lg font-semibold mb-4 text-base-content">
+            {title}
+          </h2>
+          <TiptapEditor
+            formatButtons="none"
+            content={text}
+            onChange={setText}
+          />
+          <div className="flex items-center gap-3 p-2 mt-4">
+            {/* Save Button */}
+            <Pill
+              className="text-xs"
+              iconName="save"
+              tone="dark"
+              onClick={handleSave}
+              disabled={saveStatus === "saving"}
+            >
+              {saveStatus === "saving" ? "Saving..." : "Save"}
+            </Pill>
+            {/* Cancel Button */}
+            <Pill
+              className="text-xs"
+              iconName="close"
+              tone="clear"
+              onClick={closeModal}
+            >
+              Cancel
+            </Pill>
+            {/* Success/Fail/Saving Status indicator */}
+            <div className="w-5 h-5">
+              {saveStatus === "idle" && (
+                <span className="text-info">...idle</span>
+              )}
+              {saveStatus === "saving" && <Spinner />}
+              {saveStatus === "success" && (
+                <SvgSprite
+                  iconName="check_circle"
+                  className="text-success"
+                />
+              )}
+              {saveStatus === "error" && (
+                <SvgSprite iconName="error" className="text-error" />
+              )}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
     </Dialog>
   );
 }

@@ -1,21 +1,47 @@
-import React from "react";
 import { create } from "zustand";
 
-type ModalStore = {
+type SaveStatus = "idle" | "saving" | "success" | "error";
+
+type ModalState = {
   isOpen: boolean;
-  content: React.ReactNode | null;
+  title: string;
   text: string;
-  updateText: (text: string) => void;
-  openModal: (content: React.ReactNode) => void;
+  saveStatus: SaveStatus;
+  onSave: () => Promise<void>;
+  openModal: (
+    title: string,
+    text: string,
+    onSave: () => Promise<void>
+  ) => void;
   closeModal: () => void;
+  setText: (text: string) => void;
+  setSaveStatus: (status: SaveStatus) => void;
 };
 
-export const useModalBig = create<ModalStore>((set) => ({
+const useModalBig = create<ModalState>((set) => ({
   isOpen: false,
-  // content: null,
+  title: "",
   text: "",
-  updateText: (content: string) => set({ text: content }),
-  content: null,
-  openModal: (content) => set({ isOpen: true, content }),
-  closeModal: () => set({ isOpen: false, content: null }),
+  saveStatus: "idle",
+  onSave: async () => {},
+  openModal: (title, text, onSave) =>
+    set({
+      isOpen: true,
+      title,
+      text,
+      onSave,
+      saveStatus: "idle",
+    }),
+  closeModal: () =>
+    set({
+      isOpen: false,
+      title: "",
+      text: "",
+      saveStatus: "idle",
+    }),
+  setText: (text) => set({ text }),
+  setSaveStatus: (status) => set({ saveStatus: status }),
 }));
+
+export { useModalBig };
+export type { SaveStatus };
