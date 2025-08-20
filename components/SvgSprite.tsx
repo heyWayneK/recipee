@@ -1,7 +1,7 @@
 import React from "react";
 
 interface SvgSpriteProps {
-  size: number;
+  size?: number;
   iconName: allowedIcon | "";
   className?: string;
 }

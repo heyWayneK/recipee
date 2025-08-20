@@ -6,7 +6,7 @@ import MenuOption1 from "./MenuOption1";
 import IngredientUnits from "./IngredientUnits";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 import Decimal from "decimal.js";
-import { RecipeDataProps, recipeDetailProps } from "@/types/recipeTypes";
+import { recipeDetailProps } from "@/types/recipeTypes";
 
 interface Row_SubRecipeIngredientProps {
   ingredient: recipeDetailProps;
@@ -15,7 +15,7 @@ interface Row_SubRecipeIngredientProps {
 // (typeof toneOptions)[number]
 const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingredient, totalWeight }) => {
   // INFO:  const { ingredId, ingredName, qty_g, order, type, instruction, dietClassification, stepInstruction, supplier, unitType, costPer1000g, needsPrep, FQscore } = ingredient;
-  const { qty_g } = ingredient;
+  const { qty_g, uuid, ingredId } = ingredient;
 
   const formatColContent = (type: string, value: any) => {
     // TYPEs: col = ingredName, instruction, qty, costPer100, %, move
@@ -52,9 +52,13 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
 
   return (
     <>
+      {/* INFO: Column Name
+          recipeeUI.sub_recipe: ["ingredName", "this_qty", "instruction", "costPer1000g", "qty_g", "%", "move"], 
+      */}
       {recipeeUI.sub_recipe.map((col, i) => {
         return (
-          <Table_Cell edit={i === 0 ? "edit" : null} firstCol={i === 0} type="ingredient" key={col + "_" + i}>
+          <Table_Cell edit={i === 0 ? "edit" : null} firstCol={i === 0} type="ingredient" key={col + "_" + i} dbDataId={uuid}>
+            {/* col is column name. to collect the correct value */}
             <div>{formatColContent(col, ingredient[col as keyof recipeDetailProps] ? ingredient[col as keyof recipeDetailProps] : "")}</div>
           </Table_Cell>
         );

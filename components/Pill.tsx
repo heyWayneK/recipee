@@ -5,13 +5,13 @@ import { twMerge } from "tailwind-merge";
 
 // 1. Variant-based styling with cva (class-variance-authority)
 const pillVariants = cva(
-  " text-primary-content relative flex h-full min-w-1 cursor-pointer select-none items-center gap-x-1 rounded-full border border-slate-500 px-3 py-1 text-nowrap transition-colors",
+  " text-primary-content relative flex h-full min-w-1 cursor-pointer select-none items-center gap-x-1 rounded-full border border-base-content px-3 py-1 text-nowrap transition-colors hover:bg-base-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       tone: {
         clear: "bg-none text-base-content",
         white: "bg-base-100 text-base-content",
-        dark: "bg-base-content text-base-100",
+        dark: "bg-base-content text-base-100 hover:bg-base-300 hover:text-base-content",
         // clear: "text-black",
         // white: "bg-white text-black",
         // dark: "bg-black text-white",
@@ -37,10 +37,11 @@ export interface PillProps
   iconName?: allowedIcon;
   iconPosition?: "left" | "right";
   edit?: "edit" | "save" | "options" | ""; // Optional edit state
+  disabled?: boolean; // Optional disabled state
 }
 
 // 3. Main component with clean and readable JSX
-const Pill: React.FC<PillProps> = ({ className, children, tone, edit = "", iconName, iconPosition = "left", ...props }) => {
+const Pill: React.FC<PillProps> = ({ className, children, tone, edit = "", iconName, iconPosition = "left", disabled = false, ...props }) => {
   // 4. Simplified icon rendering logic
   const renderMainIcon = () => {
     if (!iconName) return null;
@@ -59,6 +60,10 @@ const Pill: React.FC<PillProps> = ({ className, children, tone, edit = "", iconN
     //   save: "save",
     //   options: "arrow_drop_down",
     // };
+
+    if (disabled) {
+      return;
+    }
 
     return (
       <div className="absolute inset-0 flex items-center justify-center rounded-full before:absolute before:bottom-[-1px] before:left-[50%] before:translate-x-[-50%] before:content-['...'] group ">

@@ -3,18 +3,20 @@ import SvgSprite, { allowedIcon } from "./SvgSprite";
 import { recipeColors } from "@/libs/colorsRecipes";
 import { cva, type VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
+import TextEditable from "./TextEditable";
+import { useModalBig } from "@/hooks/UseBigModal";
 
 // USING CVA to create Prop types for the Table_Cell component
-const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none items-center", {
+const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none items-center ", {
   variants: {
     firstCol: {
       // First Row
-      true: "flex flex-grow flex-shrink font-normal uppercase justify-items-start  line-clamp-1",
+      true: "flex flex-grow flex-shrink font-normal uppercase justify-items-start  line-clamp-1 ",
     },
     type: {
       plating: "flex justify-center items-baseline border text-nowrap gap-x-2 rounded-full bg-base-100/40 shadow-md [&>svg]:fill-base-content [&>svg]:size [&>svg]:text-base-content capitalize ",
 
-      plating_list: "text-nowrap rounded-full hover:opacity-60 active:opacity-75 text-primary-50",
+      plating_list: "text-nowrap rounded-full hover:opacity-60 active:opacity-75 text-primary-50  ",
 
       controls: " grid grid-flow-col justify-between items-center rounded-full [&>*]:grid [&>*]:grid-flow-col [&>*]:gap-x-2",
 
@@ -73,6 +75,7 @@ interface Table_CellProps extends ComponentProps<"div">, VariantProps<typeof cel
   rowNum?: string | number;
   trackChangeVisually?: boolean;
   trackChangesStorageName?: string;
+  dbDataId?: string; // the database row id for updates
 }
 
 export type typeOption = (typeof typeOptions)[number];
@@ -92,8 +95,11 @@ const Table_Cell: React.FC<Table_CellProps> = ({
   firstCol = false,
   trackChangeVisually = false,
   trackChangesStorageName = "",
+  dbDataId = undefined,
   ...props
 }) => {
+  const { openModal } = useModalBig();
+
   const elementRef = useRef<HTMLDivElement>(null);
   const [isUpdated, setIsUpdated] = useState(false);
   let previousChildren = localStorage.getItem(`${trackChangesStorageName}-${rowNum}`);
@@ -123,6 +129,24 @@ const Table_Cell: React.FC<Table_CellProps> = ({
     }
   }, [children, trackChangeVisually, trackChangesStorageName, rowNum]);
 
+  const handleOpenModal = () => {
+    openModal(
+      <TextEditable
+        title={`Edit Component Name for Row ${rowNum} id: ${dbDataId}`}
+        path={`data.components.${rowNum}.name`}
+        dbExpectedType="plaintext"
+        optionalContent={children ? children.toString() : ""}
+        instantDbUpdate={true}
+        dbUpdateConfig={{
+          model: "recipe_components_on_recipe",
+          id: dbDataId || "",
+          idColName: "uuid",
+          field: "name",
+        }}
+      />
+    );
+  };
+
   return (
     <div
       ref={elementRef}
@@ -134,7 +158,7 @@ const Table_Cell: React.FC<Table_CellProps> = ({
     >
       {/* RECIPE UNIQUE COLOURS */}
       <div
-        // }}
+        // onClick={edit === "edit" ? () => handleOpenModal() : undefined}
         style={
           (type === "plating_list" || type === "controls") && typeof rowNum === "number"
             ? {
@@ -149,17 +173,9 @@ const Table_Cell: React.FC<Table_CellProps> = ({
         className={twMerge(cellVariants({ type, firstCol, edit }), className || "")}
       >
         {iconName && <SvgSprite className={`${header ? "fill-base-content" : "fill-base-100"}`} size={16} iconName={iconName} />}
+        {/* TEXT VALUE TO EDIT */}
         {children}
       </div>
-
-      {/* ICON */}
-      {/* {iconName && (
-        <div
-          id="icon"
-          className=" flex place-items-center justify-center top-0 left:50px active:bg-white rounded-full 
-      "
-        ></div>
-      )} */}
     </div>
   );
 };

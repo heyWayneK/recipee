@@ -256,12 +256,14 @@ await supabase.from("products").insert(supabaseData);
 
 ## CSS
 
-### daisyUi Light and Dark Theme
+### daisyUi Light and Dark Theme Colors
 
 - use hook to get "dark" or "light"
   const [isDarkOrLight] = useGetActiveTheme();
 
 Button: <ButtonThemeLightDark />
+
+> tailwind.config.js
 
 ```text
         BG: base-100
@@ -285,6 +287,26 @@ Button: <ButtonThemeLightDark />
          warning // yellow
          error // red
 ```
+
+### MODAL
+
+- How to use Modals
+- First use:
+  ```javascript
+  const { openModal } = useModalBig();
+  ```
+- Then as the **onClick** element create a
+  ```javascript
+  // POPUP MODAL
+  const handleOpenModal = () => {
+    openModal(
+      <div>
+        <h2 className="mb-4">Custom Modal Content</h2>
+        <p>This is some variable content inside the modal.</p>
+      </div>
+    );
+  };
+  ```
 
 ### TAILWIND - cva() and twMerge()
 

@@ -1,11 +1,8 @@
 import React from "react";
-// import { data } from "@/app/api/recipe";
 import Row_SubRecipeControls from "./Row_SubRecipeControls";
 import Row_SubRecipeSubName from "./Row_SubRecipeName";
 import Row_SubRecipeHeader from "./Row_SubRecipeHeader";
 import Row_SubRecipeIngredients from "./Row_SubRecipeIngredients";
-import Row_SubRecipeAddButtons from "./Row_SubRecipeAddButtons";
-import Row_SubRecipeMethod from "./Row_SubRecipeMethod";
 import DottedBorder from "./DottedBorder";
 import { RecipeProps } from "@/types/recipeTypes";
 import { useRecipeData } from "@/contexts/useRecipeData";

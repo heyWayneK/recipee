@@ -7,13 +7,18 @@ import { Editor } from "@tiptap/core";
 
 import "./TiptapStyles.css"; // Import the v2 CSS file
 
+type formatButtonsType = "none" | "all" | "basic";
+
 interface TiptapEditorProps {
   content: string;
+  formatButtons?: formatButtonsType; // Optional prop to control which buttons to show
   onChange: (content: string) => void;
+  // onSave?: () => void; // Optional save handler
+  // onCancel?: () => void; // Optional cancel handler
 }
 
 // The MenuBar component with all the controls
-function MenuBar({ editor }: { editor: Editor }) {
+function MenuBar({ editor, formatButtons = "none" }: { editor: Editor; formatButtons: formatButtonsType }) {
   const editorState = useEditorState({
     editor,
     selector: (ctx) => ({
@@ -34,6 +39,10 @@ function MenuBar({ editor }: { editor: Editor }) {
       isBlockquote: ctx.editor.isActive("blockquote") ?? false,
     }),
   });
+
+  if (formatButtons === "none") {
+    return null; // Don't render anything if no buttons are needed
+  }
 
   return (
     <div className="button-group">
@@ -74,7 +83,7 @@ function MenuBar({ editor }: { editor: Editor }) {
   );
 }
 
-const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange }) => {
+const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange, formatButtons = "none" }) => {
   const editor = useEditor({
     immediatelyRender: false, // Correct for SSR environments like Next.js
     extensions: [StarterKit],
@@ -82,6 +91,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange }) => {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+
     editorProps: {
       attributes: {
         class: "tiptap-editor",
@@ -97,21 +107,25 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange }) => {
   return (
     <div className="tiptap-container">
       {/* The BubbleMenu is a component in v2, rendered directly in the JSX */}
-      <BubbleMenu editor={editor} tippyOptions={{ duration: 100, placement: "top" }}>
-        <div className="bubble-menu">
-          <button onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive("bold") ? "is-active" : ""}>
-            Bold
-          </button>
-          <button onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive("italic") ? "is-active" : ""}>
-            Italic
-          </button>
-          <button onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive("strike") ? "is-active" : ""}>
-            Strike
-          </button>
-        </div>
-      </BubbleMenu>
+      {formatButtons !== "none" ? (
+        <BubbleMenu editor={editor} tippyOptions={{ duration: 100, placement: "top" }}>
+          <div className="bubble-menu">
+            <button onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive("bold") ? "is-active" : ""}>
+              Bold
+            </button>
+            <button onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive("italic") ? "is-active" : ""}>
+              Italic
+            </button>
+            <button onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive("strike") ? "is-active" : ""}>
+              Strike
+            </button>
+          </div>
+        </BubbleMenu>
+      ) : (
+        ""
+      )}
 
-      <MenuBar editor={editor} />
+      <MenuBar editor={editor} formatButtons={formatButtons} />
       <EditorContent editor={editor} />
     </div>
   );

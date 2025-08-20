@@ -1,11 +1,11 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { cleanComponentKeyName, formatCurrency } from "@/utils/utils";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useRecipeData } from "@/contexts/useRecipeData";
 import IngredientUnits from "./IngredientUnits";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
-// Removed unused imports
+import TextEditable from "./TextEditable";
+import { editInfoProps } from "@/types/recipeTypes";
 
 interface Row_PlatingListProps {
   className?: string;
@@ -13,23 +13,41 @@ interface Row_PlatingListProps {
 }
 
 const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewPrices }) => {
-  const { recipeData } = useRecipeData(); // Removed unused variables
+  const { recipeData } = useRecipeData();
 
   return (
     <>
       {recipeData.componentsWeights.map((component, iC) => {
-        const name = recipeData.componentsNamesArray[iC];
+        const editInfo: editInfoProps = {
+          uiName: "Component Name",
+          name: recipeData.componentsNamesArray[iC],
+          id: recipeData.componentsIDArray[iC],
+          idColName: "uuid",
+        };
 
         // TODO: Use real actions in dropdown
         const dropDownInfo = [{ jsx: <div key={1}>one</div> }, { jsx: <div key={2}>two</div> }];
-        const keyName = cleanComponentKeyName(iC);
+        const keyName = editInfo.id;
 
         // CREATE FIRST COLUMN CELL WITH SUB RECIPE NAME
         const firstCell = (
           // firstCol={true} NB responsive resizing first column
-          <Table_Cell firstCol={true} edit={"edit"} key={keyName} rowNum={iC} type="plating_list">
+          <Table_Cell firstCol={true} edit={"edit"} key={keyName} rowNum={iC} type="plating_list" dbDataId={recipeData.data.uuid}>
             {/* NO TRANSLATION NEED - CUSTOMER FIELD */}
-            {name}
+            <TextEditable
+              title={`${editInfo.uiName} - Row ${iC} - ${editInfo.idColName}: ${editInfo.id}`}
+              path={`data.components[${iC}].name`}
+              dbExpectedType="plaintext"
+              optionalContent={editInfo.name}
+              instantDbUpdate={true}
+              dbUpdateConfig={{
+                model: "recipe_components_on_recipe",
+                id: iC.toString(),
+                idColName: "uuid",
+                field: "name",
+              }}
+            />
+            {/* {name} */}
           </Table_Cell>
         );
 

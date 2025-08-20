@@ -7,10 +7,11 @@ type AllowedModels = "recipe";
 
 export async function PATCH(request: Request) {
   try {
-    const { userId } = auth();
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    // TODO: Clerk AUTH get ID
+    // const { userId } = auth();
+    // if (!userId) {
+    //   return new NextResponse("Unauthorized", { status: 401 });
+    // }
 
     const body = await request.json();
     const { model, id, field, value } = body;
@@ -20,9 +21,11 @@ export async function PATCH(request: Request) {
     }
 
     // Whitelist of allowed models to prevent arbitrary model updates.
+    // TODO: Add all the allowed table names
     const allowedModels: AllowedModels[] = ["recipe"];
     if (!allowedModels.includes(model)) {
-      return new NextResponse(`Model '${model}' is not allowed for updates.`, { status: 403 });
+      console.warn(`[UPDATE_FIELD_API] Potential Unauthorized model access attempt: ${model}`);
+      // return new NextResponse(`Model '${model}' is not allowed for updates.`, { status: 403 });
     }
 
     // The model name from the request is used to access the corresponding Prisma client.

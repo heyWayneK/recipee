@@ -88,6 +88,17 @@ export type recipeDataRuleProps = { pid: number; rule: number }[];
 
 // Partial<Prisma.recipeSelect>
 // The Recipe Data shape from the db
+
+// What is the id of a db table called id or uuid?
+export type idColnameType = "id" | "uuid";
+
+export interface editInfoProps {
+  uiName: string;
+  name: string;
+  id: string;
+  idColName: idColnameType;
+}
+
 export interface RecipeDataProps {
   readonly uuid: string;
   name: string;

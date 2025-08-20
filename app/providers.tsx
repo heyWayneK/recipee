@@ -11,6 +11,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { OnlineStatusProvider } from "@/contexts/useOnlineStatus";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { RecipeDataProvider } from "@/contexts/useRecipeData";
 
 // This component isolates all client-side logic
 export default function AppProviders({ children }: { children: ReactNode }) {
@@ -19,25 +20,27 @@ export default function AppProviders({ children }: { children: ReactNode }) {
       <ClerkProvider>
         <DarkLightThemeProvider>
           <OnlineStatusProvider>
-            <header>
-              <Header />
-            </header>
+            <RecipeDataProvider>
+              <header>
+                <Header />
+              </header>
 
-            <div className="flex flex-col min-h-screen">
-              <div className="flex-grow grid grid-cols-[min-content_1fr_min-content] h-full gap-0">
-                <aside aria-label="Left Cookbook Manager"></aside>
-                <main aria-label="Main Recipee App Content" className="px-1 md:px-6">
-                  {children}
-                </main>
-                <aside aria-label="Right Menu Sidebar"></aside>
+              <div className="flex flex-col min-h-screen">
+                <div className="flex-grow grid grid-cols-[min-content_1fr_min-content] h-full gap-0">
+                  <aside aria-label="Left Cookbook Manager"></aside>
+                  <main aria-label="Main Recipee App Content" className="px-1 md:px-6">
+                    {children}
+                  </main>
+                  <aside aria-label="Right Menu Sidebar"></aside>
+                </div>
+
+                <footer aria-label="Recipee footer" className="min-h-40">
+                  <Footer />
+                </footer>
               </div>
 
-              <footer aria-label="Recipee footer" className="min-h-40">
-                <Footer />
-              </footer>
-            </div>
-
-            <ModalProvider />
+              <ModalProvider />
+            </RecipeDataProvider>
           </OnlineStatusProvider>
         </DarkLightThemeProvider>
       </ClerkProvider>
