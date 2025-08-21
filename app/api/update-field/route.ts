@@ -25,6 +25,7 @@ export async function PATCH(request: Request) {
     const allowedModels: AllowedModels[] = ["recipe"];
     if (!allowedModels.includes(model)) {
       console.warn(`[UPDATE_FIELD_API] Potential Unauthorized model access attempt: ${model}`);
+      // TODO: add AllowedModels above
       // return new NextResponse(`Model '${model}' is not allowed for updates.`, { status: 403 });
     }
 

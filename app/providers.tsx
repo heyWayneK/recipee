@@ -5,7 +5,7 @@
 // // This file contains all the client-side providers and components
 
 import { ReactNode, StrictMode } from "react";
-import { ModalProvider } from "@/providers/bigModalProvider";
+import { BigModalProvider } from "@/providers/bigModalProvider";
 import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
 import { ClerkProvider } from "@clerk/nextjs";
 import { OnlineStatusProvider } from "@/contexts/useOnlineStatus";
@@ -39,7 +39,7 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                 </footer>
               </div>
 
-              <ModalProvider />
+              <BigModalProvider />
             </RecipeDataProvider>
           </OnlineStatusProvider>
         </DarkLightThemeProvider>

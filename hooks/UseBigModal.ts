@@ -7,12 +7,9 @@ type ModalState = {
   title: string;
   text: string;
   saveStatus: SaveStatus;
+  isTextUpdated: boolean;
   onSave: () => Promise<void>;
-  openModal: (
-    title: string,
-    text: string,
-    onSave: () => Promise<void>
-  ) => void;
+  openModal: (title: string, text: string, onSave: () => Promise<void>) => void;
   closeModal: () => void;
   setText: (text: string) => void;
   setSaveStatus: (status: SaveStatus) => void;
@@ -23,6 +20,7 @@ const useModalBig = create<ModalState>((set) => ({
   title: "",
   text: "",
   saveStatus: "idle",
+  isTextUpdated: false,
   onSave: async () => {},
   openModal: (title, text, onSave) =>
     set({
@@ -31,6 +29,7 @@ const useModalBig = create<ModalState>((set) => ({
       text,
       onSave,
       saveStatus: "idle",
+      isTextUpdated: false,
     }),
   closeModal: () =>
     set({
@@ -38,8 +37,9 @@ const useModalBig = create<ModalState>((set) => ({
       title: "",
       text: "",
       saveStatus: "idle",
+      isTextUpdated: false,
     }),
-  setText: (text) => set({ text }),
+  setText: (text) => set({ text, isTextUpdated: true }),
   setSaveStatus: (status) => set({ saveStatus: status }),
 }));
 

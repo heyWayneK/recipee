@@ -7,7 +7,9 @@ import DottedBorder from "./DottedBorder";
 import { RecipeProps } from "@/types/recipeTypes";
 import { useRecipeData } from "@/contexts/useRecipeData";
 
-interface Row_SubRecipesAllProps {}
+interface Row_SubRecipesAllProps {
+  recipeIndex: number;
+}
 
 export const recipeeUI = {
   sub_recipe: ["ingredName", "this_qty", "instruction", "costPer1000g", "qty_g", "%", "move"],
@@ -27,6 +29,14 @@ const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
       throw new Error(e);
     }
 
+    const findRecipeIndex: number = recipeData.data.recipes.findIndex((recipe) => recipe.uuid === subRecipe.uuid);
+
+    if (findRecipeIndex === -1) {
+      const e = `No Recipe Index for ${subRecipe.uuid} not found in recipes array.`;
+      console.log(e);
+      throw new Error(e);
+    }
+
     return (
       <DottedBorder key={findRecipe.uuid + "_" + i}>
         <div
@@ -36,9 +46,9 @@ const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
           }}
         >
           <Row_SubRecipeControls recipe={findRecipe} />
-          <Row_SubRecipeSubName subRecipe={subRecipe} colorNum={i} />
+          <Row_SubRecipeSubName subRecipe={subRecipe} colorNum={i} recipeIndex={findRecipeIndex} />
           <Row_SubRecipeHeader />
-          <Row_SubRecipeIngredients recipe={findRecipe} />
+          <Row_SubRecipeIngredients recipe={findRecipe} recipeIndex={findRecipeIndex} />
         </div>
       </DottedBorder>
     );

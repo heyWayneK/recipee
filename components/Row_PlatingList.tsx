@@ -42,12 +42,11 @@ const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewP
               instantDbUpdate={true}
               dbUpdateConfig={{
                 model: "recipe_components_on_recipe",
-                id: iC.toString(),
+                id: editInfo.id,
                 idColName: "uuid",
                 field: "name",
               }}
             />
-            {/* {name} */}
           </Table_Cell>
         );
 

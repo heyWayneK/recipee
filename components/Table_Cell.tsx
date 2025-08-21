@@ -129,24 +129,6 @@ const Table_Cell: React.FC<Table_CellProps> = ({
     }
   }, [children, trackChangeVisually, trackChangesStorageName, rowNum]);
 
-  const handleOpenModal = () => {
-    openModal(
-      <TextEditable
-        title={`Edit Component Name for Row ${rowNum} id: ${dbDataId}`}
-        path={`data.components.${rowNum}.name`}
-        dbExpectedType="plaintext"
-        optionalContent={children ? children.toString() : ""}
-        instantDbUpdate={true}
-        dbUpdateConfig={{
-          model: "recipe_components_on_recipe",
-          id: dbDataId || "",
-          idColName: "uuid",
-          field: "name",
-        }}
-      />
-    );
-  };
-
   return (
     <div
       ref={elementRef}
