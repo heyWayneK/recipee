@@ -8,15 +8,16 @@ interface RecipeDataProviderProps {
 }
 
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
-  const { organization, isLoaded: isOrgLoaded } = useOrganization();
-  const orgId = organization?.id;
+  // const { organization, isLoaded: isOrgLoaded } = useOrganization();
+  // const orgId = organization?.id;
+  const orgId = "1"; // Manual override for orgId
   const { fetchData, loaded } = useRecipeDataStore();
 
   useEffect(() => {
-    if (isOrgLoaded && orgId && !loaded) {
+    if (orgId && !loaded) {
       fetchData(orgId);
     }
-  }, [isOrgLoaded, orgId, fetchData, loaded]);
+  }, [orgId, fetchData, loaded]);
 
   return <>{children}</>;
 };
