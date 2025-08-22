@@ -3,7 +3,7 @@ import Row_SubRecipeIngredient from "./Row_SubRecipeIngredient";
 // import { RecipeProps, data } from "@/app/api/recipe";
 import Row_SubRecipeStep from "./Row_SubRecipeStep";
 import { RecipeProps } from "@/types/recipeTypes";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Decimal from "decimal.js";
 import Row_SubRecipeSubTotal from "./Row_SubRecipeSubTotal";
 import Row_SubRecipeMethod from "./Row_SubRecipeMethod";
@@ -15,7 +15,7 @@ interface Row_SubRecipeIngredientsProps {
   recipeIndex: number; // INFO: the index of recipe in recipeData.data.recipes[?]array
 }
 const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ recipe, recipeIndex }) => {
-  // const { recipeData } = useRecipeData();
+  // const { recipeData } = useRecipeDataStore();
   // const recipe = recipeData.data.recipes.find((rec) => recipe.uuid === rec.uuid);
 
   // if (!recipe) {

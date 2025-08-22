@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { replace_ } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 import ViewPrices from "./ViewPrices";
 
@@ -15,7 +15,7 @@ interface Row_PlatingSalesPriceInclVatProps {
 }
 
 const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> = ({ className = "", viewPrices }) => {
-  const { recipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeDataStore();
   const name = "sale_price_(incl_vat)";
 
   // UPDATE OBJECT

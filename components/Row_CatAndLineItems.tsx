@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import MenuPopupOnMouseOver, { MenuOptionsProps } from "@/components/MenuPopupOnMouseOver";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import { PreCalculatedRecipeData } from "@/types/recipeTypes";
@@ -21,7 +21,7 @@ interface Row_CatAndLineItemsProps {
 }
 const Row_CatAndLineItems: React.FC<Row_CatAndLineItemsProps> = ({ viewPrices, name, translatedName, catListObj, lineItemsObj, rulesIdObj, priceSumObj, updateObj, updateObjPath }) => {
   // INFO: Other useRecipeData vars: qty, setQty, recipeData,
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
   const update = (portionSize: Decimal, ruleId: number) => {
     // CREATE UPDATE OBJECT
     // const updatedObj: Partial<PreCalculatedRecipeData> = {

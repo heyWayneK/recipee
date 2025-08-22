@@ -4,7 +4,7 @@ import MenuOption1 from "./MenuOption1";
 import MenuOption2 from "./MenuOption2";
 import Pill from "./Pill";
 import { getTextTranslation } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import ButtonThemeLightDark from "./ButtonThemeLightDark";
 
 interface Row_ControlsPlatingProps {
@@ -13,7 +13,7 @@ interface Row_ControlsPlatingProps {
   className?: string;
 }
 const Row_ControlsPlating: React.FC<Row_ControlsPlatingProps> = ({ className = "", viewPrices, handleViewPrices }) => {
-  const { qty, setQty, recipeData } = useRecipeData();
+  const { qty, setQty, recipeData } = useRecipeDataStore();
   const name = "controls_for_components";
 
   return (

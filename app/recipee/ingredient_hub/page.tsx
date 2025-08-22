@@ -8,7 +8,7 @@ import MenuOption1 from "@/components/MenuOption1";
 import { getTextTranslation } from "@/utils/utils";
 import MenuOption2 from "@/components/MenuOption2";
 import Pill from "@/components/Pill";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Table_Cell from "@/components/Table_Cell";
 import SvgSprite from "@/components/SvgSprite";
 
@@ -31,7 +31,7 @@ import SvgSprite from "@/components/SvgSprite";
 let searchTimeout: any = null;
 
 export default function SettingsLayout(props: PropsWithChildren) {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   return (
     <>

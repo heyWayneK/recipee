@@ -5,13 +5,13 @@ import MenuOption1 from "@/components/MenuOption1";
 import { getTextTranslation } from "@/utils/utils";
 import MenuOption2 from "@/components/MenuOption2";
 import Pill from "@/components/Pill";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import TextLink from "./TextLink";
 
 interface Recipe_RecipeNameBlockProps {}
 
 const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = () => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   return (
     <DottedBorder className="grid grid-cols-1 content-between  ">

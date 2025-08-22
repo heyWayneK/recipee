@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Decimal from "decimal.js";
 
 interface Row_PlatingComponentsSubTotalProps {
@@ -10,7 +10,7 @@ interface Row_PlatingComponentsSubTotalProps {
 }
 
 const Row_PlatingComponentsSubTotal: React.FC<Row_PlatingComponentsSubTotalProps> = ({ className = "", viewPrices }) => {
-  const { recipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeDataStore();
   const name = "components_sub_total";
   return (
     <>

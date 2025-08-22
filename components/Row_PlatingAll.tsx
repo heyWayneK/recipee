@@ -14,7 +14,7 @@ import Row_PlatingMarkup from "./Row_PlatingMarkup";
 import Row_PlatingSalesPriceExVat from "./Row_PlatingSalesPriceExVat";
 import Row_PlatingSalesPriceInclVat from "./Row_PlatingSalesPriceInclVat";
 import Row_PlatingPrint from "./Row_PlatingPrint";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface Row_PlatingAllProps {}
 
@@ -22,7 +22,7 @@ const Row_PlatingAll: React.FC<Row_PlatingAllProps> = () => {
   const [viewPrices, setViewPrices] = useState(false);
 
   // INFO: useRecipeData: systemData, UserData, localOrDbData
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   function handleViewPrices() {
     // e.preventDefault();

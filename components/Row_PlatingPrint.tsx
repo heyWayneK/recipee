@@ -3,12 +3,12 @@ import Table_Cell from "./Table_Cell";
 // import { data } from "@/app/api/recipe";
 import SvgSpriteLink from "./SvgSpriteLink";
 import { cleanComponentKeyName, getTextTranslation } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface Row_PlatingPrintProps {}
 
 const Row_PlatingPrint: React.FC<Row_PlatingPrintProps> = () => {
-  const { recipeData } = useRecipeData(); // Assuming data is imported from the API
+  const { recipeData } = useRecipeDataStore(); // Assuming data is imported from the API
 
   const name = getTextTranslation("print");
   const keyName = cleanComponentKeyName(name);

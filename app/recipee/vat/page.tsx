@@ -2,14 +2,14 @@
 import React from "react";
 import { divide, get, set } from "cypress/types/lodash";
 import Loading from "@/components/Loading";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface pageProps {
   //   children: ReactNode;
   //   className?: string;
 }
 const Page: React.FC<pageProps> = () => {
-  const { recipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeDataStore();
 
   console.log("___ SYSTEMDATA", systemData);
   console.log("___%RECIPEDATA", recipeData);

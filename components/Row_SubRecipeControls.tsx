@@ -2,7 +2,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
 import { getTextTranslation } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import { RecipeProps } from "@/app/api/recipe";
 import ButtonThemeLightDark from "./ButtonThemeLightDark";
 
@@ -12,7 +12,7 @@ interface Row_SubRecipeControlsProps {
   recipe: RecipeProps;
 }
 const Row_SubRecipeControls: React.FC<Row_SubRecipeControlsProps> = ({ recipe }) => {
-  // FUTURE: Might need const { qty, setQty, userData, localOrDbData } = useRecipeData();
+  // FUTURE: Might need const { qty, setQty, userData, localOrDbData } = useRecipeDataStore();
 
   return (
     <Table_Cell firstCol={false} header={false} type="controls" iconName="" key={"Row_SubRecipeControls"}>

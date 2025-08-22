@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useModalBig } from "@/hooks/UseBigModal";
 import Link from "next/link";
@@ -12,7 +12,7 @@ interface Row_PlatingHeaderProps {
 }
 
 const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = false }) => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
   const { openModal } = useModalBig();
 
   // COMPONENTS

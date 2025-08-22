@@ -3,7 +3,7 @@ import React from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/utils/utils";
 // import { data } from "@/app/api/recipe";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 import { recipeeUI } from "./Row_SubRecipesAll";
 import Decimal from "decimal.js";
@@ -45,7 +45,7 @@ interface Row_SubRecipeHeaderProps {
   totalPerc: Decimal | string;
 }
 const Row_SubRecipeSubTotal: React.FC<Row_SubRecipeHeaderProps> = ({ totalCost = 0, totalWeight = 0, totalPerc = 0 }) => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   return recipeeUI.sub_recipe.map((col, i) => {
     return (

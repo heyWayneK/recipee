@@ -4,7 +4,7 @@ import { getRecipeDataFunc2, getSystemDataFunc2 } from "../api/data/all/function
 import { divide, get, set } from "cypress/types/lodash";
 import Loading from "@/components/Loading";
 import { PreCalculatedRecipeData, SystemDataProps } from "@/types/recipeTypes";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface pageProps {
   //   children: ReactNode;
@@ -13,7 +13,7 @@ interface pageProps {
 const Page: React.FC<pageProps> = () => {
   const [system, setSystem] = useState<SystemDataProps>();
   const [recipe, setRecipe] = useState<PreCalculatedRecipeData>();
-  // const { systemData, recipeData } = useRecipeData();
+  // const { systemData, recipeData } = useRecipeDataStore();
 
   useEffect(() => {
     const fetchData = async () => {

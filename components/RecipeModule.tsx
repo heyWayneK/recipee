@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import Row_SubRecipesAll from "./Row_SubRecipesAll";
 import Row_PlatingAll from "./Row_PlatingAll";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Loading from "./Loading";
 export interface RecipeModuleProps {
   className?: string;
@@ -9,7 +9,7 @@ export interface RecipeModuleProps {
 
 // PAGE
 const RecipeModule: React.FC<RecipeModuleProps> = () => {
-  const { recipeData, localOrDbData } = useRecipeData();
+  const { recipeData, localOrDbData } = useRecipeDataStore();
 
   if (!recipeData.portionSizes.length) return <Loading />;
 

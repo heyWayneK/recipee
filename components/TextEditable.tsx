@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import SvgSprite from "@/components/SvgSprite";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import DOMPurify from "dompurify";
 import { useModalBig } from "@/hooks/UseBigModal";
 import { idColnameType } from "@/types/recipeTypes";
@@ -20,7 +20,7 @@ interface TextEditableProps {
 }
 
 const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = false, optionalContent = ">>>...", dbUpdateConfig, dbExpectedType = "plaintext" }: TextEditableProps) => {
-  const { recipeData, getRecipeDataByPath, setRecipeDataByPath } = useRecipeData();
+  const { recipeData, getRecipeDataByPath, setRecipeDataByPath } = useRecipeDataStore();
   const { openModal, closeModal, setSaveStatus } = useModalBig();
 
   const [displayedText, setDisplayedText] = useState("");

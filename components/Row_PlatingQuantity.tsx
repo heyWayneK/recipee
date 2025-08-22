@@ -1,13 +1,13 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface Row_PlatingQuantityProps {}
 
 // TODO: this component can probably be deleted, unless a quick bulk mode is created?
 const Row_PlatingQuantity: React.FC<Row_PlatingQuantityProps> = () => {
-  const { qty, setQty, recipeData } = useRecipeData();
+  const { qty, setQty, recipeData } = useRecipeDataStore();
 
   const name = getTextTranslation("quantity");
 

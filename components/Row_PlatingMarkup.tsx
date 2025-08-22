@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { calcProfit, getTextTranslation, replace_ } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import MenuDynamicChildren, { MenuOptionsProps } from "./MenuPopupOnMouseOver";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "@/components/ViewPrices";
@@ -15,7 +15,7 @@ interface Row_PlatingMarkupProps {
 }
 
 const Row_PlatingMarkup: React.FC<Row_PlatingMarkupProps> = ({ className = "", viewPrices }) => {
-  const { recipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeDataStore();
 
   // SETUP UNIQUE VARS
   const o = {

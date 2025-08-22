@@ -1,4 +1,4 @@
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import { Decimal } from "@prisma/client/runtime/library";
 import { el } from "date-fns/locale";
 import React from "react";
@@ -9,7 +9,7 @@ type IngredientUnitsProps = {
 };
 
 const IngredientUnits: React.FC<IngredientUnitsProps> = ({ children, className = undefined }): React.ReactNode | "" => {
-  const { systemData, recipeMode } = useRecipeData();
+  const { systemData, recipeMode } = useRecipeDataStore();
 
   //   const formatWeight = (weight: number | string): string => {
   // INFO: Weight is always stored in metric grams or metric milliliters

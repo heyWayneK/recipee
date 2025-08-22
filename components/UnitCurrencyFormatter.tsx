@@ -1,4 +1,4 @@
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Decimal from "decimal.js";
 import React from "react";
 
@@ -7,7 +7,7 @@ type UnitCurrenctFormatterProps = {
 };
 
 const UnitCurrencyFormatter: React.FC<UnitCurrenctFormatterProps> = ({ children = undefined }): React.ReactElement => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   if (children === undefined) throw new Error("Invalid children prop");
 

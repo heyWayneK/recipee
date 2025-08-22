@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation, replace_ } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 
 interface Row_PlatingCostsSubTotalProps {
@@ -10,7 +10,7 @@ interface Row_PlatingCostsSubTotalProps {
 }
 
 const Row_PlatingCostsSubTotal: React.FC<Row_PlatingCostsSubTotalProps> = ({ viewPrices }) => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
   const name = "costs_sub_total";
 
   return (

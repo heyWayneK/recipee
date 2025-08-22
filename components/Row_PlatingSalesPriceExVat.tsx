@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import { cleanComponentKeyName, getTextTranslation, replace_ } from "@/utils/utils";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Row_FirstRowTableCell from "./Row_FirstRowTableCell";
 import ViewPrices from "./ViewPrices";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
@@ -11,7 +11,7 @@ interface Row_PlatingSalesPriceExVatProps {
 }
 
 const Row_PlatingSalesPriceExVat: React.FC<Row_PlatingSalesPriceExVatProps> = ({ viewPrices }) => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   const o = {
     name: cleanComponentKeyName("sale_price_(ex_vat)"),

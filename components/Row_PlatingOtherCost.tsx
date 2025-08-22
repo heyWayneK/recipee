@@ -1,5 +1,5 @@
 import React from "react";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Row_CatAndLineItems from "./Row_CatAndLineItems";
 import { getTextTranslation, replace_ } from "@/utils/utils";
 
@@ -9,7 +9,7 @@ interface Row_PlatingOtherCostProps {
 }
 
 const Row_PlatingOtherCost: React.FC<Row_PlatingOtherCostProps> = ({ viewPrices }) => {
-  const { recipeData, systemData } = useRecipeData();
+  const { recipeData, systemData } = useRecipeDataStore();
 
   // SETUP UNIQUE VARS
   const o = {

@@ -5,7 +5,7 @@ import Row_SubRecipeHeader from "./Row_SubRecipeHeader";
 import Row_SubRecipeIngredients from "./Row_SubRecipeIngredients";
 import DottedBorder from "./DottedBorder";
 import { RecipeProps } from "@/types/recipeTypes";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface Row_SubRecipesAllProps {
   recipeIndex: number;
@@ -16,7 +16,7 @@ export const recipeeUI = {
 };
 
 const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   // return recipeData.data.components.map((subRecipe, i) => {
   return recipeData.data.components.map((subRecipe, i) => {

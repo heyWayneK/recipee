@@ -6,13 +6,13 @@ import Recipe_TodoBlock from "@/components/Recipe_TodoBlock";
 import Recipe_NoteBlock from "@/components/Recipe_NoteBlock";
 import React from "react";
 import Loading from "@/components/Loading";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 // This page is only accessible to authenticated users.
 // It is wrapped with the LayoutPrivate component to enforce access control.
 // See https://docs.microsaasfast.me/private-page/
 export default function Recipee() {
-  const { qty, recipeData, systemData } = useRecipeData();
+  const { qty, recipeData, systemData } = useRecipeDataStore();
   // console.log("should have loaded recipe data", qty, recipeData, systemData, localOrDbData);
 
   console.log("recipeData", { qty, recipeData, systemData });

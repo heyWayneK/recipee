@@ -1,7 +1,7 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import MenuDynamicChildren from "./MenuPopupOnMouseOver";
-import { useRecipeData } from "@/contexts/useRecipeData";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import IngredientUnits from "./IngredientUnits";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 import TextEditable from "./TextEditable";
@@ -13,7 +13,7 @@ interface Row_PlatingListProps {
 }
 
 const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewPrices }) => {
-  const { recipeData } = useRecipeData();
+  const { recipeData } = useRecipeDataStore();
 
   return (
     <>
