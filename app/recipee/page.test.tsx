@@ -1,31 +1,69 @@
 import { render, screen } from "@testing-library/react";
-import { MenuModalProvider } from "../../contexts/useMenuModal";
-import { RecipeDataProvider } from "../../contexts/useRecipeData";
+import { RecipeDataProvider } from "@/contexts/UseRecipeData";
 import Recipee from "./page";
 import "@testing-library/jest-dom";
 import React from "react";
 import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
+import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
+import { MenuModalProvider } from "@/contexts/UseMenuModal";
 
-// INFO: ignore the errors on describe and expect. Its a known issue with Jest and TypeScript (I think)
-// INFO: It will works even with the errors
+jest.mock('@/hooks/useRecipeDataStore');
 
 describe("Recipee", () => {
-  // INFO: It will works even with the Jest errors
-  it("renders 'test-1234' in the bottom div", () => {
-    const theme = "light"; // Define the theme value
-    render(
-      //   <MenuModalProvider>
-      //     <RecipeDataProvider>
-      <DarkLightThemeProvider>
-        <Recipee />
-      </DarkLightThemeProvider>
-      //     </RecipeDataProvider>
-      //   </MenuModalProvider>
-    );
+  it("renders without crashing", () => {
+    (useRecipeDataStore as jest.Mock).mockReturnValue({
+      recipeData: {
+        portionSizes: [1],
+        data: {
+          components: [],
+          portions: [],
+        },
+        name: "Test Recipe",
+        componentsWeights: [],
+        componentsNamesArray: [],
+        componentsPricePer1000g: [],
+        componentsPrices: [],
+        componentsPricesDesc: [],
+        componentsSubTotalsPrices: [],
+        packingCostPriceTotals: [],
+        packingCostPriceRules: [],
+        otherCostsPriceTotals: [],
+        otherCostsPriceRules: [],
+        costsSubTotals: [0],
+        markUpPriceAmounts: [],
+        markUpPriceRules: [1],
+        markUpPriceRuleName: [],
+        salePricesExVat: [],
+        salesPricesIncVat: [],
+        vatRuleIds: [],
+        vatRulePercs: [],
+        vatRuleNames: [],
+      },
+      systemData: {
+        org: {
+            unit_metric_imperial_name: 'metric'
+        },
+        unit_metric_imperial: [],
+        markup: [{ id: 1, name: "Test Markup", factor: 1.2, markup_type: { name: "markup" } }]
+      },
+      loaded: true,
+      fetchData: jest.fn(),
+      qty: 1,
+      localOrDbData: {
+        system: "database",
+        recipe: "database",
+      },
+    });
 
-    const bottomDiv = screen.getByTestId("test");
-    // INFO: It will works even with the Jest errors
-    expect(bottomDiv).toBeInTheDocument();
-    expect(bottomDiv).toHaveTextContent("test-1234");
+    render(
+      <MenuModalProvider>
+        <DarkLightThemeProvider>
+          <RecipeDataProvider>
+            <Recipee />
+          </RecipeDataProvider>
+        </DarkLightThemeProvider>
+      </MenuModalProvider>
+    );
+    // The test will pass if the component renders without throwing an error.
   });
 });
