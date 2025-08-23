@@ -708,9 +708,8 @@ model ingredients_nutrition {
   omega3_per_100g           Decimal?    @db.Decimal(10, 3)
   omega6_per_100g           Decimal?    @db.Decimal(10, 3)
   omega9_per_100g           Decimal?    @db.Decimal(10, 3)
-  carbs_per_100g            Decimal?    @db.Decimal(10, 3)
-  net_carbs_per_100g        Decimal?    @db.Decimal(10, 3)
   carbohydrates_per_100g    Decimal?    @db.Decimal(10, 3)
+  net_carbs_per_100g        Decimal?    @db.Decimal(10, 3)
   total_sugar_per_100g      Decimal?    @db.Decimal(10, 3)
   added_sugar_per_100g      Decimal?    @db.Decimal(10, 3)
   artificial_sugar_per_100g Decimal?    @db.Decimal(10, 3)
@@ -722,7 +721,6 @@ model ingredients_nutrition {
   // MICRO NUTRIENTS
   water_per_100g                        Decimal? @db.Decimal(10, 3)
   nitrogen_g_per_100g                   Decimal? @db.Decimal(10, 3)
-  protein_g_per_100g                    Decimal? @db.Decimal(10, 3)
   ash_g_per_100g                        Decimal? @db.Decimal(10, 3)
   calcium_mg_per_100g                   Decimal? @db.Decimal(10, 3)
   iron_mg_per_100g                      Decimal? @db.Decimal(10, 3)
@@ -775,6 +773,46 @@ model ingredients_nutrition {
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+enum enum_macro_micro_unit {
+  g
+  mg
+  µg
+}
+
+enum enum_macro_micro_primary_category {
+  macro
+  micro
+}
+
+enum enum_macro_micro_indent {
+  null
+  parent
+  child
+}
+
+enum enum_macro_micro_secondary_category {
+  null
+  minerals
+  vitamins
+  fatty_acids
+  lipids
+  amino_acids
+  isoflavones
+}
+
+model macro_micro {
+  id                 Int                               @id @default(autoincrement())
+  name               String
+  full_name          String
+  primary_category   enum_macro_micro_primary_category
+  secondary_category String?
+  unit               enum_macro_micro_unit
+  short_name         String
+  indent             enum_macro_micro_indent
+  order              Int
+  updated_at         DateTime                          @updatedAt
 }
 
 model allergy_ingredient {
@@ -1245,9 +1283,8 @@ model component_nutrition {
   omega3_per_100g           Decimal?    @db.Decimal(10, 3)
   omega6_per_100g           Decimal?    @db.Decimal(10, 3)
   omega9_per_100g           Decimal?    @db.Decimal(10, 3)
-  carbs_per_100g            Decimal?    @db.Decimal(10, 3)
-  net_carbs_per_100g        Decimal?    @db.Decimal(10, 3)
   carbohydrates_per_100g    Decimal?    @db.Decimal(10, 3)
+  net_carbs_per_100g        Decimal?    @db.Decimal(10, 3)
   total_sugar_per_100g      Decimal?    @db.Decimal(10, 3)
   added_sugar_per_100g      Decimal?    @db.Decimal(10, 3)
   artificial_sugar_per_100g Decimal?    @db.Decimal(10, 3)

@@ -7,6 +7,7 @@ import IngredientUnits from "./IngredientUnits";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 import Decimal from "decimal.js";
 import { recipeDetailProps } from "@/types/recipeTypes";
+``;
 import TextEditable from "./TextEditable";
 
 interface Row_SubRecipeIngredientProps {

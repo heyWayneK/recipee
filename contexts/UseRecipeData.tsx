@@ -8,6 +8,7 @@ interface RecipeDataProviderProps {
 }
 
 export const RecipeDataProvider: React.FC<RecipeDataProviderProps> = ({ children }) => {
+  // TODO: Uncomment when Clerk organization is available
   // const { organization, isLoaded: isOrgLoaded } = useOrganization();
   // const orgId = organization?.id;
   const orgId = "1"; // Manual override for orgId

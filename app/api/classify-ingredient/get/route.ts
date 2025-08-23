@@ -185,9 +185,8 @@ export async function GET(request: Request) {
           '    "omega3_per_100g": <number>,\n' +
           '    "omega6_per_100g": <number>,\n' +
           '    "omega9_per_100g": <number>,\n' +
-          '    "carbs_per_100g": <number>,\n' +
-          '    "net_carbs_per_100g": <number>,\n' +
           '    "carbohydrates_per_100g": <number>,\n' +
+          '    "net_carbs_per_100g": <number>,\n' +
           '    "total_sugar_per_100g": <number>,\n' +
           '    "added_sugar_per_100g": <number|null>,\n' +
           '    "artificial_sugar_per_100g": <number|null>,\n' +
@@ -222,7 +221,6 @@ export async function GET(request: Request) {
           '  "other": {\n' +
           '    "water_per_100g: <number>,\n' +
           '    "nitrogen_g_per_100g": <number>\n' +
-          '    "protein_g_per_100g: <number>,\n' +
           '    "ash_g_per_100g: <number>,\n' +
           '    "calcium_mg_per_100g: <number>,\n' +
           '    "iron_mg_per_100g: <number>,\n' +
@@ -568,7 +566,6 @@ export async function GET(request: Request) {
           // OTHER
           water_per_100g: jsonData.other?.water_per_100g || 0,
           nitrogen_g_per_100g: jsonData.other?.nitrogen_g_per_100g || 0,
-          protein_g_per_100g: jsonData.other?.protein_g_per_100g || 0,
           ash_g_per_100g: jsonData.other?.ash_g_per_100g || 0,
           calcium_mg_per_100g: jsonData.other?.calcium_mg_per_100g || 0,
           iron_mg_per_100g: jsonData.other?.iron_mg_per_100g || 0,
@@ -631,9 +628,8 @@ export async function GET(request: Request) {
           omega3_per_100g: jsonData.nutritional_data?.omega3_per_100g || 0,
           omega6_per_100g: jsonData.nutritional_data?.omega6_per_100g || 0,
           omega9_per_100g: jsonData.nutritional_data?.omega9_per_100g || 0,
-          carbs_per_100g: jsonData.nutritional_data?.carbs_per_100g || 0,
-          net_carbs_per_100g: jsonData.nutritional_data?.net_carbs_per_100g || 0,
           carbohydrates_per_100g: jsonData.nutritional_data?.carbohydrates_per_100g || 0,
+          net_carbs_per_100g: jsonData.nutritional_data?.net_carbs_per_100g || 0,
           total_sugar_per_100g: jsonData.nutritional_data?.total_sugar_per_100g || 0,
           added_sugar_per_100g: jsonData.nutritional_data?.added_sugar_per_100g || 0,
           artificial_sugar_per_100g: jsonData.nutritional_data?.artificial_sugar_per_100g || 0,
@@ -644,7 +640,6 @@ export async function GET(request: Request) {
           // OTHER
           water_per_100g: jsonData.other?.water_per_100g || 0,
           nitrogen_g_per_100g: jsonData.other?.nitrogen_g_per_100g || 0,
-          protein_g_per_100g: jsonData.other?.protein_g_per_100g || 0,
           ash_g_per_100g: jsonData.other?.ash_g_per_100g || 0,
           calcium_mg_per_100g: jsonData.other?.calcium_mg_per_100g || 0,
           iron_mg_per_100g: jsonData.other?.iron_mg_per_100g || 0,

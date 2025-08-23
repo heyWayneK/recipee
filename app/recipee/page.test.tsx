@@ -1,13 +1,15 @@
 import { render, screen } from "@testing-library/react";
-import { RecipeDataProvider } from "@/contexts/UseRecipeData";
+
 import Recipee from "./page";
 import "@testing-library/jest-dom";
 import React from "react";
 import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import { MenuModalProvider } from "@/contexts/UseMenuModal";
+import { ClerkProvider } from "@clerk/nextjs";
+import { RecipeDataProvider } from "@/contexts/useRecipeData";
 
-jest.mock('@/hooks/useRecipeDataStore');
+jest.mock("@/hooks/useRecipeDataStore");
 
 describe("Recipee", () => {
   it("renders without crashing", () => {
@@ -41,10 +43,10 @@ describe("Recipee", () => {
       },
       systemData: {
         org: {
-            unit_metric_imperial_name: 'metric'
+          unit_metric_imperial_name: "metric",
         },
         unit_metric_imperial: [],
-        markup: [{ id: 1, name: "Test Markup", factor: 1.2, markup_type: { name: "markup" } }]
+        markup: [{ id: 1, name: "Test Markup", factor: 1.2, markup_type: { name: "markup" } }],
       },
       loaded: true,
       fetchData: jest.fn(),
@@ -56,13 +58,15 @@ describe("Recipee", () => {
     });
 
     render(
-      <MenuModalProvider>
-        <DarkLightThemeProvider>
-          <RecipeDataProvider>
-            <Recipee />
-          </RecipeDataProvider>
-        </DarkLightThemeProvider>
-      </MenuModalProvider>
+      <ClerkProvider>
+        <MenuModalProvider>
+          <DarkLightThemeProvider>
+            <RecipeDataProvider>
+              <Recipee />
+            </RecipeDataProvider>
+          </DarkLightThemeProvider>
+        </MenuModalProvider>
+      </ClerkProvider>
     );
     // The test will pass if the component renders without throwing an error.
   });

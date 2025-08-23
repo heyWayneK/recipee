@@ -20,6 +20,7 @@ interface TextEditableProps {
 }
 
 const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = false, optionalContent = ">>>...", dbUpdateConfig, dbExpectedType = "plaintext" }: TextEditableProps) => {
+  // TODO: Add if statements for dbExpectedType to plain and htmltext
   const { recipeData, getRecipeDataByPath, setRecipeDataByPath } = useRecipeDataStore();
   const { openModal, closeModal, setSaveStatus } = useModalBig();
 
@@ -27,7 +28,8 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const initialValue = path ? getRecipeDataByPath(path, recipeData) : optionalContent;
+    // const initialValue = path ? getRecipeDataByPath(path, recipeData) : optionalContent;
+    const initialValue = path ? getRecipeDataByPath(path) : optionalContent;
     const sanitizedText = DOMPurify.sanitize(initialValue ? String(initialValue) : "");
     setDisplayedText(sanitizedText);
   }, [path, getRecipeDataByPath, recipeData, optionalContent]);
@@ -43,7 +45,8 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
 
     if (path) {
       // Update the recipe data with the new text
-      setRecipeDataByPath(path, newText, recipeData);
+      // setRecipeDataByPath(path, newText, recipeData);
+      setRecipeDataByPath(path, newText);
       setDisplayedText(newText);
     }
 
@@ -85,7 +88,8 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
         console.error("Error saving text:", error);
         setSaveStatus("error");
         if (path) {
-          setRecipeDataByPath(path, displayedText, recipeData);
+          // setRecipeDataByPath(path, displayedText, recipeData);
+          setRecipeDataByPath(path, displayedText);
           setDisplayedText(displayedText);
         }
         setTimeout(() => {
@@ -95,7 +99,7 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
     } else {
       closeModal();
     }
-  }, [displayedText, path, instantDbUpdate, dbUpdateConfig, setRecipeDataByPath, recipeData, closeModal, setSaveStatus]);
+  }, [displayedText, path, instantDbUpdate, dbUpdateConfig, setRecipeDataByPath, closeModal, setSaveStatus]);
 
   const handleOpenModal = () => {
     openModal(title, displayedText, handleSave);
@@ -105,7 +109,7 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
     <div className={`relative w-full cursor-pointer group`} ref={wrapperRef} onClick={handleOpenModal}>
       <div
         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(displayedText || optionalContent) }}
-        className="text-base-content text-pretty text-ellipsis rounded-xl min-w-10 px-4 py-1 whitespace-nowrap bg-lime-400"
+        className="text-secondary-content text-pretty text-ellipsis rounded-xl min-w-10 px-1 py-1 whitespace-nowrap "
       />
       <div id="icon" className={`absolute inset-0 flex items-center justify-center fill-primary-100 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg border border-transparent`}>
         <SvgSprite size={20} iconName="edit" className="bg-secondary-500 fill-white p-1 shadow-lg shadow-secondary-300 rounded-full" />

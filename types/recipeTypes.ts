@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, enum_macro_micro_indent, enum_macro_micro_primary_category, enum_macro_micro_unit } from "@prisma/client";
 import Decimal from "decimal.js";
 
 import React from "react";
@@ -301,7 +301,47 @@ export type NutritionalDataSelect = Prisma.ingredients_nutritionGetPayload<{
   };
 }>;
 
-export type NutritionalDataValuesSelect = { column_name: string };
+// export type NutritionalDataValuesSelect = { column_name: string };
+export type MacroMicroSelect = {
+  select: {
+    id: true;
+    name: true;
+    full_name: true;
+
+    // primary_category: Prisma.Enumenum_macro_micro_indentFilter;
+    primary_category: enum_macro_micro_primary_category;
+    // primary_category: "macro" | "micro";
+
+    secondary_category: true;
+
+    // unit: Prisma.Enumenum_macro_micro_unitFilter;
+    unit: enum_macro_micro_unit;
+    // unit: "g" | "mg" | "µg";
+
+    short_name: true;
+
+    // indent: Prisma.Enumenum_macro_micro_indentFilter;
+    indent: enum_macro_micro_indent;
+    // indent: "null" | "parent" | "child";
+
+    order: true;
+  };
+};
+
+/*
+
+enum enum_macro_micro_primary_category {
+  macro
+  micro
+}
+
+enum enum_macro_micro_indent {
+  null
+  parent
+  child
+}
+
+*/
 
 export type OilPurposeSelect = Prisma.oil_purposeGetPayload<{
   select: {
@@ -613,7 +653,8 @@ export interface SystemDataProps {
   dry_cooked_yields: DryCookedYieldsSelect[];
   ingredients_religious_certification: IngredientsReligiousCertificationSelect[];
   language: LanguageSelect[];
-  nutritional_data_values: NutritionalDataValuesSelect[];
+  // macro_micro: NutritionalDataValuesSelect[];
+  macro_micro: MacroMicroSelect[];
   ingredient_category_primary: IngredientCategoryPrimarySelect[];
   // FUTURE: need to create secondary categories
   ingredient_category_secondary: IngredientCategorySecondarySelect[];
