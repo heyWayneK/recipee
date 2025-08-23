@@ -70,7 +70,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
                 field: "name_extra_info",
               }}
             />
-            <span className=" !text-xs">
+            <span className=" !text-xs overflow-hidden">
               isSalt:{ingredient.isSalt} isOil:{ingredient.isOil} uuid:{ingredient.uuid} name:{ingredient.ingredName} ingredId:{ingredId} subrecipeId : {ingredient.subRecipeId}
             </span>
           </div>

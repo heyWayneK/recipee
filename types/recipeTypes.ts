@@ -307,28 +307,22 @@ export type MacroMicroSelect = {
     id: true;
     name: true;
     full_name: true;
-
-    // primary_category: Prisma.Enumenum_macro_micro_indentFilter;
     primary_category: enum_macro_micro_primary_category;
-    // primary_category: "macro" | "micro";
-
     secondary_category: true;
-
-    // unit: Prisma.Enumenum_macro_micro_unitFilter;
     unit: enum_macro_micro_unit;
-    // unit: "g" | "mg" | "µg";
-
     short_name: true;
-
-    // indent: Prisma.Enumenum_macro_micro_indentFilter;
     indent: enum_macro_micro_indent;
-    // indent: "null" | "parent" | "child";
-
     order: true;
   };
 };
 
 /*
+
+ export const enum_macro_micro_unit: {
+  g: 'g',
+  mg: 'mg',
+  µg: 'µg'
+};
 
 enum enum_macro_micro_primary_category {
   macro

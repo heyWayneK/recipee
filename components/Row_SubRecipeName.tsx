@@ -16,7 +16,7 @@ const Row_SubRecipeSubName: React.FC<Row_SubRecipeSubNameProps> = ({ subRecipe, 
     <Table_Cell className="" firstCol={false} header={false} type="controls" rowNum={colorNum} iconName="" key={"Row_SubRecipeSubNameProps"}>
       {/* <span className=" text-base-100  line-clamp-1">{subRecipe.name}</span> */}
       <TextEditable
-        title={`Suv `}
+        title={`Sub Recipe Name`}
         // path={`data.recipes[0].recipeDetail[${ingredient.order}].ingredName`}
         path={`data.recipes[${recipeIndex}].name`}
         dbExpectedType="plaintext"

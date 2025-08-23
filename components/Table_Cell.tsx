@@ -3,7 +3,6 @@ import SvgSprite, { allowedIcon } from "./SvgSprite";
 import { recipeColors } from "@/libs/colorsRecipes";
 import { cva, type VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
-import TextEditable from "./TextEditable";
 import { useModalBig } from "@/hooks/UseBigModal";
 
 // USING CVA to create Prop types for the Table_Cell component
