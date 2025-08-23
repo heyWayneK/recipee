@@ -5,6 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 import { useModalBig } from "@/hooks/UseBigModal";
 
+// INFO: Table_Cell is a generic cell component for the Recipe Table
 // USING CVA to create Prop types for the Table_Cell component
 const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none items-center ", {
   variants: {
