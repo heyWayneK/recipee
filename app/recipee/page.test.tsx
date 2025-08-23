@@ -7,7 +7,7 @@ import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import { MenuModalProvider } from "@/contexts/UseMenuModal";
 import { ClerkProvider } from "@clerk/nextjs";
-import { RecipeDataProvider } from "@/contexts/useRecipeData";
+import { RecipeDataProvider } from "@/contexts/UseRecipeData";
 
 jest.mock("@/hooks/useRecipeDataStore");
 
