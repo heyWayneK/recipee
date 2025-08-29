@@ -288,6 +288,99 @@ Button: <ButtonThemeLightDark />
          error // red
 ```
 
+### ENUMS
+
+- PRISMA moves enums into the folder after "npx prisma generate"
+- /node_modules/.prisma/client/index.d.ts
+
+#### TYPES that will/may need updating
+
+```js
+// IMPORTANT: These are manually set. They are NOT from the DB.
+// May have tp update them
+export type recipe_row_types_type = "ingredient" | "step" | "sub";
+
+export type unit_type = "weight" | "fluid" | "each";
+
+export type unit_metric_imperial_type = "metric" | "imperial";
+
+export type prep_instruction_type =
+  | "none"
+  | "10x10mm"
+  | "15x15mm"
+  | "20x20mm"
+  | "fine"
+  | "ground"
+  | "ground - fine"
+  | "ground - medium"
+  | "ground - coarse"
+  | "grate"
+  | "grate - large"
+  | "grate - medium"
+  | "grate - fine"
+  | "fresh"
+  | "whole"
+  | "brunoise"
+  | "chiffonade"
+  | "chop"
+  | "chopped fine"
+  | "chopped rough"
+  | "cube"
+  | "dice"
+  | "julienne/french-cut"
+  | "mince"
+  | "slice"
+  | "rondelle"
+  | "diagonal"
+  | "batonnet"
+  | "jardiniere"
+  | "macedoine"
+  | "other";
+
+export type cooked_yields_category_type = "Roasting & Baking" | "Grilling & Broiling" | "Frying" | "Sautéing & Stir-Frying" | "Boiling & Simmering" | "Steaming" | "Combination Cooking" | "Sous Vide";
+
+export type dry_cooked_yields_category_type =
+  | "Unknown\n"
+  | "Pasta"
+  | "Rice"
+  | "Cereals, Pseudocereals"
+  | "Grains"
+  | "Barley (pearled)"
+  | "Farro Grain"
+  | "Oats"
+  | "Egg Noodles"
+  | "Rice Noodles"
+  | "Lentils"
+  | "Polenta"
+  | "Semolina-- ? Flours"
+  | "Chickpeas"
+  | "Beans";
+
+export type dry_cooked_yield_type =
+  | "Short Pasta (Penne, Fusilli, Macaroni)"
+  | "Long pasta (spaghetti, fettuccine)"
+  | "Whole Wheat Pasta"
+  | "Fresh Pasta (Egg Based)"
+  | "Fresh Semolina Pasta"
+  | "White Rice"
+  | "Brown Rice"
+  | "Wild Rice"
+  | "Quinoa"
+  | "Bulgur Wheat"
+  | "Couscous"
+  | "Farro Grain"
+  | "Gnocchi"
+  | "Oats (rolled)"
+  | "Oats (steel-cut)"
+  | "Couscous";
+
+export type ingredients_religious_certification_type = "no" | "yes" | "likely" | "likely" | "unknown";
+
+export type language = "English (UK)" | "English (US)" | "German" | "Italian" | "Dutch" | "Portuguese" | "French" | "Spanish";
+
+export type dietary_classification_type = "animal_product" | "vegan" | "vegetarian";
+```
+
 ### MODAL
 
 - How to use Modals

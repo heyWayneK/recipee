@@ -1,17 +1,17 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
-import { recipeeUI } from "./Row_SubRecipesAll";
+import { columnNames } from "./Row_SubRecipesAll";
 import SvgSprite from "./SvgSprite";
 import MenuOption1 from "./MenuOption1";
 import IngredientUnits from "./IngredientUnits";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
 import Decimal from "decimal.js";
-import { recipeDetailProps } from "@/types/recipeTypes";
+import { RecipeDetailProps } from "@/types/recipeTypes";
 ``;
 import TextEditable from "./TextEditable";
 
 interface Row_SubRecipeIngredientProps {
-  ingredient: recipeDetailProps;
+  ingredient: RecipeDetailProps;
   totalWeight: Decimal;
   recipeIndex: number; // INFO: the index of recipe in recipeData.data.recipes[?]array
   ingredientIndex: number;
@@ -19,7 +19,7 @@ interface Row_SubRecipeIngredientProps {
 // (typeof toneOptions)[number]
 const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingredient, totalWeight, recipeIndex, ingredientIndex }) => {
   // INFO:  const { ingredId, ingredName, qty_g, order, type, instruction, dietClassification, stepInstruction, supplier, unitType, costPer1000g, needsPrep, FQscore } = ingredient;
-  const { qty_g, uuid, ingredId, ingredName } = ingredient;
+  const { qty_g, uuid, name_extra_info } = ingredient;
 
   // if (!findRecipeIndex) {
   //   const e = `No findRecipeIndex provided.`;
@@ -56,6 +56,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
         return (
           <div className=" overflow-hidden whitespace-nowrap w-full">
             {/* {value} */}
+            {/* ING:{ingredient.} */}
             <TextEditable
               title={`${value}`}
               // path={`data.recipes[0].recipeDetail[${ingredient.order}].ingredName`}
@@ -66,12 +67,13 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
               dbUpdateConfig={{
                 model: "recipe_detail_row",
                 id: ingredient.uuid,
-                idColName: "uuid",
+                idColName: "id",
                 field: "name_extra_info",
               }}
             />
             <span className=" !text-xs overflow-hidden">
-              isSalt:{ingredient.isSalt} isOil:{ingredient.isOil} uuid:{ingredient.uuid} name:{ingredient.ingredName} ingredId:{ingredId} subrecipeId : {ingredient.subRecipeId}
+              extraName: {ingredient.name_extra_info} | isSalt:{ingredient.isSalt} isOil:{ingredient.isOil} uuid:{ingredient.uuid} name:{ingredient.name_extra_info} ingredId:{name_extra_info}{" "}
+              subrecipeId : {ingredient.subRecipeId}
             </span>
           </div>
         );
@@ -82,14 +84,14 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
 
   return (
     <>
-      {/* INFO: Column Name
-          recipeeUI.sub_recipe: ["ingredName", "this_qty", "instruction", "costPer1000g", "qty_g", "%", "move"], 
+      {/* INFO: ColumnName = 
+          ["ingredName", "this_qty", "instruction", "costPer1000g", "qty_g", "%", "move"], 
       */}
-      {recipeeUI.sub_recipe.map((col, ingredIndex) => {
+      {columnNames.sub_recipe.map((col, ingredIndex) => {
         return (
           <Table_Cell edit={ingredIndex === 0 ? "edit" : null} firstCol={ingredIndex === 0} type="ingredient" key={col + "_" + ingredIndex} dbDataId={uuid}>
             {/* col is column name. to collect the correct value */}
-            {formatColContent(col, ingredient[col as keyof recipeDetailProps] ? ingredient[col as keyof recipeDetailProps] : "", ingredIndex)}
+            {formatColContent(col, ingredient[col as keyof RecipeDetailProps] ? ingredient[col as keyof RecipeDetailProps] : "", ingredIndex)}
           </Table_Cell>
         );
       })}

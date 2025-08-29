@@ -1,8 +1,8 @@
 import React from "react";
 import Row_SubRecipeIngredient from "./Row_SubRecipeIngredient";
-// import { RecipeProps, data } from "@/app/api/recipe";
+// import { RecipesInDataProps, data } from "@/app/api/recipe";
 import Row_SubRecipeStep from "./Row_SubRecipeStep";
-import { RecipeProps } from "@/types/recipeTypes";
+import { RecipeDetailProps, RecipesInDataProps } from "@/types/recipeTypes";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Decimal from "decimal.js";
 import Row_SubRecipeSubTotal from "./Row_SubRecipeSubTotal";
@@ -11,7 +11,7 @@ import Row_SubRecipeAddButtons from "./Row_SubRecipeAddButtons";
 import Row_SubRecipeActions from "./Row_SubRecipeActions";
 
 interface Row_SubRecipeIngredientsProps {
-  recipe: RecipeProps;
+  recipe: RecipesInDataProps;
   recipeIndex: number; // INFO: the index of recipe in recipeData.data.recipes[?]array
 }
 const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ recipe, recipeIndex }) => {
@@ -40,12 +40,13 @@ const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ rec
 
   const allSteps = recipe.recipeDetail.map((ingred) => (ingred.type === "step" ? ingred.stepInstruction : "")).filter((step) => step !== "");
 
+  // RECIPE STEPS
   let stepCount = 1;
   return (
     <>
       {recipe.recipeDetail.map((ingredient, i) =>
         ingredient.type !== "step" ? (
-          <Row_SubRecipeIngredient key={ingredient.ingredId + "_" + i} ingredient={ingredient} totalWeight={totalWeight} recipeIndex={recipeIndex} ingredientIndex={i} />
+          <Row_SubRecipeIngredient key={ingredient.uuid + "_" + i} ingredient={ingredient} totalWeight={totalWeight} recipeIndex={recipeIndex} ingredientIndex={i} />
         ) : (
           <Row_SubRecipeStep key={"ingredientName_" + i} stepCount={stepCount++} recipeIndex={recipeIndex} ingredient={ingredient}>
             {ingredient.stepInstruction}

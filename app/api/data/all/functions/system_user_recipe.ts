@@ -1,12 +1,21 @@
 "use server";
-import { PreCalculatedRecipeData, OtherCostsLineItemsLookupSelect, MacroMicroSelect, LineItemsLookup } from "@/types/recipeTypes";
+import {
+  PreCalculatedRecipeData,
+  OtherCostsLineItemsLookupSelect,
+  MacroMicroSelect,
+  LineItemsLookup,
+  dry_cooked_yield_type,
+  dry_cooked_yields_category_type,
+  raw_to_prepped_yield_type,
+  RecipeDetailProps,
+} from "@/types/recipeTypes";
 import prisma from "@/libs/prisma";
-import { Prisma, enum_macro_micro_primary_category } from "@prisma/client";
+import { Prisma, cooked_yields_categories, dry_cooked_yields, dry_cooked_yields_categories, enum_macro_micro_primary_category, raw_to_prepped_yields } from "@prisma/client";
 import { SystemDataProps } from "@/types/recipeTypes";
-import { tr } from "date-fns/locale";
 
 // import { GetStaticProps } from "next";
 
+// The JSON transformation function
 const transformRecipeData = (recipe: any) => {
   if (!recipe) {
     return null;
@@ -54,109 +63,52 @@ const transformRecipeData = (recipe: any) => {
         qty_g: p.qty_g,
       })),
       nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
-      recipeDetail: comp.recipe_detail_row.map((row: any) => {
-        // const { ingredients, ...restOfRow } = row;
-        const { ingredients, ingredient_type, ...restOfRow } = row;
-        return {
-          // ingredId: row.ingredients_id,
-          ingredName: row.name_extra_info, // Keeping for compatibility
-          ingredient: ingredients, // The main new data
-          isSalt: !!row.salt_purpose_id,
-          isOil: !!row.oil_purpose_id,
-          FQscore: row.fq_score,
-          type: ingredient_type ? ingredient_type.name : null,
-          ...restOfRow,
-        };
-      }),
+      // recipeDetail: comp.recipe_detail_row.map((row: any) => {
+      //   // const { ingredients, ...restOfRow } = row;
+      //   const { ingredients, ingredient_type, ...restOfRow } = row;
+      //   return {
+      //     uuid: row.uuid,
+      //     ingredName: row.name_extra_info, // Keeping for compatibility
+      //     ingredient: ingredients, // The main new data
+      //     isSalt: !!row.salt_purpose_id,
+      //     isOil: !!row.oil_purpose_id,
+      //     FQscore: row.fq_score,
+      //     type: ingredient_type ? ingredient_type.name : null,
+      //     ...restOfRow,
+      //   };
+      // }),
     })),
-    recipes: recipe.recipe_components_on_recipe.map((comp: any) => ({
-      name: comp.name,
-      uuid: comp.uuid,
-      costPer1000g: comp.cost_per_1000g,
-      brand: null,
-      customer: null,
-      method: comp.method,
-      recipeDetail: comp.recipe_detail_row.map((row: any) => ({
-        uuid: row.uuid,
-        ingredId: row.ingredients_id,
-        ingredName: row.name_extra_info,
-        qty_g: row.qty_g,
-        qty_estimated_from_home_g: row.qty_estimated_from_home_g,
-        qty_estimated_confidence: row.qty_estimated_confidence,
-        home_qty_frac_numerator: row.home_qty_frac_numerator,
-        home_qty_frac_denominator: row.home_qty_frac_denominator,
-        home_qty: row.home_qty,
-        home_qty_type_name: row.home_qty_type_name,
+    recipes: recipe.recipe_components_on_recipe.map((comp: Prisma.recipe_components_on_recipeDefaultArgs) => ({
+      name: comp.select?.name,
+      uuid: comp.select?.uuid,
+      costPer1000g: comp.select?.cost_per_1000g,
+      // brand: comp.include?.brand.valueOf(),
+      // customer: null,
+      method: comp.select?.method,
+      recipeDetail: comp.include?.recipe_detail_row
+        ? comp.include?.recipe_detail_row.map((row: Prisma.recipe_detail_rowDefaultArgs) => ({
+            uuid: row.select?.uuid,
+            // type: row.select?.ingredient_type_name,
+            type: row.select?.ingredient_type_name,
 
-        salt_purpose_id: row.salt_purpose_id,
-        oil_purpose_id: row.oil_purpose_id,
+            // type: row.include?.ingredient_type?.valueOf(),
+            // id: row.,
+            name_extra_info: row.select?.name_extra_info,
+            qty_g: row.select?.qty_g,
+            order: row.select?.sort_order,
+            isSalt: !!row.select?.salt_purpose_id,
+            isOil: !!row.select?.oil_purpose_id,
+            FQscore: row.select?.fq_score,
+            ingredient: row.select?.ingredients,
+            // rawToPreppedYields: row.select?.raw_to_prepped_yields,
+            cookingMethodYields: row.select?.cooking_method_yields,
+            dryCookedYield: row.select?.dry_cooked_yield,
+            instruction: row.select?.instruction,
+            homeModeUnits: row.select?.home_mode_units,
 
-        sort_order: row.sort_order,
-
-        raw_to_prepped_yield: row.raw_to_prepped_yields
-          ? row.raw_to_prepped_yields.map((yieldItem: any) => ({
-              id: yieldItem.id,
-              name: yieldItem.name,
-              desc: yieldItem.desc,
-              translation: yieldItem.translation,
-              yield: yieldItem.yield,
-            }))
-          : [],
-        raw_to_prepped_yield_custom_id: row.raw_to_prepped_yield_custom_id,
-
-        cooking_method_yields: row.cooking_method_yields
-          ? row.cooking_method_yields.map((yieldItem: any) => ({
-              id: yieldItem.id,
-              name: yieldItem.name,
-              desc: yieldItem.desc,
-              translation: yieldItem.translation,
-              yield: yieldItem.yield,
-            }))
-          : [],
-        cooking_method_yields_custom_id: row.cooking_method_yields_custom_id,
-
-        dry_cooked_yield_categories: row.dry_cooked_yield_categories
-          ? row.dry_cooked_yield_categories.map((yieldItem: any) => ({
-              id: yieldItem.id,
-              name: yieldItem.name,
-              desc: yieldItem.desc,
-              translation: yieldItem.translation,
-              yield: yieldItem.yield,
-            }))
-          : [],
-        dry_cooked_yield_categories_id: row.dry_cooked_yield_categories_id,
-
-        dry_cooked_yield: row.dry_cooked_yield
-          ? {
-              id: row.dry_cooked_yield.id,
-              name: row.dry_cooked_yield.name,
-              desc: row.dry_cooked_yield.desc,
-              translation: row.dry_cooked_yield.translation,
-              yield: row.dry_cooked_yield.yield,
-            }
-          : null,
-        dry_cooked_yield_id: row.dry_cooked_yield_id,
-        dry_cooked_yield_custom: row.dry_cooked_yield_custom,
-
-        type: row.ingredient_type_name,
-
-        instruction: row.prep_instruction_name ? row.prep_instruction_name : null,
-        prep_instruction_other: row.prep_instruction_other ? row.prep_instruction_other : null,
-
-        stepInstruction: row.step_instruction,
-
-        costPer1000g: row.cost_per_1000g,
-
-        needsPrep: row.needs_prep,
-        prep_details: row.prep_details,
-
-        // isSalt: !!row.salt_purpose_id,
-        // isOil: !!row.oil_purpose_id,
-        FQscore: row.fq_score,
-        isUpdated: false, // Placeholder for isUpdated
-
-        // Simplified for the 'recipes' array as in original query
-      })),
+            ingredidient: row.select?.ingredients,
+          }))
+        : [],
     })),
   };
 };
@@ -166,6 +118,7 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
     throw new Error("Invalid recipeUuid or org_uuid provided");
   }
 
+  // RecipeData will be placed in recipData.data{}
   const recipeData = await prisma.recipe.findFirst({
     where: {
       uuid: recipeUuid,
@@ -187,11 +140,15 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
           recipe_detail_row: {
             orderBy: { sort_order: "asc" },
             include: {
+              ingredient_type: true,
+              // raw_to_prepped_yields: true,
+              cooking_method_yields: true,
+              dry_cooked_yield: true,
               ingredients: {
                 include: {
                   primary_category: true,
                   unit_type: true,
-                  raw_to_prepped_yields: true,
+                  // raw_to_prepped_yields: true,
                   cooked_yields: true,
                   dry_cooked_yields: true,
                   ingredients_nutrition: true,
@@ -201,14 +158,16 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
                   allergy: true,
                 },
               },
+
+              // ingredient_type: true,
               home_mode_units: true,
               salt_purpose: true,
               oil_purpose: true,
-              raw_to_prepped_yields: true,
-              cooking_method_yields: true,
-              dry_cooked_yield_categories: true,
-              dry_cooked_yield: true,
-              ingredient_type: true,
+              // raw_to_prepped_yields: true,
+              // cooking_method_yields: true,
+
+              // dry_cooked_yield_categories: true,
+              // dry_cooked_yield: true,
               instruction: true,
               fq_score: true,
             },
@@ -224,6 +183,7 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
   return transformedData ? [transformedData] : [];
 };
 
+// SYSTEM DATA_________________________________________________ START::
 // Using prisma.$transaction to run multiple queries in a single transaction and
 // keep type safety with TypeScript.
 export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps> => {
@@ -277,19 +237,14 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
 
     prisma.dry_cooked_yields_categories.findMany({ where: { is_live: true }, select: { id: true, name: true, desc: true, translation: true, yield: true } }),
 
-    prisma.dry_cooked_yields.findMany({ where: { is_live: true }, select: { id: true, name: true, desc: true, translation: true, yield: true } }),
+    prisma.dry_cooked_yields.findMany({
+      where: { is_live: true },
+      select: { id: true, name: true, desc: true, translation: true, yield: true, dry_cooked_yields_categories: true, dry_cooked_yields_categories_id: true },
+    }),
 
     prisma.ingredients_religious_certification.findMany({ select: { id: true, name: true } }),
 
     prisma.language.findMany({ select: { id: true, name: true } }),
-
-    // prisma.$queryRaw<NutritionalDataValuesSelect[]>`SELECT column_name FROM information_schema.columns WHERE table_name = 'ingredients_nutrition'`,
-
-    /* 
-      primary_category   enum_macro_micro_primary_category
-      unit               enum_macro_micro_unit
-      indent             enum_macro_micro_indent
-    */
 
     prisma.macro_micro.findMany({
       select: {
@@ -297,9 +252,9 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
         name: true,
         full_name: true,
         primary_category: true,
+        secondary_category: true,
         unit: true,
         indent: true,
-        secondary_category: true,
         short_name: true,
         order: true,
       },

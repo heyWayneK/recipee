@@ -3,7 +3,7 @@ import Table_Cell from "./Table_Cell";
 
 import { getTextTranslation } from "@/utils/utils";
 import SvgSprite from "./SvgSprite";
-import { recipeeUI } from "./Row_SubRecipesAll";
+import { columnNames } from "./Row_SubRecipesAll";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 const getColumHeading = (col: string, org_unit_metric_imperial: string) => {
@@ -35,7 +35,7 @@ interface Row_SubRecipeHeaderProps {
 const Row_SubRecipeHeader: React.FC<Row_SubRecipeHeaderProps> = () => {
   const { recipeData } = useRecipeDataStore();
 
-  return recipeeUI.sub_recipe.map((col) => {
+  return columnNames.sub_recipe.map((col) => {
     return (
       <Table_Cell firstCol={false} header={false} type="header" iconName="" key={"header" + col}>
         {getColumHeading(col, recipeData.measurementUnitsObj.weight[1])}

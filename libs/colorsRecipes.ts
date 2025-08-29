@@ -1,8 +1,8 @@
-interface RecipeProps {
+interface RecipeColorProps {
   [key: string]: string;
 }
 
-export const recipeColors: RecipeProps = {
+export const recipeColors: RecipeColorProps = {
   r0: "#9d174d",
   r1: "#BE7028",
   r2: "#1E929C",

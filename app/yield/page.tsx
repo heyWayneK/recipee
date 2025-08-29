@@ -1,11 +1,10 @@
 "use client";
 import React, { Suspense, useEffect, useState } from "react";
-import { SystemDataProps, getRecipeDataFunc2, getSystemDataFunc2 } from "../api/data/all/functions/system_user_recipe";
-import { RecipeProps } from "../api/recipe";
-import { divide, get, set } from "cypress/types/lodash";
-import { getSystemData } from "../api/data/system/route";
+// import { SystemDataProps, getRecipeDataFunc2, getSystemDataFunc2 } from "../api/data/all/functions/system_user_recipe";
+
 import Loading from "@/components/Loading";
-import { PreCalculatedRecipeData } from "../api/data/all/route";
+import { PreCalculatedRecipeData, SystemDataProps } from "@/types/recipeTypes";
+// import { PreCalculatedRecipeData } from "../api/data/all/route";
 
 interface pageProps {
   //   children: ReactNode;
@@ -42,7 +41,7 @@ const Page: React.FC<pageProps> = () => {
       ) : (
         <div>
           <div className={`className p-1`}>markup: {system?.markup[0]?.name.toString()}</div>
-          <div className={`className p-1`}>recipe: {recipe?.data.recipeDesc.toString()}</div>
+          <div className={`className p-1`}>recipe: {recipe?.data.desc.toString()}</div>
         </div>
       )}
     </>

@@ -5,7 +5,7 @@ import { getTextTranslation, replace_ } from "@/utils/utils";
 // import { data } from "@/app/api/recipe";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import UnitCurrencyFormatter from "./UnitCurrencyFormatter";
-import { recipeeUI } from "./Row_SubRecipesAll";
+import { columnNames } from "./Row_SubRecipesAll";
 import Decimal from "decimal.js";
 import IngredientUnits from "./IngredientUnits";
 
@@ -47,7 +47,7 @@ interface Row_SubRecipeHeaderProps {
 const Row_SubRecipeSubTotal: React.FC<Row_SubRecipeHeaderProps> = ({ totalCost = 0, totalWeight = 0, totalPerc = 0 }) => {
   const { recipeData } = useRecipeDataStore();
 
-  return recipeeUI.sub_recipe.map((col, i) => {
+  return columnNames.sub_recipe.map((col, i) => {
     return (
       <Table_Cell firstCol={i === 0} header={false} type="sub_total" iconName="" key={"header" + col}>
         {getColumValue(col, recipeData.measurementUnitsObj.weight[1], totalCost.toString(), totalWeight.toString(), totalPerc.toString())}

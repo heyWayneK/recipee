@@ -1,10 +1,5 @@
 import { create } from "zustand";
-import {
-  PreCalculatedRecipeData,
-  localOrDbDataType,
-  RecipeModeType,
-  SystemDataProps,
-} from "@/types/recipeTypes";
+import { PreCalculatedRecipeData, localOrDbDataType, RecipeModeType, SystemDataProps } from "@/types/recipeTypes";
 import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 
 interface RecipeDataState {
@@ -20,6 +15,11 @@ interface RecipeDataState {
   fetchData: (orgId: string | undefined) => Promise<void>;
   setRecipeDataByPath: (path: string, value: any) => void;
   getRecipeDataByPath: (path: string) => any;
+  //______
+  createIngredient: (path: string, recipeUuid: string, position: number) => number;
+  createIngredientStep: (recipeUuid: string) => any;
+  createIngredientAsSub: (path: string) => any;
+  updateIngredientPostions: (path: string, recipeUuid: string, ingredientId: string, position: number) => any;
 }
 
 export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
@@ -49,12 +49,7 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
       const systemDataUpdated = localStorage.getItem("systemDataUpdated");
       const date = new Date();
 
-      if (
-        !systemDataLocal ||
-        !recipeDataLocal ||
-        !systemDataUpdated ||
-        (date.getTime() - new Date(systemDataUpdated).getTime() > secsToUpdate * 1000)
-      ) {
+      if (!systemDataLocal || !recipeDataLocal || !systemDataUpdated || date.getTime() - new Date(systemDataUpdated).getTime() > secsToUpdate * 1000) {
         set({
           localOrDbData: {
             system: "database",
@@ -106,7 +101,7 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
 
   setRecipeDataByPath: (path, value) => {
     set((state) => ({
-        recipeData: setValueByPath(state.recipeData, path, value)
+      recipeData: setValueByPath(state.recipeData, path, value),
     }));
   },
 
@@ -114,4 +109,38 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
     const currentRecipeData = get().recipeData;
     return getValueByPath(currentRecipeData, path);
   },
+
+  createIngredient: (path) => {
+    // Step 1: Open modal
+    // Step 2: Create search field with dropdown. Live search after typing 2 characters e.f. "ch" shows "chicken", "chickpeas", "chives" etc
+    // step 3: Select ingredient from dropdown or type full name and press enter to create new ingredient
+    // Step 4: Select all ingredient details (name, qty, unit, cost, supplier, diet classification, nutritionals to collect macro and micro etc)
+    // step xx: Close modal and add ingredient to recipe at position
+    return 0;
+  },
+
+  createIngredientStep: (path) => {
+    // Dscribe the functionality
+  },
+
+  createIngredientAsSub: (path) => {
+    // Dscribe the functionality
+
+    return {};
+  },
+
+  updateIngredientPostions: (path: string, recipeUuid: string, ingredientId: string, position: number) =>
+    set((state) => {
+      const ingredients = getValueByPath(state.recipeData, path);
+      if (Array.isArray(ingredients)) {
+        const updatedIngredients = ingredients.map((ingred, index) => ({
+          ...ingred,
+          order: index,
+        }));
+        return {
+          recipeData: setValueByPath(state.recipeData, path, updatedIngredients),
+        };
+      }
+      return {};
+    }),
 }));

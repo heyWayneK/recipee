@@ -21,13 +21,14 @@ export async function GET() {
   const recipeId = "1234567890";
   try {
     const recipeData = await getLiveRecipeData(recipeId, orgId);
-    const recipeLive = { data: recipeData[0] } as PreCalculatedRecipeData;
+    const dataObject = { data: recipeData[0] } as PreCalculatedRecipeData;
     const systemData = await getSystemDataFunc2(orgId);
 
     // Pre-calculate data arrays to build recipe UI
-    const preCalcData = await preCalculateData(recipeLive, systemData);
+    // const preCalcData = await preCalculateData(dataObject, systemData);
 
-    return NextResponse.json({ recipeData: { ...preCalcData, ...recipeLive }, systemData }, { status: 200 });
+    // return NextResponse.json({ recipeData: { ...preCalcData, ...dataObject }, systemData }, { status: 200 });
+    return NextResponse.json({ recipeData: { ...dataObject }, systemData }, { status: 200 });
   } catch (error) {
     console.error("Error processing GET request:", error);
     return NextResponse.json({ error: "Script or Server Error" }, { status: 500 });

@@ -100,7 +100,7 @@ model ingredients {
   secondary_category String?
 
   raw_to_prepped_yields raw_to_prepped_yields[]
-  cooked_yields         ingredient_cooked_yields[]
+  cooked_yields         prepped_to_cooked_yields[]
   dry_cooked_yields     dry_cooked_yields[]
   component             component[]
   ingredients_nutrition ingredients_nutrition[]

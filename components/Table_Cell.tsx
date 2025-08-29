@@ -75,7 +75,7 @@ interface Table_CellProps extends ComponentProps<"div">, VariantProps<typeof cel
   rowNum?: string | number;
   trackChangeVisually?: boolean;
   trackChangesStorageName?: string;
-  dbDataId?: string; // the database row id for updates
+  dbDataId?: string | number; // the database row id for updates
 }
 
 export type typeOption = (typeof typeOptions)[number];

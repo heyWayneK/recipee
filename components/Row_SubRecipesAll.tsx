@@ -4,14 +4,14 @@ import Row_SubRecipeSubName from "./Row_SubRecipeName";
 import Row_SubRecipeHeader from "./Row_SubRecipeHeader";
 import Row_SubRecipeIngredients from "./Row_SubRecipeIngredients";
 import DottedBorder from "./DottedBorder";
-import { RecipeProps } from "@/types/recipeTypes";
+import { RecipeDetailProps, RecipesInDataProps } from "@/types/recipeTypes";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface Row_SubRecipesAllProps {
   recipeIndex: number;
 }
 
-export const recipeeUI = {
+export const columnNames = {
   sub_recipe: ["ingredName", "this_qty", "instruction", "costPer1000g", "qty_g", "%", "move"],
 };
 
@@ -21,7 +21,7 @@ const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
   // return recipeData.data.components.map((subRecipe, i) => {
   return recipeData.data.components.map((subRecipe, i) => {
     // Recipes are a flat structure, so we need to find the recipe by its uuid
-    const findRecipe: RecipeProps | undefined = recipeData.data.recipes.find((recipe) => recipe.uuid === subRecipe.uuid);
+    const findRecipe: RecipesInDataProps | undefined = recipeData.data.recipes.find((recipe) => recipe.uuid === subRecipe.uuid);
 
     if (!findRecipe) {
       const e = `Recipe with ID ${subRecipe.uuid} not found.`;
@@ -42,7 +42,7 @@ const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
         <div
           className={`grid gap-y-2 gap-x-2`}
           style={{
-            gridTemplateColumns: `2fr repeat(${recipeeUI.sub_recipe.length - 1}, max-content)`,
+            gridTemplateColumns: `2fr repeat(${columnNames.sub_recipe.length - 1}, max-content)`,
           }}
         >
           <Row_SubRecipeControls recipe={findRecipe} />

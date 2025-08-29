@@ -241,31 +241,35 @@ model prep_instructions {
 }
 
 model raw_to_prepped_yields {
-  id                Int                 @id @default(autoincrement())
-  whole             Decimal             @db.Decimal(10, 3)
-  peeled            Decimal             @db.Decimal(10, 3)
-  peeled_and_cored  Decimal             @db.Decimal(10, 3)
-  diced             Decimal             @db.Decimal(10, 3)
-  sliced            Decimal             @db.Decimal(10, 3)
-  grated            Decimal             @db.Decimal(10, 3)
-  updated_at        DateTime            @updatedAt
-  ingredients       ingredients         @relation(fields: [ingredients_id], references: [id])
-  ingredients_id    Int                 @unique
+  id               Int         @id @default(autoincrement())
+  whole            Decimal     @db.Decimal(10, 3)
+  peeled           Decimal     @db.Decimal(10, 3)
+  peeled_and_cored Decimal     @db.Decimal(10, 3)
+  diced            Decimal     @db.Decimal(10, 3)
+  sliced           Decimal     @db.Decimal(10, 3)
+  grated           Decimal     @db.Decimal(10, 3)
+  updated_at       DateTime    @updatedAt
+  ingredients      ingredients @relation(fields: [ingredients_id], references: [id])
+  ingredients_id   Int         @unique
   // @@map("raw_to_prepped_yields")
-  recipe_detail_row recipe_detail_row[]
+  // recipe_detail_row recipe_detail_row[]
+  //
+  custom           Decimal?    @default(0.00) @db.Decimal(10, 3)
+  custom_name      String?     @default("Custom")
 }
 
 model cooked_yields_categories {
   // LISTS of cooked yield categories for dropdown menus
-  id                Int                 @id @default(autoincrement())
-  name              String
-  translation       Json?
-  desc              String?
-  yield             Decimal?            @db.Decimal(10, 3)
-  is_live           Boolean             @default(true)
-  updated_at        DateTime            @updatedAt
-  created_at        DateTime?           @default(now())
-  recipe_detail_row recipe_detail_row[]
+  id                          Int                           @id @default(autoincrement())
+  name                        String
+  translation                 Json?
+  desc                        String?
+  yield                       Decimal?                      @db.Decimal(10, 3)
+  is_live                     Boolean                       @default(true)
+  updated_at                  DateTime                      @updatedAt
+  created_at                  DateTime?                     @default(now())
+  recipe_detail_row           recipe_detail_row[]
+  recipe_components_on_recipe recipe_components_on_recipe[]
 }
 
 // model cooked_yields {
@@ -286,13 +290,17 @@ model cooked_yields_categories {
 // }
 
 model dry_cooked_yields_categories {
-  id                Int                 @id @default(autoincrement())
-  name              String
-  translation       Json?
-  desc              String?
-  yield             Decimal?            @db.Decimal(10, 3)
-  is_live           Boolean             @default(true)
-  updated_at        DateTime            @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  translation Json?
+  desc        String?
+  yield       Decimal? @db.Decimal(10, 3)
+  is_live     Boolean  @default(true)
+  updated_at  DateTime @updatedAt
+
+  primary_category    ingredient_category_primary @relation(fields: [primary_category_id], references: [id])
+  primary_category_id Int
+
   dry_cooked_yields dry_cooked_yields[]
   recipe_detail_row recipe_detail_row[]
 }
@@ -307,8 +315,9 @@ model dry_cooked_yields {
   updated_at                      DateTime                      @updatedAt
   dry_cooked_yields_categories    dry_cooked_yields_categories? @relation(fields: [dry_cooked_yields_categories_id], references: [id])
   dry_cooked_yields_categories_id Int?
-  ingredients                     ingredients[]
-  recipe_detail_row               recipe_detail_row[]
+
+  ingredients       ingredients[]
+  recipe_detail_row recipe_detail_row[]
 }
 
 model ingredients_religious_certification {
@@ -344,7 +353,7 @@ model country_locale {
   org               org[]
 }
 
-model ingredient_cooked_yields {
+model prepped_to_cooked_yields {
   // LISTS of cooked yield for dropdown menus
   id             Int         @id @default(autoincrement())
   ingredients    ingredients @relation(fields: [ingredients_id], references: [id])
@@ -355,6 +364,8 @@ model ingredient_cooked_yields {
   shallow_fry    Decimal     @db.Decimal(10, 3)
   boiled         Decimal     @db.Decimal(10, 3)
   roasted        Decimal     @db.Decimal(10, 3)
+  custom         Decimal?    @default(0.00) @db.Decimal(10, 3)
+  custom_name    String?     @default("Custom")
   updated_at     DateTime    @updatedAt
   created_at     DateTime    @default(now())
 }
@@ -384,9 +395,10 @@ model ingredient_category_primary {
   name                          String
   translation                   Json?
   created_at                    DateTime                        @default(now())
-  updated_at                    DateTime?                       @updatedAt
+  updated_at                    DateTime                        @updatedAt
   ingredient_category_secondary ingredient_category_secondary[]
   ingredients                   ingredients[]
+  dry_cooked_yields_categories  dry_cooked_yields_categories[]
 }
 
 model ingredient_category_secondary {
@@ -635,49 +647,63 @@ model vat_rules {
 // RECIPEE________________________________START
 
 model ingredients {
-  id          Int      @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   name        String
   name_orig   String?
   names_alt   String?
-  org         org      @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
+  org         org     @relation(fields: [org_uuid], references: [uuid], onDelete: Cascade)
   org_uuid    String
-  is_default  Boolean? @default(false)
+  is_default  Boolean @default(false)
   translation Json?
 
   primary_category    ingredient_category_primary? @relation(fields: [primary_category_id], references: [id])
-  primary_category_id Int?
+  primary_category_id Int?                         @default(0) // 0 = unknow
   secondary_category  String?
 
-  unit_type    unit_type? @relation(fields: [unit_type_id], references: [id])
-  unit_type_id Int?       @default(1) // 1 = weight (g, kg)
+  unit_type    unit_type @relation(fields: [unit_type_id], references: [id])
+  unit_type_id Int       @default(1) // 1 = weight (g, kg)
 
+  // Ingredient specifuc prepping and cookinb yields
+
+  // TODO: 
+  /**
+   * /**
+   * /*
+   * Add  raw_to_prepped_yields raw_to_prepped_yields? @relation(fields: [raw_to_prepped_column], references: [id])
+   * raw_to_prepped_column Int?
+   * prepped_to_cooked_yields prepped_to_cooked_yields? @relation(fields: [prepped_to_cooked_column], references: [id])
+   * prepped_to_cooked_column Int?
+   */
+
+  // TODO: dont think we should link like this???
   raw_to_prepped_yields raw_to_prepped_yields[]
+  cooked_yields         prepped_to_cooked_yields[]
 
-  cooked_yields     ingredient_cooked_yields[]
   dry_cooked_yields dry_cooked_yields[]
 
   ingredients_nutrition ingredients_nutrition[]
 
   dietary_classification    dietary_classification? @relation(fields: [dietary_classification_id], references: [id])
-  dietary_classification_id Int?
+  dietary_classification_id Int?                    @default(0) // 0 = unknown
 
   kosher    ingredients_religious_certification? @relation(name: "KosherRelation", fields: [kosher_id], references: [id])
-  kosher_id Int?
+  kosher_id Int?                                 @default(4) // 4 = unknown
 
   halal    ingredients_religious_certification? @relation(name: "HalalRelation", fields: [halal_id], references: [id])
-  halal_id Int?
+  halal_id Int?                                 @default(4) // 4 = unknown
 
   confidence Decimal? @default(0.00) @db.Decimal(10, 3)
 
-  is_oil  Boolean? @default(false)
-  is_salt Boolean? @default(false)
+  is_oil  Boolean @default(false)
+  is_salt Boolean @default(false)
 
   allergy_custom String?
   ai_model       String?
 
   WebhookQueue WebhookQueue[]
-  allergy      allergy?       @relation(fields: [allergyId], references: [id])
-  allergyId    Int?
+
+  allergy   allergy? @relation(fields: [allergyId], references: [id])
+  allergyId Int?     @default(0) // 0 = unknown
 
   recipe_components_on_recipe recipe_components_on_recipe[]
   recipe_detail_row           recipe_detail_row[]
@@ -812,7 +838,7 @@ model macro_micro {
   short_name         String
   indent             enum_macro_micro_indent
   order              Int
-  updated_at         DateTime                          @updatedAt
+  updated_at         DateTime?                         @updatedAt
 }
 
 model allergy_ingredient {
@@ -1089,6 +1115,11 @@ model recipe_components_on_recipe {
 
   component_portion_on_recipe component_portion_on_recipe[]
 
+  // How will recipe/component be cooked? 
+  // type cooked_yields_category_type = "Roasting & Baking" | "Grilling & Broiling" | "Frying" | "Sautéing & Stir-Frying" | "Boiling & Simmering" | "Steaming" | "Combination Cooking" | "Sous Vide"; & "Custom"
+  cooked_yields_categories    cooked_yields_categories? @relation(fields: [cooked_yields_categories_id], references: [id])
+  cooked_yields_categories_id Int?
+
   // local, master, unlinked_master
   ingredient_type      ingredient_type @relation(fields: [ingredient_type_name], references: [name])
   ingredient_type_name String          @default("ingredient") // Default to ingredient,not sub or step
@@ -1210,9 +1241,9 @@ model recipe_detail_row {
 
   sort_order Int @default(1)
 
-  raw_to_prepped_yields          raw_to_prepped_yields? @relation(fields: [raw_to_prepped_yield_custom_id], references: [id])
-  raw_to_prepped_yield_custom_id Int?
-  raw_to_prepped_yield_custom    Decimal?               @db.Decimal(4, 2)
+  //TABLES WITH COLUMNS NAMES 
+  // raw_to_prepped_yields raw_to_prepped_yields? @relation(fields: [raw_to_prepped_column], references: [id])
+  // raw_to_prepped_column Int?
 
   cooking_method_yields      cooked_yields_categories? @relation(fields: [cooked_yield_categories_id], references: [id])
   cooked_yield_categories_id Int?

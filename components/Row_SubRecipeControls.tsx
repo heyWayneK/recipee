@@ -3,15 +3,15 @@ import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
 import { getTextTranslation } from "@/utils/utils";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
-import { RecipeProps } from "@/app/api/recipe";
 import ButtonThemeLightDark from "./ButtonThemeLightDark";
+import { RecipesInDataProps } from "@/types/recipeTypes";
 
 interface Row_SubRecipeControlsProps {
+  recipe: RecipesInDataProps;
   // className?: string;
   // subRecipeId: string;
-  recipe: RecipeProps;
 }
-const Row_SubRecipeControls: React.FC<Row_SubRecipeControlsProps> = ({ recipe }) => {
+const Row_SubRecipeControls: React.FC<Row_SubRecipeControlsProps> = () => {
   // FUTURE: Might need const { qty, setQty, userData, localOrDbData } = useRecipeDataStore();
 
   return (

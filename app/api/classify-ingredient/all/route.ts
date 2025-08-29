@@ -533,7 +533,7 @@ export async function POST(request: Request) {
 
     await Promise.all([
       // UPSERT COOKED YIELDS into the cooked_yields table
-      prisma.ingredient_cooked_yields.upsert({
+      prisma.prepped_to_cooked_yields.upsert({
         where: { ingredients_id: ingredient.id },
         create: {
           ingredients_id: ingredient.id,
