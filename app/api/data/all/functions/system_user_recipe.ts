@@ -63,52 +63,21 @@ const transformRecipeData = (recipe: any) => {
         qty_g: p.qty_g,
       })),
       nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
-      // recipeDetail: comp.recipe_detail_row.map((row: any) => {
-      //   // const { ingredients, ...restOfRow } = row;
-      //   const { ingredients, ingredient_type, ...restOfRow } = row;
-      //   return {
-      //     uuid: row.uuid,
-      //     ingredName: row.name_extra_info, // Keeping for compatibility
-      //     ingredient: ingredients, // The main new data
-      //     isSalt: !!row.salt_purpose_id,
-      //     isOil: !!row.oil_purpose_id,
-      //     FQscore: row.fq_score,
-      //     type: ingredient_type ? ingredient_type.name : null,
-      //     ...restOfRow,
-      //   };
-      // }),
-    })),
-    recipes: recipe.recipe_components_on_recipe.map((comp: Prisma.recipe_components_on_recipeDefaultArgs) => ({
-      name: comp.select?.name,
-      uuid: comp.select?.uuid,
-      costPer1000g: comp.select?.cost_per_1000g,
-      // brand: comp.include?.brand.valueOf(),
-      // customer: null,
-      method: comp.select?.method,
-      recipeDetail: comp.include?.recipe_detail_row
-        ? comp.include?.recipe_detail_row.map((row: Prisma.recipe_detail_rowDefaultArgs) => ({
-            uuid: row.select?.uuid,
-            // type: row.select?.ingredient_type_name,
-            type: row.select?.ingredient_type_name,
-
-            // type: row.include?.ingredient_type?.valueOf(),
-            // id: row.,
-            name_extra_info: row.select?.name_extra_info,
-            qty_g: row.select?.qty_g,
-            order: row.select?.sort_order,
-            isSalt: !!row.select?.salt_purpose_id,
-            isOil: !!row.select?.oil_purpose_id,
-            FQscore: row.select?.fq_score,
-            ingredient: row.select?.ingredients,
-            // rawToPreppedYields: row.select?.raw_to_prepped_yields,
-            cookingMethodYields: row.select?.cooking_method_yields,
-            dryCookedYield: row.select?.dry_cooked_yield,
-            instruction: row.select?.instruction,
-            homeModeUnits: row.select?.home_mode_units,
-
-            ingredidient: row.select?.ingredients,
-          }))
-        : [],
+      recipeDetail: comp.recipe_detail_row.map((row: any) => ({
+        uuid: row.uuid,
+        type: row.ingredient_type.name,
+        name_extra_info: row.name_extra_info,
+        qty_g: row.qty_g,
+        order: row.sort_order,
+        isSalt: !!row.salt_purpose_id,
+        isOil: !!row.oil_purpose_id,
+        FQscore: row.fq_score,
+        ingredient: row.ingredients,
+        cookingMethodYields: row.cooking_method_yields,
+        dryCookedYield: row.dry_cooked_yield,
+        instruction: row.instruction,
+        homeModeUnits: row.home_mode_units,
+      })),
     })),
   };
 };
