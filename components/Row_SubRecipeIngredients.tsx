@@ -36,7 +36,7 @@ const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ rec
   const totalPerc = recipe.recipeDetail.reduce((acc, ingred, ii) => acc.plus(new Decimal(ingred.qty_g).div(totalWeight)), new Decimal(0)).mul(100);
 
   // INFO: do NOT USE TOTALCOST... its a stupid value. This calculates the total cost of all cost/1000g
-  const totalCost = recipe.recipeDetail.reduce((acc, ingred, ii) => acc.plus(ingred.costPer1000g), new Decimal(0));
+  const totalCost = recipe.recipeDetail.reduce((acc, ingred, ii) => acc.plus(ingred.cost_per_1000g), new Decimal(0));
 
   const allSteps = recipe.recipeDetail.map((ingred) => (ingred.type === "step" ? ingred.stepInstruction : "")).filter((step) => step !== "");
 

@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import SvgSprite from "@/components/SvgSprite";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import DOMPurify from "dompurify";
-import { useModalBig } from "@/hooks/UseBigModal";
+import { DbExpectedType, useModalBig } from "@/hooks/UseBigModal";
 import { idColnameType } from "@/types/recipeTypes";
 
 interface TextEditableProps {
   title: string;
   path: string | undefined;
-  dbExpectedType: "uuid" | "html" | "plaintext" | "int" | "decimal";
+  dbExpectedType: DbExpectedType;
   optionalContent: string;
   instantDbUpdate?: boolean;
   dbUpdateConfig?: {

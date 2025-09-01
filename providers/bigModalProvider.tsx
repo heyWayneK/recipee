@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/modal";
-import { useModalBig, SaveStatus } from "@/hooks/UseBigModal";
+import { useModalBig } from "@/hooks/UseBigModal";
 import TiptapEditor from "@/components/TiptapEditor";
 import Pill from "@/components/Pill";
 import Spinner from "@/components/Spinner";
@@ -10,7 +10,7 @@ import SvgSprite from "@/components/SvgSprite";
 
 export function BigModalProvider() {
   const [isMounted, setIsMounted] = useState(false);
-  const { isOpen, closeModal, title, text, setText, saveStatus, onSave } = useModalBig();
+  const { isOpen, closeModal, title, text, setText, saveStatus, onSave, dbExpectedType } = useModalBig();
 
   useEffect(() => {
     setIsMounted(true);
@@ -34,7 +34,7 @@ export function BigModalProvider() {
         <div>
           <h2 className="text-lg font-semibold mb-4 text-base-content">{title}</h2>
           {/* <TiptapEditor formatButtons="none" content={text} onChange={setText} /> */}
-          <TiptapEditor formatButtons="none" content={text} onChange={handleUpdate} />
+          <TiptapEditor formatButtons="none" content={text} onChange={handleUpdate} dbExpectedType={dbExpectedType} />
           <div className="flex items-center gap-3 p-2 mt-4">
             {/* Save Button */}
             <Pill className="text-xs" iconName="save" tone="dark" onClick={handleSave} disabled={saveStatus === "saving"}>

@@ -21,7 +21,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
   // INFO:  const { ingredId, ingredName, qty_g, order, type, instruction, dietClassification, stepInstruction, supplier, unitType, costPer1000g, needsPrep, FQscore } = ingredient;
   const { qty_g, uuid, name_extra_info } = ingredient;
 
-  // if (!findRecipeIndex) {
+  // if (!findRecipeIndex) {S
   //   const e = `No findRecipeIndex provided.`;
   //   console.log(e);
   //   throw new Error(e);
@@ -34,6 +34,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
   }
 
   const formatColContent = (type: string, value: any, ingredIndex: number) => {
+    // console.log("formatColContent:______", { type, value, ingredIndex });
     // TYPEs: col = ingredName, instruction, qty, costPer100, %, move
     switch (type) {
       case "%":
@@ -48,7 +49,7 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
             <SvgSprite iconName="arrow_drop_down" size={15} />
           </MenuOption1>
         );
-      case "costPer1000g":
+      case "cost_per_1000g":
         return <UnitCurrencyFormatter>{value}</UnitCurrencyFormatter>;
       case "qty_g":
         return <IngredientUnits>{qty_g.toString()}</IngredientUnits>;
@@ -57,7 +58,9 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
           <div className=" overflow-hidden whitespace-nowrap w-full">
             {/* {value} */}
             {/* ING:{ingredient.} */}
-            <TextEditable
+            {/* IngName */}
+            {/* {value.ingredient.name} */}
+            {/* <TextEditable
               title={`${value}`}
               // path={`data.recipes[0].recipeDetail[${ingredient.order}].ingredName`}
               path={`data.recipes[${recipeIndex}].recipeDetail[${ingredientIndex}].ingredName`}
@@ -70,15 +73,18 @@ const Row_SubRecipeIngredient: React.FC<Row_SubRecipeIngredientProps> = ({ ingre
                 idColName: "id",
                 field: "name_extra_info",
               }}
-            />
-            <span className=" !text-xs overflow-hidden">
-              extraName: {ingredient.name_extra_info} | isSalt:{ingredient.isSalt} isOil:{ingredient.isOil} uuid:{ingredient.uuid} name:{ingredient.name_extra_info} ingredId:{name_extra_info}{" "}
-              subrecipeId : {ingredient.subRecipeId}
-            </span>
+            /> */}
+            <div className=" overflow-hidden">
+              <div className="font-bold"> {ingredient?.ingredient?.name || "No name"}</div>
+              <div className="text-xs">
+                extraName: {ingredient.name_extra_info} | isSalt:{ingredient.isSalt} isOil:{ingredient.isOil} uuid:{ingredient.uuid} name:{ingredient.name_extra_info} ingredId:{name_extra_info}{" "}
+                subrecipeId : {ingredient.subRecipeId}
+              </div>
+            </div>
           </div>
         );
       default:
-        return value;
+        return value.toString();
     }
   };
 

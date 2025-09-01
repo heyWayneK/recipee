@@ -41,7 +41,7 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
 
   fetchData: async (orgId) => {
     set({ loading: true });
-    const secsToUpdate = 3600;
+    const secsToUpdate = 60;
 
     try {
       const systemDataLocal = localStorage.getItem("systemData");

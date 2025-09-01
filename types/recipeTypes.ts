@@ -106,11 +106,20 @@ export interface editInfoProps {
   idColName: idColnameType;
 }
 
+// The shape of Recipe data after conversion from JSON to correct types
 export interface DataProps {
-  // CORRECT SHAPE 27 Aug 2025
+  // CORRECT SHAPE 27 Aug 2025???? not
   readonly uuid: string;
   name: string;
   desc: string;
+
+  // is_live: boolean;
+  // org_uuid: string;
+  // brand_uuid: number;
+  // recipe_type_name: "master" | "sub" | "component";
+  // recipe_mode_name: "pro" | "home";
+  // created_at: Date;
+  // updated_at: Date;
 
   portions: portionSizeProps[];
   packagingCostsId: recipeDataRuleProps;
@@ -119,6 +128,62 @@ export interface DataProps {
   vatRulesId: recipeDataRuleProps;
   components: ComponentsInDataProps[];
   recipes: RecipesInDataProps[];
+}
+export interface JsonDataProps {
+  // CORRECT SHAPE 27 Aug 2025???? not
+  readonly uuid: string;
+  name: string;
+  desc: string;
+
+  is_live: boolean;
+  org_uuid: string;
+  brand_uuid: string | number | null;
+  recipe_type_name: string | "master" | "sub" | "component";
+  recipe_mode_name: string | "pro" | "home";
+  created_at: Date;
+  updated_at: Date;
+
+  // I am lazily using :  {} | type[] because json data from db is a slighly different shape from processed content
+  recipe_portions: any;
+  packaging_costs_on_recipe: any;
+  other_costs_on_recipe: any;
+  markup_on_recipe: any;
+  vat_on_recipe: any;
+  recipe_components_on_recipe: any;
+  //
+  // recipe_portions: [] | portionSizeProps[];
+  // packaging_costs_on_recipe: [] | recipeDataRuleProps;
+  // other_costs_on_recipe: [] | recipeDataRuleProps;
+  // markup_on_recipe: [] | recipeDataRuleProps;
+  // vat_on_recipe: [] | recipeDataRuleProps;
+  // recipe_components_on_recipe: [] | ComponentsInDataProps[];
+
+  // recipe_portions: portionSizeProps[];
+  // packaging_costs_on_recipe: recipeDataRuleProps;
+  // other_costs_on_recipe: recipeDataRuleProps;
+  // markup_on_recipe: recipeDataRuleProps;
+  // vat_on_recipe: recipeDataRuleProps;
+  // recipe_components_on_recipe: ComponentsInDataProps[];
+  // recipes: RecipesInDataProps[];
+
+  /* live db shape eg
+    uuid: '1234567890',
+    name: '<p>Wayne. gggg 08h23ss s2</p>',
+    desc: '<p>Wayne Test Live UPDATED 2333</p>',
+    is_live: true,
+    org_uuid: '1',
+    brand_uuid: '123',
+    recipe_type_name: 'master',
+    recipe_mode_name: 'pro',
+    created_at: 2025-07-29T12:40:23.000Z,
+    updated_at: 2025-08-23T16:42:15.820Z,
+    recipe_portions: [ [Object], [Object] ],
+    packaging_costs_on_recipe: [ [Object], [Object] ],
+    other_costs_on_recipe: [ [Object], [Object] ],
+    markup_on_recipe: [ [Object], [Object] ],
+    vat_on_recipe: [ [Object], [Object] ],
+    recipe_components_on_recipe: [ [Object], [Object], [Object], [Object], [Object] ]
+  */
 }
 
 // export interface RecipeDataApiProps {
@@ -672,15 +737,17 @@ export type raw_to_prepped_yield_type = "whole" | "peeled" | "peeled_and_cored" 
 
 export type cooked_yields_type = "raw" | "cooked" | "deep_fry" | "shallow_fry" | "boiled" | "roasted";
 
-export type RecipeDetailProps = Prisma.recipe_detail_rowInclude;
+// export type RecipeDetailProps = Prisma.recipe_detail_rowInclude;
 
-export interface RecipeDetailPropsOLD {
+export interface RecipeDetailProps {
   uuid: number;
   name_extra_info: string | null;
   subRecipeId: string | null;
   dietClassification: dietary_classification_type;
   order: number;
-  type: recipe_row_types_type;
+  // type: recipe_row_types_type;
+  type: string;
+  ingredient_type: recipe_row_types_type;
   stepInstruction: string;
   supplier: string;
 
@@ -700,7 +767,7 @@ export interface RecipeDetailPropsOLD {
   // weight (g kg oz lb), fluid (mL L fl oz) or each (ea for eggs)
   unitType: unit_type;
 
-  costPer1000g: number;
+  cost_per_1000g: Decimal;
   rationalisedRecipe: string;
   FQscore: FQProps;
   needsPrep: boolean;
@@ -733,37 +800,37 @@ export interface RecipeDetailPropsOLD {
     created_at: true;
     updated_at: true;
 
-    recipe_uuid: 1234567890;
-    recipe_components_on_recipeUuid: 77442;
+    recipe_uuid: string;
+    recipe_components_on_recipeUuid: string;
 
-    ingredients_id: 692;
-    home_qty_type_name: null;
-    salt_purpose_id: null;
-    oil_purpose_id: null;
-    sort_order: 1;
-    raw_to_prepped_yield_custom_id: null;
-    raw_to_prepped_yield_custom: null;
-    cooked_yield_categories_id: null;
-    cooked_yield_custom: null;
-    dry_cooked_yield_categories_id: null;
-    dry_cooked_yield_id: null;
-    dry_cooked_yield_custom: null;
+    ingredients_id: number | null;
+    home_qty_type_name: string | null;
+    salt_purpose_id: number | null;
+    oil_purpose_id: number | null;
+    sort_order: number | null;
+    raw_to_prepped_yield_custom_id: number | null;
+    raw_to_prepped_yield_custom: Decimal | null;
+    cooked_yield_categories_id: number | null;
+    cooked_yield_custom: Decimal | null;
+    dry_cooked_yield_categories_id: number | null;
+    dry_cooked_yield_id: number | null;
+    dry_cooked_yield_custom: Decimal | null;
     ingredient_type_name: recipe_row_types_type;
     prep_instruction_name: prep_instruction_type;
-    prep_instruction_other: null;
-    step_instruction: null;
-    cost_per_1000g: 88.03;
-    needs_prep: false;
-    prep_details: null;
-    fq_score_id: null;
-    isUpdated: false;
-    home_mode_units: null;
-    salt_purpose: null;
-    oil_purpose: null;
+    prep_instruction_other: string | null;
+    step_instruction: string | null;
+    cost_per_1000g: Decimal | null;
+    needs_prep: true;
+    prep_details: true;
+    fq_score_id: true;
+    isUpdated: true;
+    home_mode_units: true;
+    salt_purpose: boolean;
+    oil_purpose: boolean;
 
-    cooking_method_yields: null;
-    dry_cooked_yield_categories: null;
-    dry_cooked_yield: null;
+    cooking_method_yields: Decimal | null;
+    dry_cooked_yield_categories: Decimal | null;
+    dry_cooked_yield: Decimal | null;
     instruction: {
       id: true;
       name: true;

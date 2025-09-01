@@ -8,18 +8,26 @@ import {
   dry_cooked_yields_category_type,
   raw_to_prepped_yield_type,
   RecipeDetailProps,
+  ComponentsInDataProps,
+  RecipesInDataProps,
+  DataProps,
+  JsonDataProps,
 } from "@/types/recipeTypes";
 import prisma from "@/libs/prisma";
 import { Prisma, cooked_yields_categories, dry_cooked_yields, dry_cooked_yields_categories, enum_macro_micro_primary_category, raw_to_prepped_yields } from "@prisma/client";
 import { SystemDataProps } from "@/types/recipeTypes";
+import { Recipe_detail_rowPosts } from "@/types/recipeTypes_prisma";
 
 // import { GetStaticProps } from "next";
 
 // The JSON transformation function
-const transformRecipeData = (recipe: any) => {
+const transformRecipeData = (recipe: JsonDataProps) => {
+  // const transformRecipeData = (recipe: any) => {
   if (!recipe) {
     return null;
   }
+
+  console.log("RECIPEEEEE", { recipe });
 
   return {
     uuid: recipe.uuid,
@@ -49,34 +57,81 @@ const transformRecipeData = (recipe: any) => {
     components: recipe.recipe_components_on_recipe.map((comp: any) => ({
       name: comp.name,
       uuid: comp.uuid,
-      recipeId: comp.recipe_uuid,
-      order: comp.sort_order,
+      // recipeId: comp.recipe_uuid,
+      order: comp.order,
       version: comp.version,
       versions: [], // Placeholder as in original query
       // type: comp.ingredient_type_name,
-      ingredientId: comp.ingredients_id,
+      ingredientId: comp.ingredient_id,
       yield: comp.yield,
-      costPer1000g: comp.cost_per_1000g,
-      method: comp.method,
+      // costPer1000g: comp.,
+      // method: comp.,
       portions: comp.component_portion_on_recipe.map((p: any) => ({
         id: p.recipe_portions_id,
         qty_g: p.qty_g,
       })),
       nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
-      recipeDetail: comp.recipe_detail_row.map((row: any) => ({
+      // recipeDetail: comp.recipe_detail_row.map((row: any) => ({
+      //   uuid: row.uuid,
+      //   type: row.ingredient_type.name,
+      //   name_extra_info: row.name_extra_info,
+      //   qty_g: row.qty_g,
+      //   order: row.sort_order,
+      //   isSalt: !!row.salt_purpose_id,
+      //   isOil: !!row.oil_purpose_id,
+      //   FQscore: row.fq_score,
+      //   ingredient: row.ingredients,
+      //   cookingMethodYields: row.cooking_method_yields,
+      //   dryCookedYield: row.dry_cooked_yield,
+      //   instruction: row.instruction,
+      //   homeModeUnits: row.home_mode_units,
+      // })),
+    })),
+    // recipes: recipe.recipe_components_on_recipe.map((comp: RecipeDetailProps) => ({
+    recipes: recipe.recipe_components_on_recipe.map((comp: any) => ({
+      name: comp.name,
+      uuid: comp.uuid,
+      recipeId: comp.uuid,
+      // order: comp.,
+      // version: comp.version,
+      // versions: [], // Placeholder as in original query
+      // type: comp.ingredient_type_name,
+      // ingredientId: comp.ingredients_id,
+      // yield: comp.yield,
+      // costPer1000g: comp.cost_per_1000g,
+      method: comp.method,
+      nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
+      recipeDetail: comp.recipe_detail_row.map((row: Recipe_detail_rowPosts) => ({
         uuid: row.uuid,
-        type: row.ingredient_type.name,
+        type: row.ingredient_type_name,
         name_extra_info: row.name_extra_info,
+        cost_per_1000g: row.cost_per_1000g,
         qty_g: row.qty_g,
         order: row.sort_order,
         isSalt: !!row.salt_purpose_id,
         isOil: !!row.oil_purpose_id,
-        FQscore: row.fq_score,
+        FQscore: row.fq_score_id,
         ingredient: row.ingredients,
         cookingMethodYields: row.cooking_method_yields,
         dryCookedYield: row.dry_cooked_yield,
-        instruction: row.instruction,
+        instruction: row.instruction?.name,
         homeModeUnits: row.home_mode_units,
+        stepInstruction: row.step_instruction,
+        // WAS
+        // uuid: row.uuid,
+        // type: row.ingredient_type.name,
+        // name_extra_info: row.name_extra_info,
+        // cost_per_1000g: row.cost_per_1000g,
+        // qty_g: row.qty_g,
+        // order: row.sort_order,
+        // isSalt: !!row.salt_purpose_id,
+        // isOil: !!row.oil_purpose_id,
+        // FQscore: row.fq_score,
+        // ingredient: row.ingredients,
+        // cookingMethodYields: row.cooking_method_yields,
+        // dryCookedYield: row.dry_cooked_yield,
+        // instruction: row.instruction,
+        // homeModeUnits: row.home_mode_units,
       })),
     })),
   };
@@ -117,6 +172,7 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
                 include: {
                   primary_category: true,
                   unit_type: true,
+
                   // raw_to_prepped_yields: true,
                   cooked_yields: true,
                   dry_cooked_yields: true,
@@ -146,6 +202,10 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
     },
   });
 
+  if (!recipeData) {
+    console.log("No recipe found with the provided UUID and org_uuid.");
+    return [];
+  }
   const transformedData = transformRecipeData(recipeData);
 
   console.log("----->>>>>>>> getLiveRecipeData result:", transformedData);

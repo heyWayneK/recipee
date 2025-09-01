@@ -12,7 +12,7 @@ interface Row_SubRecipesAllProps {
 }
 
 export const columnNames = {
-  sub_recipe: ["ingredName", "this_qty", "instruction", "costPer1000g", "qty_g", "%", "move"],
+  sub_recipe: ["ingredName", "this_qty", "instruction", "cost_per_1000g", "qty_g", "%", "move"],
 };
 
 const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {

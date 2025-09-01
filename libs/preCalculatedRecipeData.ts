@@ -142,11 +142,11 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
     const totalPrice = recipe.recipeDetail.reduce((ttlPrice, val) => {
       // is type either sub, step or ingredient : RecipeRowTypes
-      if (!["sub", "step", "ingredient"].includes(val.type)) {
+      if (!["sub", "step", "ingredient"].includes(val.type?.toString() || "")) {
         throw new Error(`Invalid type ${val.type} in recipeDetail. Not ["sub", "step", "ingredient"], val: ${JSON.stringify(val)}`);
       }
-      if (val.type === "step" || !val.type) return ttlPrice;
-      const costPer1000g = new Decimal(val.costPer1000g);
+      if (val.type?.toString() === "step" || !val.type) return ttlPrice;
+      const costPer1000g = new Decimal(val.cost_per_1000g);
       const qty = new Decimal(val.qty_g);
       return ttlPrice.add(costPer1000g.mul(qty.div(1000)));
     }, new Decimal(0));
@@ -199,7 +199,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
         return recipe.recipeDetail.flatMap((row) => {
           if (row.type === "sub") return [];
           const ingredientCost = new Decimal(row.qty_g).div(componentTotalWeight).mul(componentsPricesDecimals[iC][iP]);
-          return `${row.ingredName}: ${ingredientCost.toFixed(3)}`; // Using .toFixed for display
+          return `${row.ingredient?.name || "*SUB* TBC"}: ${ingredientCost.toFixed(3)}`; // Using .toFixed for display
         });
       })
     );

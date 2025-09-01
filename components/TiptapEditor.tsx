@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { Editor } from "@tiptap/core";
 
 import "./TiptapStyles.css"; // Import the v2 CSS file
+import { DbExpectedType } from "@/hooks/UseBigModal";
 
 type formatButtonsType = "none" | "all" | "basic";
 
@@ -13,6 +14,7 @@ interface TiptapEditorProps {
   content: string;
   formatButtons?: formatButtonsType; // Optional prop to control which buttons to show
   onChange: (content: string) => void;
+  dbExpectedType: DbExpectedType;
   // onSave?: () => void; // Optional save handler
   // onCancel?: () => void; // Optional cancel handler
 }
@@ -83,13 +85,21 @@ function MenuBar({ editor, formatButtons = "none" }: { editor: Editor; formatBut
   );
 }
 
-const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange, formatButtons = "none" }) => {
+const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange, formatButtons = "none", dbExpectedType }) => {
   const editor = useEditor({
     immediatelyRender: false, // Correct for SSR environments like Next.js
     extensions: [StarterKit],
     content: content,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
+      if (dbExpectedType === "html") {
+        onChange(editor.getHTML());
+      } else if (dbExpectedType === "plaintext") {
+        onChange(editor.getText());
+      } else if (dbExpectedType === "int") {
+        onChange(editor.getText());
+      } else {
+        onChange(editor.getText());
+      }
     },
 
     editorProps: {
