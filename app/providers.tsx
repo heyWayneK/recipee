@@ -13,6 +13,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { RecipeDataProvider } from "@/contexts/useRecipeData";
 import Modal_AddIngredient from "@/components/Modal_AddIngredient";
+import Modal_AddStep from "@/components/Modal_AddStep";
 
 // This component isolates all client-side logic
 export default function AppProviders({ children }: { children: ReactNode }) {
@@ -42,6 +43,7 @@ export default function AppProviders({ children }: { children: ReactNode }) {
 
               <BigModalProvider />
               <Modal_AddIngredient />
+              <Modal_AddStep />
             </RecipeDataProvider>
           </OnlineStatusProvider>
         </DarkLightThemeProvider>

@@ -21,11 +21,6 @@ export async function POST(request: Request) {
       data: {
         name,
         org_uuid: orgId,
-        unit_type_id: 1,
-        primary_category_id: 1,
-        dietary_classification_id: 1,
-        kosher_id: 4,
-        halal_id: 4,
       },
     });
 

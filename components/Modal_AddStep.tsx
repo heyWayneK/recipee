@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import Button from "./Button";
-import { useAddIngredientModalStore } from "@/hooks/useAddIngredientModalStore";
+import { useAddStepModalStore } from "@/hooks/useAddStepModalStore";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
-import { IngredientSelect } from "@/types/recipeTypes";
 import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 import Loading from "./Loading";
 import BetterIcon from "./BetterIcon";
@@ -11,15 +10,11 @@ import { v4 as uuidv4 } from "uuid";
 
 type SaveStatus = "idle" | "saving" | "success" | "error";
 
-const Modal_AddIngredient = () => {
-  const { isOpen, closeModal, componentPath } = useAddIngredientModalStore();
+const Modal_AddStep = () => {
+  const { isOpen, closeModal, componentPath } = useAddStepModalStore();
   const { recipeData, setRecipeData } = useRecipeDataStore();
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<IngredientSelect[]>([]);
-  const [selectedIngredient, setSelectedIngredient] = useState<IngredientSelect | null>(null);
-  const [newIngredientName, setNewIngredientName] = useState("");
+  const [stepInstruction, setStepInstruction] = useState("Add your Step Details");
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
-
   const [sortAction, setSortAction] = useState<"before" | "after">("after");
   const [targetRowUuid, setTargetRowUuid] = useState<string | "last">("last");
 
@@ -28,30 +23,13 @@ const Modal_AddIngredient = () => {
 
   useEffect(() => {
     if (!isOpen) {
-      setQuery("");
-      setResults([]);
-      setSelectedIngredient(null);
-      setNewIngredientName("");
+      setStepInstruction("Add your Step Details");
       setSaveStatus("idle");
       setTargetRowUuid("last");
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (query.length < 2) {
-      setResults([]);
-      return;
-    }
-    const fetchResults = async () => {
-      const response = await fetch(`/api/ingredients/search?query=${query}`);
-      const data = await response.json();
-      setResults(data);
-    };
-    const debounce = setTimeout(() => fetchResults(), 300);
-    return () => clearTimeout(debounce);
-  }, [query]);
-
-  const handleAddIngredient = async (ingredientId: number) => {
+  const handleAddStep = async () => {
     if (!componentPath) return;
     setSaveStatus("saving");
 
@@ -59,9 +37,8 @@ const Modal_AddIngredient = () => {
     let newRecipeDetails = [...recipeDetails];
     const newRowData = {
       uuid: newUuid,
-      ingredients_id: ingredientId,
-      name_extra_info: selectedIngredient?.name || newIngredientName,
-      ingredient_type_name: "ingredient",
+      step_instruction: stepInstruction,
+      ingredient_type_name: "step",
     };
 
     let insertionIndex = recipeDetails.length;
@@ -109,49 +86,16 @@ const Modal_AddIngredient = () => {
     }
   };
 
-  const handleCreateNewIngredient = async () => {
-    if (!newIngredientName) return;
-    setSaveStatus("saving");
-
-    const response = await fetch("/api/ingredients/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: newIngredientName }),
-    });
-
-    if (response.ok) {
-      const newIngredient = await response.json();
-      await handleAddIngredient(newIngredient.id);
-    } else {
-      setSaveStatus("error");
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
       <DialogContent className="overflow-y-auto bg-black border border-[#222222] max-h-[90vh] max-w-[650px] w-full text-white">
         <DialogHeader>
-          <DialogTitle>Add Ingredient</DialogTitle>
+          <DialogTitle>Add Step</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
-          {/* Search */}
-          <input type="text" placeholder="Search for an ingredient..." value={query} onChange={(e) => setQuery(e.target.value)} className="p-2 bg-gray-800 rounded" />
-          <div className="flex flex-col gap-2 max-h-40 overflow-y-auto">
-            {results.map((ing) => (
-              <div key={ing.id} onClick={() => setSelectedIngredient(ing)} className={`p-2 rounded cursor-pointer ${selectedIngredient?.id === ing.id ? "bg-blue-500" : "bg-gray-700"}`}>
-                {ing.name}
-              </div>
-            ))}
-          </div>
+          <textarea value={stepInstruction} onChange={(e) => setStepInstruction(e.target.value)} className="p-2 bg-gray-800 rounded min-h-24" />
 
-          {/* Create New */}
-          <hr className="my-2 border-gray-600" />
-          <p>Or create a new one:</p>
-          <input type="text" placeholder="New ingredient name" value={newIngredientName} onChange={(e) => setNewIngredientName(e.target.value)} className="p-2 bg-gray-800 rounded" />
-
-          {/* Sort Order */}
-          <hr className="my-2 border-gray-600" />
           <p>Where to add?</p>
           <div className="flex gap-2">
             <select value={sortAction} onChange={(e) => setSortAction(e.target.value as any)} className="p-2 bg-gray-800 rounded">
@@ -168,10 +112,7 @@ const Modal_AddIngredient = () => {
         <DialogFooter className="mt-4">
             <div className="flex justify-end items-center gap-2 w-full">
                 {saveStatus === "idle" && (
-                    <>
-                        <Button text="Add Selected" onClick={() => handleAddIngredient(selectedIngredient!.id)} disabled={!selectedIngredient} />
-                        <Button text="Create and Add" onClick={handleCreateNewIngredient} disabled={!newIngredientName} />
-                    </>
+                    <Button text="Add Step" onClick={handleAddStep} />
                 )}
                 <div className="w-5 h-5">
                     {saveStatus === "saving" && <Loading />}
@@ -186,4 +127,4 @@ const Modal_AddIngredient = () => {
   );
 };
 
-export default Modal_AddIngredient;
+export default Modal_AddStep;

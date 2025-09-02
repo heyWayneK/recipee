@@ -18,7 +18,6 @@ interface RecipeDataState {
   getRecipeDataByPath: (path: string) => any;
   setRecipeData: (recipeData: PreCalculatedRecipeData) => void;
   //______
-  createIngredientStep: (componentPath: string) => void;
   createIngredientAsSub: (path: string) => any;
   updateIngredientPostions: (path: string, recipeUuid: string, ingredientId: string, position: number) => any;
 }
@@ -112,41 +111,6 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
   },
 
   setRecipeData: (recipeData) => set({ recipeData }),
-
-  createIngredientStep: (componentPath) => {
-    const { recipeData, setRecipeData } = get();
-    const component = getValueByPath(recipeData, componentPath);
-
-    if (!component || !Array.isArray(component.recipeDetail)) {
-      console.error("Invalid component path or recipeDetail is not an array", componentPath);
-      return;
-    }
-
-    const newSortOrder = component.recipeDetail.length > 0 ? Math.max(...component.recipeDetail.map((d: any) => d.sort_order || 0)) + 1 : 1;
-
-    const payload = {
-      recipe_uuid: recipeData.data.uuid,
-      recipe_components_on_recipeUuid: component.uuid,
-      sort_order: newSortOrder,
-      ingredient_type_name: "step",
-      step_instruction: "New Step",
-    };
-
-    fetch('/api/recipe-detail-row/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    .then(res => res.json())
-    .then(newRow => {
-      const { recipeData, setRecipeData } = get();
-      const component = getValueByPath(recipeData, componentPath);
-      const newRecipeDetails = [...component.recipeDetail, newRow];
-      const newRecipeData = setValueByPath(recipeData, `${componentPath}.recipeDetail`, newRecipeDetails);
-      setRecipeData(newRecipeData);
-    })
-    .catch(error => console.error("Failed to create ingredient step", error));
-  },
 
   createIngredientAsSub: (path) => {
     // Dscribe the functionality

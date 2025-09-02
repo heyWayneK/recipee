@@ -12,6 +12,7 @@ export async function GET(request: Request) {
 
     const ingredients = await prisma.ingredients.findMany({
       where: {
+        deleted: false,
         OR: [
           {
             name: {
