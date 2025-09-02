@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
-import { RecipeDataProps, recipeDetailProps } from "@/types/recipeTypes";
+import { RecipeDetailProps } from "@/types/recipeTypes";
 
 interface Row_SubRecipeStepProps {
   children: ReactNode;
   stepCount: number;
   recipeIndex: number; // INFO: the index of recipe in recipeData.data.recipes[?]array
-  ingredient: recipeDetailProps;
+  ingredient: RecipeDetailProps;
 }
 const Row_SubRecipeStep: React.FC<Row_SubRecipeStepProps> = ({ children, stepCount, recipeIndex, ingredient }) => {
   if (recipeIndex < 0 || recipeIndex === undefined) {

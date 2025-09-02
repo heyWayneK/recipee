@@ -28,7 +28,7 @@ const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none item
 
       method: " grid grid-flow-col  self-start [&>*]:items-start ",
 
-      ingredient: "grid grid-flow-col rounded-full bg-base-content/10 truncate line-clamp-1 md:line-clamp-none md:text-wrap active:bg-neutral-content place-items-center",
+      ingredient: "grid grid-flow-col rounded-full bg-base-content/10 truncate line-clamp-1 md:text-wrap active:bg-neutral-content place-items-center",
 
       sub_recipe: "  ",
 
