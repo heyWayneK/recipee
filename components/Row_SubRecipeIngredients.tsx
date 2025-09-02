@@ -55,7 +55,7 @@ const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ rec
       )}
       <Row_SubRecipeSubTotal totalCost={totalCost.toString()} totalWeight={totalWeight.toString()} totalPerc={totalPerc.toString()} />
 
-      <Row_SubRecipeAddButtons recipe={recipe} />
+      <Row_SubRecipeAddButtons recipe={recipe} recipeIndex={recipeIndex} />
 
       <Row_SubRecipeMethod recipe={recipe} methods={allSteps} extraMethods={recipe.method} />
 

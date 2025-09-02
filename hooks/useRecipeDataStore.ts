@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { PreCalculatedRecipeData, localOrDbDataType, RecipeModeType, SystemDataProps } from "@/types/recipeTypes";
+import { PreCalculatedRecipeData, localOrDbDataType, RecipeModeType, SystemDataProps, RecipeDetailProps } from "@/types/recipeTypes";
 import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
+import Decimal from "decimal.js";
 
 interface RecipeDataState {
   qty: number;
@@ -15,9 +16,9 @@ interface RecipeDataState {
   fetchData: (orgId: string | undefined) => Promise<void>;
   setRecipeDataByPath: (path: string, value: any) => void;
   getRecipeDataByPath: (path: string) => any;
+  setRecipeData: (recipeData: PreCalculatedRecipeData) => void;
   //______
-  createIngredient: (path: string, recipeUuid: string, position: number) => number;
-  createIngredientStep: (recipeUuid: string) => any;
+  createIngredientStep: (componentPath: string) => void;
   createIngredientAsSub: (path: string) => any;
   updateIngredientPostions: (path: string, recipeUuid: string, ingredientId: string, position: number) => any;
 }
@@ -110,17 +111,41 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
     return getValueByPath(currentRecipeData, path);
   },
 
-  createIngredient: (path) => {
-    // Step 1: Open modal
-    // Step 2: Create search field with dropdown. Live search after typing 2 characters e.f. "ch" shows "chicken", "chickpeas", "chives" etc
-    // step 3: Select ingredient from dropdown or type full name and press enter to create new ingredient
-    // Step 4: Select all ingredient details (name, qty, unit, cost, supplier, diet classification, nutritionals to collect macro and micro etc)
-    // step xx: Close modal and add ingredient to recipe at position
-    return 0;
-  },
+  setRecipeData: (recipeData) => set({ recipeData }),
 
-  createIngredientStep: (path) => {
-    // Dscribe the functionality
+  createIngredientStep: (componentPath) => {
+    const { recipeData, setRecipeData } = get();
+    const component = getValueByPath(recipeData, componentPath);
+
+    if (!component || !Array.isArray(component.recipeDetail)) {
+      console.error("Invalid component path or recipeDetail is not an array", componentPath);
+      return;
+    }
+
+    const newSortOrder = component.recipeDetail.length > 0 ? Math.max(...component.recipeDetail.map((d: any) => d.sort_order || 0)) + 1 : 1;
+
+    const payload = {
+      recipe_uuid: recipeData.data.uuid,
+      recipe_components_on_recipeUuid: component.uuid,
+      sort_order: newSortOrder,
+      ingredient_type_name: "step",
+      step_instruction: "New Step",
+    };
+
+    fetch('/api/recipe-detail-row/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    .then(res => res.json())
+    .then(newRow => {
+      const { recipeData, setRecipeData } = get();
+      const component = getValueByPath(recipeData, componentPath);
+      const newRecipeDetails = [...component.recipeDetail, newRow];
+      const newRecipeData = setValueByPath(recipeData, `${componentPath}.recipeDetail`, newRecipeDetails);
+      setRecipeData(newRecipeData);
+    })
+    .catch(error => console.error("Failed to create ingredient step", error));
   },
 
   createIngredientAsSub: (path) => {

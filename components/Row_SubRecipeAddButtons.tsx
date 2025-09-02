@@ -1,37 +1,29 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
-import { RecipeDetailProps, RecipesInDataProps } from "@/types/recipeTypes";
+import { RecipesInDataProps } from "@/types/recipeTypes";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
+import { useAddIngredientModalStore } from "@/hooks/useAddIngredientModalStore";
 
 interface Row_SubRecipeAddButtonsProps {
   recipe: RecipesInDataProps;
+  recipeIndex: number;
 }
 
-const addIngredient = (recipe: RecipeDetailProps) => {
-  // Logic to add an ingredient to the recipe
-  console.log(`Adding ingredient to recipe: ${recipe.ingredient.name}`);
-};
-const addMethodStep = (recipe: RecipeDetailProps) => {
-  // Logic to add a method step to the recipe
-  console.log(`Adding method step to recipe: ${recipe.ingredient.name}`);
-};
+const Row_SubRecipeAddButtons: React.FC<Row_SubRecipeAddButtonsProps> = ({ recipe, recipeIndex }) => {
+  const { createIngredientStep } = useRecipeDataStore();
+  const { openModal } = useAddIngredientModalStore();
 
-const Row_SubRecipeAddButtons: React.FC<Row_SubRecipeAddButtonsProps> = ({ recipe }) => {
-  const { recipeData, createIngredient, createIngredientStep, createIngredientAsSub } = useRecipeDataStore();
+  const componentPath = `data.recipes[${recipeIndex}]`;
 
-  const recipeUuid = recipe.uuid;
   return (
     <Table_Cell type="controls">
-      {/* <Pill tone="dark" iconName="add_circle" onClick={() => createIngredient()}> */}
-      <Pill tone="dark" iconName="add_circle" onClick={() => {}}>
+      <Pill tone="dark" iconName="add_circle" onClick={() => openModal(componentPath)}>
         Add Ingredient
       </Pill>
-      {/* <Pill tone="dark" iconName="add_circle" onClick={() => createIngredientStep()}> */}
-      <Pill tone="dark" iconName="add_circle" onClick={() => {}}>
+      <Pill tone="dark" iconName="add_circle" onClick={() => createIngredientStep(componentPath)}>
         Add Step
       </Pill>
-      {/* <Pill tone="dark" iconName="add_circle" onClick={() => createIngredientAsSub()}> */}
       <Pill tone="dark" iconName="add_circle" onClick={() => {}}>
         Add Existing Sub Recipe
       </Pill>
