@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { PreCalculatedRecipeData, localOrDbDataType, RecipeModeType, SystemDataProps, RecipeDetailProps } from "@/types/recipeTypes";
+import { PreCalculatedRecipeData, localOrDbDataType, RecipeModeType, SystemDataProps } from "@/types/recipeTypes";
 import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 import Decimal from "decimal.js";
 
