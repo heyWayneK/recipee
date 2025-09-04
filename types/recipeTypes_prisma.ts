@@ -3,7 +3,7 @@
 
 import { Prisma } from "@prisma/client";
 
-// START RECIPE DETAIL_ROW WITçH ALL RELATIONS__________________________START::
+// START RECIPE DETAIL_ROW WITH ALL RELATIONS__________________________START::
 
 // 1. Define an object that includes the relations you want
 const recipe_detail_rowWithPostsArgs = Prisma.validator<Prisma.recipe_detail_rowDefaultArgs>()({

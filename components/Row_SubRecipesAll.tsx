@@ -4,7 +4,7 @@ import Row_SubRecipeSubName from "./Row_SubRecipeName";
 import Row_SubRecipeHeader from "./Row_SubRecipeHeader";
 import Row_SubRecipeIngredients from "./Row_SubRecipeIngredients";
 import DottedBorder from "./DottedBorder";
-import { RecipeDetailProps, RecipesInDataProps } from "@/types/recipeTypes";
+import { RecipesInDataProps } from "@/types/recipeTypes";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 
 interface Row_SubRecipesAllProps {

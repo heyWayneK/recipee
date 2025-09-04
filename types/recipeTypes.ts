@@ -3,6 +3,7 @@ import { Prisma, enum_macro_micro_indent, enum_macro_micro_primary_category, enu
 import Decimal from "decimal.js";
 
 import React from "react";
+import { Recipe_detail_rowPosts } from "./recipeTypes_prisma";
 
 // TODO: NOT SURE IF THIS IS NEEDED
 // const prismaExtended = new PrismaClient().$extends({
@@ -42,7 +43,7 @@ export interface Brand {
 export interface ComponentsInDataProps {
   name: string;
   uuid: string;
-  recipeId: string;
+  recipe_id: string;
   order: number;
   version?: string;
   versions: string[];
@@ -100,6 +101,7 @@ export type recipeDataRuleProps = { pid: number; rule: number }[];
 export type idColnameType = "id" | "uuid";
 
 export interface editInfoProps {
+  // Keep a Giraffe Case
   uiName: string;
   name: string;
   id: string;
@@ -562,7 +564,6 @@ export interface portionSizeProps {
 
 export interface PreCalculatedRecipeData {
   // CORRECT SHAPE 27 Aug 2025
-  // readonly uuid: string;
   isHome: boolean;
   isImperial: boolean; // true = imperial, false = metric
   componentsIDArray: string[];
@@ -590,36 +591,6 @@ export interface PreCalculatedRecipeData {
   vatRulePercs: Decimal[];
   data: DataProps;
   currencySymbol: string; // e.g. $, €, £
-  // TODO: Need to use DECIMAL type
-  // portionSizes: number[];
-  // portionIds: number[];
-  // componentsNamesArray: string[];
-  // componentsIDArray: string[];
-  // componentsWeights: number[][]; // Decimals
-  // componentsPricePer1000g: number[]; // Decimals
-  // componentsPrices: number[][]; // Decimals
-  // componentsPricesDesc: string[][][];
-  // componentsSubTotalsPrices: number[]; // Decimals
-  // packingCostPriceTotals: number[]; // Decimals
-  // packingCostPriceRules: number[]; // Decimals
-  // otherCostsPriceTotals: number[]; // Decimals
-  // otherCostsPriceRules: number[]; // Decimals
-  // costsSubTotals: number[]; // Decimals
-  // markUpPriceAmounts: number[]; // Decimals
-  // markUpPriceRules: number[]; // Decimals
-  // markUpPriceRuleName: string[]; // Decimals
-  // salePricesExVat: number[]; // Decimals
-  // salesPricesIncVat: number[]; // Decimals
-  // vatRuleIds: number[]; // Decimals
-  // vatRulePercs: number[]; // Decimals
-  // vatRuleNames: string[]; // Decimals
-  // data: Prisma.recipeSelect;
-
-  // isImperial: boolean; // true = imperial, false = metric
-  // isHome: boolean; // true = home mode, false = professional mode
-  // currencySymbol: string; // e.g. $, €, £
-  // // measurementUnitsObj: { [key: string]: string[] }; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
-  // measurementUnitsObj: measurementUnitsObjProps; // e.g. [g, kg,] [ml, l] [oz, lb,] [fl oz, fl oz]
 }
 
 export type PrepInstructionsSelect = Prisma.prep_instructionsGetPayload<{
@@ -634,18 +605,18 @@ export type PrepInstructionsSelect = Prisma.prep_instructionsGetPayload<{
   };
 }>;
 
-// DEFINE context shape
-export interface RecipeDataContextType {
-  qty: number;
-  setQty: React.Dispatch<React.SetStateAction<number>>;
-  recipeMode: RecipeModeType;
-  setRecipeMode: React.Dispatch<React.SetStateAction<RecipeModeType>>;
-  recipeData: PreCalculatedRecipeData;
-  setRecipeDataByPath: (path: string, value: any, recipeData: PreCalculatedRecipeData) => any; // e.g. setRecipeDataByPath("data.packagingCostsId", { ...newObj });
-  getRecipeDataByPath: (path: string, recipeData: PreCalculatedRecipeData) => any; // e.g. getRecipeDataByPath("data.packagingCostsId");
-  systemData: SystemDataProps;
-  localOrDbData: localOrDbDataType;
-}
+// // DEFINE context shape
+// export interface RecipeDataContextType {
+//   qty: number;
+//   setQty: React.Dispatch<React.SetStateAction<number>>;
+//   recipeMode: RecipeModeType;
+//   setRecipeMode: React.Dispatch<React.SetStateAction<RecipeModeType>>;
+//   recipeData: PreCalculatedRecipeData;
+//   setRecipeDataByPath: (path: string, value: any, recipeData: PreCalculatedRecipeData) => any; // e.g. setRecipeDataByPath("data.packagingCostsId", { ...newObj });
+//   getRecipeDataByPath: (path: string, recipeData: PreCalculatedRecipeData) => any; // e.g. getRecipeDataByPath("data.packagingCostsId");
+//   systemData: SystemDataProps;
+//   localOrDbData: localOrDbDataType;
+// }
 
 // IMPORTANT: These are manually set. They are NOT from the DB.
 // May have tp update them
@@ -737,253 +708,251 @@ export type raw_to_prepped_yield_type = "whole" | "peeled" | "peeled_and_cored" 
 
 export type cooked_yields_type = "raw" | "cooked" | "deep_fry" | "shallow_fry" | "boiled" | "roasted";
 
-// export type RecipeDetailProps = Prisma.recipe_detail_rowInclude;
+// export interface RecipeDetailProps {
+//   uuid: number | string;
+//   name_extra_info: string | null;
+//   sub_recipe_id: string | null;
+//   diet_classification: dietary_classification_type;
+//   order: number;
+//   // type: recipe_row_types_type;
+//   type: string;
+//   ingredient_type: recipe_row_types_type;
+//   step_instruction: string;
+//   supplier: string;
 
-export interface RecipeDetailProps {
-  uuid: number;
-  name_extra_info: string | null;
-  subRecipeId: string | null;
-  dietClassification: dietary_classification_type;
-  order: number;
-  // type: recipe_row_types_type;
-  type: string;
-  ingredient_type: recipe_row_types_type;
-  stepInstruction: string;
-  supplier: string;
+//   // Professional Mode
+//   qty_g: Decimal; // g
+//   qty_estimated_from_home_g: number | null; // g kg ml l oz lb fl oz
+//   qty_estimated_confidence: number | null; // from Ai confidence 0.0 - 1.0
+//   // Low confidence (<0.8) means we need to ask the user to confirm
+//   // Home Mode
+//   // e.g. 1 1/2 Cup "Ingredient Name"
+//   // Calc = home_qty  home_qty_frac_numerator/home_qty_frac_denominator  home_qty_type  ""
+//   home_qty_frac_numerator: number | null;
+//   home_qty_frac_denominator: number | null;
+//   home_qty: number | null;
+//   home_qty_type: string | null; // "sprig|number|spoons|cups|";
+//   // Unit Type:
+//   // weight (g kg oz lb), fluid (mL L fl oz) or each (ea for eggs)
+//   unit_type: unit_type;
 
-  // Professional Mode
-  qty_g: Decimal; // g
-  qty_estimated_from_home_g: number | null; // g kg ml l oz lb fl oz
-  qty_estimated_confidence: number | null; // from Ai confidence 0.0 - 1.0
-  // Low confidence (<0.8) means we need to ask the user to confirm
-  // Home Mode
-  // e.g. 1 1/2 Cup "Ingredient Name"
-  // Calc = home_qty  home_qty_frac_numerator/home_qty_frac_denominator  home_qty_type  ""
-  home_qty_frac_numerator: number | null;
-  home_qty_frac_denominator: number | null;
-  home_qty: number | null;
-  home_qty_type: string | null; // "sprig|number|spoons|cups|";
-  // Unit Type:
-  // weight (g kg oz lb), fluid (mL L fl oz) or each (ea for eggs)
-  unitType: unit_type;
+//   cost_per_1000g: Decimal;
+//   rationalised_recipe: string;
+//   fq_score: FQProps;
+//   needs_prep: boolean;
+//   is_salt: boolean;
+//   // is_saltInWater: boolean;
+//   is_oil: boolean;
+//   oil_purpose: oil_purpose_type;
 
-  cost_per_1000g: Decimal;
-  rationalisedRecipe: string;
-  FQscore: FQProps;
-  needsPrep: boolean;
-  isSalt: boolean;
-  isSaltInWater: boolean;
-  isOil: boolean;
-  oilPurpose: oil_purpose_type;
+//   ingred_name: true;
+//   ingredient: {
+//     id: number;
+//     name: string;
+//     name_orig: string;
+//     names_alt: string;
+//     org_uuid: string;
+//     is_default: boolean;
+//     translation: string;
+//     secondary_category: string;
+//     unit_type_id: number;
+//     dietary_classification_id: true;
+//     kosher_id: true;
+//     halal_id: true;
+//     confidence: true;
+//     is_oil: true;
+//     is_salt: true;
+//     allergy_custom: true;
+//     ai_model: true;
+//     allergyId: true;
+//     deleted: true;
+//     created_at: true;
+//     updated_at: true;
 
-  ingredName: true;
-  ingredient: {
-    id: number;
-    name: string;
-    name_orig: string;
-    names_alt: string;
-    org_uuid: string;
-    is_default: boolean;
-    translation: string;
-    secondary_category: string;
-    unit_type_id: number;
-    dietary_classification_id: true;
-    kosher_id: true;
-    halal_id: true;
-    confidence: true;
-    is_oil: true;
-    is_salt: true;
-    allergy_custom: true;
-    ai_model: true;
-    allergyId: true;
-    deleted: true;
-    created_at: true;
-    updated_at: true;
+//     recipe_uuid: string;
+//     recipe_components_on_recipeUuid: string;
 
-    recipe_uuid: string;
-    recipe_components_on_recipeUuid: string;
+//     ingredients_id: number | null;
+//     home_qty_type_name: string | null;
+//     salt_purpose_id: number | null;
+//     oil_purpose_id: number | null;
+//     sort_order: number | null;
+//     raw_to_prepped_yield_custom_id: number | null;
+//     raw_to_prepped_yield_custom: Decimal | null;
+//     cooked_yield_categories_id: number | null;
+//     cooked_yield_custom: Decimal | null;
+//     dry_cooked_yield_categories_id: number | null;
+//     dry_cooked_yield_id: number | null;
+//     dry_cooked_yield_custom: Decimal | null;
+//     ingredient_type_name: recipe_row_types_type;
+//     prep_instruction_name: prep_instruction_type;
+//     prep_instruction_other: string | null;
+//     step_instruction: string | null;
+//     cost_per_1000g: Decimal | null;
+//     needs_prep: true;
+//     prep_details: true;
+//     fq_score_id: true;
+//     isUpdated: true;
+//     home_mode_units: true;
+//     salt_purpose: boolean;
+//     oil_purpose: boolean;
 
-    ingredients_id: number | null;
-    home_qty_type_name: string | null;
-    salt_purpose_id: number | null;
-    oil_purpose_id: number | null;
-    sort_order: number | null;
-    raw_to_prepped_yield_custom_id: number | null;
-    raw_to_prepped_yield_custom: Decimal | null;
-    cooked_yield_categories_id: number | null;
-    cooked_yield_custom: Decimal | null;
-    dry_cooked_yield_categories_id: number | null;
-    dry_cooked_yield_id: number | null;
-    dry_cooked_yield_custom: Decimal | null;
-    ingredient_type_name: recipe_row_types_type;
-    prep_instruction_name: prep_instruction_type;
-    prep_instruction_other: string | null;
-    step_instruction: string | null;
-    cost_per_1000g: Decimal | null;
-    needs_prep: true;
-    prep_details: true;
-    fq_score_id: true;
-    isUpdated: true;
-    home_mode_units: true;
-    salt_purpose: boolean;
-    oil_purpose: boolean;
+//     cooking_method_yields: Decimal | null;
+//     dry_cooked_yield_categories: Decimal | null;
+//     dry_cooked_yield: Decimal | null;
+//     instruction: {
+//       id: true;
+//       name: true;
+//       translation: true;
+//       metric: true;
+//       desc: true;
+//       is_live: true;
+//       updated_at: true;
+//     };
+//     fq_score: true;
 
-    cooking_method_yields: Decimal | null;
-    dry_cooked_yield_categories: Decimal | null;
-    dry_cooked_yield: Decimal | null;
-    instruction: {
-      id: true;
-      name: true;
-      translation: true;
-      metric: true;
-      desc: true;
-      is_live: true;
-      updated_at: true;
-    };
-    fq_score: true;
-
-    primary_category_id: true;
-    primary_category: {
-      id: true;
-      name: true;
-      translation: true;
-      created_at: true;
-      updated_at: true;
-    };
-    unit_type: {
-      id: true;
-      name: true;
-      desc: true;
-      imperial: true;
-      metric: true;
-    };
-    raw_to_prepped_yields: [
-      {
-        id: true;
-        whole: true;
-        peeled: true;
-        peeled_and_cored: true;
-        diced: true;
-        sliced: true;
-        grated: true;
-        updated_at: true;
-        ingredients_id: true;
-      }
-    ];
-    cooked_yields: [
-      {
-        id: true;
-        ingredients_id: true;
-        raw: true;
-        cooked: true;
-        deep_fry: true;
-        shallow_fry: true;
-        boiled: true;
-        roasted: true;
-        updated_at: true;
-        created_at: true;
-      }
-    ];
-    dry_cooked_yields: true;
-    ingredients_nutrition: [
-      {
-        id: true;
-        org_uuid: true;
-        is_default: true;
-        ingredients_id: true;
-        kcal_per_100g: true;
-        kj_per_100g: true;
-        protein_per_100g: true;
-        fat_per_100g: true;
-        saturated_fat_per_100g: true;
-        monounsaturate_per_100g: true;
-        polyunsaturate_per_100g: true;
-        trans_fats_per_100g: true;
-        omega3_per_100g: true;
-        omega6_per_100g: true;
-        omega9_per_100g: true;
-        carbohydrates_per_100g: true;
-        net_carbs_per_100g: true;
-        total_sugar_per_100g: true;
-        added_sugar_per_100g: true;
-        artificial_sugar_per_100g: true;
-        fibre_per_100g: true;
-        starch_per_100g: true;
-        salt_per_100g: true;
-        sodium_per_100g: true;
-        water_per_100g: true;
-        nitrogen_g_per_100g: true;
-        ash_g_per_100g: true;
-        calcium_mg_per_100g: true;
-        iron_mg_per_100g: true;
-        magnesium_mg_per_100g: true;
-        phosphorus_mg_per_100g: true;
-        potassium_mg_per_100g: true;
-        zinc_mg_per_100g: true;
-        copper_mg_per_100g: true;
-        manganese_mg_per_100g: true;
-        selenium_µg_per_100g: true;
-        vitamin_a_mg_per_100g: true;
-        vitamin_b1_thiamin_mg_per_100g: true;
-        vitamin_b2_mg_per_100g: true;
-        vitamin_b3_niacin_mg_per_100g: true;
-        vitamin_b6_mg_per_100g: true;
-        vitamin_b7_biotin_µg_per_100g: true;
-        vitamin_b9_folate_mg_per_100g: true;
-        vitamin_b12_mg_per_100g: true;
-        vitamin_e_mg_per_100g: true;
-        vitamin_k_µg_per_100g: true;
-        sfa_16_0_palmitic_acid_g_per_100g: true;
-        sfa_18_0_stearic_acid_g_per_100g: true;
-        mufa_16_1_palmitoleic_acid_g_per_100g: true;
-        mufa_18_1__oleic_acid_g_per_100g: true;
-        pufa_18_2_linoleic_acid_g_per_100g: true;
-        tryptophan_g_per_100g: true;
-        threonine_g_per_100g: true;
-        isoleucine_g_per_100g: true;
-        leucine_g_per_100g: true;
-        lysine_g_per_100g: true;
-        methionine_g_per_100g: true;
-        phenylalanine_g_per_100g: true;
-        tyrosine_g_per_100g: true;
-        valine_g_per_100g: true;
-        arginine_g_per_100g: true;
-        histidine_g_per_100g: true;
-        alanine_g_per_100g: true;
-        aspartic_acid_g_per_100g: true;
-        glutamic_acid_g_per_100g: true;
-        glycine_g_per_100g: true;
-        proline_g_per_100g: true;
-        serine_g_per_100g: true;
-        hydroxyproline_g_per_100g: true;
-        cysteine_g_per_100g: true;
-        daidzein_mg_per_100g: true;
-        genistein_mg_per_100g: true;
-        daidzin_mg_per_100g: true;
-        genistin_mg_per_100g: true;
-        glycitin_mg_per_100g: true;
-        created_at: true;
-        updated_at: true;
-      }
-    ];
-    dietary_classification: {
-      id: true;
-      name: true;
-      translation: true;
-      created_at: true;
-      updated_at: true;
-    };
-    kosher: {
-      id: true;
-      name: true;
-    };
-    halal: {
-      id: true;
-      name: true;
-    };
-    allergy: null;
-  };
-}
+//     primary_category_id: true;
+//     primary_category: {
+//       id: true;
+//       name: true;
+//       translation: true;
+//       created_at: true;
+//       updated_at: true;
+//     };
+//     unit_type: {
+//       id: true;
+//       name: true;
+//       desc: true;
+//       imperial: true;
+//       metric: true;
+//     };
+//     raw_to_prepped_yields: [
+//       {
+//         id: true;
+//         whole: true;
+//         peeled: true;
+//         peeled_and_cored: true;
+//         diced: true;
+//         sliced: true;
+//         grated: true;
+//         updated_at: true;
+//         ingredients_id: true;
+//       }
+//     ];
+//     cooked_yields: [
+//       {
+//         id: true;
+//         ingredients_id: true;
+//         raw: true;
+//         cooked: true;
+//         deep_fry: true;
+//         shallow_fry: true;
+//         boiled: true;
+//         roasted: true;
+//         updated_at: true;
+//         created_at: true;
+//       }
+//     ];
+//     dry_cooked_yields: true;
+//     ingredients_nutrition: [
+//       {
+//         id: true;
+//         org_uuid: true;
+//         is_default: true;
+//         ingredients_id: true;
+//         kcal_per_100g: true;
+//         kj_per_100g: true;
+//         protein_per_100g: true;
+//         fat_per_100g: true;
+//         saturated_fat_per_100g: true;
+//         monounsaturate_per_100g: true;
+//         polyunsaturate_per_100g: true;
+//         trans_fats_per_100g: true;
+//         omega3_per_100g: true;
+//         omega6_per_100g: true;
+//         omega9_per_100g: true;
+//         carbohydrates_per_100g: true;
+//         net_carbs_per_100g: true;
+//         total_sugar_per_100g: true;
+//         added_sugar_per_100g: true;
+//         artificial_sugar_per_100g: true;
+//         fibre_per_100g: true;
+//         starch_per_100g: true;
+//         salt_per_100g: true;
+//         sodium_per_100g: true;
+//         water_per_100g: true;
+//         nitrogen_g_per_100g: true;
+//         ash_g_per_100g: true;
+//         calcium_mg_per_100g: true;
+//         iron_mg_per_100g: true;
+//         magnesium_mg_per_100g: true;
+//         phosphorus_mg_per_100g: true;
+//         potassium_mg_per_100g: true;
+//         zinc_mg_per_100g: true;
+//         copper_mg_per_100g: true;
+//         manganese_mg_per_100g: true;
+//         selenium_µg_per_100g: true;
+//         vitamin_a_mg_per_100g: true;
+//         vitamin_b1_thiamin_mg_per_100g: true;
+//         vitamin_b2_mg_per_100g: true;
+//         vitamin_b3_niacin_mg_per_100g: true;
+//         vitamin_b6_mg_per_100g: true;
+//         vitamin_b7_biotin_µg_per_100g: true;
+//         vitamin_b9_folate_mg_per_100g: true;
+//         vitamin_b12_mg_per_100g: true;
+//         vitamin_e_mg_per_100g: true;
+//         vitamin_k_µg_per_100g: true;
+//         sfa_16_0_palmitic_acid_g_per_100g: true;
+//         sfa_18_0_stearic_acid_g_per_100g: true;
+//         mufa_16_1_palmitoleic_acid_g_per_100g: true;
+//         mufa_18_1__oleic_acid_g_per_100g: true;
+//         pufa_18_2_linoleic_acid_g_per_100g: true;
+//         tryptophan_g_per_100g: true;
+//         threonine_g_per_100g: true;
+//         isoleucine_g_per_100g: true;
+//         leucine_g_per_100g: true;
+//         lysine_g_per_100g: true;
+//         methionine_g_per_100g: true;
+//         phenylalanine_g_per_100g: true;
+//         tyrosine_g_per_100g: true;
+//         valine_g_per_100g: true;
+//         arginine_g_per_100g: true;
+//         histidine_g_per_100g: true;
+//         alanine_g_per_100g: true;
+//         aspartic_acid_g_per_100g: true;
+//         glutamic_acid_g_per_100g: true;
+//         glycine_g_per_100g: true;
+//         proline_g_per_100g: true;
+//         serine_g_per_100g: true;
+//         hydroxyproline_g_per_100g: true;
+//         cysteine_g_per_100g: true;
+//         daidzein_mg_per_100g: true;
+//         genistein_mg_per_100g: true;
+//         daidzin_mg_per_100g: true;
+//         genistin_mg_per_100g: true;
+//         glycitin_mg_per_100g: true;
+//         created_at: true;
+//         updated_at: true;
+//       }
+//     ];
+//     dietary_classification: {
+//       id: true;
+//       name: true;
+//       translation: true;
+//       created_at: true;
+//       updated_at: true;
+//     };
+//     kosher: {
+//       id: true;
+//       name: true;
+//     };
+//     halal: {
+//       id: true;
+//       name: true;
+//     };
+//     allergy: null;
+//   };
+// }
 
 export type RecipeModeSelect = Prisma.recipe_modeGetPayload<{
   select: {
@@ -998,12 +967,13 @@ export type RecipeModeType = "home" | "pro";
 export interface RecipesInDataProps {
   uuid: string;
   name: string;
-  costPer1000g: number;
+  cost_per_1000g: number;
   brand: Brand;
   customer: CustomerType;
-  recipeDetail: RecipeDetailProps[];
+  // recipe_detail: RecipeDetailProps[];
+  recipe_detail: Recipe_detail_rowPosts[];
   method: string;
-  rationalisedRecipe?: string;
+  rationalised_recipe?: string;
 }
 // RATHER USE Prisma.recipeGetPayload
 // export type RecipeProps = Prisma.recipeSelect;

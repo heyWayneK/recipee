@@ -3,11 +3,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import Button from "./Button";
 import { useAddIngredientModalStore } from "@/hooks/useAddIngredientModalStore";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
-import { IngredientSelect } from "@/types/recipeTypes";
+import { IngredientSelect, RecipesInDataProps, recipe_row_types_type } from "@/types/recipeTypes";
 import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 import Loading from "./Loading";
 import BetterIcon from "./BetterIcon";
 import { v4 as uuidv4 } from "uuid";
+import Spinner from "./Spinner";
+import SvgSprite from "./SvgSprite";
+import { Recipe_detail_rowPosts } from "@/types/recipeTypes_prisma";
+import SvgSpriteLink from "./SvgSpriteLink";
+import Pill from "./Pill";
 
 type SaveStatus = "idle" | "saving" | "success" | "error";
 
@@ -23,8 +28,8 @@ const Modal_AddIngredient = () => {
   const [sortAction, setSortAction] = useState<"before" | "after">("after");
   const [targetRowUuid, setTargetRowUuid] = useState<string | "last">("last");
 
-  const component = componentPath ? getValueByPath(recipeData, componentPath) : null;
-  const recipeDetails = component ? component.recipeDetail : [];
+  const component: RecipesInDataProps = componentPath ? getValueByPath(recipeData, componentPath) : null;
+  const recipeDetails: Recipe_detail_rowPosts[] = component ? component.recipe_detail : [];
 
   useEffect(() => {
     if (!isOpen) {
@@ -59,10 +64,11 @@ const Modal_AddIngredient = () => {
     let newRecipeDetails = [...recipeDetails];
     const newRowData = {
       uuid: newUuid,
-      ingredients_id: ingredientId,
+      // ingredients_id: ingredientId,
       name_extra_info: selectedIngredient?.name || newIngredientName,
-      ingredient_type_name: "ingredient",
-    };
+      ingredients_id: ingredientId,
+      // ingredient_type: { name: "ingredient" as recipe_row_types_type },
+    } as Recipe_detail_rowPosts;
 
     let insertionIndex = recipeDetails.length;
     if (targetRowUuid !== "last") {
@@ -78,9 +84,9 @@ const Modal_AddIngredient = () => {
       sort_order: index + 1,
     }));
 
-    const newRowWithSortOrder = rowsToUpdate.find(row => row.uuid === newUuid);
+    const newRowWithSortOrder = rowsToUpdate.find((row) => row.uuid === newUuid);
 
-    const createResponse = await fetch("/api/recipe-detail-row/create", {
+    const createResponse = await fetch("/api/wrecipe-detail-row/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -90,12 +96,15 @@ const Modal_AddIngredient = () => {
       }),
     });
 
-    const reorderPayload = rowsToUpdate.filter(row => row.uuid !== newUuid).map(({ uuid, sort_order }) => ({ uuid, sort_order }));
-    const reorderResponse = reorderPayload.length > 0 ? await fetch("/api/recipe-detail-row/reorder", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rowsToUpdate: reorderPayload }),
-    }) : { ok: true };
+    const reorderPayload = rowsToUpdate.filter((row) => row.uuid !== newUuid).map(({ uuid, sort_order }) => ({ uuid, sort_order }));
+    const reorderResponse =
+      reorderPayload.length > 0
+        ? await fetch("/api/recipe-detail-row/reorder", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ rowsToUpdate: reorderPayload }),
+          })
+        : { ok: true };
 
     if (createResponse.ok && reorderResponse.ok) {
       const createdRow = await createResponse.json();
@@ -129,57 +138,74 @@ const Modal_AddIngredient = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className="overflow-y-auto bg-black border border-[#222222] max-h-[90vh] max-w-[650px] w-full text-white">
+      <DialogContent className="overflow-y-auto bg-base-100 border border-base-content max-h-[90vh] max-w-[650px] w-full text-base-content">
         <DialogHeader>
           <DialogTitle>Add Ingredient</DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           {/* Search */}
-          <input type="text" placeholder="Search for an ingredient..." value={query} onChange={(e) => setQuery(e.target.value)} className="p-2 bg-gray-800 rounded" />
+          <input type="text" placeholder="Search for an ingredient..." value={query} onChange={(e) => setQuery(e.target.value)} className="p-2 bg-base-200 border-accent rounded" />
           <div className="flex flex-col gap-2 max-h-40 overflow-y-auto">
             {results.map((ing) => (
-              <div key={ing.id} onClick={() => setSelectedIngredient(ing)} className={`p-2 rounded cursor-pointer ${selectedIngredient?.id === ing.id ? "bg-blue-500" : "bg-gray-700"}`}>
+              <div key={ing.id} onClick={() => setSelectedIngredient(ing)} className={`p-2 rounded cursor-pointer ${selectedIngredient?.id === ing.id ? "bg-secondary-500" : "bg-base-200"}`}>
                 {ing.name}
               </div>
             ))}
           </div>
 
           {/* Create New */}
-          <hr className="my-2 border-gray-600" />
+          <hr className="my-2 border-base-content" />
           <p>Or create a new one:</p>
-          <input type="text" placeholder="New ingredient name" value={newIngredientName} onChange={(e) => setNewIngredientName(e.target.value)} className="p-2 bg-gray-800 rounded" />
+          <input type="text" placeholder="New ingredient name" value={newIngredientName} onChange={(e) => setNewIngredientName(e.target.value)} className="p-2 bg-base-200 rounded" />
 
           {/* Sort Order */}
-          <hr className="my-2 border-gray-600" />
+          <hr className="my-2 border-base-content" />
           <p>Where to add?</p>
           <div className="flex gap-2">
-            <select value={sortAction} onChange={(e) => setSortAction(e.target.value as any)} className="p-2 bg-gray-800 rounded">
+            <select value={sortAction} onChange={(e) => setSortAction(e.target.value as any)} className="p-2 bg-base-200 rounded">
               <option value="after">After</option>
               <option value="before">Before</option>
             </select>
-            <select value={targetRowUuid} onChange={(e) => setTargetRowUuid(e.target.value)} className="p-2 bg-gray-800 rounded w-full">
-              {recipeDetails.map((item: any) => ( <option key={item.uuid} value={item.uuid}>{item.name_extra_info || item.step_instruction || "Unnamed Row"}</option> ))}
+            <select value={targetRowUuid} onChange={(e) => setTargetRowUuid(e.target.value)} className="p-2 bg-base-200 rounded w-full">
+              {recipeDetails.map((item) => (
+                <option key={item.uuid} value={item.uuid}>
+                  {item.ingredient_type.name}: {item?.ingredients?.name || item.name_extra_info || item.step_instruction || "Unnamed Row"}
+                </option>
+              ))}
               <option value="last">End of list</option>
             </select>
           </div>
         </div>
 
         <DialogFooter className="mt-4">
-            <div className="flex justify-end items-center gap-2 w-full">
-                {saveStatus === "idle" && (
-                    <>
-                        <Button text="Add Selected" onClick={() => handleAddIngredient(selectedIngredient!.id)} disabled={!selectedIngredient} />
-                        <Button text="Create and Add" onClick={handleCreateNewIngredient} disabled={!newIngredientName} />
-                    </>
+          <div className="flex justify-end items-center gap-2 w-full">
+            {saveStatus === "idle" && (
+              <>
+                {/* <Button text="Add Selected" onClick={() => handleAddIngredient(selectedIngredient!.id)} disabled={!selectedIngredient} /> */}
+                {selectedIngredient && (
+                  <Pill tone={!selectedIngredient ? "white" : "dark"} iconName="add_circle" onClick={() => handleAddIngredient(selectedIngredient!.id)}>
+                    Add Selected
+                  </Pill>
                 )}
-                <div className="w-5 h-5">
-                    {saveStatus === "saving" && <Loading />}
-                    {saveStatus === "success" && <BetterIcon iconName="check_circle" className="text-green-500" />}
-                    {saveStatus === "error" && <BetterIcon iconName="error" className="text-red-500" />}
-                </div>
-                <Button text="Close" onClick={closeModal} />
+                {/* {newIngredientName && <Button text="Create and Add" onClick={handleCreateNewIngredient} disabled={!newIngredientName} />} */}
+                {newIngredientName && (
+                  <Pill tone={!selectedIngredient ? "white" : "dark"} iconName="add_circle" onClick={() => handleCreateNewIngredient}>
+                    Create and Add
+                  </Pill>
+                )}
+              </>
+            )}
+            <div className="w-5 h-5">
+              {/* {saveStatus === "saving" && <Loading />}
+              {saveStatus === "success" && <BetterIcon iconName="check_circle" className="text-green-500" />}
+              {saveStatus === "error" && <BetterIcon iconName="error" className="text-red-500" />} */}
+              {saveStatus === "saving" && <Spinner />}
+              {saveStatus === "success" && <SvgSprite iconName="check_circle" className="text-success" />}
+              {saveStatus === "error" && <SvgSprite iconName="error" className="text-error" />}
             </div>
+            <Button text="Close" onClick={closeModal} />
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

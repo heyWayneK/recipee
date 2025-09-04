@@ -140,19 +140,19 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
       throw new Error(`No Component Recipe with ID ${recipeId} can't find ID in recipeData.data.recipes`);
     }
 
-    const totalPrice = recipe.recipeDetail.reduce((ttlPrice, val) => {
+    const totalPrice = recipe.recipe_detail.reduce((ttlPrice, val) => {
       // is type either sub, step or ingredient : RecipeRowTypes
-      if (!["sub", "step", "ingredient"].includes(val.type?.toString() || "")) {
-        throw new Error(`Invalid type ${val.type} in recipeDetail. Not ["sub", "step", "ingredient"], val: ${JSON.stringify(val)}`);
+      if (!["sub", "step", "ingredient"].includes(val?.ingredient_type?.name)) {
+        throw new Error(`Invalid type ${val.ingredient_type.name} in recipe_detail. Not ["sub", "step", "ingredient"], val: ${JSON.stringify(val)}`);
       }
-      if (val.type?.toString() === "step" || !val.type) return ttlPrice;
+      if (val.ingredient_type?.toString() === "step" || !val.ingredient_type) return ttlPrice;
       const costPer1000g = new Decimal(val.cost_per_1000g);
       const qty = new Decimal(val.qty_g);
       return ttlPrice.add(costPer1000g.mul(qty.div(1000)));
     }, new Decimal(0));
 
-    const totalWeight = recipe.recipeDetail.reduce((ttlWeight, val) => {
-      if (val.type === "step" || !val.type) return ttlWeight;
+    const totalWeight = recipe.recipe_detail.reduce((ttlWeight, val) => {
+      if (val.ingredient_type.name === "step" || !val.ingredient_type) return ttlWeight;
       return ttlWeight.add(val.qty_g);
     }, new Decimal(0));
 
@@ -191,15 +191,15 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
     componentsPricesDesc.push(
       portionSizes.map((_, iP) => {
-        const componentTotalWeight = recipe.recipeDetail.reduce((acc, val) => (val.type === "ingredient" ? acc.add(val.qty_g) : acc), new Decimal(0));
+        const componentTotalWeight = recipe.recipe_detail.reduce((acc, val) => (val.ingredient_type.name === "ingredient" ? acc.add(val.qty_g) : acc), new Decimal(0));
 
         // Avoid division by zero
         if (componentTotalWeight.isZero()) return [];
 
-        return recipe.recipeDetail.flatMap((row) => {
-          if (row.type === "sub") return [];
+        return recipe.recipe_detail.flatMap((row) => {
+          if (row.ingredient_type.name === "sub") return [];
           const ingredientCost = new Decimal(row.qty_g).div(componentTotalWeight).mul(componentsPricesDecimals[iC][iP]);
-          return `${row.ingredient?.name || "*SUB* TBC"}: ${ingredientCost.toFixed(3)}`; // Using .toFixed for display
+          return `${row.ingredients?.name || "*SUB* TBC"}: ${ingredientCost.toFixed(3)}`; // Using .toFixed for display
         });
       })
     );

@@ -7,6 +7,7 @@ import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 import Loading from "./Loading";
 import BetterIcon from "./BetterIcon";
 import { v4 as uuidv4 } from "uuid";
+import SvgSprite from "./SvgSprite";
 
 type SaveStatus = "idle" | "saving" | "success" | "error";
 
@@ -55,7 +56,7 @@ const Modal_AddStep = () => {
       sort_order: index + 1,
     }));
 
-    const newRowWithSortOrder = rowsToUpdate.find(row => row.uuid === newUuid);
+    const newRowWithSortOrder = rowsToUpdate.find((row) => row.uuid === newUuid);
 
     const createResponse = await fetch("/api/recipe-detail-row/create", {
       method: "POST",
@@ -67,12 +68,15 @@ const Modal_AddStep = () => {
       }),
     });
 
-    const reorderPayload = rowsToUpdate.filter(row => row.uuid !== newUuid).map(({ uuid, sort_order }) => ({ uuid, sort_order }));
-    const reorderResponse = reorderPayload.length > 0 ? await fetch("/api/recipe-detail-row/reorder", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rowsToUpdate: reorderPayload }),
-    }) : { ok: true };
+    const reorderPayload = rowsToUpdate.filter((row) => row.uuid !== newUuid).map(({ uuid, sort_order }) => ({ uuid, sort_order }));
+    const reorderResponse =
+      reorderPayload.length > 0
+        ? await fetch("/api/recipe-detail-row/reorder", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ rowsToUpdate: reorderPayload }),
+          })
+        : { ok: true };
 
     if (createResponse.ok && reorderResponse.ok) {
       const createdRow = await createResponse.json();
@@ -103,24 +107,26 @@ const Modal_AddStep = () => {
               <option value="before">Before</option>
             </select>
             <select value={targetRowUuid} onChange={(e) => setTargetRowUuid(e.target.value)} className="p-2 bg-gray-800 rounded w-full">
-              {recipeDetails.map((item: any) => ( <option key={item.uuid} value={item.uuid}>{item.name_extra_info || item.step_instruction || "Unnamed Row"}</option> ))}
+              {recipeDetails.map((item: any) => (
+                <option key={item.uuid} value={item.uuid}>
+                  {item.name_extra_info || item.step_instruction || "Unnamed Row"}
+                </option>
+              ))}
               <option value="last">End of list</option>
             </select>
           </div>
         </div>
 
         <DialogFooter className="mt-4">
-            <div className="flex justify-end items-center gap-2 w-full">
-                {saveStatus === "idle" && (
-                    <Button text="Add Step" onClick={handleAddStep} />
-                )}
-                <div className="w-5 h-5">
-                    {saveStatus === "saving" && <Loading />}
-                    {saveStatus === "success" && <BetterIcon iconName="check_circle" className="text-green-500" />}
-                    {saveStatus === "error" && <BetterIcon iconName="error" className="text-red-500" />}
-                </div>
-                <Button text="Close" onClick={closeModal} />
+          <div className="flex justify-end items-center gap-2 w-full">
+            {saveStatus === "idle" && <Button text="Add Step" onClick={handleAddStep} />}
+            <div className="w-5 h-5">
+              {saveStatus === "saving" && <Loading />}
+              {saveStatus === "success" && <SvgSprite iconName="check_circle" className="text-green-500" />}
+              {saveStatus === "error" && <SvgSprite iconName="error" className="text-red-500" />}
             </div>
+            <Button text="Close" onClick={closeModal} />
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

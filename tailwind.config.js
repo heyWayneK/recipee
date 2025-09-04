@@ -52,6 +52,7 @@ module.exports = {
         },
         neutral: colors.gray,
         // Add more color ranges as needed
+        // These colours define the recipe block component colours
         recipe: {
           r0: "#9d174d",
           r1: "#BE7028",

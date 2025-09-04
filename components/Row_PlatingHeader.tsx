@@ -6,6 +6,7 @@ import MenuDynamicChildren from "./MenuPopupOnMouseOver";
 import { useModalBig } from "@/hooks/UseBigModal";
 import Link from "next/link";
 import IngredientUnits from "./IngredientUnits";
+import { resolve } from "path";
 
 interface Row_PlatingHeaderProps {
   viewPrices?: boolean;
@@ -26,12 +27,7 @@ const Row_PlatingHeader: React.FC<Row_PlatingHeaderProps> = ({ viewPrices = fals
 
   // POPUP MODAL
   const handleOpenModal = () => {
-    openModal(
-      <div>
-        <h2 className="mb-4">Custom Modal Content</h2>
-        <p>This is some variable content inside the modal.</p>
-      </div>
-    );
+    openModal("Custom Modal Content", "This is some variable content inside the modal.", async () => {});
   };
 
   return (

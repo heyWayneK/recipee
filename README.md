@@ -101,6 +101,17 @@ Reach out to me on [Twitter](https://twitter.com/DennisBabych) or hello@db2.io
 </>
 ```
 
+## ORG and AUTH - using Clerk
+
+```javascript
+import { auth } from "@clerk/nextjs/server";
+
+const { userId, orgId } = auth();
+if (!userId) {
+  return new NextResponse("Unauthorized", { status: 401 });
+}
+```
+
 ## DECIMAL DATA TYPES
 
 - Best Practice
@@ -262,8 +273,14 @@ await supabase.from("products").insert(supabaseData);
   const [isDarkOrLight] = useGetActiveTheme();
 
 Button: <ButtonThemeLightDark />
+See colors in:
 
 > tailwind.config.js
+
+e.g. in light mode:
+
+- BG: base-100
+- TEXT: base-content
 
 ```text
         BG: base-100
@@ -286,6 +303,29 @@ Button: <ButtonThemeLightDark />
          success  // green
          warning // yellow
          error // red
+```
+
+#### Recipe Colors (Component or Sub Recipe Colors)
+
+in tailwind config
+
+```
+recipe: {
+          r0: "#9d174d",
+          r1: "#BE7028",
+          r2: "#1E929C",
+          r3: "#831E9C",
+          r4: "#BE9E28",
+          r5: "#96B323",
+          r6: "#501E9C",
+          r7: "#E07272",
+          r8: "#1E9C42",
+          r9: "#9C1E8B",
+          r10: "#1E789C",
+          r11: "#C04624",
+          r12: "#1E249C",
+          ...
+}
 ```
 
 ### ENUMS

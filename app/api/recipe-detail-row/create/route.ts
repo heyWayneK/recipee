@@ -12,22 +12,9 @@ export async function POST(request: Request) {
     const orgId = "1";
 
     const body = await request.json();
-    const {
-      recipe_uuid,
-      recipe_components_on_recipeUuid,
-      sort_order,
-      ingredient_type_name,
-      name_extra_info,
-      step_instruction,
-      ingredients_id,
-    } = body;
+    const { recipe_uuid, recipe_components_on_recipeUuid, sort_order, ingredient_type_name, name_extra_info, step_instruction, ingredients_id } = body;
 
-    if (
-      !recipe_uuid ||
-      !recipe_components_on_recipeUuid ||
-      sort_order === undefined ||
-      !ingredient_type_name
-    ) {
+    if (!recipe_uuid || !recipe_components_on_recipeUuid || sort_order === undefined || !ingredient_type_name) {
       return new NextResponse("Missing required fields", { status: 400 });
     }
 

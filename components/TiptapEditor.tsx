@@ -101,6 +101,7 @@ const TiptapEditor: React.FC<TiptapEditorProps> = ({ content, onChange, formatBu
         onChange(editor.getText());
       }
     },
+    autofocus: true,
 
     editorProps: {
       attributes: {

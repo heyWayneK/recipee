@@ -14,12 +14,14 @@ const Row_SubRecipeActions: React.FC<Row_SubRecipeActionsProps> = ({ recipe, met
       <div className="grid justify-items text-left">
         <h4 className=" capitalize">{getTextTranslation("actions")}</h4>
         <div className="">
-          {methods.map((method, index) => (
+          {"Action coming soon..."}
+          {/* {methods.map((method, index) => (
             <div key={index} className="text-xs text-base-content/80">
               {`${index + 1}. `} {method}
             </div>
           ))}
-          {!extraMethods || <div>{extraMethods}</div>}
+          {extraMethods || `${extraMethods}`}
+          */}
         </div>
       </div>
     </Table_Cell>

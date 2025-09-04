@@ -1,11 +1,11 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
-import { RecipeProps } from "@/types/recipeTypes";
 import { getTextTranslation } from "@/utils/utils";
+import { RecipeDetailProps, RecipesInDataProps } from "@/types/recipeTypes";
 // import { RecipeProps } from "@/app/api/recipe";
 
 interface Row_SubRecipeMethodProps {
-  recipe: RecipeProps;
+  recipe: RecipesInDataProps;
   methods: string[];
   extraMethods: string;
 }

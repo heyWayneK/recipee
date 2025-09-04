@@ -2,8 +2,7 @@ import React from "react";
 import Row_SubRecipeIngredient from "./Row_SubRecipeIngredient";
 // import { RecipesInDataProps, data } from "@/app/api/recipe";
 import Row_SubRecipeStep from "./Row_SubRecipeStep";
-import { RecipeDetailProps, RecipesInDataProps } from "@/types/recipeTypes";
-import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
+import { RecipesInDataProps } from "@/types/recipeTypes";
 import Decimal from "decimal.js";
 import Row_SubRecipeSubTotal from "./Row_SubRecipeSubTotal";
 import Row_SubRecipeMethod from "./Row_SubRecipeMethod";
@@ -31,25 +30,25 @@ const Row_SubRecipeIngredients: React.FC<Row_SubRecipeIngredientsProps> = ({ rec
     throw new Error(e);
   }
 
-  const totalWeight = recipe.recipeDetail.reduce((acc, ingred, ii) => acc.plus(ingred.qty_g), new Decimal(0));
+  const totalWeight = recipe.recipe_detail.reduce((acc, ingred, ii) => acc.plus(ingred.qty_g), new Decimal(0));
 
-  const totalPerc = recipe.recipeDetail.reduce((acc, ingred, ii) => acc.plus(new Decimal(ingred.qty_g).div(totalWeight)), new Decimal(0)).mul(100);
+  const totalPerc = recipe.recipe_detail.reduce((acc, ingred, ii) => acc.plus(new Decimal(ingred.qty_g).div(totalWeight)), new Decimal(0)).mul(100);
 
   // INFO: do NOT USE TOTALCOST... its a stupid value. This calculates the total cost of all cost/1000g
-  const totalCost = recipe.recipeDetail.reduce((acc, ingred, ii) => acc.plus(ingred.cost_per_1000g), new Decimal(0));
+  const totalCost = recipe.recipe_detail.reduce((acc, ingred, ii) => acc.plus(ingred.cost_per_1000g), new Decimal(0));
 
-  const allSteps = recipe.recipeDetail.map((ingred) => (ingred.type === "step" ? ingred.stepInstruction : "")).filter((step) => step !== "");
+  const allSteps = recipe.recipe_detail.map((ingred) => (ingred.ingredient_type.name === "step" ? ingred.step_instruction : "")).filter((step) => step !== "") as string[];
 
   // RECIPE STEPS
   let stepCount = 1;
   return (
     <>
-      {recipe.recipeDetail.map((ingredient, i) =>
-        ingredient.type !== "step" ? (
+      {recipe.recipe_detail.map((ingredient, i) =>
+        ingredient.ingredient_type.name !== "step" ? (
           <Row_SubRecipeIngredient key={ingredient.uuid + "_" + i} ingredient={ingredient} totalWeight={totalWeight} recipeIndex={recipeIndex} ingredientIndex={i} />
         ) : (
           <Row_SubRecipeStep key={"ingredientName_" + i} stepCount={stepCount++} recipeIndex={recipeIndex} ingredient={ingredient}>
-            {ingredient.stepInstruction}
+            {ingredient.step_instruction}
           </Row_SubRecipeStep>
         )
       )}

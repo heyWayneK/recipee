@@ -30,8 +30,8 @@ export function BigModalProvider() {
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent>
-        <div>
+      <DialogContent className=" bg-base-100">
+        <div className="text-base-content">
           <h2 className="text-lg font-semibold mb-4 text-base-content">{title}</h2>
           {/* <TiptapEditor formatButtons="none" content={text} onChange={setText} /> */}
           <TiptapEditor formatButtons="none" content={text} onChange={handleUpdate} dbExpectedType={dbExpectedType} />
