@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import Table_Cell from "./Table_Cell";
-import MenuOption1 from "./MenuOption1";
-import MenuOption2 from "./MenuOption2";
 import Pill from "./Pill";
 import { getTextTranslation } from "@/utils/utils";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
-import ButtonThemeLightDark from "./ButtonThemeLightDark";
+import { useAddComponentModalStore } from "@/hooks/useAddComponentModalStore";
+import { useAddPlatingQtyModalStore } from "@/hooks/useAddPlatingQtyModalStore";
 
 interface Row_ControlsPlatingProps {
   viewPrices: boolean;
@@ -13,11 +12,10 @@ interface Row_ControlsPlatingProps {
   className?: string;
 }
 const Row_ControlsPlating: React.FC<Row_ControlsPlatingProps> = ({ className = "", viewPrices, handleViewPrices }) => {
-  const { qty, setQty, recipeData } = useRecipeDataStore();
+  const { recipeData } = useRecipeDataStore();
+  const { openModal: openAddComponentModal } = useAddComponentModalStore();
+  const { openModal: openAddPlatingQtyModal } = useAddPlatingQtyModalStore();
   const name = "controls_for_components";
-
-  const handleAddComponent = () => {};
-  const handleAddPlatingQty_g = () => {};
 
   return (
     <Table_Cell firstCol={false} header={false} type="controls" iconName="">
@@ -27,12 +25,12 @@ const Row_ControlsPlating: React.FC<Row_ControlsPlatingProps> = ({ className = "
         - Add component to db
         - data.recipes[?]
       */}
-      <Pill tone="dark" iconName="add_circle" className=" capitalize" onClick={handleAddComponent}>
+      <Pill tone="dark" iconName="add_circle" className=" capitalize" onClick={openAddComponentModal}>
         {getTextTranslation("add_component")}
       </Pill>
 
       {/* Add Plating quantity column */}
-      <Pill tone="dark" iconName="add_circle" className=" capitalize" onClick={handleAddPlatingQty_g}>
+      <Pill tone="dark" iconName="add_circle" className=" capitalize" onClick={openAddPlatingQtyModal}>
         {/* // Add another Plating size */}
         {getTextTranslation("add_plating_quantity")}
       </Pill>

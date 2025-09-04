@@ -3,6 +3,10 @@ import Row_SubRecipesAll from "./Row_SubRecipesAll";
 import Row_PlatingAll from "./Row_PlatingAll";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import Loading from "./Loading";
+import Modal_AddIngredient from "./Modal_AddIngredient";
+import Modal_AddStep from "./Modal_AddStep";
+import Modal_AddComponent from "./Modal_AddComponent";
+import Modal_AddPlatingQty from "./Modal_AddPlatingQty";
 export interface RecipeModuleProps {
   className?: string;
 }
@@ -22,6 +26,10 @@ const RecipeModule: React.FC<RecipeModuleProps> = () => {
       </div>
       <Row_PlatingAll />
       <Row_SubRecipesAll />
+      <Modal_AddIngredient />
+      <Modal_AddStep />
+      <Modal_AddComponent />
+      <Modal_AddPlatingQty />
     </Suspense>
   );
 };
