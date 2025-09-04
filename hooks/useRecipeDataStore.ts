@@ -17,6 +17,7 @@ interface RecipeDataState {
   setRecipeDataByPath: (path: string, value: any) => void;
   getRecipeDataByPath: (path: string) => any;
   setRecipeData: (recipeData: PreCalculatedRecipeData) => void;
+  setSystemData: (systemData: SystemDataProps) => void;
   //______
   createIngredientAsSub: (path: string) => any;
   updateIngredientPostions: (path: string, recipeUuid: string, ingredientId: string, position: number) => any;
@@ -111,6 +112,8 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
   },
 
   setRecipeData: (recipeData) => set({ recipeData }),
+
+  setSystemData: (systemData) => set({ systemData }),
 
   createIngredientAsSub: (path) => {
     // Dscribe the functionality

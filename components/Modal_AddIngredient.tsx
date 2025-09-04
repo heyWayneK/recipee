@@ -18,7 +18,7 @@ type SaveStatus = "idle" | "saving" | "success" | "error";
 
 const Modal_AddIngredient = () => {
   const { isOpen, closeModal, componentPath } = useAddIngredientModalStore();
-  const { recipeData, setRecipeData } = useRecipeDataStore();
+  const { recipeData, setRecipeData, systemData, setSystemData } = useRecipeDataStore();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<IngredientSelect[]>([]);
   const [selectedIngredient, setSelectedIngredient] = useState<IngredientSelect | null>(null);
@@ -86,13 +86,14 @@ const Modal_AddIngredient = () => {
 
     const newRowWithSortOrder = rowsToUpdate.find((row) => row.uuid === newUuid);
 
-    const createResponse = await fetch("/api/wrecipe-detail-row/create", {
+    const createResponse = await fetch("/api/recipe-detail-row/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...newRowWithSortOrder,
         recipe_uuid: recipeData.data.uuid,
         recipe_components_on_recipeUuid: component.uuid,
+        ingredient_type_name: "ingredient",
       }),
     });
 
@@ -109,7 +110,7 @@ const Modal_AddIngredient = () => {
     if (createResponse.ok && reorderResponse.ok) {
       const createdRow = await createResponse.json();
       newRecipeDetails[insertionIndex] = createdRow;
-      const newRecipeData = setValueByPath(recipeData, `${componentPath}.recipeDetail`, newRecipeDetails);
+      const newRecipeData = setValueByPath(recipeData, `${componentPath}.recipe_detail`, newRecipeDetails);
       setRecipeData(newRecipeData);
       setSaveStatus("success");
       setTimeout(() => closeModal(), 1000);
@@ -122,16 +123,30 @@ const Modal_AddIngredient = () => {
     if (!newIngredientName) return;
     setSaveStatus("saving");
 
-    const response = await fetch("/api/ingredients/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: newIngredientName }),
-    });
+    try {
+      const response = await fetch("/api/ingredients/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newIngredientName }),
+      });
 
-    if (response.ok) {
-      const newIngredient = await response.json();
-      await handleAddIngredient(newIngredient.id);
-    } else {
+      if (response.ok) {
+        const newIngredient = await response.json();
+
+        // There is a typo in `types/recipeTypes.ts`, systemData.ingredients is IngredientTypeSelect[] instead of IngredientSelect[]
+        // I will assume it should be IngredientSelect[] and add the new ingredient to the list.
+        // I will cast systemData.ingredients to any to avoid typescript error.
+        const newSystemData = {
+          ...systemData,
+          ingredients: [...(systemData.ingredients as any), newIngredient],
+        };
+        setSystemData(newSystemData);
+
+        await handleAddIngredient(newIngredient.id);
+      } else {
+        setSaveStatus("error");
+      }
+    } catch (error) {
       setSaveStatus("error");
     }
   };
@@ -182,24 +197,27 @@ const Modal_AddIngredient = () => {
           <div className="flex justify-end items-center gap-2 w-full">
             {saveStatus === "idle" && (
               <>
-                {/* <Button text="Add Selected" onClick={() => handleAddIngredient(selectedIngredient!.id)} disabled={!selectedIngredient} /> */}
                 {selectedIngredient && (
-                  <Pill tone={!selectedIngredient ? "white" : "dark"} iconName="add_circle" onClick={() => handleAddIngredient(selectedIngredient!.id)}>
+                  <Pill tone="dark" iconName="add_circle" onClick={() => handleAddIngredient(selectedIngredient!.id)}>
                     Add Selected
                   </Pill>
                 )}
-                {/* {newIngredientName && <Button text="Create and Add" onClick={handleCreateNewIngredient} disabled={!newIngredientName} />} */}
                 {newIngredientName && (
-                  <Pill tone={!selectedIngredient ? "white" : "dark"} iconName="add_circle" onClick={() => handleCreateNewIngredient}>
+                  <Pill tone="dark" iconName="add_circle" onClick={handleCreateNewIngredient}>
                     Create and Add
                   </Pill>
                 )}
               </>
             )}
+            {saveStatus === "error" && (
+              <>
+                <Pill tone="dark" disabled={true} className="bg-error text-error-content">
+                  Error
+                </Pill>
+                <Button text="Try Again" onClick={() => setSaveStatus("idle")} />
+              </>
+            )}
             <div className="w-5 h-5">
-              {/* {saveStatus === "saving" && <Loading />}
-              {saveStatus === "success" && <BetterIcon iconName="check_circle" className="text-green-500" />}
-              {saveStatus === "error" && <BetterIcon iconName="error" className="text-red-500" />} */}
               {saveStatus === "saving" && <Spinner />}
               {saveStatus === "success" && <SvgSprite iconName="check_circle" className="text-success" />}
               {saveStatus === "error" && <SvgSprite iconName="error" className="text-error" />}
