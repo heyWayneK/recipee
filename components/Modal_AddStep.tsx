@@ -8,6 +8,8 @@ import Loading from "./Loading";
 import BetterIcon from "./BetterIcon";
 import { v4 as uuidv4 } from "uuid";
 import SvgSprite from "./SvgSprite";
+import { Recipe_detail_rowPosts } from "@/types/recipeTypes_prisma";
+import Spinner from "./Spinner";
 
 type SaveStatus = "idle" | "saving" | "success" | "error";
 
@@ -20,7 +22,7 @@ const Modal_AddStep = () => {
   const [targetRowUuid, setTargetRowUuid] = useState<string | "last">("last");
 
   const component = componentPath ? getValueByPath(recipeData, componentPath) : null;
-  const recipeDetails = component ? component.recipeDetail : [];
+  const recipeDetails = component ? component.recipe_detail : [];
 
   useEffect(() => {
     if (!isOpen) {
@@ -107,9 +109,9 @@ const Modal_AddStep = () => {
               <option value="before">Before</option>
             </select>
             <select value={targetRowUuid} onChange={(e) => setTargetRowUuid(e.target.value)} className="p-2 bg-gray-800 rounded w-full">
-              {recipeDetails.map((item: any) => (
+              {recipeDetails.map((item: Recipe_detail_rowPosts) => (
                 <option key={item.uuid} value={item.uuid}>
-                  {item.name_extra_info || item.step_instruction || "Unnamed Row"}
+                  {item.ingredient_type.name.toUpperCase()} {": "} {item.name_extra_info || item.step_instruction || "Unnamed Row"}
                 </option>
               ))}
               <option value="last">End of list</option>
@@ -121,7 +123,7 @@ const Modal_AddStep = () => {
           <div className="flex justify-end items-center gap-2 w-full">
             {saveStatus === "idle" && <Button text="Add Step" onClick={handleAddStep} />}
             <div className="w-5 h-5">
-              {saveStatus === "saving" && <Loading />}
+              {saveStatus === "saving" && <Spinner />}
               {saveStatus === "success" && <SvgSprite iconName="check_circle" className="text-green-500" />}
               {saveStatus === "error" && <SvgSprite iconName="error" className="text-red-500" />}
             </div>

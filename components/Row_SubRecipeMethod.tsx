@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import Table_Cell from "./Table_Cell";
 import { getTextTranslation } from "@/utils/utils";
-import { RecipeDetailProps, RecipesInDataProps } from "@/types/recipeTypes";
+import { RecipesInDataProps } from "@/types/recipeTypes";
 // import { RecipeProps } from "@/app/api/recipe";
 
 interface Row_SubRecipeMethodProps {

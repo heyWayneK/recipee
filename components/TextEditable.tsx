@@ -109,13 +109,13 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
     <div className={`relative w-full cursor-pointer group`} ref={wrapperRef} onClick={handleOpenModal}>
       <div
         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(displayedText || optionalContent) }}
-        className="text-pretty text-ellipsis rounded-xl min-w-10 px-1 py-1 whitespace-nowrap text-base-content"
+        className="text-pretty text-ellipsis rounded-xl min-w-10 px-1 py-1 whitespace-nowrap text-base-300 bg-base-content/30"
       />
-      <div id="icon" className={`absolute inset-0 flex items-center justify-center fill-primary-100 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg border border-transparent`}>
-        <SvgSprite size={20} iconName="edit" className="bg-secondary-500 fill-white p-1 shadow-lg shadow-secondary-300 rounded-full" />
+      <div id="icon" className={`absolute inset-0 flex items-center justify-center fill-primary-200 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg border border-transparent`}>
+        <SvgSprite size={20} iconName="edit" className="bg-secondary-500 fill-200 p-1 shadow-lg shadow-secondary-300 rounded-full" />
       </div>
       <div className="absolute right-1 top-1">
-        <SvgSprite className="fill-neutral-300" size={15} iconName="edit" />
+        <SvgSprite className="fill-base-content/60" size={15} iconName="edit" />
       </div>
     </div>
   );

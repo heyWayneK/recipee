@@ -158,7 +158,7 @@ const Modal_AddIngredient = () => {
           <DialogTitle>Add Ingredient</DialogTitle>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           {/* Search */}
           <input type="text" placeholder="Search for an ingredient..." value={query} onChange={(e) => setQuery(e.target.value)} className="p-2 bg-base-200 border-accent rounded" />
           <div className="flex flex-col gap-2 max-h-40 overflow-y-auto">
@@ -169,28 +169,32 @@ const Modal_AddIngredient = () => {
             ))}
           </div>
 
+          {/* Sort Order */}
+          {/* <hr className="my-2 border-base-content" /> */}
+          <div>
+            <div className=" flex items-center">
+              <p className="text-nowrap p-2 text-sm">Ingredient Position?</p>
+              <div className="flex gap-2">
+                <select value={sortAction} onChange={(e) => setSortAction(e.target.value as any)} className="p-2 bg-base-200 rounded">
+                  <option value="after">After</option>
+                  <option value="before">Before</option>
+                </select>
+                <select value={targetRowUuid} onChange={(e) => setTargetRowUuid(e.target.value)} className="p-2 bg-base-200 rounded w-full">
+                  {recipeDetails.map((item) => (
+                    <option key={item.uuid} value={item.uuid}>
+                      {item.ingredient_type.name}: {item?.ingredients?.name || item.name_extra_info || item.step_instruction || "Unnamed Row"}
+                    </option>
+                  ))}
+                  <option value="last">End of list</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           {/* Create New */}
           <hr className="my-2 border-base-content" />
-          <p>Or create a new one:</p>
+          <p>Or create a new Ingredient:</p>
           <input type="text" placeholder="New ingredient name" value={newIngredientName} onChange={(e) => setNewIngredientName(e.target.value)} className="p-2 bg-base-200 rounded" />
-
-          {/* Sort Order */}
-          <hr className="my-2 border-base-content" />
-          <p>Where to add?</p>
-          <div className="flex gap-2">
-            <select value={sortAction} onChange={(e) => setSortAction(e.target.value as any)} className="p-2 bg-base-200 rounded">
-              <option value="after">After</option>
-              <option value="before">Before</option>
-            </select>
-            <select value={targetRowUuid} onChange={(e) => setTargetRowUuid(e.target.value)} className="p-2 bg-base-200 rounded w-full">
-              {recipeDetails.map((item) => (
-                <option key={item.uuid} value={item.uuid}>
-                  {item.ingredient_type.name}: {item?.ingredients?.name || item.name_extra_info || item.step_instruction || "Unnamed Row"}
-                </option>
-              ))}
-              <option value="last">End of list</option>
-            </select>
-          </div>
         </div>
 
         <DialogFooter className="mt-4">

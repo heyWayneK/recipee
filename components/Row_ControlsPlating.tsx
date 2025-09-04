@@ -16,16 +16,26 @@ const Row_ControlsPlating: React.FC<Row_ControlsPlatingProps> = ({ className = "
   const { qty, setQty, recipeData } = useRecipeDataStore();
   const name = "controls_for_components";
 
+  const handleAddComponent = () => {};
+  const handleAddPlatingQty_g = () => {};
+
   return (
     <Table_Cell firstCol={false} header={false} type="controls" iconName="">
       {/* SHOW PRICES BUTTON */}
-      <ButtonThemeLightDark />
-      <MenuOption1>
-        <span className=" capitalize">{getTextTranslation("add_component")}</span>
-      </MenuOption1>
-      <MenuOption2>
-        <span className=" capitalize">{getTextTranslation("add_step")}</span>
-      </MenuOption2>
+
+      {/* Add Component Row and Sub Recipe 
+        - Add component to db
+        - data.recipes[?]
+      */}
+      <Pill tone="dark" iconName="add_circle" className=" capitalize" onClick={handleAddComponent}>
+        {getTextTranslation("add_component")}
+      </Pill>
+
+      {/* Add Plating quantity column */}
+      <Pill tone="dark" iconName="add_circle" className=" capitalize" onClick={handleAddPlatingQty_g}>
+        {/* // Add another Plating size */}
+        {getTextTranslation("add_plating_quantity")}
+      </Pill>
 
       {/* VIEW PRICES BUTTON TOGGLE */}
       <Pill tone="white" className="text-xs" iconName={viewPrices ? "visibility_off" : "visibility"} edit="" onClick={handleViewPrices}>

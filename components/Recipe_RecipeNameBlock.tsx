@@ -7,6 +7,7 @@ import MenuOption2 from "@/components/MenuOption2";
 import Pill from "@/components/Pill";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import TextLink from "./TextLink";
+import ButtonThemeLightDark from "./ButtonThemeLightDark";
 
 interface Recipe_RecipeNameBlockProps {}
 
@@ -87,6 +88,7 @@ const Recipe_RecipeNameBlock: React.FC<Recipe_RecipeNameBlockProps> = () => {
           <MenuOption2>
             <Pill className="text-xs" edit="options" iconName="checklist"></Pill>
           </MenuOption2>
+          <ButtonThemeLightDark />
         </div>
       </div>
     </DottedBorder>
