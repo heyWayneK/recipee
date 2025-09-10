@@ -1,5 +1,5 @@
 import { initTRPC } from '@trpc/server';
-import { superjson } from '@/libs/superjson';
+import superjson from '@/libs/superjson';
 
 const t = initTRPC.create({
   transformer: superjson,

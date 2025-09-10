@@ -250,7 +250,7 @@ export const oilPurposeSchema = z.object({
     factor: z.union([z.number(), z.string()]).transform(v => new Decimal(v)),
     desc: z.string().nullable(),
     is_default: z.boolean(),
-    confidence: z.union([z.number(), z.string()]).transform(v => new Decimal(v))).nullable(),
+    confidence: z.union([z.number(), z.string()]).transform(v => new Decimal(v)).nullable(),
 });
 
 export const saltPurposeSchema = z.object({
@@ -259,7 +259,7 @@ export const saltPurposeSchema = z.object({
     factor: z.union([z.number(), z.string()]).transform(v => new Decimal(v)),
     desc: z.string().nullable(),
     is_default: z.boolean(),
-    confidence: z.union([z.number(), z.string()]).transform(v => new Decimal(v))).nullable(),
+    confidence: z.union([z.number(), z.string()]).transform(v => new Decimal(v)).nullable(),
 });
 
 export const ingredientTypeSchema = z.object({

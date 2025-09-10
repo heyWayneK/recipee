@@ -10,4 +10,4 @@ superjson.registerCustom<Decimal, string>(
   'decimal.js'
 );
 
-export { superjson };
+export default superjson;
