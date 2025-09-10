@@ -36,7 +36,7 @@ const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewP
             {/* NO TRANSLATION NEED - CUSTOMER FIELD */}
             <TextEditable
               title={`${editInfo.uiName} - Row ${iC} - ${editInfo.idColName}: ${editInfo.id}`}
-              path={`data.components[${iC}].name`}
+              path={`data.recipes[${iC}].name`}
               dbExpectedType="plaintext"
               optionalContent={editInfo.name}
               instantDbUpdate={true}
@@ -47,6 +47,7 @@ const Row_PlatingList: React.FC<Row_PlatingListProps> = ({ className = "", viewP
                 field: "name",
               }}
             />
+            ({})
           </Table_Cell>
         );
 

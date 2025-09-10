@@ -1,7 +1,7 @@
 "use server";
 
 import { calcProfit } from "@/utils/utils";
-import { LineItemsLookup, PreCalculatedRecipeData, SystemDataProps, UnitTypeSelect, measurementUnitsObjProps } from "@/types/recipeTypes";
+import { LineItemsLookup, PreCalculatedRecipeData, SystemDataProps, UnitTypeSelect, measurementUnitsObjProps, portionSizeProps } from "@/types/recipeTypes";
 import { Decimal } from "decimal.js";
 import { logger } from "./serverside_logger";
 
@@ -24,20 +24,20 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   logger.info("Pre-calculating recipe data", {
     recipeId: recipeData.data?.uuid,
     portionsCount: recipeData.data?.portions.length,
-    componentsCount: recipeData.data?.components.length,
+    componentsCount: recipeData.data?.recipes.length,
     recipesCount: recipeData.data?.recipes.length,
   });
 
   logger.debug("Pre-calculating recipe data", {
     recipeId: recipeData.data?.uuid,
     portionsCount: recipeData.data?.portions.length,
-    componentsCount: recipeData.data?.components.length,
+    componentsCount: recipeData.data?.recipes.length,
     recipesCount: recipeData.data?.recipes.length,
   });
   logger.error("Pre-calculating recipe data", {
     recipeId: recipeData.data?.uuid,
     portionsCount: recipeData.data?.portions.length,
-    componentsCount: recipeData.data?.components.length,
+    componentsCount: recipeData.data?.recipes.length,
     recipesCount: recipeData.data?.recipes.length,
   });
 
@@ -55,11 +55,6 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     return {};
   }
 
-  if (recipeData.data.components.length === 0) {
-    console.error("No components found in recipe data");
-    return {};
-  }
-
   if (recipeData.data.recipes.length === 0) {
     console.error("No recipes found in recipe data");
     return {};
@@ -73,17 +68,17 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   const portionsSum: Decimal[] = [];
 
   const o = recipeData.data.portions;
-  for (const portion of o.sort((a, b) => a.order - b.order)) {
-    if (!portion.qty_g) console.error(`Portion with no qty`);
+  for (const portion of o.sort((a, b) => Number(a.portion_g) - Number(b.portion_g))) {
+    if (!portion.portion_g) console.error(`Portion with no portion_g qty`);
     if (!portion.id) console.error(`Portion with no id`);
-    if (!portion.order) console.error(`Portion with no order`);
 
-    portionSizes.push(new Decimal(portion.qty_g));
+    portionSizes.push(new Decimal(portion.portion_g));
     portionIds.push(portion.id);
 
     portionsSum.push(
-      recipeData.data.components.reduce((acc, comp) => {
-        let getQty = comp.portions.find((p) => p.id === portion.id)?.qty_g;
+      // recipeData.data.components.reduce((acc, comp) => {
+      recipeData.data.recipes.reduce((acc, comp) => {
+        let getQty = comp.portions.find((p) => p.id === portion.id)?.portion_g;
         if (!getQty) {
           getQty = 0; // If allowErrors true, set=0 instead of throwing an error
           if (!allowErrors) {
@@ -99,7 +94,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
       const e = `Recipe plating portions do not match actual sum of plating portions: ${portionSizes.toString()} !== ${portionsSum.toString()} grams`;
       console.warn(e);
       // TODO: turn errors on
-      console.error(e);
+      // console.error(e);
       // throw new Error(e);
     }
   }
@@ -108,7 +103,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   const componentsNamesArray: string[] = [];
   const componentsWeights: Decimal[][] = [];
   const componentsIDArray: string[] = [];
-  for (const component of recipeData.data.components.sort((a, b) => a.order - b.order)) {
+  for (const component of recipeData.data.recipes.sort((a, b) => a.order - b.order)) {
     if (!component.name) {
       if (allowErrors) {
         throw new Error(`Component ${component.name} does not have portions name`);
@@ -119,8 +114,15 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
     }
 
     componentsWeights.push(
-      portionIds.map((portionId) => {
-        const getQty = new Decimal(component.portions.find((p) => p.id === portionId)?.qty_g || 0);
+      portionIds.map((portionId: number) => {
+        const getQty: Decimal = new Decimal(component.portions.find((p) => p.id === portionId)?.portion_g || 0);
+
+        // logger.debug("******** componentsWeights", {
+        //   portionIds: portionIds,
+        //   portionId: portionId,
+        //   getQty: getQty,
+        // });
+
         if (!getQty) console.error(`Portion ${portionId} not in ${component.name}`);
         return getQty;
       })
@@ -130,10 +132,13 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
   // COSTS PER 1000/COMPONENT____________________________
   const componentsPricePer1000g: Decimal[] = [];
-  for (const component of recipeData.data.components) {
+  ///// WAYNE______________________*************************************
+  // for (const component of recipeData.data.components) {
+  for (const component of recipeData.data.recipes) {
     const recipeId = component.uuid;
     if (!recipeId) {
-      throw new Error(`No Component RecipeId. recipeData.data.components`);
+      // throw new Error(`No Component RecipeId. recipeData.data.components`);
+      throw new Error(`No Component RecipeId. recipeData.data.recipes`);
     }
     const recipe = recipeData.data.recipes.find((recipe) => recipe.uuid === recipeId);
     if (!recipe) {
@@ -181,8 +186,10 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
   // COMPONENT PRICES BREAKDOWN [][][]___________________
   const componentsPricesDesc: string[][][] = [];
-  for (let iC = 0; iC < recipeData.data.components.length; iC++) {
-    const recipeId = recipeData.data.components[iC].uuid;
+  // for (let iC = 0; iC < recipeData.data.components.length; iC++) {
+  for (let iC = 0; iC < recipeData.data.recipes.length; iC++) {
+    // const recipeId = recipeData.data.components[iC].uuid;
+    const recipeId = recipeData.data.recipes[iC].uuid;
 
     const recipe = recipeData.data.recipes.find((r) => r.uuid === recipeId);
     if (!recipe) {
@@ -196,6 +203,7 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
         // Avoid division by zero
         if (componentTotalWeight.isZero()) return [];
 
+        // return recipe.recipe_detail.flatMap((row) => {
         return recipe.recipe_detail.flatMap((row) => {
           if (row.ingredient_type.name === "sub") return [];
           const ingredientCost = new Decimal(row.qty_g).div(componentTotalWeight).mul(componentsPricesDecimals[iC][iP]);
@@ -218,10 +226,12 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   // PACKAGING COSTS AND RULES ARRAYS____________________
   const packingCostPriceTotalsDecimals: Decimal[] = [];
   const packingCostPriceRules: number[] = [];
+  const packingCostPriceRules_default = 0; // Unknown = 0 in DB
   for (const portionId of portionIds) {
-    const packagingIdRuleForPortion = recipeData.data.packagingCostsId.find((p) => p.pid === portionId)?.rule;
+    const packagingIdRuleForPortion = recipeData.data.packagingCostsId.find((p) => p.pid === portionId)?.rule ?? packingCostPriceRules_default;
     if (packagingIdRuleForPortion === undefined) {
-      throw new Error(`Packaging rule for portion ID ${portionId} not found.`);
+      // throw new Error(`Packaging rule for portion ID ${portionId} not found.`);
+      console.warn(`Packaging rule for portion ID ${portionId} not found.`);
     }
     packingCostPriceRules.push(packagingIdRuleForPortion);
     const cost = returnLookupCostsArr(packagingIdRuleForPortion, systemData.packaging_costs_line_items_lookup);
@@ -231,8 +241,9 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   // OTHER COSTS AND RULES ARRAY_________________________
   const otherCostsPriceTotalsDecimals: Decimal[] = [];
   const otherCostsPriceRules: number[] = [];
+  const otherCostsPriceRules_default = 0; // Unknown = 0 in DB
   for (const portionId of portionIds) {
-    let otherCostsIdRuleForPortion = recipeData.data.otherCostsId.find((p) => p.pid === portionId)?.rule;
+    let otherCostsIdRuleForPortion = recipeData.data.otherCostsId.find((p) => p.pid === portionId)?.rule ?? otherCostsPriceRules_default;
 
     if (otherCostsIdRuleForPortion === undefined) {
       if (!allowErrors) {
@@ -252,18 +263,22 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
 
   // MARKUP CALCULATIONS AND RULES _______________________
   const markUpPriceAmountsDecimals: Decimal[] = [];
+  const markUpPriceAmountsDecimals_default = new Decimal(0);
   const markUpPriceRules: number[] = [];
+  const markUpPriceRules_default = 0; // Unknown = 0 in DB
   const markUpPriceRuleName: string[] = [];
+  const markUpPriceRuleName_default = "No Markup";
   for (let i = 0; i < portionIds.length; i++) {
-    const markupRuleId = recipeData.data.markupId.find((p) => portionIds[i] === p.pid)?.rule;
+    const markupRuleId = recipeData.data.markupId.find((p) => portionIds[i] === p.pid)?.rule ?? markUpPriceRules_default;
     if (markupRuleId === undefined) {
       throw new Error(`Markup rule for portion ID ${portionIds[i]} not found.`);
     }
     const foundMarkupRule = systemData.markup.find((m) => m.id === markupRuleId);
     if (!foundMarkupRule) throw new Error(`Markup Rule ID: ${markupRuleId} not found in db.`);
 
-    const { markup_type, factor, name } = foundMarkupRule;
-    const markupAmount = calcProfit(costsSubTotalsDecimals[i].toNumber(), markup_type.name, Number(factor));
+    const { markup_type, factor, name = markUpPriceRuleName_default } = foundMarkupRule;
+    const markupAmount = calcProfit(costsSubTotalsDecimals[i].toNumber(), markup_type.name, Number(factor)) ?? markUpPriceAmountsDecimals_default.toNumber();
+
     markUpPriceAmountsDecimals.push(new Decimal(markupAmount));
     markUpPriceRules.push(markupRuleId);
     markUpPriceRuleName.push(name);
@@ -275,11 +290,14 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   // SALES PRICE INCL VAT ___________________________________
   const salesPricesIncVatDecimals: Decimal[] = [];
   const vatRuleIds: number[] = [];
+  const vatRuleIds_default = 0; // Unknown = 0 in DB
   const vatRulePercs: Decimal[] = [];
+  const vatRulePercs_default = new Decimal(0);
   const vatRuleNames: string[] = [];
+  const vatRuleNames_default = "No VAT";
 
   const defaultVatRule = systemData.vat_rules.find((vat) => vat.default) || systemData.vat_rules[0];
-  const defaultVatPerc = defaultVatRule ? new Decimal(defaultVatRule.cost) : new Decimal(0);
+  const defaultVatPerc = defaultVatRule ? new Decimal(defaultVatRule.cost) : vatRulePercs_default;
 
   portionIds.forEach((pid, i) => {
     const vatRuleId = recipeData.data.vatRulesId.find((rule) => rule.pid === pid)?.rule;
@@ -290,9 +308,9 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
       console.warn(`VAT rule for portion ID ${pid} not found. Using default.`);
       const vatAmount = salePricesExVatDecimals[i].mul(defaultVatPerc);
       salesPricesIncVatDecimals.push(salePricesExVatDecimals[i].add(vatAmount));
-      vatRuleIds.push(defaultVatRule?.id || 0);
+      vatRuleIds.push(defaultVatRule?.id || vatRuleIds_default);
       vatRulePercs.push(new Decimal(defaultVatPerc));
-      vatRuleNames.push(defaultVatRule?.name || "No VAT found");
+      vatRuleNames.push(defaultVatRule?.name || vatRuleNames_default);
       return;
     }
 
@@ -316,6 +334,8 @@ export async function preCalculateData(recipeData: PreCalculatedRecipeData, syst
   // Needs to be either "metric" or "imperial" as keys of UnitTypeSelect
   // We then retrieve either the metric or imperial units based on the org's default unit type
   const orgDefaultUnitType: keyof UnitTypeSelect = (systemData.org.unit_metric_imperial_name as keyof UnitTypeSelect) || "metric";
+
+  console.log("*********************preCalculatedRecipeData ()))))))))))))");
 
   if (orgDefaultUnitType !== "metric" && orgDefaultUnitType !== "imperial") {
     throw new Error(`Invalid org unit type: ${orgDefaultUnitType}, should be either "metric" or "imperial".`);

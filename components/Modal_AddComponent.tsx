@@ -14,59 +14,62 @@ type SaveStatus = "idle" | "saving" | "success" | "error";
 
 const Modal_AddComponent = () => {
   const { isOpen, closeModal } = useAddComponentModalStore();
-  const { recipeData, setRecipeData } = useRecipeDataStore();
-  const [newComponentName, setNewComponentName] = useState("");
+  const { recipeData, setRecipeData, setRecipeDataByPath } = useRecipeDataStore();
+  const [newRecipeName, setNewRecipeName] = useState("");
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [sortAction, setSortAction] = useState<"before" | "after">("after");
-  const [targetComponentUuid, setTargetComponentUuid] = useState<string | "last">("last");
+  const [targetRecipeUuid, setTargetRecipeUuid] = useState<string | "last">("last");
 
-  const components = recipeData.data.components;
+  const recipes = recipeData.data.recipes;
 
   useEffect(() => {
     if (!isOpen) {
-      setNewComponentName("");
+      setNewRecipeName("");
       setSaveStatus("idle");
-      setTargetComponentUuid("last");
+      setTargetRecipeUuid("last");
     }
   }, [isOpen]);
 
   const handleAddComponent = async () => {
-    if (!newComponentName) return;
+    if (!newRecipeName) return;
     setSaveStatus("saving");
 
-    const newComponentUuid = uuidv4();
+    // const newComponentUuid = uuidv4();
     const newRecipeUuid = uuidv4();
 
-    const newComponent: ComponentsInDataProps = {
-      uuid: newComponentUuid,
-      name: newComponentName,
-      recipe_id: newRecipeUuid,
-      order: 0, // Will be set later
-      versions: [],
-      portions: [],
-    };
+    // const newComponent: ComponentsInDataProps = {
+    //   uuid: newComponentUuid,
+    //   name: newRecipeName,
+    //   recipe_id: newRecipeUuid,
+    //   order: 0, // Will be set later
+    //   versions: [],
+    //   portions: [],
+    // };
 
     const newRecipe: RecipesInDataProps = {
       uuid: newRecipeUuid,
-      name: newComponentName,
+      name: newRecipeName,
       cost_per_1000g: 0,
       brand: {} as any, // Should be filled with actual brand data
       customer: {} as any, // Should be filled with actual customer data
       recipe_detail: [],
       method: "",
+      order: 0, // Will be set later
+      portions: [],
     };
 
-    let newComponents = [...components];
-    let insertionIndex = newComponents.length;
-    if (targetComponentUuid !== "last") {
-      const targetIndex = newComponents.findIndex((c) => c.uuid === targetComponentUuid);
+    // let newRecipes = [...recipes];
+    // let newRecipes = recipes;
+    let insertionIndex = recipes.length;
+    if (targetRecipeUuid !== "last") {
+      const targetIndex = recipes.findIndex((c) => c.uuid === targetRecipeUuid);
       if (targetIndex !== -1) {
         insertionIndex = sortAction === "after" ? targetIndex + 1 : targetIndex;
       }
     }
 
-    newComponents.splice(insertionIndex, 0, newComponent);
-    newComponents = newComponents.map((c, index) => ({ ...c, order: index + 1 }));
+    // newRecipes.splice(insertionIndex, 0, newRecipe);
+    // newRecipes = newRecipes.map((c, index) => ({ ...c, order: index + 1 }));
 
     const newRecipes = [...recipeData.data.recipes, newRecipe];
 
@@ -74,7 +77,7 @@ const Modal_AddComponent = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        newComponent,
+        // newComponent,
         newRecipe,
         recipeUuid: recipeData.data.uuid,
       }),
@@ -83,11 +86,11 @@ const Modal_AddComponent = () => {
     if (response.ok) {
       const { createdComponent, createdRecipe } = await response.json();
       // Replace the temporary new component with the one from the DB
-      newComponents[insertionIndex] = {
-        ...newComponent,
-        uuid: createdComponent.component_recipe_uuid, // The component uuid is the recipe uuid of the component
-      };
-      const newRecipeData = setValueByPath(recipeData, "data.components", newComponents);
+      // newRecipes[insertionIndex] = {
+      //   ...newRecipes,
+      //   uuid: createdComponent.component_recipe_uuid, // The component uuid is the recipe uuid of the component
+      // };
+      const newRecipeData = setValueByPath(recipeData, "data.components", newRecipes);
       const finalRecipeData = setValueByPath(newRecipeData, "data.recipes", [...recipeData.data.recipes, createdRecipe]);
       setRecipeData(finalRecipeData);
 
@@ -107,13 +110,7 @@ const Modal_AddComponent = () => {
 
         <div className="flex flex-col gap-2">
           {/* Component Name */}
-          <input
-            type="text"
-            placeholder="New component name"
-            value={newComponentName}
-            onChange={(e) => setNewComponentName(e.target.value)}
-            className="p-2 bg-base-200 rounded"
-          />
+          <input type="text" placeholder="New component name" value={newRecipeName} onChange={(e) => setNewRecipeName(e.target.value)} className="p-2 bg-base-200 rounded" />
 
           {/* Sort Order */}
           <div>
@@ -124,8 +121,8 @@ const Modal_AddComponent = () => {
                   <option value="after">After</option>
                   <option value="before">Before</option>
                 </select>
-                <select value={targetComponentUuid} onChange={(e) => setTargetComponentUuid(e.target.value)} className="p-2 bg-base-200 rounded w-full">
-                  {components.map((c) => (
+                <select value={targetRecipeUuid} onChange={(e) => setTargetRecipeUuid(e.target.value)} className="p-2 bg-base-200 rounded w-full">
+                  {recipes.map((c) => (
                     <option key={c.uuid} value={c.uuid}>
                       {c.name}
                     </option>
@@ -140,7 +137,7 @@ const Modal_AddComponent = () => {
         <DialogFooter className="mt-4">
           <div className="flex justify-end items-center gap-2 w-full">
             {saveStatus === "idle" && (
-              <Pill tone="dark" iconName="add_circle" onClick={handleAddComponent} disabled={!newComponentName}>
+              <Pill tone="dark" iconName="add_circle" onClick={handleAddComponent} disabled={!newRecipeName}>
                 Create and Add
               </Pill>
             )}

@@ -16,7 +16,7 @@ const cellVariants = cva(" px-2 md:px-4 py-[6px] cursor-pointer select-none item
     type: {
       plating: "flex justify-center items-baseline border text-nowrap gap-x-2 rounded-full bg-base-100/40 shadow-md [&>svg]:fill-base-content [&>svg]:size [&>svg]:text-base-content capitalize ",
 
-      plating_list: "text-nowrap rounded-full hover:opacity-60 active:opacity-75 text-primary-50  ",
+      plating_list: "flex text-nowrap rounded-full hover:opacity-60 active:opacity-75 text-primary-50  ",
 
       controls: " grid grid-flow-col justify-between items-center rounded-full [&>*]:grid [&>*]:grid-flow-col [&>*]:gap-x-2",
 

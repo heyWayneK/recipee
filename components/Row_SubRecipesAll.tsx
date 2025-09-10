@@ -19,7 +19,7 @@ const Row_SubRecipesAll: React.FC<Row_SubRecipesAllProps> = () => {
   const { recipeData } = useRecipeDataStore();
 
   // return recipeData.data.components.map((subRecipe, i) => {
-  return recipeData.data.components.map((subRecipe, i) => {
+  return recipeData.data.recipes.map((subRecipe, i) => {
     // Recipes are a flat structure, so we need to find the recipe by its uuid
     const findRecipe: RecipesInDataProps | undefined = recipeData.data.recipes.find((recipe) => recipe.uuid === subRecipe.uuid);
 

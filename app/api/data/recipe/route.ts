@@ -1,9 +1,6 @@
 "use server";
-
-import { preCalculateData } from "@/libs/preCalculatedRecipeData";
 import { NextResponse } from "next/server";
-import { getSystemDataFunc2, getLiveRecipeData } from "../functions/system_user_recipe";
-import { PreCalculatedRecipeData } from "@/types/recipeTypes";
+import { getLiveRecipeData } from "../functions/system_user_recipe";
 
 // TODO: Do we need this
 // import { GetStaticProps } from "next";
@@ -16,18 +13,14 @@ import { PreCalculatedRecipeData } from "@/types/recipeTypes";
 
 export async function GET() {
   // TODO: Use orgId from session or request
-  // TODO: get recipeId from request parameters
+  // TODO: get recipeId from request parameters 1
+
   const orgId = "1"; // Default customer ID
   const recipeId = "1234567890";
   try {
     const recipeData = await getLiveRecipeData(recipeId, orgId);
-    const dataObject = { data: recipeData[0] } as PreCalculatedRecipeData;
-    const systemData = await getSystemDataFunc2(orgId);
 
-    // Pre-calculate data arrays to build recipe UI
-    const preCalcData = await preCalculateData(dataObject, systemData);
-
-    return NextResponse.json({ recipeData: { ...preCalcData, ...dataObject }, systemData }, { status: 200 });
+    return NextResponse.json(JSON.parse(JSON.stringify({ recipeData })), { status: 200 });
     // return NextResponse.json({ recipeData: { ...dataObject }, systemData }, { status: 200 });
   } catch (error) {
     console.error("Error processing GET request:", error);

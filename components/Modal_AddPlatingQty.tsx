@@ -14,7 +14,7 @@ type SaveStatus = "idle" | "saving" | "success" | "error";
 
 const Modal_AddPlatingQty = () => {
   const { isOpen, closeModal } = useAddPlatingQtyModalStore();
-  const { recipeData, setRecipeData } = useRecipeDataStore();
+  const { recipeData, setRecipeData, updatePreCalc } = useRecipeDataStore();
   const [newQtyG, setNewQtyG] = useState("");
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 
@@ -30,8 +30,8 @@ const Modal_AddPlatingQty = () => {
     setSaveStatus("saving");
 
     const newQty = new Decimal(newQtyG);
-    const portions = recipeData.data.portions;
-    const lastPortion = portions[portions.length - 1];
+    const portions: portionSizeProps = recipeData.data.portions;
+    const lastPortion: portionSizeProps = portions[portions.length - 1].portion_g;
 
     if (!lastPortion) {
       // Handle case with no existing portions, maybe just add the new portion with 100% of it in the first component
@@ -40,20 +40,20 @@ const Modal_AddPlatingQty = () => {
       return;
     }
 
-    const ratio = newQty.div(lastPortion.qty_g);
+    const ratio = newQty.div(lastPortion.portion_g);
 
     const newPortions = [
       ...portions,
       {
         id: portions.length + 1, // This should be a proper ID from the DB
-        qty_g: newQty.toDP(2).toNumber(),
+        portion_g: newQty.toDP(2).toNumber(),
         order: portions.length + 1,
       },
     ];
 
     const newComponents = recipeData.data.components.map((component) => {
       const lastComponentPortion = component.portions.find((p) => p.id === lastPortion.id);
-      const newPortionQty = new Decimal(lastComponentPortion?.qty_g || 0).mul(ratio);
+      const newPortionQty = new Decimal(lastComponentPortion?.portion_g || 0).mul(ratio);
 
       return {
         ...component,
@@ -61,7 +61,7 @@ const Modal_AddPlatingQty = () => {
           ...component.portions,
           {
             id: newPortions[newPortions.length - 1].id,
-            qty_g: newPortionQty.toDP(2).toNumber(),
+            portion_g: newPortionQty.toDP(2).toNumber(),
           },
         ],
       };
@@ -69,7 +69,7 @@ const Modal_AddPlatingQty = () => {
 
     const componentPortions = newComponents.map((c) => ({
       component_recipe_uuid: c.uuid,
-      qty_g: c.portions[c.portions.length - 1].qty_g,
+      portion_g: c.portions[+(c.portions.length - 1)].portion_g,
     }));
 
     const response = await fetch("/api/portions/create", {
@@ -90,9 +90,7 @@ const Modal_AddPlatingQty = () => {
 
       // Update component portions with the new IDs
       const updatedComponents = newComponents.map((component) => {
-        const matchingComponentPortion = createdComponentPortions.find(
-          (cp: any) => cp.component_recipe_uuid === component.uuid
-        );
+        const matchingComponentPortion = createdComponentPortions.find((cp: any) => cp.component_recipe_uuid === component.uuid);
         if (matchingComponentPortion) {
           component.portions[component.portions.length - 1].id = matchingComponentPortion.recipe_portion_id;
         }
@@ -118,13 +116,7 @@ const Modal_AddPlatingQty = () => {
         </DialogHeader>
 
         <div className="flex flex-col gap-2">
-          <input
-            type="number"
-            placeholder="New plating quantity (g)"
-            value={newQtyG}
-            onChange={(e) => setNewQtyG(e.target.value)}
-            className="p-2 bg-base-200 rounded"
-          />
+          <input type="number" placeholder="New plating quantity (g)" value={newQtyG} onChange={(e) => setNewQtyG(e.target.value)} className="p-2 bg-base-200 rounded" />
         </div>
 
         <DialogFooter className="mt-4">

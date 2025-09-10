@@ -1,13 +1,14 @@
 import React from "react";
 import Table_Cell from "./Table_Cell";
 import Pill from "./Pill";
-import { ComponentsInDataProps } from "@/types/recipeTypes";
+import { ComponentsInDataProps, RecipesInDataProps } from "@/types/recipeTypes";
 import Decimal from "decimal.js";
 import TextEditable from "./TextEditable";
 
 interface Row_SubRecipeSubNameProps {
   // subRecipe: ComponentsProps;
-  subRecipe: ComponentsInDataProps; //
+  // subRecipe: ComponentsInDataProps; //
+  subRecipe: RecipesInDataProps; //
   colorNum: number;
   recipeIndex: number; // INFO: the index of recipe in recipeData.data.recipes[?]array
 }

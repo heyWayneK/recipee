@@ -15,12 +15,14 @@ interface Row_PlatingSalesPriceInclVatProps {
 }
 
 const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> = ({ className = "", viewPrices }) => {
-  const { recipeData, systemData } = useRecipeDataStore();
+  const { recipeData, systemData, setRecipeDataByPath } = useRecipeDataStore();
   const name = "sale_price_(incl_vat)";
 
   // UPDATE OBJECT
-  const update = (portionSize: number, ruleId: number) => {
-    return {};
+  const update = (i: number, ruleId: number) => {
+    // return {};
+    setRecipeDataByPath(`data.vatRuleId[${i}]`, ruleId);
+
     // const updatedObj: Partial<PreCalculatedRecipeData> = {
     //   data: {
     //     ...recipeData.data,
@@ -71,8 +73,8 @@ const Row_PlatingSalesPriceInclVat: React.FC<Row_PlatingSalesPriceInclVatProps> 
                 </span>
               </>
             ),
-            // handler: () => update(recipeData.portionSizes[i], +key),
-            handler: () => {},
+            handler: () => update(i, +key),
+            // handler: () => {},
             // TODO: selectedId is broken...not working
             selectedId: recipeData.markUpPriceRules[i],
             id: +key,

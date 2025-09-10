@@ -11,31 +11,46 @@ import {
   RecipesInDataProps,
   DataProps,
   JsonDataProps,
+  portionSizeProps,
 } from "@/types/recipeTypes";
 import prisma from "@/libs/prisma";
-import { Prisma, cooked_yields_categories, dry_cooked_yields, dry_cooked_yields_categories, enum_macro_micro_primary_category, raw_to_prepped_yields } from "@prisma/client";
+import {
+  Prisma,
+  cooked_yields_categories,
+  dry_cooked_yields,
+  dry_cooked_yields_categories,
+  enum_macro_micro_primary_category,
+  raw_to_prepped_yields,
+  recipe_components_on_recipe,
+} from "@prisma/client";
 import { SystemDataProps } from "@/types/recipeTypes";
 import { Recipe_detail_rowPosts } from "@/types/recipeTypes_prisma";
+import { logger } from "@/libs/serverside_logger";
 
 // import { GetStaticProps } from "next";
 
 // The JSON transformation function
 const transformRecipeData = (recipe: JsonDataProps) => {
+  logger.debug("******** transformRecipeData", {
+    recipe: recipe,
+    filename: "system_user_recipe.ts",
+  });
+
   // const transformRecipeData = (recipe: any) => {
   if (!recipe) {
     return null;
   }
 
-  console.log("RECIPEEEEE", { recipe });
+  // console.log("RECIPEEEEE", { recipe });
 
   return {
     uuid: recipe.uuid,
     name: recipe.name,
     desc: recipe.desc,
-    portions: recipe.recipe_portions.map((p: any) => ({
+    portions: recipe.recipe_portions.map((p: portionSizeProps) => ({
       id: p.id,
-      qty_g: p.portion_g,
-      order: p.order,
+      portion_g: p.portion_g,
+      // order: p.order,
     })),
     packagingCostsId: recipe.packaging_costs_on_recipe.map((pc: any) => ({
       pid: pc.recipe_portions_id,
@@ -53,50 +68,69 @@ const transformRecipeData = (recipe: JsonDataProps) => {
       pid: v.recipe_portions_id,
       rule: v.vat_categoryId,
     })),
-    components: recipe.recipe_components_on_recipe.map((comp: any) => ({
-      name: comp.name,
-      uuid: comp.uuid,
-      // recipeId: comp.recipe_uuid,
-      order: comp.order,
-      version: comp.version,
-      versions: [], // Placeholder as in original query
-      // type: comp.ingredient_type_name,
-      ingredientId: comp.ingredient_id,
-      yield: comp.yield,
-      // costPer1000g: comp.,
-      // method: comp.,
-      portions: comp.component_portion_on_recipe.map((p: any) => ({
-        id: p.recipe_portions_id,
-        qty_g: p.qty_g,
-      })),
-      nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
-      // recipeDetail: comp.recipe_detail_row.map((row: any) => ({
-      //   uuid: row.uuid,
-      //   type: row.ingredient_type.name,
-      //   name_extra_info: row.name_extra_info,
-      //   qty_g: row.qty_g,
-      //   order: row.sort_order,
-      //   isSalt: !!row.salt_purpose_id,
-      //   isOil: !!row.oil_purpose_id,
-      //   FQscore: row.fq_score,
-      //   ingredient: row.ingredients,
-      //   cookingMethodYields: row.cooking_method_yields,
-      //   dryCookedYield: row.dry_cooked_yield,
-      //   instruction: row.instruction,
-      //   homeModeUnits: row.home_mode_units,
-      // })),
-    })),
+    // components: recipe.recipe_components_on_recipe.map((comp: any) => ({
+    //   // components: recipe.recipe_components_on_recipe.map((comp: recipe_components_on_recipe) => ({
+    //   name: comp.name,
+    //   uuid: comp.uuid,
+    //   // recipeId: comp.recipe_uuid,
+    //   order: comp.order,
+    //   version: comp.version,
+    //   versions: [], // Placeholder as in original query
+    //   // type: comp.ingredient_type_name,
+    //   ingredientId: comp.ingredient_id,
+    //   yield: comp.yield,
+    //   // costPer1000g: comp.,
+    //   // method: comp.,
+    //   // portions: comp.component_portion_on_recipe.map((p: portionSizeProps) => ({
+    //   portions: comp.component_portion_on_recipe.map((p: any) => ({
+    //     id: p.recipe_portions_id,
+    //     // portion_g: p.portion_g,
+    //     portion_g: p.qty_g,
+    //   })),
+    //   nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
+    //   // recipeDetail: comp.recipe_detail_row.map((row: any) => ({
+    //   //   uuid: row.uuid,
+    //   //   type: row.ingredient_type.name,
+    //   //   name_extra_info: row.name_extra_info,
+    //   //   qty_g: row.qty_g,
+    //   //   order: row.sort_order,
+    //   //   isSalt: !!row.salt_purpose_id,
+    //   //   isOil: !!row.oil_purpose_id,
+    //   //   FQscore: row.fq_score,
+    //   //   ingredient: row.ingredients,
+    //   //   cookingMethodYields: row.cooking_method_yields,
+    //   //   dryCookedYield: row.dry_cooked_yield,
+    //   //   instruction: row.instruction,
+    //   //   homeModeUnits: row.home_mode_units,
+    //   // })),
+    // })),
     // recipes: recipe.recipe_components_on_recipe.map((comp: RecipeDetailProps) => ({
     recipes: recipe.recipe_components_on_recipe.map((comp: any) => ({
       name: comp.name,
       uuid: comp.uuid,
       recipeId: comp.uuid,
+
+      order: comp.order,
+      version: comp.version,
+      versions: [], // Placeholder as in original query
+      // type: comp.ingredient_type_name,
+      ingredientId: comp.ingredient_id,
+
+      // costPer1000g: comp.,
+      // method: comp.,
+      // portions: comp.component_portion_on_recipe.map((p: portionSizeProps) => ({
+      portions: comp.component_portion_on_recipe.map((p: any) => ({
+        id: p.recipe_portions_id,
+        // portion_g: p.portion_g,
+        portion_g: p.qty_g,
+      })),
+
       // order: comp.,
       // version: comp.version,
       // versions: [], // Placeholder as in original query
       // type: comp.ingredient_type_name,
       // ingredientId: comp.ingredients_id,
-      // yield: comp.yield,
+      yield: comp.yield,
       // costPer1000g: comp.cost_per_1000g,
       method: comp.method,
       nutriPer100: [], // Placeholder, nutrition transformation can be added here if needed
@@ -118,6 +152,7 @@ const transformRecipeData = (recipe: JsonDataProps) => {
           instruction: row.instruction?.name,
           home_mode_nnits: row.home_mode_units,
           step_instruction: row.step_instruction,
+
           // UNSURE ABOUT THESE FIELDS:
           // sub_recipe_id: row.sub_recipe_id,
           // salt_purpose_id: row.salt_purpose_id,
@@ -160,7 +195,8 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
     },
     include: {
       recipe_portions: {
-        orderBy: { order: "asc" },
+        // orderBy: { order: "asc" },
+        orderBy: { portion_g: "asc" },
       },
       packaging_costs_on_recipe: true,
       other_costs_on_recipe: true,
@@ -218,14 +254,15 @@ export const getLiveRecipeData = async (recipeUuid: string, orgUuid: string) => 
   }
   const transformedData = transformRecipeData(recipeData);
 
-  console.log("----->>>>>>>> getLiveRecipeData result:", transformedData);
+  // console.log("----->>>>>>>> getLiveRecipeData result:", transformedData);
   return transformedData ? [transformedData] : [];
 };
 
 // SYSTEM DATA_________________________________________________ START::
 // Using prisma.$transaction to run multiple queries in a single transaction and
 // keep type safety with TypeScript.
-export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps> => {
+// Omit<SystemDataProps, "ingredients"> hide ingredients for performance
+export const getSystemDataFunc2 = async (orgId: string): Promise<Omit<SystemDataProps, "ingredients">> => {
   // / 1. Determine which customer IDs to query for.
   // Always include the Admin default customer (ID 1).
   const orgIds: string[] = ["1"];
@@ -263,7 +300,7 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
     packaging_costs_category,
     packaging_costs_line_items_lookup,
     vat_rules,
-    ingredients,
+    // ingredients,
     org,
   ] = await prisma.$transaction([
     prisma.unit_type.findMany({ select: { id: true, name: true, desc: true, imperial: true, metric: true } }),
@@ -345,24 +382,24 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
 
     prisma.vat_rules.findMany({ where: { org_uuid: { in: orgIds } }, select: { id: true, name: true, cost: true, description: true, org_uuid: true, default: true } }),
 
-    prisma.ingredients.findMany({
-      where: { org_uuid: orgId, deleted: false },
-      select: {
-        id: true,
-        name: true,
-        name_orig: true,
-        names_alt: true,
-        org_uuid: true,
-        translation: true,
-        primary_category_id: true,
-        secondary_category: true,
-        unit_type_id: true,
-        dietary_classification_id: true,
-        kosher_id: true,
-        halal_id: true,
-        confidence: true,
-      },
-    }),
+    // prisma.ingredients.findMany({
+    //   where: { org_uuid: orgId, deleted: false },
+    //   select: {
+    //     id: true,
+    //     name: true,
+    //     name_orig: true,
+    //     names_alt: true,
+    //     org_uuid: true,
+    //     translation: true,
+    //     primary_category_id: true,
+    //     secondary_category: true,
+    //     unit_type_id: true,
+    //     dietary_classification_id: true,
+    //     kosher_id: true,
+    //     halal_id: true,
+    //     confidence: true,
+    //   },
+    // }),
     prisma.org.findFirst({
       where: { uuid: orgId },
       select: {
@@ -423,7 +460,7 @@ export const getSystemDataFunc2 = async (orgId: string): Promise<SystemDataProps
     packaging_costs_category,
     packaging_costs_line_items_lookup,
     vat_rules,
-    ingredients,
+    // ingredients,
     org,
   };
 };

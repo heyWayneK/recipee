@@ -21,7 +21,7 @@ interface TextEditableProps {
 
 const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = false, optionalContent = ">>>...", dbUpdateConfig, dbExpectedType = "plaintext" }: TextEditableProps) => {
   // TODO: Add if statements for dbExpectedType to plain and htmltext
-  const { recipeData, getRecipeDataByPath, setRecipeDataByPath } = useRecipeDataStore();
+  const { recipeData, getRecipeDataByPath, setRecipeDataByPath, fetchRecipeData } = useRecipeDataStore();
   const { openModal, closeModal, setSaveStatus } = useModalBig();
 
   const [displayedText, setDisplayedText] = useState("");
@@ -36,7 +36,7 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
 
   const handleSave = useCallback(async () => {
     const newText = useModalBig.getState().text;
-
+    const orgId = "1";
     if (newText.trim() === displayedText.trim()) {
       // If the text hasn't changed, just close the modal
       closeModal();
@@ -47,6 +47,7 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
       // Update the recipe data with the new text
       // setRecipeDataByPath(path, newText, recipeData);
       setRecipeDataByPath(path, newText);
+
       setDisplayedText(newText);
     }
 
@@ -80,6 +81,9 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
           throw new Error(errorResponse || `Failed to save to database: ${response.status} ${response.text}`);
         }
 
+        // ??????????
+        await fetchRecipeData(recipeData.data.uuid, orgId);
+
         setSaveStatus("success");
         setTimeout(() => {
           closeModal();
@@ -90,6 +94,7 @@ const TextEditable = ({ title = "Edit", path = undefined, instantDbUpdate = fals
         if (path) {
           // setRecipeDataByPath(path, displayedText, recipeData);
           setRecipeDataByPath(path, displayedText);
+          // fetchRecipeData(recipeData.data.uuid, orgId);
           setDisplayedText(displayedText);
         }
         setTimeout(() => {

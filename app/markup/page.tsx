@@ -5,7 +5,7 @@ import { divide, get, set } from "cypress/types/lodash";
 import Loading from "@/components/Loading";
 import { PreCalculatedRecipeData, SystemDataProps } from "@/types/recipeTypes";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
-import { getLiveRecipeData, getSystemDataFunc2 } from "../api/data/all/functions/system_user_recipe";
+import { getLiveRecipeData, getSystemDataFunc2 } from "../api/data/functions/system_user_recipe";
 import { th } from "date-fns/locale";
 
 interface pageProps {

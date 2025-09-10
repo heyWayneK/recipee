@@ -668,6 +668,11 @@ model ingredients {
   // TODO: 
   /**
    * /**
+   * /**
+   * /**
+   * /**
+   * /**
+   * /**
    * /*
    * Add  raw_to_prepped_yields raw_to_prepped_yields? @relation(fields: [raw_to_prepped_column], references: [id])
    * raw_to_prepped_column Int?
@@ -1023,7 +1028,8 @@ model recipe {
 
   // recipe_type: local, master, unlinked_master
   recipe_type      recipe_type @relation(fields: [recipe_type_name], references: [name])
-  recipe_type_name String
+  // see Db for real values or temp values: type ingredient_type
+  recipe_type_name String      @default("local") // "local", "master", "unlinked_master"
 
   // recipe_mode: pro, home
   recipe_mode      recipe_mode @relation(fields: [recipe_mode_name], references: [name])
@@ -1086,7 +1092,7 @@ model recipe_portions {
   recipe_uuid                 String
   // Main Portion g = [265g, 350g, 500g]
   portion_g                   Int
-  order                       Int
+  // order                       Int
   component_portion_on_recipe component_portion_on_recipe[]
   packaging_costs_on_recipe   packaging_costs_on_recipe[]
   other_costs_on_recipe       other_costs_on_recipe[]
@@ -1122,7 +1128,8 @@ model recipe_components_on_recipe {
 
   // local, master, unlinked_master
   ingredient_type      ingredient_type @relation(fields: [ingredient_type_name], references: [name])
-  ingredient_type_name String          @default("ingredient") // Default to ingredient,not sub or step
+  // see Db for real values or temp values: type ingredient_type
+  ingredient_type_name String          @default("ingredient") // "ingredient", "sub", "step"
 
   // Are we using the ingredient as a component?
   is_ingredient  Boolean      @default(false)
@@ -1259,7 +1266,7 @@ model recipe_detail_row {
 
   // ingredient_type_name: local, master, unlinked_master
   ingredient_type      ingredient_type @relation(fields: [ingredient_type_name], references: [name])
-  ingredient_type_name String          @default("local") // Default to local
+  ingredient_type_name String          @default("ingredient") // ingredient | sub | step
 
   // 10x10mm, 15x15mm, ground fine, whole
   instruction            prep_instructions? @relation(fields: [prep_instruction_name], references: [name])
