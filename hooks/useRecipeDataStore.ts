@@ -3,7 +3,6 @@ import { PreCalculatedRecipeData, localOrDbDataType, RecipeModeType, SystemDataP
 import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 import Decimal from "decimal.js";
 import { preCalculateData } from "@/libs/preCalculatedRecipeData";
-import { getLiveRecipeData } from "@/app/api/data/functions/system_user_recipe";
 
 interface RecipeDataState {
   qty: number;
@@ -15,7 +14,7 @@ interface RecipeDataState {
   loaded: boolean; // To prevent refetching
   setQty: (qty: number) => void;
   setRecipeMode: (mode: RecipeModeType) => void;
-  fetchData: (orgId: string | undefined) => Promise<void>;
+  fetchData: (data: { recipeData: PreCalculatedRecipeData, systemData: SystemDataProps }) => void;
   fetchRecipeData: (recipeUuid: string, orgId: string) => Promise<void>;
   setRecipeDataByPath: (path: string, value: any) => void;
   getRecipeDataByPath: (path: string) => any;
@@ -47,64 +46,25 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
   setQty: (qty) => set({ qty }),
   setRecipeMode: (mode) => set({ recipeMode: mode }),
 
-  fetchData: async (orgId) => {
-    set({ loading: true });
-    const secsToUpdate = 60;
+  fetchData: (data) => {
+    const date = new Date();
+    set({
+      localOrDbData: {
+        system: "database",
+        systemUpdated: date,
+        recipe: "database",
+        recipeUpdated: date,
+      },
+      systemData: data.systemData,
+      recipeData: data.recipeData,
+      loading: false,
+      loaded: true,
+    });
 
-    try {
-      const systemDataLocal = localStorage.getItem("systemData");
-      const recipeDataLocal = localStorage.getItem("recipeData");
-      const systemDataUpdated = localStorage.getItem("systemDataUpdated");
-      const date = new Date();
-
-      if (!systemDataLocal || !recipeDataLocal || !systemDataUpdated || date.getTime() - new Date(systemDataUpdated).getTime() > secsToUpdate * 1000) {
-        set({
-          localOrDbData: {
-            system: "database",
-            systemUpdated: date,
-            recipe: "database",
-            recipeUpdated: date,
-          },
-        });
-
-        const response = await fetch("/api/data/all");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const { systemData, recipeData } = await response.json();
-
-        set({
-          systemData: systemData as SystemDataProps,
-          recipeData: recipeData as PreCalculatedRecipeData,
-          loading: false,
-          loaded: true,
-        });
-
-        localStorage.setItem("systemData", JSON.stringify(systemData));
-        localStorage.setItem("recipeData", JSON.stringify(recipeData));
-        localStorage.setItem("systemDataUpdated", new Date().toISOString());
-        localStorage.setItem("recipeDataUpdated", new Date().toISOString());
-      } else {
-        const systemDataLocalParsed = JSON.parse(systemDataLocal);
-        const recipeDataLocalParsed = JSON.parse(recipeDataLocal);
-
-        set({
-          systemData: systemDataLocalParsed as SystemDataProps,
-          recipeData: recipeDataLocalParsed as PreCalculatedRecipeData,
-          localOrDbData: {
-            system: "localStorage",
-            systemUpdated: date,
-            recipe: "localStorage",
-            recipeUpdated: date,
-          },
-          loading: false,
-          loaded: true,
-        });
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      set({ loading: false });
-    }
+    localStorage.setItem("systemData", JSON.stringify(data.systemData));
+    localStorage.setItem("recipeData", JSON.stringify(data.recipeData));
+    localStorage.setItem("systemDataUpdated", new Date().toISOString());
+    localStorage.setItem("recipeDataUpdated", new Date().toISOString());
   },
 
   fetchRecipeData: async (recipeUuid, orgId) => {
@@ -147,30 +107,10 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
   },
 
   setRecipeDataByPath: async (path, value) => {
-    // const orgId = "1"; // Default customer ID
-    // const recipeId = "1234567890";
-
-    // RELOAD DATABASE
-    // WRONG METHOD to call data, need api call
-    // const newRecipeData = await getLiveRecipeData(recipeId, orgId);
-    // const newRecipeData = await getLiveRecipeData(recipeId, orgId);
-    // const dataObject = { data: newRecipeData[0] } as PreCalculatedRecipeData;
-    // Pre-calculate data arrays to build recipe UI
-
-    // const newRecipeData = setValueByPath(get().recipeData, path, value);
-    // const preCalcData = await preCalculateData(newRecipeData, get().systemData);
-    // const preCalcData = await preCalculateData(dataObject, get().systemData);
-
     set((state) => ({
-      // recipeData: { ...preCalcData, ...dataObject },
-      // recipeData: { ...state.recipeData, ...preCalcData },
-
-      // ORIGINAL
       recipeData: setValueByPath(state.recipeData, path, value),
     }));
   },
-
-  // reloadRecipeData: ()
 
   updatePreCalc: async () => {
     const currRecipeData = get().recipeData;
@@ -179,8 +119,6 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
     set((state) => ({
       recipeData: setValueByPath(state.recipeData, "", preCalcData),
     }));
-    // return recipeData: (recipeData) => set({...,recipeData, ...preCalcData }),
-    // return recipeData: (recipeData) => set({...,recipeData, ...preCalcData }),
   },
 
   getRecipeDataByPath: (path) => {
@@ -193,8 +131,6 @@ export const useRecipeDataStore = create<RecipeDataState>((set, get) => ({
   setSystemData: (systemData) => set({ systemData }),
 
   createIngredientAsSub: (path) => {
-    // Dscribe the functionality
-
     return {};
   },
 

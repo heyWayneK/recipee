@@ -22,3 +22,11 @@ jest.mock("@clerk/nextjs", () => ({
     userId: "user_2fBORKfV2ExRz94O955hUfA4aCR",
   }),
 }));
+
+jest.mock('@/libs/superjson', () => ({
+  superjson: {
+    parse: (str) => JSON.parse(str),
+    stringify: (obj) => JSON.stringify(obj),
+    registerCustom: jest.fn(),
+  }
+}));

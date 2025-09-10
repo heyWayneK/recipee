@@ -8,6 +8,7 @@ import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import { MenuModalProvider } from "@/contexts/UseMenuModal";
 import { ClerkProvider } from "@clerk/nextjs";
 import { RecipeDataProvider } from "@/contexts/UseRecipeData";
+import Provider from "@/providers/trpcProvider";
 
 jest.mock("@/hooks/useRecipeDataStore");
 
@@ -17,7 +18,7 @@ describe("Recipee", () => {
       recipeData: {
         portionSizes: [1],
         data: {
-          components: [],
+          recipes: [],
           portions: [],
         },
         name: "Test Recipe",
@@ -58,15 +59,17 @@ describe("Recipee", () => {
     });
 
     render(
-      <ClerkProvider>
-        <MenuModalProvider>
-          <DarkLightThemeProvider>
-            <RecipeDataProvider>
-              <Recipee />
-            </RecipeDataProvider>
-          </DarkLightThemeProvider>
-        </MenuModalProvider>
-      </ClerkProvider>
+      <Provider>
+        <ClerkProvider>
+          <MenuModalProvider>
+            <DarkLightThemeProvider>
+              <RecipeDataProvider>
+                <Recipee />
+              </RecipeDataProvider>
+            </DarkLightThemeProvider>
+          </MenuModalProvider>
+        </ClerkProvider>
+      </Provider>
     );
     // The test will pass if the component renders without throwing an error.
   });
