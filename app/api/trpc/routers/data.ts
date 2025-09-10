@@ -13,7 +13,7 @@ export const dataRouter = router({
       recipeId: z.string(),
     }))
     .output(z.object({
-        recipeData: preCalculatedRecipeDataSchema,
+        recipeData: z.any(),
         systemData: systemDataSchema,
     }))
     .query(async ({ input }) => {
