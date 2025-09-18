@@ -552,6 +552,10 @@ logger.error("Database connection failed", { error: "Connection timeout" });
 logger.debug("User data fetched", { userId: 123, userName: "JohnDoe" });
 ```
 
+### Sending Email
+
+sample script: http://localhost:3000/api/office365mail?req=hello
+
 # EXAMPLE ON MARKDOWN
 
 ### Heading 3
