@@ -2,8 +2,11 @@
 import prisma from "@/libs/prisma";
 import { NextResponse } from "next/server";
 import OpenAI from "openai"; //for X/grok too
-import { json } from "stream/consumers";
+// import { json } from "stream/consumers";
 // FUTURE: import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// X.ai API Console for credits:
+// https://console.x.ai/team/30110b4c-4d37-411c-800e-226f8cdaa201
 
 // FIXME: Add Jest and Cypres tests - based on server TotalTimeSecs < 15 seconds
 // FIXME: 15 secs is the Vercel Max time limit (It can be longer, with MUCH higher pricing)

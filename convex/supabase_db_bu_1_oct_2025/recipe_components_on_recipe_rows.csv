@@ -1,0 +1,12 @@
+uuid,recipe_uuid,name,sort_order,ingredient_type_name,ingredients_id,yield,version,created_at,updated_at,is_ingredient,cost_per_1000g,org_uuid,method,cooked_yields_categories_id
+0a6d1eeb-7868-4d3f-a4b8-82784f4f29a0,1234567890,tester 333,0,sub,,1.000,,2025-09-05 12:01:23.846,2025-09-09 06:25:58.735,false,0.000,1,,
+101235,1234567890,<p>1. Live Master - FC Rosemary Gravy 2c</p>,2,sub,,0.860,xxx,2025-08-01 16:19:54.869,2025-08-22 12:13:40.062,false,10.110,1,"extra method text
+/n more ",
+1012399,1234567890,<p>2. LIve Master - FC Rosemary Gravy 2b</p>,5,sub,,0.860,xxx,2025-08-01 16:29:06.417,2025-08-20 14:20:17.992,false,10.550,1,"extra method text info
+/r more ",
+322,1234567890,<p>Live Dukkah Roasted Butternut with Feta 2b</p>,3,sub,,0.860,xxx,2025-08-01 16:25:29.822,2025-08-20 14:19:59.895,false,10.220,1,"extra method text
+</br> more ",
+77442,1234567890,LIVE - FC Chicken Breast Novation Cooked 4 Sept 2,1,sub,,0.710,todo,2025-07-30 07:53:34,2025-09-04 16:18:13.924,false,0.000,1,,
+98747,1234567890,<p>Spinach Fritters 2b - amazing</p>,4,sub,,0.890,xxx,2025-08-01 16:27:42.617,2025-08-22 13:39:49.226,false,10.440,1,,
+da5e3952-e503-4434-9216-a5c39c48f64a,1234567890,Cheeses *WED,0,sub,,1.000,,2025-09-06 10:05:39.337,2025-09-10 09:33:27.76,false,0.000,1,,
+edf7d3d0-edb1-4227-b887-60ed895e2ab7,1234567890,new 10 SEPT25,0,sub,,1.000,,2025-09-08 15:53:32.395,2025-09-10 09:28:02.936,false,0.000,1,,

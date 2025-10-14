@@ -1,0 +1,17 @@
+id,name,translation,desc,yield,is_live,updated_at,primary_category_id
+0,"Unknown
+",,,,true,2025-03-27 18:46:26,0
+1,Pasta,,General Dry  or Fresh Pasta Cooking,2.000,true,2025-03-11 17:42:07,20
+2,Rice,,White Rice (long/short grain),3.000,true,2025-03-11 19:31:21,12
+3,"Cereals, Pseudocereals (Quinoa)",,"Cereals	(Monocots)
+e.g. Wheat, Rice, Corn, Oats, Barley
+Usually have Gluten, incomplete proteins.
+
+Pseudocereals (Dicots)
+e.g. Quinoa, Buckwheat, Amaranth, Chia
+Naturally Gluten free, complete Protein
+",2.500,true,2025-03-11 19:32:42,12
+4,Grains,,"Grains e.g., Bulgar Wheat",2.700,true,2025-03-11 19:33:42,12
+7,Oats,,Oats Raw,2.500,true,2025-03-11 20:34:48,12
+8,Noodles,,Noodles Dried Raw,2.000,true,2025-03-11 20:35:48,20
+10,"Legumes, Lentils, Beans",,Lentils Dried,2.000,true,2025-03-11 20:38:48,14

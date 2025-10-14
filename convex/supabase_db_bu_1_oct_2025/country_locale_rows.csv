@@ -1,0 +1,17 @@
+id,country_name,country_code,currency_code,currency_name,currency_symbol,language_code,locale,time_zone,date_format,decimal_separator,is_active,language_id
+1,United Kingdom,GB,GBP,British Pound,£,en,en-GB,Europe/London,DD/MM/YYYY,.,true,1
+2,France,FR,EUR,Euro,€,fr,fr-FR,Europe/Paris,DD/MM/YYYY,",",true,3
+3,Germany,DE,EUR,Euro,€,de,de-DE,Europe/Berlin,DD/MM/YYYY,",",true,5
+4,Spain,ES,EUR,Euro,€,es,es-ES,Europe/Madrid,DD/MM/YYYY,",",true,4
+5,Italy,IT,EUR,Euro,€,it,it-IT,Europe/Rome,DD/MM/YYYY,",",true,6
+6,Netherlands,NL,EUR,Euro,€,nl,nl-NL,Europe/Amsterdam,DD/MM/YYYY,",",true,7
+7,Portugal,PT,EUR,Euro,€,pt,pt-PT,Europe/Lisbon,DD/MM/YYYY,",",true,8
+8,Nigeria,NG,NGN,Nigerian Naira,₦,en,en-NG,Africa/Lagos,DD/MM/YYYY,.,true,1
+9,Kenya,KE,KES,Kenyan Shilling,KSh,en,en-KE,Africa/Nairobi,DD/MM/YYYY,.,true,1
+10,South Africa,ZA,ZAR,South African Rand,R,en,en-ZA,Africa/Johannesburg,DD/MM/YYYY,.,true,1
+11,United States,US,USD,United States Dollar,$,en,en-US,America/New_York,MM/DD/YYYY,.,true,2
+12,Canada,CA,CAD,Canadian Dollar,$,en,en-CA,America/Toronto,DD/MM/YYYY,.,true,2
+13,Mexico,MX,MXN,Mexican Peso,$,es,es-MX,America/Mexico_City,DD/MM/YYYY,.,true,4
+14,Brazil,BR,BRL,Brazilian Real,R$,pt,pt-BR,America/Sao_Paulo,DD/MM/YYYY,",",true,8
+15,Argentina,AR,ARS,Argentine Peso,$,es,es-AR,America/Buenos_Aires,DD/MM/YYYY,",",true,4
+16,Chile,CL,CLP,Chilean Peso,$,es,es-CL,America/Santiago,DD/MM/YYYY,",",true,4

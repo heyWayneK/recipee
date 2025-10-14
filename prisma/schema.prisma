@@ -372,12 +372,12 @@ model prepped_to_cooked_yields {
 
 model home_mode_units {
   // home_mode_units: imperial, metric
-  id                   Int     @id @default(autoincrement())
-  name                 String  @unique
-  order                Int     @default(1)
-  desc                 String?
-  primary_category_ids String?
-  group                String?
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  order Int     @default(1)
+  desc  String?
+  // primary_category_ids String?
+  group String?
   // e.g., "vegetables", "fruits"
 
   default_g         Decimal             @default(0.00)
@@ -667,6 +667,7 @@ model ingredients {
 
   // TODO: 
   /**
+   * /**
    * /**
    * /**
    * /**

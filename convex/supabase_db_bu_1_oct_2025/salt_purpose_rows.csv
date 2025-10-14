@@ -1,0 +1,17 @@
+id,name,factor,is_default,confidence,desc
+1,"100% Added
+",1.000,true,1.000,
+4,Salt for Pasta Water (6.5% average),0.065,false,0.900,
+5,Salt for Pasta Water (3% Low Scenario),0.030,false,0.900,
+6,Salt Added to Pasta Water (10% High Scenario),0.100,false,0.900,
+7,Salt in Rice water (Boiled & Drained Method) - 10%,0.100,false,0.850,
+8,Salt in Rice water (Water fully absorbed) - 100%,1.000,false,0.850,
+9,Salt Added to Water to Boil Vegetables 15%,0.150,false,0.800,
+10,"Salt Sprinkled on Vegetables with Oil - 85%
+
+",0.850,false,0.750,
+11,Salt in shallow frying - 80%,0.800,false,0.600,
+12,Salt on Air fryer foods - 85%,0.850,false,0.700,
+13,"Salt In Cooking Water: Legumes, Beans, Lentils (12%)",0.120,false,0.850,
+14,"Soaking Legumes, beans, and lentils overnight (3.5%)",0.035,false,0.750,
+15,"Soaking Legumes, beans, and lentils overnight (3.5%)",0.035,false,0.750,

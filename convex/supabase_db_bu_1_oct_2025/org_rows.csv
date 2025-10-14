@@ -1,0 +1,3 @@
+uuid,name,address,logo,active,payment_options,contacts,created_at,updated_at,country_locale_id,emails,json,phone_numbers,username,vat_number,last_sign_in_at,unit_metric_imperial_name,recipe_mode_name
+1,Recipee SuperAdmin,test,,true,test,test,2025-03-18 10:01:37,2025-04-22 09:18:16.712,1,"[{""val"":""wayne@recipee.app"",""default"":true},{""val"":""wayne@fitchef.co.za""}]","[{""val"":""spare value 1"",""default"":true},{""val"":""spare value 2""}]","[{""val"":""+447562212249"",""default"":true},{""val"":""+447562212248""}]",heyWayneKTest,VAT123456,2025-07-21 16:01:28.801,metric,home
+2,w2,test2,,true,test 2,test 2,2025-03-18 10:02:57,2025-03-18 10:03:01,2,,,,heyWk2_imperial,,2025-07-21 16:01:28.801,imperial,home

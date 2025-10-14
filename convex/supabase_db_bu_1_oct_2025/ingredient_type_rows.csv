@@ -1,0 +1,4 @@
+id,name,desc
+1,ingredient,An ingredient in a recipe or a component.
+2,step,A step description in a recipe.
+3,sub,"A sub-recipe, can either be a link to a Master (reusable recipe), or a private recipe only used for this recipe. "

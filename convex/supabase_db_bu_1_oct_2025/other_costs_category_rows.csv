@@ -1,0 +1,4 @@
+id,org_uuid,name,desc,recipeUuid
+0,1,Unknown,Please select a cost category.,
+3,1,350g meal extra costs (Test),Extra costs associated with a 350g plated meal,
+4,1,265g meal extra costs,Extra costs associated with a 265g plated meal (test),

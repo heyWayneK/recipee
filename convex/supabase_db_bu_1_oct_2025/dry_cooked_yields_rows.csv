@@ -1,0 +1,26 @@
+id,name,translation,desc,yield,is_live,updated_at,dry_cooked_yields_categories_id
+1,"Short Pasta (Penne, Fusilli, Macaroni)",,"Short White Pasta (Penne, Fusilli, Macaroni)",2.400,true,2025-03-11 18:05:14,1
+2,"Long pasta (spaghetti, fettuccine)",,"Long White asta (spaghetti, fettuccine)",2.250,true,2025-03-11 18:07:48,1
+3,Whole Wheat Pasta,,Whole Wheat Dry Pasta,2.000,true,2025-03-11 18:15:12,1
+4,Fresh Pasta (Egg Based),,"Egg-based pasta (tagliatelle, fettuccine, ravioli)",1.400,true,2025-03-11 18:17:57,1
+5,Fresh Semolina Pasta,,"Fresh Semolina pasta (gnocchi, orecchiette, trofie)",1.450,true,2025-03-11 18:22:42,1
+6,White Rice,,White Rice General,3.000,true,2025-03-11 20:51:46,2
+7,Brown Rice,,Brown Rice General,2.500,true,2025-03-11 20:52:48,2
+8,Wild Rice,,Wild Rice,3.500,true,2025-03-11 20:54:13,2
+9,Quinoa,,Quinoa Raw,3.000,true,2025-03-11 20:55:41,3
+10,Bulgur Wheat,,Bulgur Wheat Raw,2.500,true,2025-03-11 20:58:14,3
+12,Couscous,,Couscous Raw,2.500,true,2025-03-11 21:01:28,1
+13,Farro Grain,,Farro Grain Raw,2.700,true,2025-03-11 21:28:17,3
+14,Gnocchi,,Fresh Gnocchi Dumpling Pasta,1.200,true,2025-03-11 22:39:46,1
+15,Oats (rolled),,Oats (rolled),2.500,true,2025-03-11 22:43:55,7
+16,Oats (steel-cut),,Oats (steel-cut),2.700,true,2025-03-11 22:44:59,7
+18,Couscous,,"Couscous - Semolina Flour from Durum Wheat. 3 Sizes Small Moroccan, Medium Israeli Pear Couscous, Large Lebanese",2.500,true,2025-03-11 22:54:49,1
+19,Egg Noodles,,Egg Noodles Dry,2.500,true,2025-08-28 11:58:52,8
+20,Barley (pearled),,Barley (pearled),3.500,true,2025-08-28 12:06:44,4
+21,Farro Grain,,Farro Grain,2.700,true,2025-08-28 12:08:18,4
+22,Lentils Dried,,Lentils Raw Dry,,true,2025-08-28 12:09:45,10
+23,Chickpeas Dried,,Chickpeas Raw Dry,2.700,true,2025-08-28 12:12:13,10
+24,Beans Dried,,Beans Raw Dried,2.500,true,2025-08-28 12:13:01,10
+25,Polenta Dried,,Polenta Dried,4.000,true,2025-08-28 12:14:37,1
+26,Semolina Dried,,Semolina Dried,2.500,true,2025-08-28 12:15:26,1
+27,Gnocchi Raw Fresh,,Uncooked Fresh Gnocchi,1.056,true,2025-08-28 12:27:14,1

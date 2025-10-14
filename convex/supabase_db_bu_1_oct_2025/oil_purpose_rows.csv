@@ -1,0 +1,5 @@
+id,name,desc,factor,is_default,confidence
+1,added,100% oil added,1.000,true,1.000
+2,thin_coating,Thin coating for roasting,0.750,false,0.950
+3,shallow_fry,Shallow Fry (Low Oil Absorption),0.400,false,0.700
+4,deep_fry,Estimate - Deep Frying (High Oil Absorption),0.100,false,0.500

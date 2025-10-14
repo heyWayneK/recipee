@@ -41,7 +41,12 @@ interface GeminiPrompt {
 type openAiModels = "gpt-4o-2024-05-13" | "gpt-4" | "gpt-3.5-turbo" | "gpt-4o-2024-05-13";
 
 const sdks = {
-  xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-2-latest" },
+  // xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-2-latest" },
+  xai: { connect: new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: "https://api.x.ai/v1" }), model: "grok-3-mini" },
+  // INFO: Grok-2 was slow 17 secs
+  // INFO: Grok-3-mini was slow 22 secs
+  // INFO: Grok-4 was slow 42 secs
+
   // FUTURE: Switch Models if Xai is not available
   // openai: { connect: new OpenAI({ apiKey: process.env.OPENAI_API_KEY }), model: "gpt-4o-2024-05-13" },
   // gemini: { connect: new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!), model: "gemini-1.5-flash" },
@@ -285,6 +290,12 @@ export async function GET(request: Request) {
 
     if (useSdk === "xai") {
       // X Ai to classify the ingredient and get nutritional data
+      // 10 OCT 2025:
+      // from xai_sdk import Client
+      // from xai_sdk.chat import user, system
+      // client = Client(api_key="<YOUR_XAI_API_KEY_HERE>")
+      // chat = client.chat.create(model="grok-3-mini", temperature=0)
+
       const response = await sdks.xai.connect.chat.completions.create({
         model: sdks.xai.model,
         stream: false,
@@ -721,7 +732,7 @@ export async function GET(request: Request) {
     const totalTimeSecs = (Date.now() - startTime) / 1000 + " seconds";
     console.log("Total time taken:", totalTimeSecs);
 
-    return NextResponse.json({ message: "Success", timer: totalTimeSecs, resultJson: jsonData }, { status: 200 });
+    return NextResponse.json({ message: "Success", timer: totalTimeSecs, model: sdks.xai.model, resultJson: jsonData }, { status: 200 });
   } catch (error: any) {
     console.error("Webhook error:", error);
 

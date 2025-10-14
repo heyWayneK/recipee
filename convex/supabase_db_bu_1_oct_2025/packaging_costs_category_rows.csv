@@ -1,0 +1,6 @@
+id,org_uuid,name,desc,is_active,recipeUuid
+0,1,Unknown,Please select or create a cost category.,true,
+3,1,265g Container + Lid (0001),Small Meal,true,
+4,1,350g Container (0002),Medium Meal,true,
+5,1,700g Container + Lid (0003),Large Meal,true,
+6,1,1400g Container (0004),XL Meal,true,

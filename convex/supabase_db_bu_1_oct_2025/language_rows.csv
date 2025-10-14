@@ -1,0 +1,9 @@
+id,name,code,is_active
+1,English (UK),en-GB,true
+2,English (US),en-US,true
+3,French,fr-FR,true
+4,Spanish,es-ES,true
+5,German,de-DE,true
+6,Italian,it-IT,true
+7,Dutch,nl-NL,true
+8,Portuguese,pt-PT,true

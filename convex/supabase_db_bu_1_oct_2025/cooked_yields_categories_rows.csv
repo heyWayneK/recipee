@@ -1,0 +1,9 @@
+id,name,translation,desc,yield,is_live,updated_at,created_at
+1,Roasting & Baking,,Hot Air Cooking,0.700,true,2025-03-11 12:24:18,2025-03-18 09:59:52.21
+2,Grilling & Broiling,,Direct High Heat,0.750,true,2025-03-11 12:25:06,2025-03-18 09:59:52.21
+3,Frying,,Oil as a Heat Medium,0.700,true,2025-03-11 12:25:39,2025-03-18 09:59:52.21
+4,Sautéing & Stir-Frying,,"Fast, High Heat",0.800,true,2025-03-11 12:26:45,2025-03-18 09:59:52.21
+6,Boiling & Simmering,,Direct Water Cooking,0.850,true,2025-03-11 15:27:38,2025-03-18 09:59:52.21
+7,Steaming,,Using Steam to Cook.,0.900,true,2025-03-11 15:29:25,2025-03-18 09:59:52.21
+8,Combination Cooking,,Dry + Moist Heat,0.720,true,2025-03-11 15:32:21,2025-03-18 09:59:52.21
+10,Sous Vide,,"Sealed, Slow Sous Vide Cooking",0.900,true,2025-03-11 16:11:58,2025-03-18 09:59:52.21

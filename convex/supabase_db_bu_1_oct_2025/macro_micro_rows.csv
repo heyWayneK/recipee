@@ -1,0 +1,72 @@
+id,name,full_name,secondary_category,order,updated_at,short_name,primary_category,unit,indent
+1,kcal_per_100g,Calories,,1,,kcal,macro,g,parent
+2,kj_per_100g,Kilojoules,,2,,kJ,macro,g,parent
+3,protein_per_100g,Protein,,3,,Protein,macro,g,parent
+4,fat_per_100g,Total Fat,,4,,Fat,macro,g,parent
+5,saturated_fat_per_100g,Saturated Fat,,5,,Sat Fat,macro,g,child
+6,monounsaturate_per_100g,Monounsaturated Fat,,6,,MUFA,macro,g,child
+7,polyunsaturate_per_100g,Polyunsaturated Fat,,7,,PUFA,macro,g,child
+8,trans_fats_per_100g,Trans Fat,,8,,Trans Fat,macro,g,child
+9,carbohydrates_per_100g,Carbohydrate,,9,,Carbs,macro,g,parent
+10,net_carbs_per_100g,Net Carbohydrates,,10,,Net Carbs,macro,g,child
+11,total_sugar_per_100g,Total Sugar,,11,,Sugar,macro,g,child
+12,added_sugar_per_100g,Added Sugar,,12,,Added Sugar,macro,g,child
+13,artificial_sugar_per_100g,Artificial Sugar,,13,,Art. Sugar,macro,g,child
+14,starch_per_100g,Starch,,14,,Starch,macro,g,child
+15,fibre_per_100g,Fibre,,15,,Fibre,macro,g,parent
+16,salt_per_100g,Salt,,16,,Salt,macro,g,parent
+17,sodium_per_100g,Sodium,,17,,Na,macro,g,child
+18,water_per_100g,Water,,1,,H₂O,micro,g,parent
+19,nitrogen_g_per_100g,Nitrogen,,2,,N,micro,g,parent
+20,ash_g_per_100g,Ash,,3,,Ash,micro,g,parent
+21,calcium_mg_per_100g,Calcium,minerals,4,,Ca,micro,mg,parent
+22,iron_mg_per_100g,Iron,minerals,5,,Fe,micro,mg,parent
+23,magnesium_mg_per_100g,Magnesium,minerals,6,,Mg,micro,mg,parent
+24,phosphorus_mg_per_100g,Phosphorus,minerals,7,,P,micro,mg,parent
+25,potassium_mg_per_100g,Potassium,minerals,8,,K,micro,mg,parent
+26,zinc_mg_per_100g,Zinc,minerals,9,,Zn,micro,mg,parent
+27,copper_mg_per_100g,Copper,minerals,10,,Cu,micro,mg,parent
+28,manganese_mg_per_100g,Manganese,minerals,11,,Mn,micro,mg,parent
+29,selenium_¬µg_per_100g,Selenium,minerals,12,,Se,micro,µg,parent
+30,vitamin_a_mg_per_100g,Vitamin A,vitamins,13,,Vit A,micro,mg,parent
+31,vitamin_b1_thiamin_mg_per_100g,Vitamin B1 (Thiamin),vitamins,14,,Vit B1,micro,mg,parent
+32,vitamin_b2_mg_per_100g,Vitamin B2 (Riboflavin),vitamins,15,,Vit B2,micro,mg,parent
+33,vitamin_b3_niacin_mg_per_100g,Vitamin B3 (Niacin),vitamins,16,,Vit B3,micro,mg,parent
+34,vitamin_b6_mg_per_100g,Vitamin B6,vitamins,17,,Vit B6,micro,mg,parent
+35,vitamin_b7_biotin_¬µg_per_100g,Vitamin B7 (Biotin),vitamins,18,,Vit B7,micro,µg,parent
+36,vitamin_b9_folate_mg_per_100g,Vitamin B9 (Folate),vitamins,19,,Vit B9,micro,mg,parent
+37,vitamin_b12_mg_per_100g,Vitamin B12,vitamins,20,,Vit B12,micro,mg,parent
+38,vitamin_e_mg_per_100g,Vitamin E,vitamins,21,,Vit E,micro,mg,parent
+39,vitamin_k_¬µg_per_100g,Vitamin K,vitamins,22,,Vit K,micro,µg,parent
+40,sfa_16_0_palmitic_acid_g_per_100g,Palmitic Acid,fatty_acids,23,,C16:0,micro,g,parent
+41,sfa_18_0_stearic_acid_g_per_100g,Stearic Acid,fatty_acids,24,,C18:0,micro,g,parent
+42,mufa_16_1_palmitoleic_acid_g_per_100g,Palmitoleic Acid,fatty_acids,25,,C16:1,micro,g,parent
+43,mufa_18_1__oleic_acid_g_per_100g," Oleic Acid",fatty_acids,26,,C18:1,micro,g,parent
+44,pufa_18_2_linoleic_acid_g_per_100g,Linoleic Acid,fatty_acids,27,,C18:2,micro,g,parent
+45,omega3_per_100g,Omega-3 Fatty Acids,lipids,28,,Ome,micro,g,parent
+46,omega6_per_100g,Omega-6 Fatty Acids,lipids,29,,Ome,micro,g,parent
+47,omega9_per_100g,Omega-9 Fatty Acids,lipids,30,,Ome,micro,g,parent
+48,tryptophan_g_per_100g,Tryptophan,amino_acids,31,,Try,micro,g,parent
+49,threonine_g_per_100g,Threonine,amino_acids,32,,Thr,micro,g,parent
+50,isoleucine_g_per_100g,Isoleucine,amino_acids,33,,Iso,micro,g,parent
+51,leucine_g_per_100g,Leucine,amino_acids,34,,Leu,micro,g,parent
+52,lysine_g_per_100g,Lysine,amino_acids,35,,Lys,micro,g,parent
+53,methionine_g_per_100g,Methionine,amino_acids,36,,Met,micro,g,parent
+54,phenylalanine_g_per_100g,Phenylalanine,amino_acids,37,,Phe,micro,g,parent
+55,tyrosine_g_per_100g,Tyrosine,amino_acids,38,,Tyr,micro,g,parent
+56,valine_g_per_100g,Valine,amino_acids,39,,Val,micro,g,parent
+57,arginine_g_per_100g,Arginine,amino_acids,40,,Arg,micro,g,parent
+58,histidine_g_per_100g,Histidine,amino_acids,41,,His,micro,g,parent
+59,alanine_g_per_100g,Alanine,amino_acids,42,,Ala,micro,g,parent
+60,aspartic_acid_g_per_100g,Aspartic Acid,amino_acids,43,,Asp,micro,g,parent
+61,glutamic_acid_g_per_100g,Glutamic Acid,amino_acids,44,,Glu,micro,g,parent
+62,glycine_g_per_100g,Glycine,amino_acids,45,,Gly,micro,g,parent
+63,proline_g_per_100g,Proline,amino_acids,46,,Pro,micro,g,parent
+64,serine_g_per_100g,Serine,amino_acids,47,,Ser,micro,g,parent
+65,hydroxyproline_g_per_100g,Hydroxyproline,amino_acids,48,,Hyd,micro,g,parent
+66,cysteine_g_per_100g,Cysteine,amino_acids,49,,Cys,micro,g,parent
+67,daidzein_mg_per_100g,Daidzein,isoflavones,50,,Daidzein,micro,mg,parent
+68,genistein_mg_per_100g,Genistein,isoflavones,51,,Genistein,micro,mg,parent
+69,daidzin_mg_per_100g,Daidzin,isoflavones,52,,Daidzin,micro,mg,parent
+70,genistin_mg_per_100g,Genistin,isoflavones,53,,Genistin,micro,mg,parent
+71,glycitin_mg_per_100g,Glycitin,isoflavones,54,,Glycitin,micro,mg,parent

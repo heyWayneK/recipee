@@ -1,0 +1,9 @@
+id,name,desc,supplier_id,is_active,cost
+4,265g Container,Foil Small,1,true,1.76
+5,350g Foil Container,Foil Medium,1,true,2.37
+6,700g Foil Container,Foil Large,1,true,4.83
+7,1400g Foil Container,Foil XL,1,true,9.83
+8,265g/350g Plastic Lid,Plastic Clip On,1,true,1.35
+9,265g/350g Foil Lid,Foil,1,true,1.62
+10,700g Plastic Lid,Plastic,1,true,2.58
+11,1400g Plastic Lid,Plastic,1,true,3.65

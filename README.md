@@ -5,13 +5,11 @@
 - All recipes are Metric g's & mL's in the database.
 - Weight is always stored in metric grams or metric milliliters.
 - NB: Unit Type is |weight|fluid|each| Pro Mode aims to use weight 99% of the time
-
   - weight (g kg oz lb),
   - fluid (mL L fl oz) or
   - each (ea for eggs) - useful for garnish e.g. 1 Bay Leaf, 1 boiled egg
 
   **Metric**
-
   - Fluid Volume
     - Millilitre: mL : 250 mL
     - Litre: L : 2 L
@@ -22,7 +20,6 @@
     - Milligram: mg : 15 mg
 
   **Imperial**
-
   - Fluid Volume
     - Fluid Ounce: fl oz : 8 fl oz
     - Pint: pt : 1 pt
@@ -122,21 +119,17 @@ if (!userId) {
 ### **Plan**
 
 1. **Database Schema**:
-
    - Ensure your database schema uses a `NUMERIC` or `DECIMAL` type for fields requiring high precision (e.g., prices, weights, etc.).
    - Supabase (PostgreSQL) supports `NUMERIC`/`DECIMAL` types natively.
 
 2. **Prisma Schema**:
-
    - Use Prisma's `Decimal` type for fields that map to `NUMERIC`/`DECIMAL` in the database.
    - Prisma uses the `Decimal.js` library under the hood to handle high-precision arithmetic.
 
 3. **Install Decimal.js**:
-
    - Install the `decimal.js` library in your app to work with `Decimal` values in your business logic.
 
 4. **Transform Data**:
-
    - When fetching data from Prisma, ensure you handle `Decimal` objects correctly (e.g., convert to strings or numbers as needed).
    - When sending data to Supabase (if applicable), serialize `Decimal` values properly.
 
@@ -216,15 +209,12 @@ function validatePrice(input: string): Decimal {
 ### **Best Practices**
 
 1. **Use Decimal.js for All Arithmetic**:
-
    - Avoid floating-point arithmetic with `number` in JavaScript. Always use `Decimal` for calculations involving money or precision.
 
 2. **Serialize Decimal Properly**:
-
    - Convert `Decimal` to `string` when sending data to external APIs (e.g., Supabase).
 
 3. **Database Consistency**:
-
    - Ensure the precision and scale in your Prisma schema match the database schema.
 
 4. **Testing**:
@@ -436,7 +426,7 @@ export type dietary_classification_type = "animal_product" | "vegan" | "vegetari
       <div>
         <h2 className="mb-4">Custom Modal Content</h2>
         <p>This is some variable content inside the modal.</p>
-      </div>
+      </div>,
     );
   };
   ```
@@ -467,6 +457,7 @@ const pillVariants = cva("relative flex h-full min-w-10 cursor-pointer select-no
     edit: "edit", // Set default for edit state
   },
 });
+
 
 // 2. Clear and self-documenting prop types
 export interface PillProps
@@ -539,7 +530,7 @@ Cleans the "key" so we dont have special character or spaces
 (I use customer text for recipe names)
 use cleanComponentKeyName(keyName)
 
-### Serverside SSR error, success logs
+### Serverside SSR error, success logs - better than console.log()
 
 Its important to log console type logs in a SSR so we can track problems.
 This provides a morwe complete log with context
@@ -613,3 +604,10 @@ function myFunction() {
 - [📚 Documentation](https://docs.microsaasfast.me/)
 - [🧑‍💻 Discord](https://discord.gg/U75p2BQuAH)
 - [🧑‍💻 Free clients guide](https://www.notion.so/Product-Hunt-Launch-36a5b9610bf04559b8fcf4a2a7b90ea6?pvs=4)
+
+## Classify Ingredient AI/GPT/Grok/Credits
+
+- How to use x.ai in javascript : https://docs.x.ai/docs/tutorial
+
+x.ai credits to classift ingredients:
+https://console.x.ai/team/30110b4c-4d37-411c-800e-226f8cdaa201

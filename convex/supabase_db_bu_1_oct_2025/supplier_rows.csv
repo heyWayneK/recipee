@@ -1,0 +1,2 @@
+id,org_uuid,name,vat,corporation_number,logo,email,tel,cell,whatsapp,account_email,account_name,account_tel,created_at,updated_at
+1,1,ACME  (Test Customer),1234567,2001/5666/66864,,test@recipee.app,44207 766543,4499966699,44 5566 822 222,account@test.com,Test Name,0800 777 5555,2025-04-04 11:19:55,2025-04-04 11:19:56

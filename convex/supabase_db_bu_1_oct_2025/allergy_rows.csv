@@ -1,0 +1,22 @@
+id,name,desc,translation,created_at,updated_at,org_uuid
+0,unknown,Unable to classify ingredient allergies. Manual intervention is required.,,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+1,none,No common food allergy associations.,,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+3,buckwheat,"Common in Asia, especially Japan (e.g. in soba noodles).",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+4,celery,"Celery might sneak into soups, stocks, or seasoning blends. ",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+5,chilli,"Chilli and garlic are staples in countless cuisines, from sauces to marinades, often unlisted in fine detail. ",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+6,eggs,"Particularly egg whites, a common allergen in children.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+7,garlic,"Though rare, garlic allergies can occur, leading to symptoms like skin rashes or respiratory discomfort.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+8,gluten,"Gluten, bread and pasta, lurks in processed foods like soups, dressings, or even soy sauce. ",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+9,lupin,"A legume used in flours and baked goods, notable in Europe.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+10,milk_dairy,Cows milk,,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+11,mustard,"Significant in Europe, found in sauces and condiments.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+12,peanuts,"Technically a legume, but listed separately due to its high allergenic potential.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+13,rice,"More prevalent in Asia, though less common globally.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+14,seafood_fish,"Beyond fish and shellfish, allergies to squid or octopus may occur.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+15,sesame,"Widespread in regional cuisine (e.g., tahini, halva).",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+16,shellfish,"Crustaceans: Shrimp, crab, lobster & Mollusks: Clams, mussels, oysters, squid. ",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+17,soybeans,"Soy Beans, Edamame and soy-based products like tofu and soy milk.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+18,sulphur_dioxide,"Sulphur dioxide, a preservative, hides in dried fruits, wines, and some packaged snacks.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+19,tree_nuts,"Includes almonds, walnuts, cashews, pistachios, pecans, hazelnuts, Brazil nuts, etc.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+20,wheat,"A frequent trigger, especially in children.",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1
+21,nightshade,"Nightshades contain alkaloids, but the highest concentration is in the leaves and stem (questionable as an allergen), not the vegetable/fruit. Tomatoes, Potatoes, Eggplant, Peppers, Goji berries etc",,2025-03-18 09:52:47.269,2025-04-15 20:44:46.311,1

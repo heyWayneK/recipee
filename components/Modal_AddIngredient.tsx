@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import Button from "./Button";
 import { useAddIngredientModalStore } from "@/hooks/useAddIngredientModalStore";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
-import { IngredientSelect, RecipesInDataProps, recipe_row_types_type } from "@/types/recipeTypes";
+import { IngredientSelect, RecipesInDataProps } from "@/types/recipeTypes";
 import { getValueByPath, setValueByPath } from "@/utils/getSetValueFromObject";
 import Loading from "./Loading";
 import BetterIcon from "./BetterIcon";

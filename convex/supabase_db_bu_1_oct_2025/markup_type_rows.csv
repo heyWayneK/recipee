@@ -1,0 +1,5 @@
+id,name,desc
+0,Unknown,Please select a type
+1,markup,A pricing method where a fixed percentage or amount is added to the cost of preparing a meal to determine its selling price. This reflects the additional value or profit the company wants to earn beyond the base cost (e.g.
+2,margin,A pricing method based on the desired profit percentage relative to the selling price of the meal. The margin is calculated as the profit divided by the selling price
+3,x_cost,A pricing method where the meal’s selling price is determined by multiplying the total cost (e.g.

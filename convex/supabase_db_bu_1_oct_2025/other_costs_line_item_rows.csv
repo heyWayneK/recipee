@@ -1,0 +1,8 @@
+id,name,desc,supplier_id,is_active,cost
+2,Film,Clear film,1,true,0.45
+3,"Printed Sleeve - 350g ",Full Printed Sleeve,1,true,2.70
+4,Label (100x50mm),Heat print label,1,true,0.20
+5,Outer Box (12 meals),Generic outer box,1,true,6.25
+6,Outer Box Label (50x50mm),Heat Printable Label,1,true,0.10
+7,Tape,Box Tape,1,true,2.50
+8,Printed Sleeve (265g meal),Smaller Printed Sleeve,1,true,2.20

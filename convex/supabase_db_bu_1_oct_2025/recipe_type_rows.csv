@@ -1,0 +1,4 @@
+id,name,desc,is_default
+1,local,A recipe only available for this recipe. i.e. Local Recipe,false
+2,master,A master recipe. Changes affect all recipes. i.e. Global Recipe.,false
+3,unlinked_master,"A recipe that was a master, but unlocked for local use, but can be relinked to a master.",false

@@ -7,7 +7,7 @@ import { DarkLightThemeProvider } from "@/contexts/useThemeDarkLight";
 import { useRecipeDataStore } from "@/hooks/useRecipeDataStore";
 import { MenuModalProvider } from "@/contexts/UseMenuModal";
 import { ClerkProvider } from "@clerk/nextjs";
-import { RecipeDataProvider } from "@/contexts/UseRecipeData";
+import { RecipeDataProvider } from "@/contexts/useRecipeData";
 
 jest.mock("@/hooks/useRecipeDataStore");
 
@@ -66,7 +66,7 @@ describe("Recipee", () => {
             </RecipeDataProvider>
           </DarkLightThemeProvider>
         </MenuModalProvider>
-      </ClerkProvider>
+      </ClerkProvider>,
     );
     // The test will pass if the component renders without throwing an error.
   });

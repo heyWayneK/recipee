@@ -1,0 +1,4 @@
+id,name,desc,imperial,metric
+1,weight,Weight values like kg/g or lbs/oz,oz|lbs,g|kg
+2,fluid,Liquid weights e.g fl oz,oz|oz,mL|L
+3,each,"Individual Units, e.g. 2 eggs, or  1 Bay leaf garnish)",ea,ea|ea
